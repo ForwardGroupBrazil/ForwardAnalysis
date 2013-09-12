@@ -15,7 +15,7 @@ Example:
     cmsRun DiffractiveZPATTupleMulticrab.py Run=data_MuonA
 
 Optional arguments:
-    Run = data_MuonA, data_MuonB, data_ElectronA, data_ElectronB, MC_none, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU 
+    Run = data_MuonP1, data_MuonP2, data_ElectronP1, data_ElectronP2, MC_none, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU 
 
 Authors: D. Figueiredo, R. Arciadiacono and N. Cartiglia
 '''
