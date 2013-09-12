@@ -8,6 +8,7 @@ DijetsTriggerAnalysis = cms.PSet(
     l1TriggerNames = cms.vstring('L1_SingleJet36_FwdVeto','L1_SingleJet36','L1_DoubleJet36_Central','L1_DoubleEG5')
 )
 
+
 """
 DijetsTriggerAnalysis = cms.PSet(
   #gtDigisTag = cms.InputTag("gtDigis"),
