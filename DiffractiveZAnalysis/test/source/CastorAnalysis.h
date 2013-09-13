@@ -79,6 +79,30 @@ class CastorAnalysis {
 
   std::vector<TH2F*> m_hVector_histo_castor_centroid;
   std::vector<TH1F*> m_hVector_histo_castor_centroid_phi;
+  std::vector<TProfile*> m_hVector_SectorVsTotalCastorEnergyTProf;
+  std::vector<TH2F*> m_hVector_SectorVsTotalCastorEnergy;
+  std::vector<TH1F*> m_hVector_RunNumber;
+  std::vector<TH1F*> m_hVector_RunNumberZeroCastor;
+  std::vector<TH1F*> m_hVector_RunNumberHighCastor;
+  std::vector<TH2F*> m_hVector_CastorMultiplicityVsLumi;
+  std::vector<TH1F*> m_hVector_CastorMultiplicity;
+  std::vector<TH1F*> m_hVector_sumECastorAndHFMinus;
+  std::vector<TProfile*> m_hVector_EnergyHFMinusVsCastorTProf;
+  std::vector<TProfile*> m_hVector_EnergyHFPlusVsCastorTProf;
+  std::vector<TH2F*> m_hVector_etcalos_n;
+  std::vector<TH2F*> m_hVector_etcalos_p;
+  std::vector<TH1F*> m_hVector_ECastorSectorBin1D;
+  std::vector<TProfile*> m_hVector_ECastorSectorTProf;
+  std::vector<TProfile*> m_hVector_ECaloVsEtaTProf;
+  std::vector<TH2F*> m_hVector_ECastorSector;
+  std::vector<TH1F*> m_hVector_sumECastorMinus;
+  std::vector<TH2F*> m_hVector_ECaloVsEta;
+
+  std::vector<std::vector<TH2F*> > m_hVector_TotalEnergyCastor_sectorsVsCastorMultiplicity;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_sectors;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEHFplusBinSlice;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEHFminusBinSlice; 
+  std::vector<std::vector<TH2F*> > m_hVector_Sector_EnergyVsMultiplicity; 
 
   std::vector <std::string> Folders;
 
