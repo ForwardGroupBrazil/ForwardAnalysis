@@ -256,6 +256,7 @@ offlineSelection = cms.Sequence(primaryVertexFilter + filterScraping + HBHENoise
 #offlineSelection = cms.Sequence(filterScraping + HBHENoiseFilter)
 eventSelection = cms.Sequence(offlineSelection)
 eventSelectionHLT = cms.Sequence(diffractiveZHLTFilter + offlineSelection)
+eventSelectionOnlyHLT = cms.Sequence(diffractiveZHLTFilter)
 
 """
 eventSelectionHLTHBVetoPlusAndMinus = cms.Sequence(eventSelectionHLT+hcalVetoHBPlusAndMinus)
