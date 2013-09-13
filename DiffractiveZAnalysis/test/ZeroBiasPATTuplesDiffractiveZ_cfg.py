@@ -400,12 +400,13 @@ process.castor_step = cms.Path(process.castorSequence)
 
 process.diffractiveZAnalysisTTreeBefore = process.diffractiveZAnalysisTTree.clone()
 process.diffractiveZAnalysisTTreeAfter = process.diffractiveZAnalysisTTree.clone()
-   
- if config.TriggerOn:
+
+if config.TriggerOn:
        print(">> With Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
        process.analysisSequences + process.diffractiveZFilter + process.eventSelectionOnlyHLT + process.diffractiveZAnalysisTTreeBefore + process.eventSelection +  process.diffractiveZAnalysisTTreeAfter)
- else:
+
+else:
        print(">> No Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
        process.analysisSequences + process.diffractiveZFilter + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
