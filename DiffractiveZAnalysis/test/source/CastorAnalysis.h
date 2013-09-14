@@ -66,6 +66,7 @@ class CastorAnalysis {
   int optTrigger;
   double lepton1pt;
   double lepton2pt;
+  double SectorThreshold;
   int SectorZeroCastorCounter;
 
   double x_centroid;
@@ -98,11 +99,12 @@ class CastorAnalysis {
   std::vector<TH1F*> m_hVector_sumECastorMinus;
   std::vector<TH2F*> m_hVector_ECaloVsEta;
 
-  std::vector<std::vector<TH2F*> > m_hVector_TotalEnergyCastor_sectorsVsCastorMultiplicity;
-  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_sectors;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergySectors;
   std::vector<std::vector<TH1F*> > m_hVector_sumEHFplusBinSlice;
   std::vector<std::vector<TH1F*> > m_hVector_sumEHFminusBinSlice; 
   std::vector<std::vector<TH2F*> > m_hVector_Sector_EnergyVsMultiplicity; 
+  std::vector<std::vector<TH1F*> > m_hVector_sumECastorMinusBinSlice; 
+
 
   std::vector <std::string> Folders;
 
@@ -112,7 +114,7 @@ class CastorAnalysis {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, double);
   void LoadFile(std::string,std::string);
   void CreateHistos();
   void FillHistos(int);
