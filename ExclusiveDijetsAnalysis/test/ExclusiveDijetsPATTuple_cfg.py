@@ -132,6 +132,12 @@ PATTriggerInfo.runALLTriggerPath = True
 # Module with EventInfo + DiffractiveAnalysis + ExclusiveDijets 
 #
 
+process.DiffractiveJetsFilter = cms.EDFilter("DiffractiveJetsFilter",
+        calAlgoFilter = cms.untracked.string("selectedPatJetsPFlow"),
+        PtCut1 = cms.double(15.0),
+        PtCut2 = cms.double(15.0)
+        )
+
 process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoPFCandInfoDiffractiveExclusiveDijetsAnalysisTTree",
 	EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(not config.runOnMC),
@@ -223,9 +229,9 @@ else:
 """
 if config.TriggerOn:
     process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedUpTTree_step = cms.Path(
-    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT +
+    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT + process.DiffractiveJetsFilter +
     process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
 
 else:
     process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedUpTTree_step = cms.Path(
-    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection + process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
+    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection + process.DiffractiveJetsFilter + process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
