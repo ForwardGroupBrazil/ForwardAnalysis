@@ -121,6 +121,8 @@ void CastorAnalysis::CreateHistos(){
     TH1F *histo_castor_centroid_phi = new TH1F(castor_centroid_phi,"Castor Centroid Energy; Sector(#phi,i) [degree]; NEvents",720,0,360);
     m_hVector_histo_castor_centroid_phi.push_back(histo_castor_centroid_phi);
 
+/*
+
     char name1[300];
     sprintf(name1,"ECaloVsEta_%s",Folders.at(j).c_str());
     TH2F *histo_ECaloVsEta = new TH2F(name1,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 500, -6, 6, 100, 0., 1000.);
@@ -210,14 +212,14 @@ void CastorAnalysis::CreateHistos(){
       char name17t[300];
       sprintf(name17,"TotalEnergySector%d_%s",se,Folders.at(j).c_str());
       sprintf(name17t,"#sum Energy, Castor Sector %d; #sum E_{modules 1,2,3,4,5} [GeV]; N events", se+1);
-      TH1F *histo_TotalEnergySectors = new TH1F(name17,name17t, 1000,0,500);
+      TH1F *histo_TotalEnergySectors = new TH1F(name17,"teste", 1000,0,500);
       m_hVector_TotalEnergySectors[se].push_back(histo_TotalEnergySectors);
 
       char name18[300];
       char name18t[300];
       sprintf(name18,"Sector%d_EnergyVsMultiplicity_%s",se,Folders.at(j).c_str());
       sprintf(name18t,"Energy for Sector %d Vs Multiplicity; Multiplicity; #sum Energy_{sector} [GeV]", se);
-      TH2F *histo_Sector_EnergyVsMultiplicity = new TH2F(name18,name18t,17,0,17,1000,0,500);
+      TH2F *histo_Sector_EnergyVsMultiplicity = new TH2F(name18,"teste",17,0,17,1000,0,500);
       m_hVector_Sector_EnergyVsMultiplicity[se].push_back(histo_Sector_EnergyVsMultiplicity);
 
     }
@@ -226,7 +228,7 @@ void CastorAnalysis::CreateHistos(){
     m_hVector_sumEHFminusBinSlice.push_back( std::vector<TH1F*>() );
     m_hVector_sumECastorMinusBinSlice.push_back( std::vector<TH1F*>() );
 
-    for (int bs=0; bs<5; bs++){
+    for (int bs=0; bs<4; bs++){
       char name19[300];
       sprintf(name19,"sumEHFplusBinSlice%d_%s",bs,Folders.at(j).c_str());
       TH1F *histo_sumEHFplusBinSlice = new TH1F(name19,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
@@ -240,8 +242,10 @@ void CastorAnalysis::CreateHistos(){
       char name21[300]; 
       sprintf(name21,"sumECastorMinusBinSlice%d_%s",bs,Folders.at(j).c_str());
       TH1F *histo_sumECastorMinusBinSlice = new TH1F(name21,"Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
-      m_hVector_sumECastorMinusBinSlice[j].push_back(histo_sumECastorMinusBinSlice);
+      m_hVector_sumECastorMinusBinSlice[bs].push_back(histo_sumECastorMinusBinSlice);
     }
+
+*/
 
   }
 
@@ -292,6 +296,7 @@ void CastorAnalysis::FillHistos(int index){
     m_hVector_histo_castor_centroid_phi.at(index)->Fill(phi_average);
   }
 
+/*
 
   for (k=0; k<eventCastor->GetEachTowerCounter();k++){
     m_hVector_ECaloVsEta.at(index)->Fill(eventCastor->GetEachTowerEta(k),eventCastor->GetEachTowerEnergy(k));
@@ -349,7 +354,7 @@ void CastorAnalysis::FillHistos(int index){
     m_hVector_sumEHFplusBinSlice[index].at(3)->Fill(eventdiff->GetSumEnergyHFPlus());
     m_hVector_sumEHFminusBinSlice[index].at(3)->Fill(eventdiff->GetSumEnergyHFMinus());
   }
-
+*/
 
 }
 
@@ -358,6 +363,41 @@ void CastorAnalysis::SaveHistos(){
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
     m_hVector_histo_castor_centroid[j]->Write();
     m_hVector_histo_castor_centroid_phi[j]->Write();
+
+/*
+
+    m_hVector_ECastorSector[j]->Write();
+    m_hVector_ECastorSectorTProf[j]->Write();
+    m_hVector_ECastorSectorBin1D[j]->Write();
+    m_hVector_ECaloVsEta[j]->Write();
+    m_hVector_ECaloVsEtaTProf[j]->Write();
+    m_hVector_sumECastorMinus[j]->Write();
+    m_hVector_etcalos_n[j]->Write();
+    m_hVector_EnergyHFPlusVsCastorTProf[j]->Write();
+    m_hVector_EnergyHFMinusVsCastorTProf[j]->Write();
+    m_hVector_sumECastorAndHFMinus[j]->Write();
+    m_hVector_CastorMultiplicity[j]->Write();
+    m_hVector_CastorMultiplicityVsLumi[j]->Write();
+    m_hVector_RunNumberZeroCastor[j]->Write();
+    m_hVector_RunNumberHighCastor[j]->Write();
+    m_hVector_RunNumber[j]->Write();
+    m_hVector_SectorVsTotalCastorEnergy[j]->Write();
+    m_hVector_SectorVsTotalCastorEnergyTProf[j]->Write();
+
+    for (int id=0; id<16; id++){
+      m_hVector_TotalEnergySectors[j].at(id)->Write();
+      m_hVector_Sector_EnergyVsMultiplicity[j].at(id)->Write();
+      m_hVector_Sector_EnergyVsMultiplicity[j].at(id)->Write();
+    }
+
+    for (int id=0; id<4; id++){
+      m_hVector_sumECastorMinusBinSlice[j].at(id)->Write();
+      m_hVector_sumEHFplusBinSlice[j].at(id)->Write();
+      m_hVector_sumEHFminusBinSlice[j].at(id)->Write();
+    }
+
+*/
+
   }
 
 }
