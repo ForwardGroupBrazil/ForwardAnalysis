@@ -272,7 +272,7 @@ process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoPFCandInfoDiffra
                     RunWithWeightGen = cms.untracked.bool(config.runGen)
 	),
 	DiffractiveAnalysis = DiffractiveAnalysis,
-        ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
+        ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis,
         PFCandInfo = PFCandInfo
         )
 
