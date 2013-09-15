@@ -42,9 +42,9 @@ class DiffractiveZAnalysis {
       void fillDetectorVariables(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillVariables(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillCastor(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillCastorDebug(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillZDC(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillDetectorEnergyEtaInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
-      //void fillDetectorEnergyEtaInfoNoThreshold(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       edm::InputTag triggerResultsTag_;
       std::vector<std::string> hltPathNames_;
@@ -77,6 +77,7 @@ class DiffractiveZAnalysis {
       std::string selectionPathName_;
 
       TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
+      TH1F *CastorChannelHisto_;
 
 };
 
