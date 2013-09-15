@@ -13,7 +13,6 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TMath.h"
-
 #include "FWCore/Utilities/interface/RegexMatch.h"
 #include "FWCore/Framework/interface/TriggerNamesService.h"
 #include "DataFormats/Common/interface/TriggerResults.h"
@@ -110,6 +109,8 @@ void DiffractiveZAnalysis::setTFileService(){
   hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
   hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
 
+  CastorChannelHisto_ = fs->make<TH1F>("CastorChannelWorking","Working Channel; Channel (id); # Times of working",240,0,240);
+
 }
 
 DiffractiveZAnalysis::~DiffractiveZAnalysis(){}
@@ -134,7 +135,10 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
   fillVariables(eventData,event,setup);
   if (RunMC_) fillGenInfo(eventData,event,setup); 
   if (RunZPat_) fillZPat(eventData,event,setup);
-  if (RunCastor_) fillCastor(eventData,event,setup);
+  if (RunCastor_){
+    fillCastor(eventData,event,setup);
+    fillCastorDebug(eventData,event,setup);
+  }
   if (RunZDC_) fillZDC(eventData,event,setup);
   if (EachTower_) fillDetectorEnergyEtaInfo(eventData,event,setup);
 
@@ -1991,17 +1995,31 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
 
   bool debug = false;
   bool debug_deep = false;
+
   std::vector<double> castor_tower;
+  std::vector<double> castor_tower_module1;
+  std::vector<double> castor_tower_module2;
+  std::vector<double> castor_tower_module3;
+  std::vector<double> castor_tower_module4;
+  std::vector<double> castor_tower_module5;
 
   edm::Handle<CastorRecHitCollection> CastorRecHits;
   event.getByLabel(castorHitsTag_,CastorRecHits); 
 
   double sumCastorTower[16];
-  bool accept[16];
+  double energyModule1[16];
+  double energyModule2[16];
+  double energyModule3[16];
+  double energyModule4[16];
+  double energyModule5[16];
 
   for(int isec = 0; isec < 16; isec++) {
-    accept[isec] = false;
-    sumCastorTower[isec] = 0; 
+    sumCastorTower[isec] = 0.;
+    energyModule1[isec] = 0.;
+    energyModule2[isec] = 0.;
+    energyModule3[isec] = 0.;
+    energyModule4[isec] = 0.;
+    energyModule5[isec] = 0.; 
   }
 
   for (size_t i = 0; i < CastorRecHits->size(); ++i) {
@@ -2016,31 +2034,130 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
     // Only 5th modules
     if (rh.id().module() > 5 ) continue;
 
+    if (debug_deep) std::cout << "Channel: " << cha << std::endl;
     if (debug_deep) std::cout << "Energy: " << rh.energy()*fCGeVCastor_ << " | Sector: " << rh.id().sector() << " | Module: " << rh.id().module() << " | Channel: " << cha << std::endl;
 
     for(int isec = 0; isec < 16; isec++) {
-      if (rh.id().sector()== isec+1) sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
+      if (rh.id().sector()== isec+1){
+	sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
+
+	if (rh.id().module() == 1){
+	  energyModule1[isec] = rh.energy()*fCGeVCastor_;
+	}
+
+	if (rh.id().module() == 2){
+	  energyModule2[isec] = rh.energy()*fCGeVCastor_;
+	}
+
+	if (rh.id().module() == 3){
+	  energyModule3[isec] = rh.energy()*fCGeVCastor_;
+	}
+
+	if (rh.id().module() == 4){
+	  energyModule4[isec] = rh.energy()*fCGeVCastor_;
+	}
+
+	if (rh.id().module() == 5){
+	  energyModule5[isec] = rh.energy()*fCGeVCastor_;
+	}
+      }
+    }
+
+
+  }
+
+  for (int isec=0;isec<16;isec++){
+    castor_tower.push_back(sumCastorTower[isec]);
+    castor_tower_module1.push_back(energyModule1[isec]);
+    castor_tower_module2.push_back(energyModule2[isec]);
+    castor_tower_module3.push_back(energyModule3[isec]);
+    castor_tower_module4.push_back(energyModule4[isec]);
+    castor_tower_module5.push_back(energyModule5[isec]);
+    if (debug) {
+      std::cout << "Sector "<< isec+1 << ", Module 1, Energy [GeV]: " << energyModule1[isec] << std::endl;
+      std::cout << "Sector "<< isec+1 << ", Module 2, Energy [GeV]: " << energyModule2[isec] << std::endl;
+      std::cout << "Sector "<< isec+1 << ", Module 3, Energy [GeV]: " << energyModule3[isec] << std::endl;
+      std::cout << "Sector "<< isec+1 << ", Module 4, Energy [GeV]: " << energyModule4[isec] << std::endl;
+      std::cout << "Sector "<< isec+1 << ", Module 5, Energy [GeV]: " << energyModule5[isec] << std::endl;
+      std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
+    }
+  }
+
+  eventData.SetCastorTowerEnergy(castor_tower);
+  eventData.SetCastorModule1Energy(castor_tower_module1);
+  eventData.SetCastorModule2Energy(castor_tower_module2);
+  eventData.SetCastorModule3Energy(castor_tower_module3);
+  eventData.SetCastorModule4Energy(castor_tower_module4);
+  eventData.SetCastorModule5Energy(castor_tower_module5);
+
+}
+
+//
+// Fill Castor Check Channels 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void DiffractiveZAnalysis::fillCastorDebug(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  // Phi: 16 modules, rh.id().sector();
+  // Z: 14 modules, rh.id().module();
+  // Channel definition: 16*(rh.id().module()-1) + rh.id().sector();
+  // For 2010, Castor uses only first five modules.
+
+  bool debug = true;
+  bool debug_deep = false;
+
+  int NRecHits = 0;
+  int NRecHitsPartial = 0;
+  int BadChannels = 0;
+  std::vector<int> Channels;
+  std::vector<int> BChannels;
+
+  edm::Handle<CastorRecHitCollection> CastorRecHits;
+  event.getByLabel(castorHitsTag_,CastorRecHits);
+
+  for (size_t i = 0; i < CastorRecHits->size(); ++i) {
+
+    const CastorRecHit & rh = (*CastorRecHits)[i];
+    int cha = 16*(rh.id().module()-1) + rh.id().sector();
+
+    CastorChannelHisto_->Fill(cha);
+    Channels.push_back(cha);
+
+    ++NRecHits;
+    if (rh.id().module() > 5 ) ++NRecHitsPartial;
+
+    if (debug_deep){
+    std::cout << "\nChannel: " << cha << std::endl;
+    std::cout << "Number of Rec Hits, partial: " << NRecHitsPartial << std::endl;
+    std::cout << "Number of Rec Hits, total: " << NRecHits << std::endl;
     }
 
   }
 
-  /*
-     for (int isec = 0; isec < 16;isec++) {
-// 4 sigma for threshold.
-if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
-if (accept[isec]==true) {
-castor_tower.push_back(sumCastorTower[isec]);
-}
-else castor_tower.push_back(-999.);
-} 
-   */
+  // Search Bad Channels
+  const int size = (int) Channels.size();
+  for (int i=1; i<=224; i++) {
+      bool found=false;
+      for (int j=0; j<size; j++){
+       if (Channels[j]==i) {
+          if (debug) std::cout << "There is channel " << Channels[j] << std::endl;
+          found=true; 
+          break;
+       }
+      }
+      if (!found) {
+      ++BadChannels;
+      BChannels.push_back(i);
+      if (debug) std::cout << "Channel " << i << " was not working." << std::endl;
+      }
+  }
 
-for (int isec=0;isec<16;isec++){
-  castor_tower.push_back(sumCastorTower[isec]);
-  if (debug) std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
-}
-
-eventData.SetCastorTowerEnergy(castor_tower);
+  if (BadChannels < 1){
+  BChannels.push_back(-999);
+  }
+ 
+  eventData.SetCastorNumberBadChannels(BadChannels); 
+  eventData.SetCastorBadChannels(BChannels);  
 
 }
 
@@ -2055,8 +2172,8 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
   std::vector<std::vector<double> > digiAllPMT;
   std::vector<double> digiPMT;
 
-  bool debug = true;
-  bool debug_deep = true;
+  bool debug = false;
+  bool debug_deep = false;
 
   double ZDCNSumEMEnergy = 0.;
   double ZDCNSumHADEnergy = 0.;
