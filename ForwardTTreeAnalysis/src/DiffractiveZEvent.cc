@@ -50,8 +50,15 @@ void DiffractiveZEvent::reset(){
   EachTowerEnergy_.clear();
   EachTowerEta_.clear();
   CastorTowerEnergy_.clear();
+  CastorModule1Energy_.clear();
+  CastorModule2Energy_.clear();
+  CastorModule3Energy_.clear();
+  CastorModule4Energy_.clear();
+  CastorModule5Energy_.clear();
+  CastorBadChannels_.clear();
+  CastorNumberBadChannels_ = -999;
   EachTowerCounter_ = -1;
-
+  
   PrimaryGapMaxGen_=-999.;
   SecondGapMaxGen_=-999.;
   TracksPtGen_.clear();
