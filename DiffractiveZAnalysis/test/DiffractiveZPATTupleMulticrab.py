@@ -26,7 +26,7 @@ import atexit
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-options.register('Run','MC_none',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('Run','data_MuonP1',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -39,7 +39,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 100
+config.NumberOfEvents = -1
 config.sys = False
 
 #
