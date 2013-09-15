@@ -277,6 +277,13 @@ class DiffractiveZEvent {
     void SetPatDiElectronPhi(double fpatDiElectronPhi) { patDiElectronPhi_ = fpatDiElectronPhi;}
 
     void SetCastorTowerEnergy(const std::vector<double>& fCastorTowerEnergy) { CastorTowerEnergy_ = fCastorTowerEnergy; }
+    void SetCastorModule1Energy(const std::vector<double>& fCastorModule1Energy) { CastorModule1Energy_ = fCastorModule1Energy; }
+    void SetCastorModule2Energy(const std::vector<double>& fCastorModule2Energy) { CastorModule2Energy_ = fCastorModule2Energy; }
+    void SetCastorModule3Energy(const std::vector<double>& fCastorModule3Energy) { CastorModule3Energy_ = fCastorModule3Energy; }
+    void SetCastorModule4Energy(const std::vector<double>& fCastorModule4Energy) { CastorModule4Energy_ = fCastorModule4Energy; }
+    void SetCastorModule5Energy(const std::vector<double>& fCastorModule5Energy) { CastorModule5Energy_ = fCastorModule5Energy; }
+    void SetCastorBadChannels(const std::vector<int>& fCastorBadChannels) { CastorBadChannels_ = fCastorBadChannels; }
+    void SetCastorNumberBadChannels(int fCastorNumberBadChannels) { CastorNumberBadChannels_ = fCastorNumberBadChannels;}
 
     void SetEachTowerEta(const std::vector<double>& fEachTowerEta) { EachTowerEta_ = fEachTowerEta; }
     void SetEachTowerEnergy(const std::vector<double>& fEachTowerEnergy) { EachTowerEnergy_ = fEachTowerEnergy; }
@@ -589,6 +596,13 @@ class DiffractiveZEvent {
     int GetEachTowerCounter() const {return EachTowerCounter_;}
 
     double GetCastorTowerEnergy(int i) const { return CastorTowerEnergy_[i]; }
+    double GetCastorModule1Energy(int i) const { return CastorModule1Energy_[i]; }
+    double GetCastorModule2Energy(int i) const { return CastorModule2Energy_[i]; }
+    double GetCastorModule3Energy(int i) const { return CastorModule3Energy_[i]; }
+    double GetCastorModule4Energy(int i) const { return CastorModule4Energy_[i]; }
+    double GetCastorModule5Energy(int i) const { return CastorModule5Energy_[i]; }
+    int GetCastorBadChannels(int i) const { return CastorBadChannels_[i]; }
+    int GetCastorNumberBadChannels() const { return CastorNumberBadChannels_;}
 
     int GetTracksNonConeMuon03()    const {return TracksNonConeMuon03_;}
     int GetTracksNonConeElectron03()    const {return TracksNonConeElectron03_;}
@@ -727,7 +741,14 @@ class DiffractiveZEvent {
     std::vector<double> EachTowerEta_;
     std::vector<double> EachTowerEnergy_;
     std::vector<double> CastorTowerEnergy_;
-
+    std::vector<double> CastorModule1Energy_;
+    std::vector<double> CastorModule2Energy_;
+    std::vector<double> CastorModule3Energy_;
+    std::vector<double> CastorModule4Energy_;
+    std::vector<double> CastorModule5Energy_;
+    std::vector<int> CastorBadChannels_;
+   
+    int CastorNumberBadChannels_;
     int EachTowerCounter_;
 
     double PrimaryGapMaxGen_;
