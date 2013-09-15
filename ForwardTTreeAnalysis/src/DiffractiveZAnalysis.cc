@@ -2103,7 +2103,7 @@ void DiffractiveZAnalysis::fillCastorDebug(DiffractiveZEvent& eventData, const e
   // Channel definition: 16*(rh.id().module()-1) + rh.id().sector();
   // For 2010, Castor uses only first five modules.
 
-  bool debug = true;
+  bool debug = false;
   bool debug_deep = false;
 
   int NRecHits = 0;
@@ -2127,9 +2127,9 @@ void DiffractiveZAnalysis::fillCastorDebug(DiffractiveZEvent& eventData, const e
     if (rh.id().module() > 5 ) ++NRecHitsPartial;
 
     if (debug_deep){
-    std::cout << "\nChannel: " << cha << std::endl;
-    std::cout << "Number of Rec Hits, partial: " << NRecHitsPartial << std::endl;
-    std::cout << "Number of Rec Hits, total: " << NRecHits << std::endl;
+      std::cout << "\nChannel: " << cha << std::endl;
+      std::cout << "Number of Rec Hits, partial: " << NRecHitsPartial << std::endl;
+      std::cout << "Number of Rec Hits, total: " << NRecHits << std::endl;
     }
 
   }
@@ -2137,25 +2137,25 @@ void DiffractiveZAnalysis::fillCastorDebug(DiffractiveZEvent& eventData, const e
   // Search Bad Channels
   const int size = (int) Channels.size();
   for (int i=1; i<=224; i++) {
-      bool found=false;
-      for (int j=0; j<size; j++){
-       if (Channels[j]==i) {
-          if (debug) std::cout << "There is channel " << Channels[j] << std::endl;
-          found=true; 
-          break;
-       }
+    bool found=false;
+    for (int j=0; j<size; j++){
+      if (Channels[j]==i) {
+	if (debug) std::cout << "There is channel " << Channels[j] << std::endl;
+	found=true; 
+	break;
       }
-      if (!found) {
+    }
+    if (!found) {
       ++BadChannels;
       BChannels.push_back(i);
       if (debug) std::cout << "Channel " << i << " was not working." << std::endl;
-      }
+    }
   }
 
   if (BadChannels < 1){
-  BChannels.push_back(-999);
+    BChannels.push_back(-999);
   }
- 
+
   eventData.SetCastorNumberBadChannels(BadChannels); 
   eventData.SetCastorBadChannels(BChannels);  
 
