@@ -28,6 +28,8 @@
 #include "DataFormats/JetReco/interface/CaloJet.h"
 #include "DataFormats/JetReco/interface/PFJet.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
+#include "DataFormats/JetReco/interface/JetCollection.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 
 //deltaR
 #include "DataFormats/Math/interface/deltaR.h"
@@ -77,7 +79,7 @@ DiffractiveJetsFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   bool FilterResult = false;
 
-  Handle<reco::CaloJetCollection> jetsis5;
+  edm::Handle<edm::View<reco::Jet> > jetsis5;
   iEvent.getByLabel(calAlgoFilter,jetsis5);
 
   int jet5size = jetsis5->size();
@@ -85,13 +87,13 @@ DiffractiveJetsFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   double jet1Pt = 0;
   double jet2Pt = 0;
-  const reco::CaloJet* jet1=NULL;
-  const reco::CaloJet* jet2=NULL;
+  const reco::Jet* jet1=NULL;
+  const reco::Jet* jet2=NULL;
 
   if (jet5size >= 2){
 
     for(ijet5=0; ijet5 < jet5size; ++ijet5){
-      const reco::CaloJet* jetAll = &((*jetsis5)[ijet5]);
+      const reco::Jet* jetAll = &((*jetsis5)[ijet5]);
 
       if (jetAll==NULL) continue;
       if (jet1==NULL) {jet1=jetAll; continue;}
