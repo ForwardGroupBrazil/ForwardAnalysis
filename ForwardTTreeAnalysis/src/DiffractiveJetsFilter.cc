@@ -80,6 +80,7 @@ DiffractiveJetsFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
   bool FilterResult = false;
 
   edm::Handle<edm::View<reco::Jet> > jetsis5;
+  Handle<reco::Jet> jetsis5;
   iEvent.getByLabel(calAlgoFilter,jetsis5);
 
   int jet5size = jetsis5->size();
