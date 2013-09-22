@@ -12,11 +12,11 @@ Usage:
     cmsRun DiffractiveZPATTupleMultiple.py
 
 Example:
-    cmsRun DiffractiveZPATTupleMulticrab.py Run=data_MuonA
+    cmsRun DiffractiveZPATTupleMulticrab.py Run=data_MuonP1 condition=B
 
 Optional arguments:
     Run = data_MuonP1, data_MuonP2, data_ElectronP1, data_ElectronP2, MC_none, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU 
-
+    condition = A or B for Castor remove channels depending of Run. If any, no conditions.
 Authors: D. Figueiredo, R. Arciadiacono and N. Cartiglia
 '''
 
@@ -27,6 +27,7 @@ import atexit
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
 options.register('Run','data_MuonP1',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('condition','A',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Channels CASTOR conditions.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -186,13 +187,12 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = '/storage1/dmf/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_233_3_nsm.root'
+    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/DyToMuMuPU2010/DyToMuMu.root'
 
 else:
     config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    #config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
-    config.inputFileName = '/storage1/dmf/TestSamples/Electron2010B/Electron2010B.root'   
+    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/MuRun2010/MuRunA2010.root'   
 
 #
 # CMSSW Main Code
@@ -387,24 +387,32 @@ process.diffractiveZAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsP
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessCastorInfo = False
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessZDCInfo = False
 
-process.diffractiveZAnalysisTTreePFShiftedUp = process.diffractiveZAnalysisTTree.clone()
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedUp"
+if options.condition=="A":
+     print("")
+     print(">>>> RunA Castor Conditions")
+     print("")
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = True
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = False
 
-process.diffractiveZAnalysisTTreePFShiftedDown = process.diffractiveZAnalysisTTree.clone() 	 
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedDown" 	 
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedDown" 	 
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedDown" 	 
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedDown"
+elif options.condition=="B":
+     print("")
+     print(">>>> RunB Castor Conditions")
+     print("")
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = True
+else:
+     print("")
+     print(">>>> Full Castor")
+     print("")
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = False 
 
 if config.runOnMC:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = True
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.9375
 else:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015 
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015
 
 #
 # Define MC Access
@@ -420,7 +428,24 @@ if config.runOnMC:
                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 
 else:
-     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessMCInfo = False 
+     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessMCInfo = False
+
+#
+# Clone Shifted Up and Down
+#
+######################################################################################
+
+process.diffractiveZAnalysisTTreePFShiftedUp = process.diffractiveZAnalysisTTree.clone()
+process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
+process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedUp"
+process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedUp"
+process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedUp"
+
+process.diffractiveZAnalysisTTreePFShiftedDown = process.diffractiveZAnalysisTTree.clone() 	 
+process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedDown" 	 
+process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedDown" 	 
+process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedDown" 	 
+process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedDown"
 
 #
 # Run Path. 

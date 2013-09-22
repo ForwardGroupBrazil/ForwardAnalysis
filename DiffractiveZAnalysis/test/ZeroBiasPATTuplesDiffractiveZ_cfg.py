@@ -9,10 +9,10 @@ Goal:
 Produce your ZeroBias diffractive Z ntuple.
 
 Usage:
-    cmsRun ZeroBiasPATTuplesDiffractiveZ_cfg.py
+    cmsRun ZeroBiasPATTuplesDiffractiveZ_cfg.py Run=A
 
 Example:
-    cmsRun ZeroBiasPATTuplesDiffractiveZ_cfg.py Run=A
+    cmsRun ZeroBiasPATTuplesDiffractiveZ_cfg.py 
 
 Optional arguments:
     Run = A, B, MC_none, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU
@@ -157,13 +157,12 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = '/storage1/dmf/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_233_3_nsm.root'
+    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/DyToMuMuPU2010/DyToMuMu.root'
 
 else:
     config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    config.inputFileName = '/storage1/eliza/samples_test/MinimumBias_ZeorBias.root'
-
+    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/ZeroBias2010/minimumBias2010.root'
 
 #
 # CMSSW Main Code
@@ -326,7 +325,6 @@ process.diffractiveZFilter = cms.EDFilter("diffractiveZFilter",
                              muonTag = cms.untracked.InputTag("muons"),
                              electronTag = cms.untracked.InputTag("gsfElectrons")
                              )
-
 #
 # Define Analyzers
 #
@@ -354,24 +352,32 @@ process.diffractiveZAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsP
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessCastorInfo = False
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessZDCInfo = False
 
-process.diffractiveZAnalysisTTreePFShiftedUp = process.diffractiveZAnalysisTTree.clone()
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedUp"
-
-process.diffractiveZAnalysisTTreePFShiftedDown = process.diffractiveZAnalysisTTree.clone()
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedDown"
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedDown"
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedDown"
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedDown"
-
 if config.runOnMC:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = True
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.9375
 else:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015
+
+if options.Run=="A":
+     print("")
+     print(">>>> RunA Castor Conditions")
+     print("")
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = True
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = False
+
+elif options.Run=="B":
+     print("")
+     print(">>>> RunB Castor Conditions")
+     print("")
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = True
+else:
+     print("")
+     print(">>>> Full Castor")
+     print("")
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = False
 
 #
 # Define MC Access
