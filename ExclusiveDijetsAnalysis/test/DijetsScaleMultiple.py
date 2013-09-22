@@ -287,6 +287,8 @@ process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.vertexTag = "goodOfflin
 process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
 process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.energyThresholdHF = 7.0
+process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessCastorInfo = True
+process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessZDCInfo = False
 
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.hltPaths = config.hltPaths 
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
