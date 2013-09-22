@@ -55,6 +55,8 @@ class DiffractiveZAnalysis {
       edm::InputTag PVtxCollectionTag_;
       edm::InputTag castorHitsTag_;
       edm::InputTag zdcHitsTag_;
+      bool RunA_;
+      bool RunB_;
       bool RunCastor_;
       bool RunZDC_;
       bool RunMC_;

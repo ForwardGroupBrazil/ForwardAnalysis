@@ -80,7 +80,7 @@ class DiffractiveAnalysis {
 
       bool accessCastorInfo_;
       bool accessZDCInfo_;
-  
+
       edm::InputTag vertexTag_;
       edm::InputTag trackTag_;
       edm::InputTag metTag_;
@@ -90,6 +90,8 @@ class DiffractiveAnalysis {
       edm::InputTag zdcHitsTag_;
       double castorThreshold_;
       double fCGeVCastor_;
+      bool RunA_;
+      bool RunB_;
       edm::InputTag particleFlowTag_;
       edm::InputTag genChargedTag_;
       edm::InputTag triggerResultsTag_;

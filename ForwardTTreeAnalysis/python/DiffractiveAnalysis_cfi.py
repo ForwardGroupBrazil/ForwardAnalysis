@@ -11,7 +11,9 @@ DiffractiveAnalysis = cms.PSet(
     caloTowerTag = cms.InputTag("towerMaker"), 
     castorRecHitTag = cms.InputTag("castorRecHitCorrector"),
     zdcHitsTag = cms.InputTag("zdcreco"),
-    fCGeVCastor = cms.double(0.015), # for MC we need use 0.9375 (0.015/0.016)  
+    fCGeVCastor = cms.double(0.015), # for MC we need use 0.9375 (0.015/0.016) 
+    RunA = cms.untracked.bool(True), # When RunA == RunB == True/False (All Channels). RunA=True and RunB=False (Good Channels Run A)/ RunA=False and RunB=True (Good Channels RunB)
+    RunB = cms.untracked.bool(True), 
     castorThreshold = cms.double(0.364), # 364 MeV for 2010
     particleFlowTag = cms.InputTag("pfCandidateNoiseThresholds"),
     edmNtupleEtaMaxTag = cms.InputTag("edmNtupleEtaMax"),

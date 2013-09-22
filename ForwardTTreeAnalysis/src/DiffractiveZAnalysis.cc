@@ -77,6 +77,8 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   RunZDC_(pset.getUntrackedParameter<Bool_t>("RunZDC", false)),
   RunMC_(pset.getUntrackedParameter<Bool_t>("RunMC", false)),
   RunZPat_(pset.getUntrackedParameter<Bool_t>("RunZPat", false)),
+  RunA_(pset.getUntrackedParameter<Bool_t>("RunA", false)),
+  RunB_(pset.getUntrackedParameter<Bool_t>("RunB", false)),
   EachTower_(pset.getUntrackedParameter<Bool_t>("EachTower", false)),
   pTPFThresholdCharged_(pset.getParameter<double>("pTPFThresholdCharged")),
   energyPFThresholdBar_(pset.getParameter<double>("energyPFThresholdBar")),
@@ -2028,11 +2030,19 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
     const CastorRecHit & rh = (*CastorRecHits)[i];
     int cha = 16*(rh.id().module()-1) + rh.id().sector();    
 
-    if(cha != 5 && cha != 6) used_cha = true;  
-    if(used_cha == false) continue; 
+    if(RunA_ && !RunB_){
+      if(cha != 5 && cha != 6) used_cha = true;  
+      if (rh.id().module() > 5 ) continue;
+    }
+    if(!RunA_ && RunB_){
+      if(cha != 9 && cha != 10) used_cha = true;
+      if (rh.id().module() > 5 ) continue;
+    }
+    if((RunA_ && RunB_) || (!RunA_ && !RunB_)){
+      used_cha = true;
+    }
 
-    // Only 5th modules
-    if (rh.id().module() > 5 ) continue;
+    if(used_cha == false) continue;
 
     if (debug_deep) std::cout << "Channel: " << cha << std::endl;
     if (debug_deep) std::cout << "Energy: " << rh.energy()*fCGeVCastor_ << " | Sector: " << rh.id().sector() << " | Module: " << rh.id().module() << " | Channel: " << cha << std::endl;

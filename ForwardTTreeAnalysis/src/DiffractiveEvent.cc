@@ -108,6 +108,10 @@ void DiffractiveEvent::reset(){
   sumETotCastor_ = -999.;
 
   CastorTowerEnergy_.clear();
-
+  CastorModule1Energy_.clear();
+  CastorModule2Energy_.clear();
+  CastorModule3Energy_.clear();
+  CastorModule4Energy_.clear();
+  CastorModule5Energy_.clear();
 
 }
