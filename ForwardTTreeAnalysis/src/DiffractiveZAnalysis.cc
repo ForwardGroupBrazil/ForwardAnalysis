@@ -2031,13 +2031,14 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
     int cha = 16*(rh.id().module()-1) + rh.id().sector();    
 
     if(RunA_ && !RunB_){
-      if(cha != 5 && cha != 6) used_cha = true;  
+      if(cha != 5 && cha != 6 && cha !=11 && cha !=12) used_cha = true;
       if (rh.id().module() > 5 ) continue;
     }
     if(!RunA_ && RunB_){
-      if(cha != 9 && cha != 10) used_cha = true;
+      if(cha != 13 && cha != 14 && (cha >=73 && cha <=80)) used_cha = true;
       if (rh.id().module() > 5 ) continue;
     }
+
     if((RunA_ && RunB_) || (!RunA_ && !RunB_)){
       used_cha = true;
     }
