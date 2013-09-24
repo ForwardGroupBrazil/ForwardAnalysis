@@ -74,6 +74,20 @@ elif options.Run == "B":
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U'
   triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
 
+elif options.Run == "Full":
+  print("")
+  print("############")
+  print("RunA or RunB")
+  print("############")
+  print("")
+  config.globalTagNameData = 'GR_R_42_V23::All'
+  config.TriggerOn = True
+  config.runOnMC = False
+  config.runPUMC = False
+  config.runGen = False
+  l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U'
+  triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
+
 elif options.Run == "MC_FlatWeight_and_PU":
   print("")
   print("#####################")
@@ -372,7 +386,7 @@ elif options.Run=="B":
      print("")
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = True
-else:
+elif options.Run=="Full":
      print("")
      print(">>>> Full Castor")
      print("")
