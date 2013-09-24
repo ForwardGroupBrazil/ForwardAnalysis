@@ -17,8 +17,8 @@ class TH2F;
 
 namespace diffractiveZAnalysis {
 
-class DiffractiveZAnalysis {
-   public:
+  class DiffractiveZAnalysis {
+    public:
       typedef DiffractiveZEvent event_type;
       static const char* name;
 
@@ -30,7 +30,7 @@ class DiffractiveZAnalysis {
       void begin(const edm::Run&, const edm::EventSetup&);
       void fill(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void end();
-   private:
+    private:
 
       void setTFileService();
       void fillTriggerInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
@@ -80,8 +80,9 @@ class DiffractiveZAnalysis {
 
       TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
       TH1F *CastorChannelHisto_;
-
-};
+      TH1F *histo_castor_channels;
+      std::vector<TH1F*> m_hVector_histo_castor_channels;
+  };
 
 } // namespace
 #endif 

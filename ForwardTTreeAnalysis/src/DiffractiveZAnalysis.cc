@@ -10,6 +10,7 @@
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "TLorentzVector.h"
 
+#include "TDirectory.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TMath.h"
@@ -100,7 +101,9 @@ void DiffractiveZAnalysis::setTFileService(){
 
   edm::Service<TFileService> fs;
   std::ostringstream oss;
-  hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
+
+  TFileDirectory triggerDir = fs->mkdir("TriggerInfo");
+  hltTriggerNamesHisto_ = triggerDir.make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
   hltTriggerNamesHisto_->SetBit(TH1::kCanRebin);
   for(unsigned k=0; k < hltPathNames_.size(); ++k){
     oss << "Using HLT reference trigger " << hltPathNames_[k] << std::endl;
@@ -108,10 +111,19 @@ void DiffractiveZAnalysis::setTFileService(){
   }
   edm::LogVerbatim("Analysis") << oss.str();
 
-  hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
+  hltTriggerPassHisto_ = triggerDir.make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
   hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
 
-  CastorChannelHisto_ = fs->make<TH1F>("CastorChannelWorking","Working Channel; Channel (id); # Times of working",240,0,240);
+  TFileDirectory castorDir = fs->mkdir("CastorInfo");
+  CastorChannelHisto_ = castorDir.make<TH1F>("CastorChannelWorking","Working Channel; Channel (id); # Times of working",240,0,240);
+  for (int chan=1; chan <=224; chan++){
+    char castor_channels[300];
+    char castor_title[300];
+    sprintf(castor_channels,"Castor_Channel_%d",chan);
+    sprintf(castor_title,"Castor Channel %d Energy Distribution; Energy [GeV]; NEvents",chan);
+    histo_castor_channels = castorDir.make<TH1F>(castor_channels,castor_title,1000,0,500);
+    m_hVector_histo_castor_channels.push_back(histo_castor_channels);
+  }
 
 }
 
@@ -2029,6 +2041,8 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
     bool used_cha = false;
     const CastorRecHit & rh = (*CastorRecHits)[i];
     int cha = 16*(rh.id().module()-1) + rh.id().sector();    
+
+    m_hVector_histo_castor_channels.at(cha-1)->Fill(rh.energy()*fCGeVCastor_);
 
     if(RunA_ && !RunB_){
       if(cha != 5 && cha != 6 && cha !=11 && cha !=12) used_cha = true;

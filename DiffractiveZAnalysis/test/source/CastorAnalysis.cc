@@ -247,6 +247,16 @@ void CastorAnalysis::CreateHistos(){
       m_hVector_sumECastorMinusBinSlice[bs-1].push_back(histo_sumECastorMinusBinSlice);
     }
 
+    char name23[300];
+    sprintf(name23,"CastorBadChannelVsRun_%s",Folders.at(j).c_str());
+    TH2F *histo_CastorBadChannelVsRun = new TH2F(name23,"Castor Bad Channel Vs Run; # Castor Bad Channel(id); Run",226,0,226,16000,134000,150000);
+    m_hVector_CastorBadChannelVsRun.push_back(histo_CastorBadChannelVsRun);
+
+    char name24[300];
+    sprintf(name24,"CastorBadRuns_%s",Folders.at(j).c_str());
+    TH1F *histo_CastorBadRuns = new TH1F(name24,"Castor Bad Run Number; Bad Run Number; N Event",16000,134000,150000);
+    m_hVector_CastorBadRuns.push_back(histo_CastorBadRuns);
+
   }
 
 }
@@ -319,6 +329,12 @@ void CastorAnalysis::FillHistos(int index){
   m_hVector_SectorVsTotalCastorEnergy.at(index)->Fill(SectorCastorHit,sumCastorEnergy);
   m_hVector_SectorVsTotalCastorEnergyTProf.at(index)->Fill(SectorCastorHit,sumCastorEnergy);
 
+
+  for (int l=0; l<eventCastor->GetCastorNumberBadChannels(); l++){
+    m_hVector_CastorBadChannelVsRun.at(index)->Fill(eventCastor->GetCastorBadChannels(l),eventdiff->GetRunNumber());
+    if (eventCastor->GetCastorBadChannels(l) >=1 && eventCastor->GetCastorBadChannels(l) <= 80) m_hVector_CastorBadRuns.at(index)->Fill(eventdiff->GetRunNumber());
+  }
+
   for(int id=0; id < 16; id++){
     if (eventCastor->GetCastorTowerEnergy(id) > SectorThreshold){
       m_hVector_TotalEnergySectors[id].at(index)->Fill(eventCastor->GetCastorTowerEnergy(id));
@@ -381,6 +397,8 @@ void CastorAnalysis::SaveHistos(){
     m_hVector_RunNumber[j]->Write();
     m_hVector_SectorVsTotalCastorEnergy[j]->Write();
     m_hVector_SectorVsTotalCastorEnergyTProf[j]->Write();
+    m_hVector_CastorBadChannelVsRun[j]->Write();
+    m_hVector_CastorBadRuns[j]->Write();
 
     for (int id=0; id<16; id++){
       m_hVector_TotalEnergySectors[id].at(j)->Write();
