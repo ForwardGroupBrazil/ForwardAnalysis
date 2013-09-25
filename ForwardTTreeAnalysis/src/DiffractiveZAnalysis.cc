@@ -2128,8 +2128,8 @@ void DiffractiveZAnalysis::fillCastorDebug(DiffractiveZEvent& eventData, const e
   // Channel definition: 16*(rh.id().module()-1) + rh.id().sector();
   // For 2010, Castor uses only first five modules.
 
-  bool debug = true;
-  bool debug_deep = true;
+  bool debug = false;
+  bool debug_deep = false;
 
   int NRecHits = 0;
   int NRecHitsPartial = 0;
