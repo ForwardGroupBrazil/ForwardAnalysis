@@ -100,6 +100,7 @@ class CastorAnalysis {
   std::vector<TH2F*> m_hVector_ECaloVsEta;
   std::vector<TH2F*> m_hVector_CastorBadChannelVsRun;
   std::vector<TH1F*> m_hVector_CastorBadRuns;
+  std::vector<TH1F*> m_hVector_CastorBadChannels;
  
   std::vector<std::vector<TH1F*> > m_hVector_TotalEnergySectors;
   std::vector<std::vector<TH1F*> > m_hVector_sumEHFplusBinSlice;

@@ -26,7 +26,7 @@ import atexit
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-options.register('Run','B',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('Run','Full',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
