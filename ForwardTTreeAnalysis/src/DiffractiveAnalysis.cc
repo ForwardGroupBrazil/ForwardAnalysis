@@ -108,7 +108,9 @@ void DiffractiveAnalysis::setTFileService(){
 
 DiffractiveAnalysis::~DiffractiveAnalysis(){}
 
-void DiffractiveAnalysis::begin() {}
+void DiffractiveAnalysis::begin() {
+  setTFileService();
+}
 
 void DiffractiveAnalysis::begin(const edm::Run& run, const edm::EventSetup& setup) {}
 
