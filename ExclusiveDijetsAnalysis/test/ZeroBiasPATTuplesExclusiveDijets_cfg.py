@@ -26,7 +26,7 @@ import atexit
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-options.register('Run','B',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('Run','Full',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -34,12 +34,12 @@ process = cms.Process("Analysis")
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
-config.outputTTreeFile = 'ZeroBiasDiffractiveZPATTuple.root'
+config.outputTTreeFile = 'ZeroBiasExclusiveDijets.root'
 config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 100
+config.NumberOfEvents = -1
 
 #
 # Define Options to Run
@@ -65,6 +65,20 @@ elif options.Run == "B":
   print("#####")
   print("Run B")
   print("#####")
+  print("")
+  config.globalTagNameData = 'GR_R_42_V23::All'
+  config.TriggerOn = True
+  config.runOnMC = False
+  config.runPUMC = False
+  config.runGen = False
+  l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U'
+  triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
+
+elif options.Run == "Full":
+  print("")
+  print("##############")
+  print("Run A && Run B")
+  print("##############")
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
@@ -324,7 +338,7 @@ elif options.Run=="B":
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.RunA = False
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.RunB = True
 
-else:
+elif options.Run=="Full":
      print("")
      print(">>>> Full Castor")
      print("")

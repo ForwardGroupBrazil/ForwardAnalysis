@@ -140,7 +140,8 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
 void ExclusiveDijetsAnalysis::setTFileService(){
   edm::Service<TFileService> fs;
   std::ostringstream oss;
-  hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
+  TFileDirectory triggerDir = fs->mkdir("TriggerInfo");
+  hltTriggerNamesHisto_ = triggerDir.make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
   hltTriggerNamesHisto_->SetBit(TH1::kCanRebin);
   for(unsigned k=0; k < hltPathNames_.size(); ++k){
     oss << "Using HLT reference trigger " << hltPathNames_[k] << std::endl;
@@ -148,7 +149,7 @@ void ExclusiveDijetsAnalysis::setTFileService(){
   }
   edm::LogVerbatim("Analysis") << oss.str();
 
-  hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
+  hltTriggerPassHisto_ = triggerDir.make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
   hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
 }
 //////

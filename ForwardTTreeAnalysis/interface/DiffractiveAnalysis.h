@@ -12,11 +12,12 @@
 #include <map>
 
 class DiffractiveEvent;
+class TH1F;
 
 namespace diffractiveAnalysis {
 
-class DiffractiveAnalysis {
-   public:
+  class DiffractiveAnalysis {
+    public:
       typedef DiffractiveEvent event_type;
       static const char* name;
 
@@ -28,7 +29,8 @@ class DiffractiveAnalysis {
       void begin(const edm::Run&, const edm::EventSetup&);
       void fill(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void end();
-   private:
+    private:
+      void setTFileService();
       void fillEventInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillNoiseInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillTriggerInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
@@ -41,42 +43,42 @@ class DiffractiveAnalysis {
       void fillZDCInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillDiffVariables(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillGenInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
- 
+
       void setGenInfo(reco::GenParticleCollection const&, double,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&,
-                                                          math::XYZTLorentzVector&);
- 
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&,
+	  math::XYZTLorentzVector&);
+
       double MassDissGen(reco::GenParticleCollection const& genParticles, double rangeEtaMin = -999.,
-                                                                          double rangeEtaMax = 999.);
+	  double rangeEtaMax = 999.);
 
       unsigned int nHCALiEta(const std::map<unsigned int, std::vector<unsigned int> >&, 
-                             unsigned int, unsigned int);
+	  unsigned int, unsigned int);
 
       double sumEHCALiEta(const std::map<unsigned int, std::vector<double> >&, 
-                          unsigned int, unsigned int);
-      
+	  unsigned int, unsigned int);
+
       template <class PartColl>
-      double MassColl(PartColl& partCollection, double ptThreshold = -1.,
-                double energyHBThreshold = -1., double energyHEThreshold = -1.,
-                double energyHFThreshold = -1., double energyScale = -1.);
+	double MassColl(PartColl& partCollection, double ptThreshold = -1.,
+	    double energyHBThreshold = -1., double energyHEThreshold = -1.,
+	    double energyHFThreshold = -1., double energyScale = -1.);
 
       template <class Coll>
-      std::pair<double,double> Xi(Coll& partCollection, double Ebeam, double ptThreshold = -1.,
-                                  double energyHBThreshold = -1., double energyHEThreshold = -1.,
-                                  double energyHFThreshold = -1., double energyScale = -1.);
+	std::pair<double,double> Xi(Coll& partCollection, double Ebeam, double ptThreshold = -1.,
+	    double energyHBThreshold = -1., double energyHEThreshold = -1.,
+	    double energyHFThreshold = -1., double energyScale = -1.);
 
       template <class Coll>
-      std::pair<double,double> EPlusPz(Coll& partCollection, double ptThreshold = -1.,
-                                       double energyHBThreshold = -1., double energyHEThreshold = -1.,
-                                       double energyHFThreshold = -1., double energyScale = -1.);
+	std::pair<double,double> EPlusPz(Coll& partCollection, double ptThreshold = -1.,
+	    double energyHBThreshold = -1., double energyHEThreshold = -1.,
+	    double energyHFThreshold = -1., double energyScale = -1.);
 
       bool accessCastorInfo_;
       bool accessZDCInfo_;
@@ -108,8 +110,12 @@ class DiffractiveAnalysis {
       bool accessMCInfo_;
       std::string hltPathName_;
       //std::vector<std::string> > hltPathNames_;
-      int ttBit_; 
-};
+      int ttBit_;
+
+      TH1F *histo_castor_channels;
+      std::vector<TH1F*> m_hVector_histo_castor_channels;
+
+  };
 
 } // namespace
 #endif 

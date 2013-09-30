@@ -5,6 +5,8 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/Utilities/interface/Exception.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
 
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/JetReco/interface/Jet.h"
@@ -83,6 +85,26 @@ DiffractiveAnalysis::DiffractiveAnalysis(const edm::ParameterSet& pset):
   Ebeam_ = comEnergy_/2.;
   if(applyEnergyScaleHCAL_) energyScaleHCAL_ = pset.getParameter<double>("EnergyScaleFactorHCAL");
 }
+
+void DiffractiveAnalysis::setTFileService(){
+
+  edm::Service<TFileService> fs;
+  std::ostringstream oss;
+
+  edm::LogVerbatim("Analysis") << oss.str();
+
+  TFileDirectory castorDir = fs->mkdir("CastorInfo");
+  for (int chan=1; chan <=224; chan++){
+    char castor_channels[300];
+    char castor_title[300];
+    sprintf(castor_channels,"Castor_Channel_%d",chan);
+    sprintf(castor_title,"Castor Channel %d Energy Distribution; Energy [GeV]; NEvents",chan);
+    histo_castor_channels = castorDir.make<TH1F>(castor_channels,castor_title,1000,0,500);
+    m_hVector_histo_castor_channels.push_back(histo_castor_channels);
+  }
+
+}
+
 
 DiffractiveAnalysis::~DiffractiveAnalysis(){}
 
@@ -628,81 +650,88 @@ void DiffractiveAnalysis::fillCastorInfo(DiffractiveEvent& eventData, const edm:
     energyModule5[isec] = 0.;
   }
 
-  for (size_t i = 0; i < CastorRecHits->size(); ++i) {
+  if( CastorRecHits.isValid() ){
 
-    bool used_cha = false;
-    const CastorRecHit & rh = (*CastorRecHits)[i];
-    int cha = 16*(rh.id().module()-1) + rh.id().sector();
+    for (size_t i = 0; i < CastorRecHits->size(); ++i) {
 
-    if(RunA_ && !RunB_){
-      if(cha != 5 && cha != 6 && cha !=11 && cha !=12) used_cha = true;
-      if (rh.id().module() > 5 ) continue;
+      bool used_cha = false;
+      const CastorRecHit & rh = (*CastorRecHits)[i];
+      int cha = 16*(rh.id().module()-1) + rh.id().sector();
+
+      m_hVector_histo_castor_channels.at(cha-1)->Fill(rh.energy()*fCGeVCastor_);
+
+      if(RunA_ && !RunB_){
+	if(cha != 5 && cha != 6 && cha !=11 && cha !=12) used_cha = true;
+	if (rh.id().module() > 5 ) continue;
+      }
+      if(!RunA_ && RunB_){
+	if(cha != 13 && cha != 14 && (cha >=73 && cha <=80)) used_cha = true;
+	if (rh.id().module() > 5 ) continue;
+      }
+      if((RunA_ && RunB_) || (!RunA_ && !RunB_)){
+	used_cha = true;
+      }
+
+      if(used_cha == false) continue;
+
+      if (debug_deep) std::cout << "Channel: " << cha << std::endl;
+      if (debug_deep) std::cout << "Energy: " << rh.energy()*fCGeVCastor_ << " | Sector: " << rh.id().sector() << " | Module: " << rh.id().module() << " | Channel: " << cha << std::endl;
+
+      for(int isec = 0; isec < 16; isec++) {
+	if (rh.id().sector()== isec+1){
+	  sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
+
+	  if (rh.id().module() == 1){
+	    energyModule1[isec] = rh.energy()*fCGeVCastor_;
+	  }
+
+	  if (rh.id().module() == 2){
+	    energyModule2[isec] = rh.energy()*fCGeVCastor_;
+	  }
+
+	  if (rh.id().module() == 3){
+	    energyModule3[isec] = rh.energy()*fCGeVCastor_;
+	  }
+
+	  if (rh.id().module() == 4){
+	    energyModule4[isec] = rh.energy()*fCGeVCastor_;
+	  }
+
+	  if (rh.id().module() == 5){
+	    energyModule5[isec] = rh.energy()*fCGeVCastor_;
+	  }
+	}
+      }
+
     }
-    if(!RunA_ && RunB_){
-      if(cha != 13 && cha != 14 && (cha >=73 && cha <=80)) used_cha = true;
-      if (rh.id().module() > 5 ) continue;
-    }
-    if((RunA_ && RunB_) || (!RunA_ && !RunB_)){
-      used_cha = true;
-    }
 
-   if(used_cha == false) continue;
-
-    if (debug_deep) std::cout << "Channel: " << cha << std::endl;
-    if (debug_deep) std::cout << "Energy: " << rh.energy()*fCGeVCastor_ << " | Sector: " << rh.id().sector() << " | Module: " << rh.id().module() << " | Channel: " << cha << std::endl;
-
-    for(int isec = 0; isec < 16; isec++) {
-      if (rh.id().sector()== isec+1){
-        sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
-
-        if (rh.id().module() == 1){
-          energyModule1[isec] = rh.energy()*fCGeVCastor_;
-        }
-
-        if (rh.id().module() == 2){
-          energyModule2[isec] = rh.energy()*fCGeVCastor_;
-        }
-
-        if (rh.id().module() == 3){
-          energyModule3[isec] = rh.energy()*fCGeVCastor_;
-        }
-
-        if (rh.id().module() == 4){
-          energyModule4[isec] = rh.energy()*fCGeVCastor_;
-        }
-
-        if (rh.id().module() == 5){
-          energyModule5[isec] = rh.energy()*fCGeVCastor_;
-        }
+    for (int isec=0;isec<16;isec++){
+      castor_tower.push_back(sumCastorTower[isec]);
+      castor_tower_module1.push_back(energyModule1[isec]);
+      castor_tower_module2.push_back(energyModule2[isec]);
+      castor_tower_module3.push_back(energyModule3[isec]);
+      castor_tower_module4.push_back(energyModule4[isec]);
+      castor_tower_module5.push_back(energyModule5[isec]);
+      if (debug) {
+	std::cout << "Sector "<< isec+1 << ", Module 1, Energy [GeV]: " << energyModule1[isec] << std::endl;
+	std::cout << "Sector "<< isec+1 << ", Module 2, Energy [GeV]: " << energyModule2[isec] << std::endl;
+	std::cout << "Sector "<< isec+1 << ", Module 3, Energy [GeV]: " << energyModule3[isec] << std::endl;
+	std::cout << "Sector "<< isec+1 << ", Module 4, Energy [GeV]: " << energyModule4[isec] << std::endl;
+	std::cout << "Sector "<< isec+1 << ", Module 5, Energy [GeV]: " << energyModule5[isec] << std::endl;
+	std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
       }
     }
 
+    eventData.SetCastorTowerEnergy(castor_tower);
+    eventData.SetCastorModule1Energy(castor_tower_module1);
+    eventData.SetCastorModule2Energy(castor_tower_module2);
+    eventData.SetCastorModule3Energy(castor_tower_module3);
+    eventData.SetCastorModule4Energy(castor_tower_module4);
+    eventData.SetCastorModule5Energy(castor_tower_module5);
+
+  }else{
+    if (debug) std::cout << "There is no Castor valid recHitSector "<< std::cout;
   }
-
-  for (int isec=0;isec<16;isec++){
-    castor_tower.push_back(sumCastorTower[isec]);
-    castor_tower_module1.push_back(energyModule1[isec]);
-    castor_tower_module2.push_back(energyModule2[isec]);
-    castor_tower_module3.push_back(energyModule3[isec]);
-    castor_tower_module4.push_back(energyModule4[isec]);
-    castor_tower_module5.push_back(energyModule5[isec]);
-    if (debug) {
-      std::cout << "Sector "<< isec+1 << ", Module 1, Energy [GeV]: " << energyModule1[isec] << std::endl;
-      std::cout << "Sector "<< isec+1 << ", Module 2, Energy [GeV]: " << energyModule2[isec] << std::endl;
-      std::cout << "Sector "<< isec+1 << ", Module 3, Energy [GeV]: " << energyModule3[isec] << std::endl;
-      std::cout << "Sector "<< isec+1 << ", Module 4, Energy [GeV]: " << energyModule4[isec] << std::endl;
-      std::cout << "Sector "<< isec+1 << ", Module 5, Energy [GeV]: " << energyModule5[isec] << std::endl;
-      std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
-    }
-  }
-
-  eventData.SetCastorTowerEnergy(castor_tower);
-  eventData.SetCastorModule1Energy(castor_tower_module1);
-  eventData.SetCastorModule2Energy(castor_tower_module2);
-  eventData.SetCastorModule3Energy(castor_tower_module3);
-  eventData.SetCastorModule4Energy(castor_tower_module4);
-  eventData.SetCastorModule5Energy(castor_tower_module5);
-
 
 }
 
