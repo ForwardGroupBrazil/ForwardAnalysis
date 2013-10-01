@@ -170,39 +170,37 @@ void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const e
 
   if( triggerResults.isValid() ){
 
-    int nSize = triggerResults->size(); 
+    int nSize = triggerResults->size();
     const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
 
     size_t idxpath = 0;
     std::vector<std::string>::const_iterator hltpath = hltPathNames_.begin();
-    std::vector<std::string>::const_iterator hltpaths_end = hltPathNames_.end(); 
+    std::vector<std::string>::const_iterator hltpaths_end = hltPathNames_.end();
     for(; hltpath != hltpaths_end; ++hltpath,++idxpath){
-      std::string resolvedPathName; 
+      std::string resolvedPathName;
       if( edm::is_glob( *hltpath ) ){
-	std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), *hltpath);
-
-	if( matches.empty() )
-	  throw cms::Exception("Configuration") << "Could not find any HLT path of type " << *hltpath << "\n";
-	else if( matches.size() > 1)
-	  throw cms::Exception("Configuration") << "HLT path type " << *hltpath << " not unique\n";
-	else resolvedPathName = *(matches[0]);
+        std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), *hltpath);
+        if( matches.empty() ) edm::LogWarning("Configuration") << "Could not find trigger " << *hltpath << " in the path list.\n";
+        else if( matches.size() > 1)
+          throw cms::Exception("Configuration") << "HLT path type " << *hltpath << " not unique\n";
+        else resolvedPathName = *(matches[0]);
       } else{
-	resolvedPathName = *hltpath;
+        resolvedPathName = *hltpath;
       }
 
       int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
 
       if (idx_HLT >= 0 && idx_HLT < nSize){
-	if (debug) std::cout << "Error accept_HLT?" << std::endl;
-	int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
-	if (debug) std::cout << "No... , accept_HLT: " << accept_HLT << std::endl;
-	if (debug) std::cout << "Error eventData.SetHLTPath?" << std::endl;
-	eventData.SetHLTPath(idxpath, accept_HLT);
-	if (debug) std::cout << "No..." << std::endl;
-	hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
+        if (debug) std::cout << "Error accept_HLT?" << std::endl;
+        int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
+        if (debug) std::cout << "No... , accept_HLT: " << accept_HLT << std::endl;
+        if (debug) std::cout << "Error eventData.SetHLTPath?" << std::endl;
+        eventData.SetHLTPath(idxpath, accept_HLT);
+        if (debug) std::cout << "No..." << std::endl;
+        hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 );
       }else{
-	eventData.SetHLTPath(idxpath, -1);
-	hltTriggerPassHisto_->Fill( (*hltpath).c_str(), -1 );
+        eventData.SetHLTPath(idxpath, -1);
+        hltTriggerPassHisto_->Fill( (*hltpath).c_str(), -1 );
       }
 
     }

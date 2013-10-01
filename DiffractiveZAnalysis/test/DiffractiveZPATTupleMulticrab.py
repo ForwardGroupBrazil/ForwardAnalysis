@@ -342,6 +342,8 @@ process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
 from ForwardAnalysis.DiffractiveZAnalysis.DiffractiveZAnalysis_cfi import DiffractiveZAnalysis
+from ForwardAnalysis.ForwardTTreeAnalysis.PFCandInfo_cfi import PFCandInfo
+
 #from ForwardAnalysis.ForwardTTreeAnalysis.PATTriggerInfo_cfi import PATTriggerInfo
 
 #PATTriggerInfo.L1AlgoBitName =  config.l1Paths 
@@ -367,18 +369,18 @@ process.diffractiveZFilter = cms.EDFilter("diffractiveZFilter",
 
 process.diffractiveZHLTFilter.HLTPaths = config.hltPaths
 
-process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffractiveZAnalysisTTree",
+process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoPFCandInfoDiffractiveDiffractiveZAnalysisTTree",
         EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(not config.runOnMC),
                     RunWithMCPU = cms.untracked.bool(config.runPUMC),
                     RunWithWeightGen = cms.untracked.bool(config.runGen)
         ),
         DiffractiveAnalysis = DiffractiveAnalysis,
-        DiffractiveZAnalysis = DiffractiveZAnalysis
+        DiffractiveZAnalysis = DiffractiveZAnalysis,
+        PFCandInfo = PFCandInfo
         )
 
 process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
-
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.hltPath = ''
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.vertexTag = "goodOfflinePrimaryVertices"

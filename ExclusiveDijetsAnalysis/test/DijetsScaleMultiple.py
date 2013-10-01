@@ -27,8 +27,8 @@ import atexit
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-options.register('Run','data_exclusiveB',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
-options.register('condition','A',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Channels CASTOR conditions.")
+options.register('Run','data_Multijet',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('condition','Full',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Channels CASTOR conditions.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -48,24 +48,52 @@ config.NumberOfEvents = -1
 #
 ########################
 
-if options.Run == "data_exclusiveB":
+if options.Run == "data_Multijet":
   print("")
-  print("########################")
-  print("Data Exclusive 2010 RunB")
-  print("########################")
+  print("#############")
+  print("Data Multijet")
+  print("#############")
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Jet15U', 'HLT_Jet30U', 'HLT_Jet50U', 'HLT_ExclDiJet30U_HFOR_v*','HLT_ExclDiJet30U_HFAND_v*', 'HLT_DiJetAve15U', 'HLT_DiJetAve30U', 'HLT_DiJetAve50U' 
+  triggerlist = 'HLT_Jet15U','HLT_Jet15U_v*','HLT_Jet30U','HLT_Jet30U_v*','HLT_Jet50U','HLT_Jet50U','HLT_ExclDiJet30U_HFOR_v*','HLT_ExclDiJet30U_HFAND_v*','HLT_DiJetAve15U','HLT_DiJetAve15U_v*','HLT_DiJetAve30U','HLT_DiJetAve30U_v*','HLT_DiJetAve50U','HLT_DiJetAve50U_v*' 
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
 
-elif options.Run == "data_inclusiveB":
+if options.Run == "data_Jet":
+  print("")
+  print("########")
+  print("Data Jet")
+  print("########")
+  print("")
+  config.globalTagNameData = 'GR_R_42_V23::All'
+  config.TriggerOn = True
+  triggerlist = 'HLT_Jet15U','HLT_Jet15U_v*','HLT_Jet30U','HLT_Jet30U_v*','HLT_Jet50U','HLT_Jet50U','HLT_ExclDiJet30U_HFOR_v*','HLT_ExclDiJet30U_HFAND_v*','HLT_DiJetAve15U','HLT_DiJetAve15U_v*','HLT_DiJetAve30U','HLT_DiJetAve30U_v*','HLT_DiJetAve50U','HLT_DiJetAve50U_v*'
+  l1list = 'L1_ZeroBias','L1_SingleEG5'
+  config.runOnMC = False
+  config.runPUMC = False
+  config.runGen = False
+
+elif options.Run == "data_JetMet":
+  print("")
+  print("#####################")
+  print("Data Inclusive JetMet ")
+  print("#####################")
+  print("")
+  config.globalTagNameData = 'GR_R_42_V23::All'
+  config.TriggerOn = True
+  triggerlist = 'HLT_Jet15U','HLT_Jet30U','HLT_Jet50U'
+  l1list = 'L1_ZeroBias','L1_SingleEG5'
+  config.runOnMC = False
+  config.runPUMC = False
+  config.runGen = False
+
+elif options.Run == "data_JetMetTau":
   print("")
   print("########################")
-  print("Data Inclusive 2010 RunB")
+  print("Data Inclusive JetMetTau")
   print("########################")
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'

@@ -54,7 +54,7 @@ if options.Run == "A":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U'
+  l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
   triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
   config.runOnMC = False
   config.runPUMC = False
@@ -71,7 +71,7 @@ elif options.Run == "B":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
-  l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U'
+  l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
   triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
 
 elif options.Run == "Full":
@@ -85,7 +85,7 @@ elif options.Run == "Full":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
-  l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U'
+  l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
   triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
 
 elif options.Run == "MC_FlatWeight_and_PU":
@@ -323,6 +323,8 @@ process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
 from ForwardAnalysis.DiffractiveZAnalysis.DiffractiveZAnalysis_cfi import DiffractiveZAnalysis
+from ForwardAnalysis.ForwardTTreeAnalysis.PFCandInfo_cfi import PFCandInfo
+
 #from ForwardAnalysis.ForwardTTreeAnalysis.PATTriggerInfo_cfi import PATTriggerInfo
 
 #PATTriggerInfo.L1AlgoBitName =  config.l1Paths
@@ -346,14 +348,15 @@ process.diffractiveZFilter = cms.EDFilter("diffractiveZFilter",
 
 process.diffractiveZHLTFilter.HLTPaths = config.hltPaths
 
-process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffractiveZAnalysisTTree",
+process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoPFCandInfoDiffractiveDiffractiveZAnalysisTTree",
         EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(not config.runOnMC),
                     RunWithMCPU = cms.untracked.bool(config.runPUMC),
                     RunWithWeightGen = cms.untracked.bool(config.runGen)
         ),
         DiffractiveAnalysis = DiffractiveAnalysis,
-        DiffractiveZAnalysis = DiffractiveZAnalysis
+        DiffractiveZAnalysis = DiffractiveZAnalysis,
+        PFCandInfo = PFCandInfo
         )
 
 process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
@@ -424,7 +427,7 @@ process.diffractiveZAnalysisTTreeAfter = process.diffractiveZAnalysisTTree.clone
 if config.TriggerOn:
        print(">> With Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.eventSelectionOnlyHLT + process.diffractiveZFilter + process.diffractiveZAnalysisTTreeBefore + process.eventSelection +  process.diffractiveZAnalysisTTreeAfter)
+       process.analysisSequences + process.eventSelectionOnlyHLT + process.diffractiveZFilter + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
 
 else:
        print(">> No Trigger.")

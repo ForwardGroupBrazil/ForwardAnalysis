@@ -20,6 +20,10 @@
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ForwardTTreeProducer.h"
 
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveZAnalysis::DiffractiveZAnalysis> DiffractiveZAnalysisTTree;
+DEFINE_FWK_MODULE(DiffractiveZAnalysisTTree);
+
+
 typedef forwardTTreeAnalysis::ForwardTTreeProducer<pfCandInfo::PFCandInfo> PFCandInfoTTree;
 DEFINE_FWK_MODULE(PFCandInfoTTree);
 
@@ -70,6 +74,13 @@ typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
                                                    diffractiveAnalysis::DiffractiveAnalysis,
                                                    diffractiveZAnalysis::DiffractiveZAnalysis> EventInfoDiffractiveDiffractiveZAnalysisTTree;
 DEFINE_FWK_MODULE(EventInfoDiffractiveDiffractiveZAnalysisTTree);
+
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
+                                                   pfCandInfo::PFCandInfo,
+                                                   diffractiveAnalysis::DiffractiveAnalysis,
+                                                   diffractiveZAnalysis::DiffractiveZAnalysis> EventInfoPFCandInfoDiffractiveDiffractiveZAnalysisTTree;
+DEFINE_FWK_MODULE(EventInfoPFCandInfoDiffractiveDiffractiveZAnalysisTTree);
+
 
 typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveAnalysis::DiffractiveAnalysis,
                                                    exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis,
