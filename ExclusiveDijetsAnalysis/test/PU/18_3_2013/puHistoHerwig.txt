@@ -1,0 +1,52 @@
+
+<< INPUTS >>
+ 
+Input file: /storage1/eliza/PATTuples_Mar2013/mc_HERWIG/mc_total/mc_herwig_lowpu_0.root
+Output file: puHistoHerwig.root
+ 
+pT(Jet1): 60GeV
+pT(Jet2): 60GeV
+# Vertex: 1
+Trigger Option: 0
+ 
+--> TRUE = 1 FALSE = 0
+Lumi. Weight: 0
+Evt. - Evt. Weight: 0
+Trigger Switch: 0
+Pre-Selection Switch: 1
+N Bins PU Distributions: 25
+ 
+--> Factors
+Lumi. Weight: 1
+
+<< EVENT INFO >> 
+ 
+Total # of Events without Weight: 9415198
+ 
+Triggered: 19296
+STEP1: 17221
+STEP2: 13468
+STEP3 (CMS Acceptance): 13468
+STEP4_4 (CMS Acceptance): 4029
+STEP4_3 (CMS Acceptance): 974
+STEP4_2 (CMS Acceptance): 27
+STEP4_1 (CMS Acceptance): 0
+ 
+STEP3 (Tracker Acceptance): 13466
+STEP4_4 (Tracker Acceptance): 4028
+STEP4_3 (Tracker Acceptance): 974
+STEP4_2 (Tracker Acceptance): 27
+STEP4_1 (Tracker Acceptance): 0
+ 
+STEP3 (eta < x and eta > x Acceptance): 11124
+STEP4_4 (eta < 4 and eta > -4 Acceptance): 3289
+STEP4_3 (eta < 3 and eta > -3 Acceptance): 800
+STEP4_2 (eta < 2 and eta > -2 Acceptance): 27
+STEP4_1 (eta < 1 and eta > -1 Acceptance): 0
+ 
+<< LEGEND >> 
+STEP1: # Vertex selection.
+STEP2: # Vertex selection + Two Jets.
+STEP3: # Vertex selection + Two Jets + Jets in Tracker Acceptance or All CMS.
+STEP4_X: # Vertex selection + Two Jets + Jets in Tracker Acceptance or All CMS + Eta_max < X and Eta_min > X.
+ 
