@@ -62,7 +62,7 @@ if options.Run == "data_Multijet":
   config.runPUMC = False
   config.runGen = False
 
-if options.Run == "data_Jet":
+elif options.Run == "data_Jet":
   print("")
   print("########")
   print("Data Jet")
