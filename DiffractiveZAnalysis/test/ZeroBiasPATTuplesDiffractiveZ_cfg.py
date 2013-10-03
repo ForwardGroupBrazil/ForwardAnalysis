@@ -348,15 +348,14 @@ process.diffractiveZFilter = cms.EDFilter("diffractiveZFilter",
 
 process.diffractiveZHLTFilter.HLTPaths = config.hltPaths
 
-process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoPFCandInfoDiffractiveDiffractiveZAnalysisTTree",
+process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffractiveZAnalysisTTree",
         EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(not config.runOnMC),
                     RunWithMCPU = cms.untracked.bool(config.runPUMC),
                     RunWithWeightGen = cms.untracked.bool(config.runGen)
         ),
         DiffractiveAnalysis = DiffractiveAnalysis,
-        DiffractiveZAnalysis = DiffractiveZAnalysis,
-        PFCandInfo = PFCandInfo
+        DiffractiveZAnalysis = DiffractiveZAnalysis
         )
 
 process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
