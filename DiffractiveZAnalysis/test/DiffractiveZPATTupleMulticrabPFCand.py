@@ -12,7 +12,7 @@ Usage:
     cmsRun DiffractiveZPATTupleMultiple.py
 
 Example:
-    cmsRun DiffractiveZPATTupleMulticrab.py Run=data_MuonP1 condition=B
+    cmsRun DiffractiveZPATTupleMulticrabPFCand.py Run=data_MuonP1 condition=B
 
 Optional arguments:
     Run = data_MuonP1, data_MuonP2, data_ElectronP1, data_ElectronP2, MC_none, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU 
@@ -41,7 +41,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = -1
-config.sys = False
+config.sys = True
 
 #
 # Define Options to Run
