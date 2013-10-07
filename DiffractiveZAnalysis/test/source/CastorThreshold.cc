@@ -24,10 +24,46 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
+#include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
 using namespace diffractiveAnalysis;
+using namespace diffractiveZAnalysis;
 using namespace exclusiveDijetsAnalysis;
 using namespace eventInfo;
+using namespace reweight;
+
+#define PI 3.14159265
+
+static inline void loadBar(int x, int n, int r, int w)
+{
+  // Modified
+  // http://www.rosshemsley.co.uk/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/
+
+  // Only update r times.
+  if ( x % (n/r) != 0 ) return;
+
+  // Calculuate the correlation of complete-to-incomplete.
+  double correlation = x/(double)n;
+  int   c     = correlation * w;
+
+  // Show the percentage complete.
+  printf("%3d%%[", (int)(correlation*100) );
+
+  // Show the load bar.
+  for (int x=0; x<c; x++)
+    printf("=");
+
+  for (int x=c; x<w; x++)
+    printf(" ");
+
+  // ANSI Control codes to go back to the
+  // previous line and clear it.
+  // printf("]\n33[F33[J");
+
+  printf("\r"); // Move to the first column
+  fflush(stdout);
+}
 
 void CastorThreshold::LoadFile(std::string fileinput, std::string processinput){
 
@@ -37,16 +73,17 @@ void CastorThreshold::LoadFile(std::string fileinput, std::string processinput){
   std::string fdirectory = processinput + "/ProcessedTree";
   tr = (TTree*)inf->Get(fdirectory.c_str());
   eventdiff = new DiffractiveEvent();
-  eventexcl = new ExclusiveDijetsEvent();
+  eventCastor = new DiffractiveZEvent();
   eventinfo = new EventInfoEvent();
   diff = tr->GetBranch("DiffractiveAnalysis");
-  excl = tr->GetBranch("ExclusiveDijetsAnalysis");
+  Castor = tr->GetBranch("DiffractiveZAnalysis");
   info = tr->GetBranch("EventInfo");
   diff->SetAddress(&eventdiff);
-  excl->SetAddress(&eventexcl);
+  Castor->SetAddress(&eventCastor);
   info->SetAddress(&eventinfo);
 
 }
+
 
 void CastorThreshold::CreateHistos(std::string type){
 
@@ -147,12 +184,7 @@ void CastorThreshold::FillHistos(int index){
   m_hVector_pfetamin[index]->Fill(eventdiff->GetEtaMinFromPFCands());
   m_hVector_sumEHFplus[index]->Fill(eventdiff->GetSumEnergyHFPlus());
   m_hVector_sumEHFminus[index]->Fill(eventdiff->GetSumEnergyHFMinus());
-  m_hVector_sumEHFpfplus[index]->Fill(eventexcl->GetSumEHFPFlowPlus());
-  m_hVector_sumEHFpfminus[index]->Fill(eventexcl->GetSumEHFPFlowMinus());
-  m_hVector_vertex[index]->Fill(eventexcl->GetNVertex());
   m_hVector_lumi[index]->Fill(eventinfo->GetInstLumiBunch());
-  m_hVector_sumEHFpfplusVsetaMax[index]->Fill(eventdiff->GetEtaMaxFromPFCands(),eventexcl->GetSumEHFPFlowPlus());
-  m_hVector_sumEHFpfminusVsetaMin[index]->Fill(eventdiff->GetEtaMinFromPFCands(),eventexcl->GetSumEHFPFlowMinus());
   m_hVector_sumEHFplusVsetaMax[index]->Fill(eventdiff->GetEtaMaxFromPFCands(),eventdiff->GetSumEnergyHFPlus());
   m_hVector_sumEHFminusVsetaMin[index]->Fill(eventdiff->GetEtaMinFromPFCands(),eventdiff->GetSumEnergyHFMinus());  
   m_hVector_sumECastor[index]->Fill(eventdiff->GetSumETotCastor());
@@ -181,6 +213,8 @@ void CastorThreshold::SaveHistos(){
 }
 
 void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string type_){
+ 
+  //bool debug = false;
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -220,7 +254,6 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
   std::ofstream outstring(outtxt);
 
   int NEVENTS = tr->GetEntries();
-  int decade = 0;
   int triggercounter[20]={0};
 
   TH1::SetDefaultSumw2(true);
@@ -235,20 +268,10 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
 
   for(int i=0;i<NEVENTS;i++){
 
-    double progress = 10.0*i/(1.0*NEVENTS);
-    int l = TMath::FloorNint(progress); 
-
-    if (l > decade){
-      std::cout <<"\n<<<<<< STATUS >>>>>>" << std::endl; 
-      std::cout<<10*l<<" % completed." << std::endl;
-      std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
-    }
-    decade = l;          
-
     tr->GetEntry(i);
 
     for (int nt=0;nt<20;nt++){
-      if(eventexcl->GetHLTPath(nt)){
+      if(eventCastor->GetHLTPath(nt)){
 	triggercounter[nt]++;
       }
     }
@@ -258,45 +281,36 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
     bool triggerHLTMinus = false;
     bool vertex = false;
     bool tracks = false;
-    bool d_eta4 = false;
-    bool d_eta3 = false;
-    bool d_eta2 = false;
-    bool d_eta1 = false;
     bool collisions = false;
+    bool nocollisions = false;
     bool unpaired = false;
-    bool presel = false;
 
-    if (eventexcl->GetHLTPath(0)) triggerZeroBias = true;
-    if (eventexcl->GetHLTPath(1)) triggerHLTPlus = true;
-    if (eventexcl->GetHLTPath(2)) triggerHLTMinus = true;
-    if ((eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)) presel = true;
+    if (eventCastor->GetHLTPath(0)) triggerZeroBias = true;
+    if (eventCastor->GetHLTPath(1)) triggerHLTPlus = true;
+    if (eventCastor->GetHLTPath(2)) triggerHLTMinus = true;
+
     if (eventdiff->GetMultiplicityTracks() > 0) tracks = true;  
-    if (eventexcl->GetNVertex() > 0) vertex = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta4 = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta3 = true; 
-    if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta2 = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta1 = true;
+    if (eventdiff->GetNVertex() > 0) vertex = true;
 
     if (type == "collisions"){
       if (triggerZeroBias && vertex && tracks) collisions = true;
       status = "collisions";
       FillHistos(0); 
       if (collisions) FillHistos(1);
-      if (collisions && d_eta4) FillHistos(2);
-      if (collisions && d_eta3) FillHistos(3);
-      if (collisions && d_eta2) FillHistos(4);
-      if (collisions && d_eta1) FillHistos(5);
+    }
+
+    else if (type == "no_collisions"){
+      if(triggerZeroBias && !vertex && !tracks) nocollisions = true; 
+      status = "no collisions";
+      FillHistos(0);
+      if (nocollisions) FillHistos(1);
     }
 
     else if (type == "unpaired"){
-      if((triggerHLTPlus || triggerHLTMinus) && !vertex && !tracks) unpaired = true; 
+      if((triggerHLTPlus || triggerHLTMinus) && !vertex && !tracks) unpaired = true;
       status = "unpaired";
       FillHistos(0);
       if (unpaired) FillHistos(1);
-      if (unpaired && d_eta4) FillHistos(2);
-      if (unpaired && d_eta3) FillHistos(3);
-      if (unpaired && d_eta2) FillHistos(4);
-      if (unpaired && d_eta1) FillHistos(5);
     }
 
      else if (type == "collisionsmc"){
@@ -304,10 +318,6 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
       status = "collisionsmc";
       FillHistos(0);
       if (collisions) FillHistos(1);
-      if (collisions && d_eta4) FillHistos(2);
-      if (collisions && d_eta3) FillHistos(3);
-      if (collisions && d_eta2) FillHistos(4);
-      if (collisions && d_eta1) FillHistos(5);
     }
 
     else if (type == "unpairedmc"){
@@ -315,10 +325,6 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
       status = "unpairedmc";
       FillHistos(0);
       if (unpaired) FillHistos(1);
-      if (unpaired && d_eta4) FillHistos(2);
-      if (unpaired && d_eta3) FillHistos(3);
-      if (unpaired && d_eta2) FillHistos(4);
-      if (unpaired && d_eta1) FillHistos(5);
     }
 
     else {
@@ -381,6 +387,15 @@ int main(int argc, char **argv)
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
   if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
   if (argc > 4 && strcmp(s1,argv[4]) != 0)  type_  = argv[4];
+
+  if (type_=="collisions" || type_=="no_collisions" || type_=="unpaired") {}
+  else{
+    std::cout << "Please Insert type of Swithtrigger: " << std::endl;
+    std::cout << "1) collisions: ZeroBias trigger. Tracks and Vertex > 0." << std::endl;
+    std::cout << "2) no_collisions: ZeroBias trigger. No tracks and no vertex." << std::endl;
+    std::cout << "3) unpaired: HLT_BPTX Minus or Plus. No tracks and no vertex." << std::endl;
+    return 0;
+  }
 
   CastorThreshold* castor = new CastorThreshold();   
   castor->CreateHistos(type_);

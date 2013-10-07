@@ -12,17 +12,19 @@
 class DiffractiveEvent;
 class ExclusiveDijetsEvent;
 class EventInfoEvent;
+class DiffractiveZEvent;
 
 class CastorThreshold {
 
   TFile* inf;
   TTree* tr;
   TBranch *diff;
-  TBranch *excl;
+  TBranch *Castor;
   TBranch *info;
   DiffractiveEvent *eventdiff;
   ExclusiveDijetsEvent *eventexcl;
   EventInfoEvent *eventinfo;
+  DiffractiveZEvent *eventCastor;
 
   std::string fileinput;
   std::string processinput;
