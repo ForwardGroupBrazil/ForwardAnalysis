@@ -17,7 +17,7 @@
   <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
 </bin>
 
-<bin   file="source/FasterCheck.cc" name="FasterCheck">
+<bin   file="source/CastorThreshold.cc" name="CastorThreshold">
   <use   name="root"/>
   <use   name="rootcore"/>
   <use   name="FWCore/FWLite"/>
@@ -25,5 +25,4 @@
   <use   name="ForwardAnalysis/Utilities"/>
   <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
 </bin>
-
 
