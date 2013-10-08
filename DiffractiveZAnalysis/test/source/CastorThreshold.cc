@@ -89,89 +89,43 @@ void CastorThreshold::CreateHistos(std::string type){
 
   std::string step0 = "without_cuts_" + type;
   std::string step1 = "with_type_" + type;  
-  std::string step2 = "d_eta4_" + type;
-  std::string step3 = "d_eta3_" + type;
-  std::string step4 = "d_eta2_" + type;
-  std::string step5 = "d_eta1_" + type;
 
   Folders.push_back(step0);
   Folders.push_back(step1);
-  Folders.push_back(step2);
-  Folders.push_back(step3);
-  Folders.push_back(step4);
-  Folders.push_back(step5);
 
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
     char name1[300];
     sprintf(name1,"Tracks_%s",Folders.at(j).c_str());
-    TH1D *histo_Tracks = new TH1D(name1,"Tracks Multiplicity; n Tracks; N events",50,0,150);
+    TH1F *histo_Tracks = new TH1F(name1,"Tracks Multiplicity; n Tracks; N events",50,0,150);
     m_hVector_tracks.push_back(histo_Tracks);
 
     char name2[300];
-    sprintf(name2,"pfetamax_%s",Folders.at(j).c_str());
-    TH1D *histo_PFEtamax = new TH1D(name2,"Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
-    m_hVector_pfetamax.push_back(histo_PFEtamax);
-
-    char name3[300];
-    sprintf(name3,"pfetamin_%s",Folders.at(j).c_str());
-    TH1D *histo_PFEtamin = new TH1D(name3,"Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
-    m_hVector_pfetamin.push_back(histo_PFEtamin);
-
-    char name4[300];
-    sprintf(name4,"sumEHFplus_%s",Folders.at(j).c_str());
-    TH1D *histo_sumEHFplus = new TH1D(name4,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
-    m_hVector_sumEHFplus.push_back(histo_sumEHFplus);
-
-    char name5[300];
-    sprintf(name5,"sumEHFminus_%s",Folders.at(j).c_str());
-    TH1D *histo_sumEHFminus = new TH1D(name5,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
-    m_hVector_sumEHFminus.push_back(histo_sumEHFminus);
-
-    char name6[300];
-    sprintf(name6,"sumEHFpfplus_%s",Folders.at(j).c_str());
-    TH1D *histo_sumEHFpfplus = new TH1D(name6,"HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
-    m_hVector_sumEHFpfplus.push_back(histo_sumEHFpfplus);
-
-    char name7[300];
-    sprintf(name7,"sumEHFpfminus_%s",Folders.at(j).c_str());
-    TH1D *histo_sumEHFpfminus = new TH1D(name7,"HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
-    m_hVector_sumEHFpfminus.push_back(histo_sumEHFpfminus);
-
-    char name8[300];
-    sprintf(name8,"vertex_%s",Folders.at(j).c_str());
-    TH1D *histo_vertex = new TH1D(name8,"Number of Vertex; # Vertex; N events",25,0,25);
+    sprintf(name2,"vertex_%s",Folders.at(j).c_str());
+    TH1F *histo_vertex = new TH1F(name2,"Number of Vertex; # Vertex; N events",25,0,25);
     m_hVector_vertex.push_back(histo_vertex);
 
-    char name9[300];
-    sprintf(name9,"lumi_%s",Folders.at(j).c_str());
-    TH1D *histo_lumi = new TH1D(name9,"Luminosity per Bunch; L_{Bunch} [#mub^{-1}s^{-1}]; N events",25,0,2);
-    m_hVector_lumi.push_back(histo_lumi);
+    char name3[300];
+    sprintf(name3,"RunNumber_%s",Folders.at(j).c_str());
+    TH1F *histo_RunNumber = new TH1F(name3,"Run Number; Run Number; N Event",16000,134000,150000);
+    m_hVector_RunNumber.push_back(histo_RunNumber);
 
-    char name10[300];
-    sprintf(name10,"sumEHFpfplusVspfetamax_%s",Folders.at(j).c_str());
-    TH2D *histo_sumEHFpfplusVsPFEtamax = new TH2D(name10,"#sum E_{HF^{+}} Vs #eta_{max} Distribution; #eta_{Max};#sum E_{HF^{+}} [GeV]; N events",20,0,5.5,100, 0., 2000.);
-    m_hVector_sumEHFpfplusVsetaMax.push_back(histo_sumEHFpfplusVsPFEtamax);
+    for (int bs=0; bs<16; bs++){
+      m_hVector_SectorCastorEnergy.push_back( std::vector<TH1F*>() );
 
-    char name11[300];
-    sprintf(name11,"sumEHFpfminusVspfetamin_%s",Folders.at(j).c_str());
-    TH2D *histo_sumEHFpfminusVsPFEtamin = new TH2D(name11,"#sum E_{HF^{-}} Vs #eta_{min} Distribution; #eta_{Min};#sum E_{HF^{-}} [GeV]; N events",20,-5.5,0,100, 0., 2000);
-    m_hVector_sumEHFpfminusVsetaMin.push_back(histo_sumEHFpfminusVsPFEtamin);
+      char name4[300];
+      char name4t[300];
+      sprintf(name4,"Sector%d_CastorSumEnergy_%s",bs+1,Folders.at(j).c_str());
+      sprintf(name4t,"#sum Energy, Castor Sector %d; #sum E_{modules 1,2,3,4,5} [GeV]; N events", bs+1);
+      TH1F *histo_SectorCastorEnergy = new TH1F(name4,name4t,1000,0,500);
+      m_hVector_SectorCastorEnergy[bs].push_back(histo_SectorCastorEnergy);
 
-    char name12[300];
-    sprintf(name12,"sumEHFplusVspfetamax_%s",Folders.at(j).c_str());
-    TH2D *histo_sumEHFplusVsPFEtamax = new TH2D(name12,"#sum E_{HF^{+}} Vs #eta_{max} Distribution; #eta_{Max};#sum E_{HF^{+}} [GeV]; N events",20,0,5.5,100, 0., 2000.);
-    m_hVector_sumEHFplusVsetaMax.push_back(histo_sumEHFplusVsPFEtamax);
+    }
 
-    char name13[300];
-    sprintf(name13,"sumEHFminusVspfetamin_%s",Folders.at(j).c_str());
-    TH2D *histo_sumEHFminusVsPFEtamin = new TH2D(name13,"#sum E_{HF^{-}} Vs #eta_{min} Distribution; #eta_{Min};#sum E_{HF^{-}} [GeV]; N events",20,-5.5,0,100, 0., 2000);
-    m_hVector_sumEHFminusVsetaMin.push_back(histo_sumEHFminusVsPFEtamin);
-
-    char name14[300];
-    sprintf(name14,"sumECastor_%s",Folders.at(j).c_str());
-    TH1D *histo_sumECastor = new TH1D(name14,"Castor - Total Energy; #sum E_{Castor} [GeV]; N events",100,0,2000);
-    m_hVector_sumECastor.push_back(histo_sumECastor);
+    char name5[300];
+    sprintf(name5,"CastorSumOfEnergyForAllSectors_%s",Folders.at(j).c_str());
+    TH1F *histo_AllSectorsCastorEnergy = new TH1F(name5,"#sum Energy, All Castor Sector; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+    m_hVector_AllSectorsCastorEnergy.push_back(histo_AllSectorsCastorEnergy);
 
   }
 
@@ -179,15 +133,28 @@ void CastorThreshold::CreateHistos(std::string type){
 
 void CastorThreshold::FillHistos(int index){
 
+  bool debug = false;
+
   m_hVector_tracks[index]->Fill(eventdiff->GetMultiplicityTracks());
-  m_hVector_pfetamax[index]->Fill(eventdiff->GetEtaMaxFromPFCands());
-  m_hVector_pfetamin[index]->Fill(eventdiff->GetEtaMinFromPFCands());
-  m_hVector_sumEHFplus[index]->Fill(eventdiff->GetSumEnergyHFPlus());
-  m_hVector_sumEHFminus[index]->Fill(eventdiff->GetSumEnergyHFMinus());
-  m_hVector_lumi[index]->Fill(eventinfo->GetInstLumiBunch());
-  m_hVector_sumEHFplusVsetaMax[index]->Fill(eventdiff->GetEtaMaxFromPFCands(),eventdiff->GetSumEnergyHFPlus());
-  m_hVector_sumEHFminusVsetaMin[index]->Fill(eventdiff->GetEtaMinFromPFCands(),eventdiff->GetSumEnergyHFMinus());  
-  m_hVector_sumECastor[index]->Fill(eventdiff->GetSumETotCastor());
+  m_hVector_vertex[index]->Fill(eventdiff->GetNVertex());
+  m_hVector_RunNumber[index]->Fill(eventdiff->GetRunNumber());
+
+  for (int i=0; i < 16; i++){
+    CastorEnergySector[i]=0;
+    if (i==4 || i==5){
+      CastorEnergySector[i]=eventCastor->GetCastorModule2Energy(i)+eventCastor->GetCastorModule3Energy(i)+eventCastor->GetCastorModule4Energy(i)+eventCastor->GetCastorModule5Energy(i);
+    }else{
+      CastorEnergySector[i]=eventCastor->GetCastorModule1Energy(i)+eventCastor->GetCastorModule2Energy(i)+eventCastor->GetCastorModule3Energy(i)+eventCastor->GetCastorModule4Energy(i)+eventCastor->GetCastorModule5Energy(i);
+    }
+    m_hVector_SectorCastorEnergy[i].at(index)->Fill(CastorEnergySector[i]);
+    m_hVector_AllSectorsCastorEnergy[index]->Fill(CastorEnergySector[i]);
+  }
+
+  if (debug){
+    for (int i=0; i<16; i++){
+      std::cout << "\nCastor Sector(" << i+1 << "): " << CastorEnergySector[i] << std::endl;
+    }
+  } 
 
 }
 
@@ -195,26 +162,19 @@ void CastorThreshold::SaveHistos(){
 
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
     m_hVector_tracks[j]->Write();
-    m_hVector_pfetamax[j]->Write();
-    m_hVector_pfetamin[j]->Write();
-    m_hVector_sumEHFplus[j]->Write();
-    m_hVector_sumEHFminus[j]->Write();
-    m_hVector_sumEHFpfplus[j]->Write();
-    m_hVector_sumEHFpfminus[j]->Write();
     m_hVector_vertex[j]->Write();
-    m_hVector_lumi[j]->Write();
-    m_hVector_sumEHFpfplusVsetaMax[j]->Write();
-    m_hVector_sumEHFpfminusVsetaMin[j]->Write();
-    m_hVector_sumEHFplusVsetaMax[j]->Write();
-    m_hVector_sumEHFminusVsetaMin[j]->Write();
-    m_hVector_sumECastor[j]->Write();
+    m_hVector_RunNumber[j]->Write();
+    m_hVector_AllSectorsCastorEnergy[j]->Write();
+    for (int id=0; id<16; id++){
+      m_hVector_SectorCastorEnergy[id].at(j)->Write();
+    }
   }
 
 }
 
-void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string type_){
- 
-  //bool debug = false;
+void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string type_, int runmin_, int runmax_){
+
+  bool debug = false;
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -223,6 +183,8 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
   savehistofile = savehistofile_;
   processname = processname_;
   type = type_;
+  runmin = runmin_;
+  runmax = runmax_;
 
   TFile check1(filein.c_str());
 
@@ -259,16 +221,20 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
 
-  unsigned NEntries = tr->GetEntries();
-  std::cout << "" << std::endl;
-  std::cout<< "Reading Tree: "<< NEntries << " events"<<std::endl;
-  std::cout << "" << std::endl;
-
   std::string status;  
 
   for(int i=0;i<NEVENTS;i++){
 
     tr->GetEntry(i);
+
+    if (!debug){
+      if (i==0) {
+	std::cout << "" << std::endl;
+	std::cout<< "Status Bar" << std::endl;
+	std::cout << "" << std::endl;
+      }
+      loadBar(i,NEVENTS,100,100);
+    }
 
     for (int nt=0;nt<20;nt++){
       if(eventCastor->GetHLTPath(nt)){
@@ -284,36 +250,37 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
     bool collisions = false;
     bool nocollisions = false;
     bool unpaired = false;
+    bool runselection = false;
 
+    if (eventdiff->GetRunNumber() >= runmin && eventdiff->GetRunNumber() <= runmax) runselection = true;
     if (eventCastor->GetHLTPath(0)) triggerZeroBias = true;
     if (eventCastor->GetHLTPath(1)) triggerHLTPlus = true;
     if (eventCastor->GetHLTPath(2)) triggerHLTMinus = true;
-
     if (eventdiff->GetMultiplicityTracks() > 0) tracks = true;  
     if (eventdiff->GetNVertex() > 0) vertex = true;
 
     if (type == "collisions"){
       if (triggerZeroBias && vertex && tracks) collisions = true;
       status = "collisions";
-      FillHistos(0); 
-      if (collisions) FillHistos(1);
+      if (runselection) FillHistos(0); 
+      if (runselection && collisions) FillHistos(1);
     }
 
     else if (type == "no_collisions"){
       if(triggerZeroBias && !vertex && !tracks) nocollisions = true; 
       status = "no collisions";
-      FillHistos(0);
-      if (nocollisions) FillHistos(1);
+      if (runselection) FillHistos(0);
+      if (runselection && nocollisions) FillHistos(1);
     }
 
     else if (type == "unpaired"){
       if((triggerHLTPlus || triggerHLTMinus) && !vertex && !tracks) unpaired = true;
       status = "unpaired";
-      FillHistos(0);
-      if (unpaired) FillHistos(1);
+      if (runselection) FillHistos(0);
+      if (runselection && unpaired) FillHistos(1);
     }
 
-     else if (type == "collisionsmc"){
+    else if (type == "collisionsmc"){
       if (vertex && tracks) collisions = true;
       status = "collisionsmc";
       FillHistos(0);
@@ -382,24 +349,37 @@ int main(int argc, char **argv)
   std::string savehistofile_;
   std::string processname_;
   std::string type_;
+  int runmin_;
+  int runmax_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
   if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
   if (argc > 4 && strcmp(s1,argv[4]) != 0)  type_  = argv[4];
+  if (argc > 5 && strcmp(s1,argv[5]) != 0)  runmin_  = atoi(argv[5]);
+  if (argc > 6 && strcmp(s1,argv[6]) != 0)  runmax_  = atoi(argv[6]);
 
-  if (type_=="collisions" || type_=="no_collisions" || type_=="unpaired") {}
+  if (type_=="collisions" || type_=="no_collisions" || type_=="unpaired" || type_=="collisionsmc" || type_=="unpairedmc") {}
   else{
-    std::cout << "Please Insert type of Swithtrigger: " << std::endl;
+    std::cout << "Please Insert type of selection: " << std::endl;
     std::cout << "1) collisions: ZeroBias trigger. Tracks and Vertex > 0." << std::endl;
     std::cout << "2) no_collisions: ZeroBias trigger. No tracks and no vertex." << std::endl;
     std::cout << "3) unpaired: HLT_BPTX Minus or Plus. No tracks and no vertex." << std::endl;
+    std::cout << "4) collisionsmc: Tracks and Vertex > 0." << std::endl;
+    std::cout << "5) unpairedmc: No tracks and no vertex." << std::endl;
+    return 0;
+  }
+
+  if (runmin_ < 0 || runmax_ < 0) {
+    std::cout << "Please Insert Run Min. or Run Max. > 0." << std::endl;
     return 0;
   }
 
   CastorThreshold* castor = new CastorThreshold();   
   castor->CreateHistos(type_);
-  castor->Run(filein_, savehistofile_, processname_, type_);
+  castor->Run(filein_, savehistofile_, processname_, type_, runmin_, runmax_);
+
+  std::cout << "\n" << std::endl;
 
   return 0;
 }

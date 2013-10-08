@@ -34,21 +34,17 @@ class CastorThreshold {
   std::string processname;
   std::string savehistofile;
   std::string type;
+  int runmin;
+  int runmax;
 
-  std::vector<TH1D*> m_hVector_tracks;
-  std::vector<TH1D*> m_hVector_pfetamax;
-  std::vector<TH1D*> m_hVector_pfetamin;
-  std::vector<TH1D*> m_hVector_sumEHFplus;
-  std::vector<TH1D*> m_hVector_sumEHFminus;
-  std::vector<TH1D*> m_hVector_sumEHFpfplus;
-  std::vector<TH1D*> m_hVector_sumEHFpfminus;
-  std::vector<TH1D*> m_hVector_sumECastor;
-  std::vector<TH1D*> m_hVector_vertex;
-  std::vector<TH1D*> m_hVector_lumi;
-  std::vector<TH2D*> m_hVector_sumEHFplusVsetaMax;
-  std::vector<TH2D*> m_hVector_sumEHFminusVsetaMin;
-  std::vector<TH2D*> m_hVector_sumEHFpfplusVsetaMax;
-  std::vector<TH2D*> m_hVector_sumEHFpfminusVsetaMin; 
+  double CastorEnergySector[16];
+
+  std::vector<TH1F*> m_hVector_tracks;
+  std::vector<TH1F*> m_hVector_vertex;
+  std::vector<TH1F*> m_hVector_RunNumber;
+  std::vector<TH1F*> m_hVector_AllSectorsCastorEnergy;
+
+  std::vector<std::vector<TH1F*> > m_hVector_SectorCastorEnergy;
 
   std::vector <std::string> Folders;
 
@@ -57,7 +53,7 @@ class CastorThreshold {
   CastorThreshold() {}
   ~CastorThreshold() { inf->Close(); }
 
-  void Run(std::string, std::string, std::string, std::string);
+  void Run(std::string, std::string, std::string, std::string, int, int);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int);
