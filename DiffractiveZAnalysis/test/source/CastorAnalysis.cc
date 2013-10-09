@@ -213,7 +213,7 @@ void CastorAnalysis::CreateHistos(){
       char name18[300];
       char name18t[300];
       sprintf(name18,"TotalEnergySector%d_%s",se,Folders.at(j).c_str());
-      sprintf(name18t,"#sum Energy, Castor Sector %d; #sum E_{modules 1,2,3,4,5} [GeV]; N events", se+1);
+      sprintf(name18t,"#sum Energy, Castor Sector %d; #sum E_{modules 1,2,3,4,5} [GeV]; N events", se);
       TH1F *histo_TotalEnergySectors = new TH1F(name18,name18t, 1000,0,500);
       m_hVector_TotalEnergySectors[se-1].push_back(histo_TotalEnergySectors);
 
@@ -282,18 +282,28 @@ void CastorAnalysis::FillHistos(int index){
   SectorCastorHit = 0;
 
   double castorId[16] = {11.25,33.75,56.25,78.75,101.25,123.75,146.25,168.75,191.25,213.75,236.25,258.75,281.25,303.75,326.75,348.75};
+
+  for (int i=0; i < 16; i++){
+    CastorEnergySector[i]=0;
+    if (i==4 || i==5){
+      CastorEnergySector[i]=eventCastor->GetCastorModule2Energy(i)+eventCastor->GetCastorModule3Energy(i)+eventCastor->GetCastorModule4Energy(i)+eventCastor->GetCastorModule5Energy(i);
+    }else{
+      CastorEnergySector[i]=eventCastor->GetCastorModule1Energy(i)+eventCastor->GetCastorModule2Energy(i)+eventCastor->GetCastorModule3Energy(i)+eventCastor->GetCastorModule4Energy(i)+eventCastor->GetCastorModule5Energy(i);
+    }
+  }
+
   for (l=0; l<16;l++){
-    if (eventCastor->GetCastorTowerEnergy(l) > SectorThreshold){
+    if (CastorEnergySector[l] > SectorThreshold){
       ++SectorCastorHit;
-      sumCastorEnergy+=eventCastor->GetCastorTowerEnergy(l);
+      sumCastorEnergy+=CastorEnergySector[l];
       x_temp = 15*cos(castorId[l]*PI/180.0);
       y_temp = 15*sin(castorId[l]*PI/180.0);
-      num_phi += castorId[l]*eventCastor->GetCastorTowerEnergy(l);
-      num_x_centroid += x_temp*eventCastor->GetCastorTowerEnergy(l);
-      num_y_centroid += y_temp*eventCastor->GetCastorTowerEnergy(l);
-      m_hVector_ECastorSector.at(index)->Fill(l+1,eventCastor->GetCastorTowerEnergy(l));
-      m_hVector_ECastorSectorTProf.at(index)->Fill(l+1,eventCastor->GetCastorTowerEnergy(l));
-      m_hVector_ECastorSectorBin1D.at(index)->Fill(l+1,eventCastor->GetCastorTowerEnergy(l));
+      num_phi += castorId[l]*CastorEnergySector[l];
+      num_x_centroid += x_temp*CastorEnergySector[l];
+      num_y_centroid += y_temp*CastorEnergySector[l];
+      m_hVector_ECastorSector.at(index)->Fill(l+1,CastorEnergySector[l]);
+      m_hVector_ECastorSectorTProf.at(index)->Fill(l+1,CastorEnergySector[l]);
+      m_hVector_ECastorSectorBin1D.at(index)->Fill(l+1,CastorEnergySector[l]);
     }
     else{
       sumCastorEnergy+=0;
@@ -341,9 +351,9 @@ void CastorAnalysis::FillHistos(int index){
   }
 
   for(int id=0; id < 16; id++){
-    if (eventCastor->GetCastorTowerEnergy(id) > SectorThreshold){
-      m_hVector_TotalEnergySectors[id].at(index)->Fill(eventCastor->GetCastorTowerEnergy(id));
-      m_hVector_Sector_EnergyVsMultiplicity[id].at(index)->Fill(SectorCastorHit,eventCastor->GetCastorTowerEnergy(id));
+    if (CastorEnergySector[id] > SectorThreshold){
+      m_hVector_TotalEnergySectors[id].at(index)->Fill(CastorEnergySector[id]);
+      m_hVector_Sector_EnergyVsMultiplicity[id].at(index)->Fill(SectorCastorHit,CastorEnergySector[id]);
     }
     else{
       m_hVector_TotalEnergySectors[id].at(index)->Fill(0);

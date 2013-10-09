@@ -77,6 +77,7 @@ class CastorAnalysis {
   double num_y_centroid;
   double num_phi;
   double phi_average;
+  double CastorEnergySector[16];
 
   std::vector<TH2F*> m_hVector_histo_castor_centroid;
   std::vector<TH1F*> m_hVector_histo_castor_centroid_phi;
