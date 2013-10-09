@@ -322,8 +322,6 @@ void CastorAnalysis::FillHistos(int index){
     m_hVector_histo_castor_centroid_phi.at(index)->Fill(phi_average);
   }
 
-
-
   for (k=0; k<eventCastor->GetEachTowerCounter();k++){
     m_hVector_ECaloVsEta.at(index)->Fill(eventCastor->GetEachTowerEta(k),eventCastor->GetEachTowerEnergy(k));
     m_hVector_ECaloVsEtaTProf.at(index)->Fill(eventCastor->GetEachTowerEta(k),eventCastor->GetEachTowerEnergy(k));
@@ -354,10 +352,6 @@ void CastorAnalysis::FillHistos(int index){
     if (CastorEnergySector[id] > SectorThreshold){
       m_hVector_TotalEnergySectors[id].at(index)->Fill(CastorEnergySector[id]);
       m_hVector_Sector_EnergyVsMultiplicity[id].at(index)->Fill(SectorCastorHit,CastorEnergySector[id]);
-    }
-    else{
-      m_hVector_TotalEnergySectors[id].at(index)->Fill(0);
-      m_hVector_Sector_EnergyVsMultiplicity[id].at(index)->Fill(SectorCastorHit,0.);
     }
   }
 
