@@ -218,7 +218,9 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
       std::string resolvedPathName;
       if( edm::is_glob( *hltpath ) ){
 	std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), *hltpath);
-	if( matches.empty() ) edm::LogWarning("Configuration") << "Could not find trigger " << *hltpath << " in the path list.\n";
+	if( matches.empty() ) { 
+	  if (debug) edm::LogWarning("Configuration") << "Could not find trigger " << *hltpath << " in the path list.\n";
+        }
 	else if( matches.size() > 1)
 	  throw cms::Exception("Configuration") << "HLT path type " << *hltpath << " not unique\n";
 	else resolvedPathName = *(matches[0]);
@@ -244,7 +246,7 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
     }
 
   }else{
-    std::cout << "\n No valid trigger result.\n" <<std::endl;
+    if (debug) std::cout << "\n No valid trigger result.\n" <<std::endl;
   }
 
 }
