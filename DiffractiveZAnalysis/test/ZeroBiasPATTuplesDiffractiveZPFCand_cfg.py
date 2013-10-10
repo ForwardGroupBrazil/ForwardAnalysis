@@ -427,10 +427,10 @@ process.diffractiveZAnalysisTTreeAfter = process.diffractiveZAnalysisTTree.clone
 if config.TriggerOn:
        print(">> With Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.eventSelectionOnlyHLT + process.diffractiveZFilter + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
+       process.analysisSequences + process.eventSelectionOnlyHLT + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
 
 else:
        print(">> No Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.diffractiveZFilter + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
+       process.analysisSequences + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
 
