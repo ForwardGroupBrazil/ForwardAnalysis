@@ -55,7 +55,7 @@ if options.Run == "A":
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
@@ -72,7 +72,7 @@ elif options.Run == "B":
   config.runPUMC = False
   config.runGen = False
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR'
 
 elif options.Run == "Full":
   print("")
@@ -86,7 +86,7 @@ elif options.Run == "Full":
   config.runPUMC = False
   config.runGen = False
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR'
 
 elif options.Run == "MC_FlatWeight_and_PU":
   print("")
@@ -426,10 +426,10 @@ process.diffractiveZAnalysisTTreeAfter = process.diffractiveZAnalysisTTree.clone
 if config.TriggerOn:
        print(">> With Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.eventSelectionOnlyHLT + process.diffractiveZFilter + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
+       process.analysisSequences + process.eventSelectionOnlyHLT + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
 
 else:
        print(">> No Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.diffractiveZFilter + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
+       process.analysisSequences + process.diffractiveZAnalysisTTreeBefore + process.eventSelection + process.diffractiveZAnalysisTTreeAfter)
 
