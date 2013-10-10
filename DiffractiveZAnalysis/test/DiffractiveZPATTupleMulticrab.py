@@ -41,7 +41,6 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = -1
-config.sys = False
 
 #
 # Define Options to Run
@@ -61,6 +60,7 @@ if options.Run == "data_MuonP1":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
+  config.sys = True
 
 elif options.Run == "data_MuonP2":
   print("")
@@ -75,6 +75,7 @@ elif options.Run == "data_MuonP2":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
+  config.sys = True
 
 elif options.Run == "data_ElectronP1":
   print("")
@@ -89,6 +90,7 @@ elif options.Run == "data_ElectronP1":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
+  config.sys = True
 
 elif options.Run == "data_ElectronP2":
   print("")
@@ -103,6 +105,7 @@ elif options.Run == "data_ElectronP2":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
+  config.sys = True
 
 elif options.Run == "MC_FlatWeight_and_PU":
   print("")
@@ -117,6 +120,7 @@ elif options.Run == "MC_FlatWeight_and_PU":
   config.runOnMC = True
   config.runPUMC = True
   config.runGen = True
+  config.sys = False
 
 elif options.Run == "MC_FlatWeight":
   print("")
@@ -131,6 +135,7 @@ elif options.Run == "MC_FlatWeight":
   config.runOnMC = True
   config.runPUMC = False
   config.runGen = True
+  config.sys = False
 
 elif options.Run == "MC_PU":
   print("")
@@ -145,6 +150,7 @@ elif options.Run == "MC_PU":
   config.runOnMC = True
   config.runPUMC = True
   config.runGen = False
+  config.sys = False
 
 elif options.Run == "MC_none":
   print("")
@@ -159,6 +165,7 @@ elif options.Run == "MC_none":
   config.runOnMC = True
   config.runPUMC = False
   config.runGen = False
+  config.sys = False
 
 else:
   print("")
@@ -173,6 +180,7 @@ print("Run with MC: %s" % config.runOnMC)
 print("Run MC with Pile Up: %s" % config.runPUMC)
 print("Run MC with Flat Weight: %s" % config.runGen)
 print("Run with Trigger: %s" % config.TriggerOn)
+print("Run with Energy Scale: %s" % config.sys)
 if not config.runOnMC: 
    print("Data Global Tag: " + config.globalTagNameData)
 else:
