@@ -61,6 +61,7 @@ if options.Run == "data_Multijet":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
+  config.sys = True
 
 elif options.Run == "data_Jet":
   print("")
@@ -75,6 +76,7 @@ elif options.Run == "data_Jet":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
+  config.sys = True
 
 elif options.Run == "data_JetMet":
   print("")
@@ -89,6 +91,7 @@ elif options.Run == "data_JetMet":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
+  config.sys = True
 
 elif options.Run == "data_JetMetTau":
   print("")
@@ -103,6 +106,7 @@ elif options.Run == "data_JetMetTau":
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
+  config.sys = True
 
 elif options.Run == "MC_FlatWeight_and_PU":
   print("")
@@ -117,6 +121,7 @@ elif options.Run == "MC_FlatWeight_and_PU":
   config.runOnMC = True
   config.runPUMC = True
   config.runGen = True
+  config.sys = False
 
 elif options.Run == "MC_FlatWeight":
   print("")
@@ -131,6 +136,7 @@ elif options.Run == "MC_FlatWeight":
   config.runOnMC = True
   config.runPUMC = False
   config.runGen = True
+  config.sys = False
 
 elif options.Run == "MC_PU":
   print("")
@@ -145,6 +151,7 @@ elif options.Run == "MC_PU":
   config.runOnMC = True
   config.runPUMC = True
   config.runGen = False
+  config.sys = False
 
 elif options.Run == "MC_none":
   print("")
@@ -159,6 +166,7 @@ elif options.Run == "MC_none":
   config.runOnMC = True
   config.runPUMC = False
   config.runGen = False
+  config.sys = False
 
 else:
   print("")
@@ -386,12 +394,24 @@ process.exclusiveDijetsAnalysisTTreePFShiftedDown.ExclusiveDijetsAnalysis.Partic
 
 process.castor_step = cms.Path(process.castorSequence)
 
-if config.TriggerOn:
-    process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedTTree_step = cms.Path(
-    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT + process.DiffractiveJetsFilter +
-    process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
+if config.sys:
 
-else: 
-    process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedTTree_step = cms.Path(
-    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection + process.DiffractiveJetsFilter + process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
+   print(">> With Energy Scale.")
+   if config.TriggerOn:
+       print(">> With Trigger.")
+       process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedTTree_step = cms.Path(process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT + process.DiffractiveJetsFilter + process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
 
+   else:
+       print(">> No Trigger.")
+       process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedTTree_step = cms.Path(process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection + process.DiffractiveJetsFilter + process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
+
+
+else:
+   print(">> No Energy Scale.")
+   if config.TriggerOn:
+       print(">> With Trigger.")
+       process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedTTree_step = cms.Path(process.analysisSequences + process.eventSelectionHLT + process.DiffractiveJetsFilter + process.exclusiveDijetsAnalysisTTree)
+
+   else:
+       print(">> No Trigger.")
+       process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedTTree_step = cms.Path(process.analysisSequences + process.eventSelection + process.DiffractiveJetsFilter + process.exclusiveDijetsAnalysisTTree)
