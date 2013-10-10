@@ -181,6 +181,7 @@ print("Run with MC: %s" % config.runOnMC)
 print("Run MC with Pile Up: %s" % config.runPUMC)
 print("Run MC with Flat Weight: %s" % config.runGen)
 print("Run with Trigger: %s" % config.TriggerOn)
+print("Run with Energy Scale: %s" % config.sys)
 if not config.runOnMC: 
    print("Data Global Tag: " + config.globalTagNameData)
 else:
