@@ -55,7 +55,7 @@ if options.Run == "A":
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
@@ -72,7 +72,7 @@ elif options.Run == "B":
   config.runPUMC = False
   config.runGen = False
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
 
 elif options.Run == "Full":
   print("")
@@ -86,7 +86,7 @@ elif options.Run == "Full":
   config.runPUMC = False
   config.runGen = False
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
 
 elif options.Run == "MC_FlatWeight_and_PU":
   print("")
