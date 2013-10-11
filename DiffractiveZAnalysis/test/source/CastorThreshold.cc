@@ -117,14 +117,14 @@ void CastorThreshold::CreateHistos(std::string type){
       char name4t[300];
       sprintf(name4,"Sector%d_CastorSumEnergy_%s",bs+1,Folders.at(j).c_str());
       sprintf(name4t,"#sum Energy, Castor Sector %d; #sum E_{modules 1,2,3,4,5} [GeV]; N events", bs+1);
-      TH1F *histo_SectorCastorEnergy = new TH1F(name4,name4t,1000,0,500);
+      TH1F *histo_SectorCastorEnergy = new TH1F(name4,name4t,1000,-50,500);
       m_hVector_SectorCastorEnergy[bs].push_back(histo_SectorCastorEnergy);
 
     }
 
     char name5[300];
     sprintf(name5,"CastorSumOfEnergyForAllSectors_%s",Folders.at(j).c_str());
-    TH1F *histo_AllSectorsCastorEnergy = new TH1F(name5,"Castor Sector: #sum Energy; #sum E_{modules 1,2,3,4,5} per sector [GeV]; N events",2000,0,500);
+    TH1F *histo_AllSectorsCastorEnergy = new TH1F(name5,"Castor Sector: #sum Energy; #sum E_{modules 1,2,3,4,5} per sector [GeV]; N events",2000,-50,500);
     m_hVector_AllSectorsCastorEnergy.push_back(histo_AllSectorsCastorEnergy);
 
   }
