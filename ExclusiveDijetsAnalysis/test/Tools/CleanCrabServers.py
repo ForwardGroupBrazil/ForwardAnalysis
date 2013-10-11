@@ -8,11 +8,11 @@ def main(argv):
    try:
       opts, args = getopt.getopt(argv,"hu:",["user="])
    except getopt.GetoptError:
-      print 'CleanCrabServers.py -u <number of jobs>'
+      print 'CleanCrabServers.py -u <USER>'
       sys.exit(2)
    for opt, arg in opts:
       if opt == '-h':
-         print 'CleanCrabServers.py -u <number of jobs>'
+         print 'CleanCrabServers.py -u <USER>'
          sys.exit()
       elif opt in ("-u", "--user"):
          user_ = arg
