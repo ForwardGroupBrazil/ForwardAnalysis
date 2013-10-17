@@ -27,6 +27,7 @@ import atexit
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
 options.register('Run','Full',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('condition','Full',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Channels CASTOR conditions.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -55,7 +56,7 @@ if options.Run == "A":
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
@@ -72,7 +73,7 @@ elif options.Run == "B":
   config.runPUMC = False
   config.runGen = False
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
 
 elif options.Run == "Full":
   print("")
@@ -86,7 +87,7 @@ elif options.Run == "Full":
   config.runPUMC = False
   config.runGen = False
   l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
-  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
+  triggerlist = 'HLT_ZeroBias','HLT_L1_BPTX_PlusOnly','HLT_L1_BPTX_MinusOnly','HLT_L1_BPTX','HLT_L1_BscMinBiasOR_BptxPlusORMinus','HLT_L1_BptxXOR_BscMinBiasOR','HLT_L1Tech_BSC_minBias_OR','HLT_L1Tech_BSC_minBias','HLT_L1Tech_BSC_halo','HLT_L1Tech_BSC_halo_forPhysicsBackground','HLT_L1Tech_BSC_HighMultiplicity'
 
 elif options.Run == "MC_FlatWeight_and_PU":
   print("")
@@ -375,20 +376,20 @@ else:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015
 
-if options.Run=="A":
+if options.condition=="A":
      print("")
      print(">>>> RunA Castor Conditions")
      print("")
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = True
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = False
 
-elif options.Run=="B":
+elif options.condition=="B":
      print("")
      print(">>>> RunB Castor Conditions")
      print("")
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = True
-elif options.Run=="Full":
+else:
      print("")
      print(">>>> Full Castor")
      print("")
