@@ -27,6 +27,7 @@ import atexit
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
 options.register('Run','Full',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('condition','Full',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Channels CASTOR conditions.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -375,20 +376,20 @@ else:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015
 
-if options.Run=="A":
+if options.condition=="A":
      print("")
      print(">>>> RunA Castor Conditions")
      print("")
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = True
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = False
 
-elif options.Run=="B":
+elif options.condition=="B":
      print("")
      print(">>>> RunB Castor Conditions")
      print("")
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = True
-elif options.Run=="Full":
+else:
      print("")
      print(">>>> Full Castor")
      print("")
