@@ -2009,6 +2009,11 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
 
   bool debug = false;
   bool debug_deep = false;
+  bool idmod1 = false;
+  bool idmod2 = false;
+  bool idmod3 = false;
+  bool idmod4 = false;
+  bool idmod5 = false;
 
   std::vector<double> castor_tower;
   std::vector<double> castor_tower_module1;
@@ -2066,26 +2071,31 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
 
       for(int isec = 0; isec < 16; isec++) {
 	if (rh.id().sector()== isec+1){
-	  sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
+	  sumCastorTower[isec]+=rh.energy()*fCGeVCastor_; 
 
 	  if (rh.id().module() == 1){
 	    energyModule1[isec] = rh.energy()*fCGeVCastor_;
+            if (idmod1) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 
 	  if (rh.id().module() == 2){
 	    energyModule2[isec] = rh.energy()*fCGeVCastor_;
+            if (idmod2) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 
 	  if (rh.id().module() == 3){
 	    energyModule3[isec] = rh.energy()*fCGeVCastor_;
+            if (idmod3) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 
 	  if (rh.id().module() == 4){
 	    energyModule4[isec] = rh.energy()*fCGeVCastor_;
+            if (idmod4) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 
 	  if (rh.id().module() == 5){
 	    energyModule5[isec] = rh.energy()*fCGeVCastor_;
+            if (idmod5) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 	}
       }
