@@ -133,7 +133,7 @@ void CastorAnalysis::CreateHistos(){
 
     char name3[300];
     sprintf(name3,"ECastorSector_%s",Folders.at(j).c_str());
-    TH2F *histo_ECastorSector = new TH2F(name3,"Castor Energy X Sector; Sector; Energy [GeV]", 17, 0, 17, 44, 0., 220.);
+    TH2F *histo_ECastorSector = new TH2F(name3,"Castor Energy X Sector; Sector; Energy [GeV]", 18, 0, 18, 44, 0., 220.);
     m_hVector_ECastorSector.push_back(histo_ECastorSector);
 
     char name4[300];
@@ -143,12 +143,12 @@ void CastorAnalysis::CreateHistos(){
 
     char name5[300];
     sprintf(name5,"ECastorSectorTProf_%s",Folders.at(j).c_str());
-    TProfile *histo_ECastorSectorTProf = new TProfile(name5,"Castor Energy X Sector; Sector; <Energy> [GeV]", 100, 0, 17, 0., 7000.);
+    TProfile *histo_ECastorSectorTProf = new TProfile(name5,"Castor Energy X Sector; Sector; <Energy> [GeV]", 100, 0, 18, 0., 7000.);
     m_hVector_ECastorSectorTProf.push_back(histo_ECastorSectorTProf); 
 
     char name6[300];
     sprintf(name6,"ECastorSectorBin1D_%s",Folders.at(j).c_str());
-    TH1F *histo_ECastorSectorBin1D = new TH1F(name6,"Castor Energy X Sector; Sector; Energy [GeV]", 17, 0, 17);
+    TH1F *histo_ECastorSectorBin1D = new TH1F(name6,"Castor Energy X Sector; Sector; Energy [GeV]", 18, 0, 18);
     m_hVector_ECastorSectorBin1D.push_back(histo_ECastorSectorBin1D);
 
     char name7[300];
@@ -173,12 +173,12 @@ void CastorAnalysis::CreateHistos(){
 
     char name11[300];
     sprintf(name11,"CastorMultiplicity_%s",Folders.at(j).c_str());
-    TH1F *histo_CastorMultiplicity = new TH1F(name11,"Castor: number of sectors with activity; #Sectors; N events",17,0,17);
+    TH1F *histo_CastorMultiplicity = new TH1F(name11,"Castor: number of sectors with activity; #Sectors; N events",18,0,18);
     m_hVector_CastorMultiplicity.push_back(histo_CastorMultiplicity);
 
     char name12[300];
     sprintf(name12,"CastorMultiplicityVsLumi_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorMultiplicityVsLumi = new TH2F(name12,"CastorMultiplicity Vs Luminosity; Luminosity per Bunch [#mub^{-1}s^{-1}]; Castor Multiplicity",5000,0,2,17,0,17);
+    TH2F *histo_CastorMultiplicityVsLumi = new TH2F(name12,"CastorMultiplicity Vs Luminosity; Luminosity per Bunch [#mub^{-1}s^{-1}]; Castor Multiplicity",5000,0,2,18,0,18);
     m_hVector_CastorMultiplicityVsLumi.push_back(histo_CastorMultiplicityVsLumi);
 
     char name13[300];
@@ -198,12 +198,12 @@ void CastorAnalysis::CreateHistos(){
 
     char name16[300];
     sprintf(name16,"SectorVsTotalCastorEnergyTProf_%s",Folders.at(j).c_str());
-    TProfile *histo_SectorVsTotalCastorEnergyTProf = new TProfile(name16,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,0,1500);
+    TProfile *histo_SectorVsTotalCastorEnergyTProf = new TProfile(name16,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",18,0,18,0,1500);
     m_hVector_SectorVsTotalCastorEnergyTProf.push_back(histo_SectorVsTotalCastorEnergyTProf);
 
     char name17[300];
     sprintf(name17,"SectorVsTotalCastorEnergy_%s",Folders.at(j).c_str());
-    TH2F *histo_SectorVsTotalCastorEnergy = new TH2F(name17,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,6000,0,3000);
+    TH2F *histo_SectorVsTotalCastorEnergy = new TH2F(name17,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",18,0,18,6000,0,3000);
     m_hVector_SectorVsTotalCastorEnergy.push_back(histo_SectorVsTotalCastorEnergy);
 
     for (int se=1; se<17; se++){
@@ -216,28 +216,28 @@ void CastorAnalysis::CreateHistos(){
       char name18t[300];
       sprintf(name18,"TotalEnergySector%d_%s",se,Folders.at(j).c_str());
       sprintf(name18t,"#sum Energy, Castor Sector %d; #sum E_{modules 1,2,3,4,5} [GeV]; N events", se);
-      TH1F *histo_TotalEnergySectors = new TH1F(name18,name18t, 1000,0,500);
+      TH1F *histo_TotalEnergySectors = new TH1F(name18,name18t,1000,0,500);
       m_hVector_TotalEnergySectors[se-1].push_back(histo_TotalEnergySectors);
 
       char name19[300];
       char name19t[300];
       sprintf(name19,"Sector%d_EnergyVsMultiplicity_%s",se,Folders.at(j).c_str());
       sprintf(name19t,"Energy for Sector %d Vs Multiplicity; Multiplicity; #sum Energy_{sector} [GeV]", se);
-      TH2F *histo_Sector_EnergyVsMultiplicity = new TH2F(name19,name19t,17,0,17,1000,0,500);
+      TH2F *histo_Sector_EnergyVsMultiplicity = new TH2F(name19,name19t,18,0,18,1000,0,500);
       m_hVector_Sector_EnergyVsMultiplicity[se-1].push_back(histo_Sector_EnergyVsMultiplicity);
 
       char name20[300];
       char name20t[300];
       sprintf(name20,"Channel%d_EnergyVsModule_%s",se,Folders.at(j).c_str());
       sprintf(name20t,"Energy for Channel %d Vs Module; Module Id(Z); Energy [GeV]", se);
-      TH2F *histo_channel_EnergyVsModule = new TH2F(name20,name20t,6,0,6,4000,0,2000);
+      TH2F *histo_channel_EnergyVsModule = new TH2F(name20,name20t,7,0,7,4000,0,2000);
       m_hVector_channel_EnergyVsModule[se-1].push_back(histo_channel_EnergyVsModule);
 
       char name21[300];
       char name21t[300];
       sprintf(name21,"Channel%d_EnergyVsModuleTProf_%s",se,Folders.at(j).c_str());
       sprintf(name21t,"Energy for Channel %d Vs Module; Module Id (Z); Energy [GeV]", se);
-      TProfile *histo_channel_EnergyVsModuleTProf = new TProfile(name21,name21t,6,0,6,0,2000);
+      TProfile *histo_channel_EnergyVsModuleTProf = new TProfile(name21,name21t,7,0,7,0,2000);
       m_hVector_channel_EnergyVsModuleTProf[se-1].push_back(histo_channel_EnergyVsModuleTProf);
 
     }
@@ -280,33 +280,42 @@ void CastorAnalysis::CreateHistos(){
 
     char name28[300];
     sprintf(name28,"MultiplicityPerModule_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorMultiplicityPerModule = new TH2F(name28,"Multiplicity per Module; Module Id (Z); Multiplicity",6,0,6,17,0,17);
+    TH2F *histo_CastorMultiplicityPerModule = new TH2F(name28,"Multiplicity per Module; Module Id (Z); Multiplicity",7,0,7,17,0,17);
     m_hVector_CastorMultiplicityPerModule.push_back(histo_CastorMultiplicityPerModule);
 
     char name29[300];
     sprintf(name29,"MultiplicityPerModuleTProf_%s",Folders.at(j).c_str());
-    TProfile *histo_CastorMultiplicityPerModuleTProf = new TProfile(name29,"Multiplicity per Module; Module Id (Z); Multiplicity",6,0,6,0,17);
+    TProfile *histo_CastorMultiplicityPerModuleTProf = new TProfile(name29,"Multiplicity per Module; Module Id (Z); Multiplicity",7,0,7,0,17);
     m_hVector_CastorMultiplicityPerModuleTProf.push_back(histo_CastorMultiplicityPerModuleTProf);
 
     for (int i=1;i<6;i++){
       m_hVector_CastorMultiplicityModule.push_back( std::vector<TH1F*>() );
+      m_hVector_CastorMultiplicityModuleAll.push_back( std::vector<TH2F*>() );
 
       char name30[300];
       char name30t[300];
       sprintf(name30,"CastorMultiplicityModule%d_%s",i,Folders.at(j).c_str());
-      sprintf(name30t,"Castor Module%d: number of channels with activity; #Sectors; N events", i);
+      sprintf(name30t,"Castor Module %d: number of channels with activity; #Sectors; N events", i);
       TH1F *histo_CastorMultiplicityModule = new TH1F(name30,name30t,17,0,17);
       m_hVector_CastorMultiplicityModule[i-1].push_back(histo_CastorMultiplicityModule);
+
+      char name31[300];
+      char name31t[300];
+      sprintf(name31,"CastorMultiplicityModule%dVsTotal_%s",i,Folders.at(j).c_str());
+      sprintf(name31t,"Castor Module %d X All Modules; Castor Module %d; #Sectors; N events", i, i);
+      TH2F *histo_CastorMultiplicityModuleAll = new TH2F(name31,name31t,17,0,17,17,0,17);
+      m_hVector_CastorMultiplicityModuleAll[i-1].push_back(histo_CastorMultiplicityModuleAll);
+
     }
 
-    char name31[300];
-    sprintf(name31,"EnergyPerModule_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorEnergyPerModule = new TH2F(name31,"Energy per Module; Module Id (Z); Energy [GeV]",6,0,6,4000,0,2000);
+    char name32[300];
+    sprintf(name32,"EnergyPerModule_%s",Folders.at(j).c_str());
+    TH2F *histo_CastorEnergyPerModule = new TH2F(name32,"Energy per Module; Module Id (Z); Energy [GeV]",6,0,6,4000,0,2000);
     m_hVector_CastorEnergyPerModule.push_back(histo_CastorEnergyPerModule);
 
-    char name32[300];
-    sprintf(name32,"EnergyPerModuleTProf_%s",Folders.at(j).c_str());
-    TProfile *histo_CastorEnergyPerModuleTProf = new TProfile(name32,"Energy per Module; Module Id (Z); Energy [GeV]",6,0,6,0,2000);
+    char name33[300];
+    sprintf(name33,"EnergyPerModuleTProf_%s",Folders.at(j).c_str());
+    TProfile *histo_CastorEnergyPerModuleTProf = new TProfile(name33,"Energy per Module; Module Id (Z); Energy [GeV]",6,0,6,0,2000);
     m_hVector_CastorEnergyPerModuleTProf.push_back(histo_CastorEnergyPerModuleTProf);
 
   }
