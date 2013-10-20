@@ -33,8 +33,6 @@ using namespace diffractiveZAnalysis;
 using namespace eventInfo;
 using namespace reweight;
 
-#define PI 3.14159265
-
 static inline void loadBar(int x, int n, int r, int w)
 {
   // Modified
@@ -371,9 +369,6 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_CastorMultiplicityVsLumi.push_back( std::vector<TH2F*>() );
     m_hVector_SectorVsTotalCastorEnergy.push_back( std::vector<TH2F*>() );
     m_hVector_SectorVsTotalCastorEnergyTProf.push_back( std::vector<TProfile*>() );
-
-    m_hVector_histo_castor_centroid.push_back( std::vector<TH2F*>() );
-    m_hVector_histo_castor_centroid_phi.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -1493,17 +1488,6 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name222,"SectorVsTotalCastorEnergyTProf_%s_%s",tag,Folders.at(j).c_str());
       TProfile *histo_SectorVsTotalCastorEnergyTProf = new TProfile(name222,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,0,1500);
       m_hVector_SectorVsTotalCastorEnergyTProf[j].push_back(histo_SectorVsTotalCastorEnergyTProf);
-
-      char castor_centroid[300];
-      sprintf(castor_centroid,"CastorCentroid_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_castor_centroid = new TH2F(castor_centroid,"Castor Centroid Energy; x[cm]; y[cm]",30,-15,15,30,-15,15);
-      m_hVector_histo_castor_centroid[j].push_back(histo_castor_centroid);
-
-      char castor_centroid_phi[300];
-      sprintf(castor_centroid_phi,"CastorCentroidPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_castor_centroid_phi = new TH1F(castor_centroid_phi,"Castor Centroid Energy; Sector(<#phi>)_i; NEvents",4000,0,4000);
-      m_hVector_histo_castor_centroid_phi[j].push_back(histo_castor_centroid_phi);
-
     }
   }
 }
@@ -1672,49 +1656,33 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   sumCastorAndHFMinusEnergy = 0.;
   SectorCastorHit = 0.;
   SectorZeroCastorCounter = 0.;
-  num_phi = 0.;
-  num_x_centroid = 0;
-  num_y_centroid = 0.;
-  x_temp = 0.;
-  y_temp = 0.;
-  x_centroid = 0.;
-  y_centroid = 0.;
-  phi_average = 0.;
 
-  double castorId[16] = {11.25,33.75,56.25,78.75,101.25,123.75,146.25,168.75,191.25,213.75,236.25,258.75,281.25,303.75,326.75,348.75};
-  for (l=0; l<16;l++){
-    if (eventdiffZ->GetCastorTowerEnergy(l) > 10.){
+  for (int i=0; i < 16; i++){
+    CastorEnergySector[i]=0;
+    if (i==4 || i==5){
+      CastorEnergySector[i]=eventdiffZ->GetCastorModule2Energy(i)+eventdiffZ->GetCastorModule3Energy(i)+eventdiffZ->GetCastorModule4Energy(i)+eventdiffZ->GetCastorModule5Energy(i);
+    }else{
+      CastorEnergySector[i]=eventdiffZ->GetCastorModule1Energy(i)+eventdiffZ->GetCastorModule2Energy(i)+eventdiffZ->GetCastorModule3Energy(i)+eventdiffZ->GetCastorModule4Energy(i)+eventdiffZ->GetCastorModule5Energy(i);
+    }
+  }
+
+ for (l=0; l<16;l++){
+    if (CastorEnergySector[l] > castorthreshold){
       ++SectorCastorHit;
-      m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l),totalweight);
-      m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l),totalweight);
-      m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l)*totalweight);
-      sumCastorEnergy+=eventdiffZ->GetCastorTowerEnergy(l);
-      x_temp = 15*cos(castorId[l]*PI/180.0);
-      y_temp = 15*sin(castorId[l]*PI/180.0);
-      num_phi += castorId[l]*eventdiffZ->GetCastorTowerEnergy(l);
-      num_x_centroid += x_temp*eventdiffZ->GetCastorTowerEnergy(l);
-      num_y_centroid += y_temp*eventdiffZ->GetCastorTowerEnergy(l);
+      sumCastorEnergy+=CastorEnergySector[l];
+      m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
+      m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
+      m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
     }
     else{
-      m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,0);
-      m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,0);
-      m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(l+1,0);
       sumCastorEnergy+=0;
       ++SectorZeroCastorCounter;
       num_x_centroid += 0;
       num_y_centroid += 0;
-      num_phi += 0;      
+      num_phi += 0;
+      m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,0);
     }
   }
-
-  if (sumCastorEnergy > 0.){
-    x_centroid = num_x_centroid/sumCastorEnergy;
-    y_centroid = num_y_centroid/sumCastorEnergy;
-    phi_average = num_phi/sumCastorEnergy;
-    m_hVector_histo_castor_centroid[index].at(pileup)->Fill(x_centroid,y_centroid);
-    m_hVector_histo_castor_centroid_phi[index].at(pileup)->Fill(phi_average);
-  }
-
  
   m_hVector_SectorVsTotalCastorEnergy[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
   m_hVector_SectorVsTotalCastorEnergyTProf[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
@@ -2047,15 +2015,13 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_RunNumber[j].at(i)->Write();
       m_hVector_SectorVsTotalCastorEnergy[j].at(i)->Write();
       m_hVector_SectorVsTotalCastorEnergyTProf[j].at(i)->Write();
-      m_hVector_histo_castor_centroid[j].at(i)->Write();
-      m_hVector_histo_castor_centroid_phi[j].at(i)->Write();
 
     }
   }
 
 }
 
-void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_){
+void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_, double castorthreshold_){
 
   bool debug = false;
 
@@ -2074,6 +2040,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   lepton1pt = lepton1pt_;
   lepton2pt = lepton2pt_;
   typesel = typesel_;
+  castorthreshold = castorthreshold_;
 
   std::string selStatus;
   std::string TriggerStatus;
@@ -2232,6 +2199,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       }
     }
 
+    bool triggerE_a = false;
+    bool triggerE_b = false;
+    bool triggerE_c = false;
+    bool triggerE_d = false;
+    bool triggerE_e = false;
+    bool triggerE_f = false;
+    bool triggerE_g = false;
     bool trigger = false;
     bool vertex = false;
     bool diffseln = false;
@@ -2258,7 +2232,17 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool ZKinP = false;
 
     if (switchtrigger == "trigger_all_electron"){
-      if (eventdiffZ->GetHLTPath(0) || eventdiffZ->GetHLTPath(1) || eventdiffZ->GetHLTPath(2) || eventdiffZ->GetHLTPath(3) || eventdiffZ->GetHLTPath(4) || eventdiffZ->GetHLTPath(5) || eventdiffZ->GetHLTPath(6)) trigger = true;
+
+      if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffZ->GetHLTPath(0) ) triggerE_a = true;
+      if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventdiffZ->GetHLTPath(1) ) triggerE_b = true;
+      if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventdiffZ->GetHLTPath(2) ) triggerE_c = true;
+      if ( (eventdiff->GetRunNumber() >= 144115 && eventdiff->GetRunNumber() <= 147145) && eventdiffZ->GetHLTPath(3) ) triggerE_d = true;
+      if ( (eventdiff->GetRunNumber() >= 147146 && eventdiff->GetRunNumber() <= 148058) && eventdiffZ->GetHLTPath(4) ) triggerE_e = true;
+      if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventdiffZ->GetHLTPath(5) ) triggerE_f = true;
+      if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventdiffZ->GetHLTPath(6) ) triggerE_g = true;
+
+      if (triggerE_a || triggerE_b || triggerE_c || triggerE_d || triggerE_e || triggerE_f || triggerE_g) trigger = true;
+
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
@@ -2538,6 +2522,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   outstring << ">> Lepton1(pT) > " << lepton1pt <<std::endl;
   outstring << ">> Lepton2(pT) > " << lepton2pt <<std::endl;
   outstring << ">> Type of Selection: " << selStatus << std::endl;
+  outstring << ">> Castor Threshold: " << castorthreshold << std::endl;
   outstring << " " << std::endl;
   outstring << "<< TRIGGER >> " << std::endl;
   outstring << " " << std::endl;
@@ -2595,6 +2580,7 @@ int main(int argc, char **argv)
   std::string switchlumiweight_;
   std::string type_;
   std::string typesel_;
+  double castorthreshold_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0) filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0) processname_ = argv[2];
@@ -2608,6 +2594,7 @@ int main(int argc, char **argv)
   if (argc > 10 && strcmp(s1,argv[10]) != 0) switchlumiweight_ = argv[10];
   if (argc > 11 && strcmp(s1,argv[11]) != 0) mcweight_ = atof(argv[11]);
   if (argc > 12 && strcmp(s1,argv[12]) != 0) typesel_ = argv[12];
+  if (argc > 13 && strcmp(s1,argv[13]) != 0) castorthreshold_ = atof(argv[13]);
 
   std::cout << " " << std::endl;
   std::cout << ">>>>> Run with the Options <<<<< " << std::endl;
@@ -2623,6 +2610,7 @@ int main(int argc, char **argv)
   std::cout << "Luminosity Weight Option: " << switchlumiweight_ << std::endl;
   std::cout << "MC Weight: " << mcweight_ << std::endl;
   std::cout << "Type of Selection: " << typesel_ << std::endl;
+  std::cout << "Castor Threshold: " << castorthreshold_ << std::endl;
   std::cout << "" << std::endl;
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
@@ -2646,7 +2634,7 @@ int main(int argc, char **argv)
       return 0;
     }
 
-    if (nVertex_ <= 0 || optTrigger_ < 0 || mcweight_ <= 0 || lepton1pt_ < 0 || lepton2pt_ < 0 ){
+    if (nVertex_ <= 0 || optTrigger_ < 0 || mcweight_ <= 0 || lepton1pt_ < 0 || lepton2pt_ < 0 || castorthreshold_ < 0){
       std::cout << "----------------------------------------------" << std::endl;
       std::cout << " Pay attention on the input numbers parameters" << std::endl;
       std::cout << "----------------------------------------------" << std::endl;
@@ -2655,13 +2643,14 @@ int main(int argc, char **argv)
       std::cout << "II)  optTrigger >= 0" << std::endl;
       std::cout << "III) mcweight_ > 0" << std::endl;
       std::cout << "IV)  Lepton1pt_ and Lepton2pt_ >= 0" << std::endl;  
+      std::cout << "V)   castorthreshold_ >= 0" << std::endl;
       std::cout << "----------------------------------------------" << std::endl; 
       return 0;
     }
 
     DiffractiveZ* diffZRun = new DiffractiveZ();
     diffZRun->CreateHistos(type_);
-    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_);
+    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_, castorthreshold_);
     return 0;
   }
 
