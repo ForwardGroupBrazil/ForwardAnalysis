@@ -69,6 +69,7 @@ class DiffractiveZ {
   double HE2;
   double sumCastorAndHFMinusEnergy;
   int SectorCastorHit;
+  double castorthreshold;
 
   std::string filein;
   std::string processname;
@@ -83,6 +84,7 @@ class DiffractiveZ {
   double lepton1pt;
   double lepton2pt;
   int SectorZeroCastorCounter;
+  double CastorEnergySector[16];
 
   double x_centroid;
   double y_centroid;
@@ -333,8 +335,6 @@ class DiffractiveZ {
   std::vector<std::vector<TH2F*> > m_hVector_CastorMultiplicityVsLumi;
   std::vector<std::vector<TH2F*> > m_hVector_SectorVsTotalCastorEnergy;
   std::vector<std::vector<TProfile*> > m_hVector_SectorVsTotalCastorEnergyTProf;
-  std::vector<std::vector<TH2F*> > m_hVector_histo_castor_centroid;
-  std::vector<std::vector<TH1F*> > m_hVector_histo_castor_centroid_phi;
     
   std::vector <std::string> Folders;
 
@@ -344,7 +344,7 @@ class DiffractiveZ {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);
