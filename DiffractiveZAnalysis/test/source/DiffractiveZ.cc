@@ -370,6 +370,10 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_SectorVsTotalCastorEnergy.push_back( std::vector<TH2F*>() );
     m_hVector_SectorVsTotalCastorEnergyTProf.push_back( std::vector<TProfile*>() );
 
+    m_hVector_XiPlusPF.push_back( std::vector<TH1F*>() );
+    m_hVector_XiMinusPF.push_back( std::vector<TH1F*>() );
+    m_hVector_XiPF.push_back( std::vector<TH1F*>() );
+
     for (int k=0;k<nloop;k++){
 
       if (type=="multiple_pileup"){
@@ -1341,7 +1345,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name193[300];
       sprintf(name193,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_maxetagap = new TH1F(name193,"Particle Flow #eta_{max} Gap Distribution; #eta_{max, gap}; N events",17,binarrayminus);
+      TH1F *histo_maxetagap = new TH1F(name193,"Particle Flow #eta_{max} Gap Distribution; #eta_{max, gap}; N events",40,-6.,6);
       m_hVector_maxetagap[j].push_back(histo_maxetagap);
 
       char name194[300];
@@ -1488,12 +1492,28 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name222,"SectorVsTotalCastorEnergyTProf_%s_%s",tag,Folders.at(j).c_str());
       TProfile *histo_SectorVsTotalCastorEnergyTProf = new TProfile(name222,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,0,1500);
       m_hVector_SectorVsTotalCastorEnergyTProf[j].push_back(histo_SectorVsTotalCastorEnergyTProf);
+
+      char name223[300];
+      sprintf(name223,"xiPlusPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_XiPlusPF = new TH1F(name223,"#xi_{plus} Particle Flow; #xi_{plus}; N Event",100,0.,1.);
+      m_hVector_XiPlusPF[j].push_back(histo_XiPlusPF);
+
+      char name224[300];
+      sprintf(name224,"xiMinusPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_XiMinusPF = new TH1F(name224,"#xi_{minus} Particle Flow; #xi_{minus}; N Event",100,0.,1.);
+      m_hVector_XiMinusPF[j].push_back(histo_XiMinusPF);
+
+      char name225[300];
+      sprintf(name225,"xiPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_XiPF = new TH1F(name225,"#xi Particle Flow; #xi; N Event",100,0.,1.);
+      m_hVector_XiPF[j].push_back(histo_XiPF);
+
     }
   }
 }
 
 void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
-    
+
   m_hVector_DiElectronMass[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
   m_hVector_DiElectronEta[index].at(pileup)->Fill(eventdiffZ->GetDiElectronEta(),totalweight);
   m_hVector_DiElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPhi(),totalweight);
@@ -1666,7 +1686,7 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
     }
   }
 
- for (l=0; l<16;l++){
+  for (l=0; l<16;l++){
     if (CastorEnergySector[l] > castorthreshold){
       ++SectorCastorHit;
       sumCastorEnergy+=CastorEnergySector[l];
@@ -1683,7 +1703,7 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
       m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,0);
     }
   }
- 
+
   m_hVector_SectorVsTotalCastorEnergy[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
   m_hVector_SectorVsTotalCastorEnergyTProf[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
   m_hVector_sumECastorMinus[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
@@ -1779,6 +1799,11 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
 
   m_hVector_absdeltaEtaPF[index].at(pileup)->Fill(absdeltaetapf,totalweight);
   m_hVector_deltaEtaPF[index].at(pileup)->Fill(deltaetapf,totalweight);
+
+  m_hVector_XiPlusPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
+  m_hVector_XiMinusPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
+  m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
+  m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
 
 }
 
@@ -2015,6 +2040,10 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_RunNumber[j].at(i)->Write();
       m_hVector_SectorVsTotalCastorEnergy[j].at(i)->Write();
       m_hVector_SectorVsTotalCastorEnergyTProf[j].at(i)->Write();
+
+      m_hVector_XiMinusPF[j].at(i)->Write();
+      m_hVector_XiPlusPF[j].at(i)->Write();
+      m_hVector_XiPF[j].at(i)->Write();
 
     }
   }

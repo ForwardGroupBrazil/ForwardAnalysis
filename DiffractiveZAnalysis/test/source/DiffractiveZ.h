@@ -335,7 +335,11 @@ class DiffractiveZ {
   std::vector<std::vector<TH2F*> > m_hVector_CastorMultiplicityVsLumi;
   std::vector<std::vector<TH2F*> > m_hVector_SectorVsTotalCastorEnergy;
   std::vector<std::vector<TProfile*> > m_hVector_SectorVsTotalCastorEnergyTProf;
-    
+
+  std::vector<std::vector<TH1F*> > m_hVector_XiPlusPF;
+  std::vector<std::vector<TH1F*> > m_hVector_XiMinusPF;
+  std::vector<std::vector<TH1F*> > m_hVector_XiPF;
+
   std::vector <std::string> Folders;
 
   public :
