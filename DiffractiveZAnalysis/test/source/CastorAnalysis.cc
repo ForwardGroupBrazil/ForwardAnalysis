@@ -302,7 +302,7 @@ void CastorAnalysis::CreateHistos(){
       char name31[300];
       char name31t[300];
       sprintf(name31,"CastorMultiplicityModule%dVsTotal_%s",i,Folders.at(j).c_str());
-      sprintf(name31t,"Castor Module %d X All Modules; Castor Module %d; #Sectors; N events", i, i);
+      sprintf(name31t,"Castor Module %d Vs All Modules Multiplicities; Castor Module %d; #Sectors", i, i);
       TH2F *histo_CastorMultiplicityModuleAll = new TH2F(name31,name31t,17,0,17,17,0,17);
       m_hVector_CastorMultiplicityModuleAll[i-1].push_back(histo_CastorMultiplicityModuleAll);
 
@@ -352,7 +352,8 @@ void CastorAnalysis::FillHistos(int index){
     }
   }
 
-  double ChannelThreshold = SectorThreshold/sqrt(5);
+  double ChannelThreshold = 1.5*SectorThreshold/sqrt(5);
+  if (debug) std::cout << "ChannelThreshold: " << ChannelThreshold << std::endl;
 
   for (int j=0; j<16;j++){
     if ( (eventCastor->GetCastorModule1Energy(j) > ChannelThreshold) && (j!=4 || j!=5) ){
@@ -387,15 +388,6 @@ void CastorAnalysis::FillHistos(int index){
     }
   }
 
-  for (int j=0; j<5; j++){
-    if (debug) std::cout << "\nMultiplicity Module " << j+1 << ":" << multicounter[j] << std::endl;
-    m_hVector_CastorMultiplicityModule[j].at(index)->Fill(multicounter[j]);
-    m_hVector_CastorMultiplicityPerModule.at(index)->Fill(j+1,multicounter[j]);
-    m_hVector_CastorMultiplicityPerModuleTProf.at(index)->Fill(j+1,multicounter[j]);
-    m_hVector_CastorEnergyPerModule.at(index)->Fill(j+1,energymodule[j]);
-    m_hVector_CastorEnergyPerModuleTProf.at(index)->Fill(j+1,energymodule[j]);
-  }
-
   for (l=0; l<16;l++){
     if (CastorEnergySector[l] > SectorThreshold){
       ++SectorCastorHit;
@@ -417,6 +409,16 @@ void CastorAnalysis::FillHistos(int index){
       num_phi += 0;
       m_hVector_ECastorSector.at(index)->Fill(l+1,0);
     }
+  }
+
+  for (int j=0; j<5; j++){
+    if (debug) std::cout << "\nMultiplicity Module " << j+1 << ":" << multicounter[j] << std::endl;
+    m_hVector_CastorMultiplicityModule[j].at(index)->Fill(multicounter[j]);
+    m_hVector_CastorMultiplicityPerModule.at(index)->Fill(j+1,multicounter[j]);
+    m_hVector_CastorMultiplicityPerModuleTProf.at(index)->Fill(j+1,multicounter[j]);
+    m_hVector_CastorEnergyPerModule.at(index)->Fill(j+1,energymodule[j]);
+    m_hVector_CastorEnergyPerModuleTProf.at(index)->Fill(j+1,energymodule[j]);
+    m_hVector_CastorMultiplicityModuleAll[j].at(index)->Fill(multicounter[j],SectorCastorHit);
   }
 
   if (sumCastorEnergy > 0.){
@@ -534,6 +536,7 @@ void CastorAnalysis::SaveHistos(){
 
     for (int id=0;id<5;id++){
       m_hVector_CastorMultiplicityModule[id].at(j)->Write();
+      m_hVector_CastorMultiplicityModuleAll[id].at(j)->Write();
     }
 
   }
