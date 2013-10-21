@@ -127,6 +127,17 @@ void CastorThreshold::CreateHistos(std::string type){
     TH1F *histo_AllSectorsCastorEnergy = new TH1F(name5,"Castor Sector: #sum Energy; #sum E_{modules 1,2,3,4,5} per sector [GeV]; N events",200,-10,10);
     m_hVector_AllSectorsCastorEnergy.push_back(histo_AllSectorsCastorEnergy);
 
+    for (int bs=0; bs<80; bs++){
+      m_hVector_ChannelCastorEnergy.push_back( std::vector<TH1F*>() );
+
+      char name6[300];
+      char name6t[300];
+      sprintf(name6,"Channel%d_Energy_%s",bs+1,Folders.at(j).c_str());
+      sprintf(name6t,"#Castor Channel %d; #E_{Channel %d} [GeV]; N events", bs+1, bs+1);
+      TH1F *histo_ChannelCastorEnergy = new TH1F(name6,name6t,200,-10,10);
+      m_hVector_ChannelCastorEnergy[bs].push_back(histo_ChannelCastorEnergy);
+    }
+
   }
 
 }
@@ -150,6 +161,15 @@ void CastorThreshold::FillHistos(int index){
     m_hVector_AllSectorsCastorEnergy[index]->Fill(CastorEnergySector[i]);
   }
 
+  for (int i=0; i < 16; i++){
+    m_hVector_ChannelCastorEnergy[i].at(index)->Fill(eventCastor->GetCastorModule1Energy(i));
+    m_hVector_ChannelCastorEnergy[16+i].at(index)->Fill(eventCastor->GetCastorModule2Energy(i));
+    m_hVector_ChannelCastorEnergy[32+i].at(index)->Fill(eventCastor->GetCastorModule3Energy(i));
+    m_hVector_ChannelCastorEnergy[48+i].at(index)->Fill(eventCastor->GetCastorModule4Energy(i));
+    m_hVector_ChannelCastorEnergy[64+i].at(index)->Fill(eventCastor->GetCastorModule5Energy(i));   
+  }
+
+
   if (debug){
     for (int i=0; i<16; i++){
       std::cout << "\nCastor Sector(" << i+1 << "): " << CastorEnergySector[i] << std::endl;
@@ -167,6 +187,10 @@ void CastorThreshold::SaveHistos(){
     m_hVector_AllSectorsCastorEnergy[j]->Write();
     for (int id=0; id<16; id++){
       m_hVector_SectorCastorEnergy[id].at(j)->Write();
+    }
+
+    for (int id=0; id<80; id++){
+      m_hVector_ChannelCastorEnergy[id].at(j)->Write();
     }
   }
 

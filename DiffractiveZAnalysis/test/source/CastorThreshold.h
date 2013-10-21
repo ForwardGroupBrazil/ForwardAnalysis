@@ -45,6 +45,7 @@ class CastorThreshold {
   std::vector<TH1F*> m_hVector_AllSectorsCastorEnergy;
 
   std::vector<std::vector<TH1F*> > m_hVector_SectorCastorEnergy;
+  std::vector<std::vector<TH1F*> > m_hVector_ChannelCastorEnergy;
 
   std::vector <std::string> Folders;
 
