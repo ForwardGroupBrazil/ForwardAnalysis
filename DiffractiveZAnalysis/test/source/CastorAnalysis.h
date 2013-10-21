@@ -113,8 +113,8 @@ class CastorAnalysis {
   std::vector<std::vector<TH2F*> > m_hVector_Sector_EnergyVsMultiplicity; 
   std::vector<std::vector<TH1F*> > m_hVector_sumECastorMinusBinSlice; 
   std::vector<std::vector<TH1F*> > m_hVector_CastorMultiplicityModule;
-  std::vector<std::vector<TH2F*> > m_hVector_channel_EnergyVsModule;
-  std::vector<std::vector<TProfile*> > m_hVector_channel_EnergyVsModuleTProf;
+  std::vector<std::vector<TH2F*> > m_hVector_AlongZ_EnergyVsModule;
+  std::vector<std::vector<TProfile*> > m_hVector_AlongZ_EnergyVsModuleTProf;
   std::vector<std::vector<TH2F*> > m_hVector_CastorMultiplicityModuleAll;
 
   std::vector <std::string> Folders;

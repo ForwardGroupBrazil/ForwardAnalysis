@@ -209,8 +209,8 @@ void CastorAnalysis::CreateHistos(){
     for (int se=1; se<17; se++){
       m_hVector_TotalEnergySectors.push_back( std::vector<TH1F*>() );
       m_hVector_Sector_EnergyVsMultiplicity.push_back( std::vector<TH2F*>() );
-      m_hVector_channel_EnergyVsModule.push_back( std::vector<TH2F*>() );
-      m_hVector_channel_EnergyVsModuleTProf.push_back( std::vector<TProfile*>() );
+      m_hVector_AlongZ_EnergyVsModule.push_back( std::vector<TH2F*>() );
+      m_hVector_AlongZ_EnergyVsModuleTProf.push_back( std::vector<TProfile*>() );
 
       char name18[300];
       char name18t[300];
@@ -228,17 +228,17 @@ void CastorAnalysis::CreateHistos(){
 
       char name20[300];
       char name20t[300];
-      sprintf(name20,"Channel%d_EnergyVsModule_%s",se,Folders.at(j).c_str());
-      sprintf(name20t,"Energy for Channel %d Vs Module; Module Id(Z); Energy [GeV]", se);
-      TH2F *histo_channel_EnergyVsModule = new TH2F(name20,name20t,7,0,7,4000,0,2000);
-      m_hVector_channel_EnergyVsModule[se-1].push_back(histo_channel_EnergyVsModule);
+      sprintf(name20,"AlongZ_Sector%d_EnergyVsModule_%s",se,Folders.at(j).c_str());
+      sprintf(name20t,"Energy Along Z, Sector %d Vs Module; Module Id(Z); Energy [GeV]", se);
+      TH2F *histo_AlongZ_EnergyVsModule = new TH2F(name20,name20t,7,0,7,4000,0,2000);
+      m_hVector_AlongZ_EnergyVsModule[se-1].push_back(histo_AlongZ_EnergyVsModule);
 
       char name21[300];
       char name21t[300];
-      sprintf(name21,"Channel%d_EnergyVsModuleTProf_%s",se,Folders.at(j).c_str());
-      sprintf(name21t,"Energy for Channel %d Vs Module; Module Id (Z); Energy [GeV]", se);
-      TProfile *histo_channel_EnergyVsModuleTProf = new TProfile(name21,name21t,7,0,7,0,2000);
-      m_hVector_channel_EnergyVsModuleTProf[se-1].push_back(histo_channel_EnergyVsModuleTProf);
+      sprintf(name21,"AlongZ_Sector%d_EnergyVsModuleTProf_%s",se,Folders.at(j).c_str());
+      sprintf(name21t,"Energy Along Z, Sector %d Vs Module; Module Id (Z); Energy [GeV]", se);
+      TProfile *histo_AlongZ_EnergyVsModuleTProf = new TProfile(name21,name21t,7,0,7,0,2000);
+      m_hVector_AlongZ_EnergyVsModuleTProf[se-1].push_back(histo_AlongZ_EnergyVsModuleTProf);
 
     }
 
@@ -359,32 +359,32 @@ void CastorAnalysis::FillHistos(int index){
     if ( (eventCastor->GetCastorModule1Energy(j) > ChannelThreshold) && (j!=4 || j!=5) ){
       multicounter[0]++;
       energymodule[0]+=eventCastor->GetCastorModule1Energy(j);
-      m_hVector_channel_EnergyVsModule[j].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(j));
-      m_hVector_channel_EnergyVsModuleTProf[j].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(j));
+      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(j));
+      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(j));
     }
     if (eventCastor->GetCastorModule2Energy(j) > ChannelThreshold){ 
       multicounter[1]++;
       energymodule[1]+=eventCastor->GetCastorModule2Energy(j);
-      m_hVector_channel_EnergyVsModule[j].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(j));
-      m_hVector_channel_EnergyVsModuleTProf[j].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(j));
+      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(j));
+      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(j));
     }
     if (eventCastor->GetCastorModule3Energy(j) > ChannelThreshold){ 
       multicounter[2]++;
       energymodule[2]+=eventCastor->GetCastorModule3Energy(j);
-      m_hVector_channel_EnergyVsModule[j].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(j));
-      m_hVector_channel_EnergyVsModuleTProf[j].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(j));
+      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(j));
+      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(j));
     }
     if (eventCastor->GetCastorModule4Energy(j) > ChannelThreshold){ 
       multicounter[3]++;
       energymodule[3]+=eventCastor->GetCastorModule4Energy(j);
-      m_hVector_channel_EnergyVsModule[j].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(j));
-      m_hVector_channel_EnergyVsModuleTProf[j].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(j));
+      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(j));
+      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(j));
     }
     if (eventCastor->GetCastorModule5Energy(j) > ChannelThreshold){ 
       multicounter[4]++;
       energymodule[4]+=eventCastor->GetCastorModule5Energy(j);
-      m_hVector_channel_EnergyVsModule[j].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(j));
-      m_hVector_channel_EnergyVsModuleTProf[j].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(j));
+      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(j));
+      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(j));
     }
   }
 
@@ -524,8 +524,8 @@ void CastorAnalysis::SaveHistos(){
     for (int id=0; id<16; id++){
       m_hVector_TotalEnergySectors[id].at(j)->Write();
       m_hVector_Sector_EnergyVsMultiplicity[id].at(j)->Write();
-      m_hVector_channel_EnergyVsModule[id].at(j)->Write();
-      m_hVector_channel_EnergyVsModuleTProf[id].at(j)->Write();
+      m_hVector_AlongZ_EnergyVsModule[id].at(j)->Write();
+      m_hVector_AlongZ_EnergyVsModuleTProf[id].at(j)->Write();
     }
 
     for (int id=0; id<4; id++){
