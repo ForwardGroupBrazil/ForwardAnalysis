@@ -318,13 +318,44 @@ void CastorAnalysis::CreateHistos(){
     TProfile *histo_CastorEnergyPerModuleTProf = new TProfile(name33,"Energy per Module; Module Id (Z); Energy [GeV]",6,0,6,0,2000);
     m_hVector_CastorEnergyPerModuleTProf.push_back(histo_CastorEnergyPerModuleTProf);
 
+    char name34[300];
+    sprintf(name34,"CastorMappingMultiplicities_%s",Folders.at(j).c_str());
+    TH2F *histo_CastorMappingMultiplicity = new TH2F(name34,"Mapping Multiplicities; Module Id (Z); Channel Id",7,0,7,17,0,17);
+    m_hVector_CastorMappingMultiplicity.push_back(histo_CastorMappingMultiplicity);
+
+    char name35[300];
+    sprintf(name35,"CastorMappingEnergy_%s",Folders.at(j).c_str());
+    TH2F *histo_CastorMappingEnergy = new TH2F(name35,"Mapping Energy; Module Id (Z); Channel Id",7,0,7,17,0,17);
+    m_hVector_CastorMappingEnergy.push_back(histo_CastorMappingEnergy);
+
   }
+
+  for (int i=1;i<6;i++)
+    for (int j=1;j<6;j++){
+      m_hVector_CastorMappingEnergySnapshot.push_back( std::vector<TH2F*>() );
+      m_hVector_CastorMappingMultiplicitySnapshot.push_back( std::vector<TH2F*>() );
+
+      char name36[300];
+      char name36t[300];
+      sprintf(name36,"CastorMappingMultiplicities_module_%d_snapshot_%d",i,j);
+      sprintf(name36t,"Castor Mapping Module %d, Snapshot %d. Multiplicities; Module Id (Z); Channel Id", i,j);
+      TH2F *histo_CastorMappingMultiplicitySnapshot = new TH2F(name36,name36t,7,0,7,17,0,17);
+      m_hVector_CastorMappingMultiplicitySnapshot[i-1].push_back(histo_CastorMappingMultiplicitySnapshot);
+
+      char name37[300];
+      char name37t[300];
+      sprintf(name37,"CastorMappingEnergy_module%d_snapshot_%d",i,j);
+      sprintf(name37t,"Castor Mapping Module %d, Snapshot %d. Energy; Module Id (Z); Channel Id", i, j);
+      TH2F *histo_CastorMappingEnergySnapshot = new TH2F(name37,name37t,7,0,7,17,0,17);
+      m_hVector_CastorMappingEnergySnapshot[i-1].push_back(histo_CastorMappingEnergySnapshot);
+    }
 
 }
 
 void CastorAnalysis::FillHistos(int index){
 
   bool debug = false;
+  bool debugmult = false;
 
   sumCastorEnergy = 0.; 
   sumCastorAndHFMinusEnergy = 0.;
@@ -338,95 +369,218 @@ void CastorAnalysis::FillHistos(int index){
   y_centroid = 0.;
   phi_average = 0.;
   SectorCastorHit = 0;
-  int multicounter[16]={0};
-  double energymodule[5]={0.};
-
+  int multicounter[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  double energymodule[5]={0.,0.,0.,0.,0.};
   double castorId[16] = {11.25,33.75,56.25,78.75,101.25,123.75,146.25,168.75,191.25,213.75,236.25,258.75,281.25,303.75,326.75,348.75};
+  int mapping[5][16];
+  double energymapping[5][16];
 
-  for (int i=0; i < 16; i++){
-    CastorEnergySector[i]=0;
-    if (i==4 || i==5){
-      CastorEnergySector[i]=eventCastor->GetCastorModule2Energy(i)+eventCastor->GetCastorModule3Energy(i)+eventCastor->GetCastorModule4Energy(i)+eventCastor->GetCastorModule5Energy(i);
-    }else{
-      CastorEnergySector[i]=eventCastor->GetCastorModule1Energy(i)+eventCastor->GetCastorModule2Energy(i)+eventCastor->GetCastorModule3Energy(i)+eventCastor->GetCastorModule4Energy(i)+eventCastor->GetCastorModule5Energy(i);
+  for (int i=0; i<5; i++){
+    for (int j=0; j<16; j++){
+      mapping[i][j]=0;
+      energymapping[i][j]=0;
     }
   }
 
-  double ChannelThreshold = 1.5*SectorThreshold/sqrt(5);
-  if (debug) std::cout << "ChannelThreshold: " << ChannelThreshold << std::endl;
+  if (ChannelThreshold > 0. && SectorThreshold < 0.){
+    sprintf(selCastor,">> Castor Channel Threshold: %0.2f GeV",ChannelThreshold);
+    for (int i=0; i < 16; i++){
+      CastorEnergySector[i]=0.;
+      if (i==4 || i==5){ // removing channel 5 and 6, module1
+	if (eventCastor->GetCastorModule2Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule2Energy(i);
+	if (eventCastor->GetCastorModule3Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule3Energy(i);
+	if (eventCastor->GetCastorModule4Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule4Energy(i);
+	if (eventCastor->GetCastorModule5Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule5Energy(i);
+      }else{
+	if (eventCastor->GetCastorModule1Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule1Energy(i);
+	if (eventCastor->GetCastorModule2Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule2Energy(i);
+	if (eventCastor->GetCastorModule3Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule3Energy(i);
+	if (eventCastor->GetCastorModule4Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule4Energy(i);
+	if (eventCastor->GetCastorModule5Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule5Energy(i);
+      }
+      if (eventCastor->GetCastorModule1Energy(i) > ChannelThreshold){
+	if (i!=4 || i!=5){ //remove channel 5 and 6, module1
+	  multicounter[0]++;
+	  energymodule[0]+=eventCastor->GetCastorModule1Energy(i);
+	  m_hVector_AlongZ_EnergyVsModule[i].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(i));
+	  m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(i));
+	  m_hVector_CastorMappingEnergy.at(index)->Fill(1,i,eventCastor->GetCastorModule1Energy(i));
+	  m_hVector_CastorMappingMultiplicity.at(index)->Fill(1,i);
+	  mapping[0][i]=1;
+	  energymapping[0][i]=eventCastor->GetCastorModule1Energy(i);
+	}
+      }
+      if (eventCastor->GetCastorModule2Energy(i) > ChannelThreshold){
+	multicounter[1]++;
+	energymodule[1]+=eventCastor->GetCastorModule2Energy(i);
+	m_hVector_AlongZ_EnergyVsModule[i].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(i));
+	m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(i));
+	m_hVector_CastorMappingEnergy.at(index)->Fill(2,i,eventCastor->GetCastorModule2Energy(i));
+	m_hVector_CastorMappingMultiplicity.at(index)->Fill(2,i);
+	mapping[1][i]=1;
+	energymapping[1][i]=eventCastor->GetCastorModule2Energy(i);
+      }
+      if (eventCastor->GetCastorModule3Energy(i) > ChannelThreshold){
+	multicounter[2]++;
+	energymodule[2]+=eventCastor->GetCastorModule3Energy(i);
+	m_hVector_AlongZ_EnergyVsModule[i].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(i));
+	m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(i));
+	m_hVector_CastorMappingEnergy.at(index)->Fill(3,i,eventCastor->GetCastorModule3Energy(i));
+	m_hVector_CastorMappingMultiplicity.at(index)->Fill(3,i);
+	mapping[2][i]=1;
+	energymapping[2][i]=eventCastor->GetCastorModule3Energy(i);
+      }
+      if (eventCastor->GetCastorModule4Energy(i) > ChannelThreshold){
+	multicounter[3]++;
+	energymodule[3]+=eventCastor->GetCastorModule4Energy(i);
+	m_hVector_AlongZ_EnergyVsModule[i].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(i));
+	m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(i));
+	m_hVector_CastorMappingEnergy.at(index)->Fill(4,i,eventCastor->GetCastorModule4Energy(i));
+	m_hVector_CastorMappingMultiplicity.at(index)->Fill(4,i);
+	mapping[3][i]=1;
+	energymapping[3][i]=eventCastor->GetCastorModule4Energy(i);
+      }
+      if (eventCastor->GetCastorModule5Energy(i) > ChannelThreshold){
+	multicounter[4]++;
+	energymodule[4]+=eventCastor->GetCastorModule5Energy(i);
+	m_hVector_AlongZ_EnergyVsModule[i].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(i));
+	m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(i));
+	m_hVector_CastorMappingEnergy.at(index)->Fill(5,i,eventCastor->GetCastorModule5Energy(i));
+	m_hVector_CastorMappingMultiplicity.at(index)->Fill(5,i);
+	mapping[4][i]=1;
+	energymapping[4][i]=eventCastor->GetCastorModule5Energy(i);
+      }
+      if (CastorEnergySector[i] > ChannelThreshold){
+	SectorCastorHit++;
+	sumCastorEnergy+=CastorEnergySector[i];
+	x_temp = 15*cos(castorId[i]*PI/180.0);
+	y_temp = 15*sin(castorId[i]*PI/180.0);
+	num_phi += castorId[i]*CastorEnergySector[i];
+	num_x_centroid += x_temp*CastorEnergySector[i];
+	num_y_centroid += y_temp*CastorEnergySector[i];
+	m_hVector_ECastorSector.at(index)->Fill(i+1,CastorEnergySector[i]);
+	m_hVector_ECastorSectorTProf.at(index)->Fill(i+1,CastorEnergySector[i]);
+	m_hVector_ECastorSectorBin1D.at(index)->Fill(i+1,CastorEnergySector[i]);
+      }
+      else{
+	sumCastorEnergy+=0;
+	SectorZeroCastorCounter++;
+	num_x_centroid += 0;
+	num_y_centroid += 0;
+	num_phi += 0;
+	m_hVector_ECastorSector.at(index)->Fill(i+1,0);
+      }
+    }
 
-  for (int j=0; j<16;j++){
-    if ( (eventCastor->GetCastorModule1Energy(j) > ChannelThreshold) && (j!=4 || j!=5) ){
-      multicounter[0]++;
-      energymodule[0]+=eventCastor->GetCastorModule1Energy(j);
-      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(j));
-      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(j));
+    for (int j=0; j<5; j++){
+      if (debug){ std::cout << "\nMultiplicity Module " << j+1 << ":" << multicounter[j] << std::endl;
+	std::cout << "Castor Multiplicity: " << SectorCastorHit << std::endl;
+      }
+      m_hVector_CastorMultiplicityModule[j].at(index)->Fill(multicounter[j]);
+      m_hVector_CastorMultiplicityPerModule.at(index)->Fill(j+1,multicounter[j]);
+      m_hVector_CastorMultiplicityPerModuleTProf.at(index)->Fill(j+1,multicounter[j]);
+      m_hVector_CastorEnergyPerModule.at(index)->Fill(j+1,energymodule[j]);
+      m_hVector_CastorEnergyPerModuleTProf.at(index)->Fill(j+1,energymodule[j]);
+      m_hVector_CastorMultiplicityModuleAll[j].at(index)->Fill(multicounter[j],SectorCastorHit);
     }
-    if (eventCastor->GetCastorModule2Energy(j) > ChannelThreshold){ 
-      multicounter[1]++;
-      energymodule[1]+=eventCastor->GetCastorModule2Energy(j);
-      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(j));
-      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(j));
+
+    if (sumCastorEnergy > 0.){
+      x_centroid = num_x_centroid/sumCastorEnergy;
+      y_centroid = num_y_centroid/sumCastorEnergy;
+      phi_average = num_phi/sumCastorEnergy;
+      m_hVector_histo_castor_centroid.at(index)->Fill(x_centroid,y_centroid);
+      m_hVector_histo_castor_centroid_phi.at(index)->Fill(phi_average);
     }
-    if (eventCastor->GetCastorModule3Energy(j) > ChannelThreshold){ 
-      multicounter[2]++;
-      energymodule[2]+=eventCastor->GetCastorModule3Energy(j);
-      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(j));
-      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(j));
+
+    if (debug){
+      std::cout << "SectorCastorHit: " << SectorCastorHit << std::endl;
+      std::cout << "Module 1: " << multicounter[0] <<  std::endl;
+      std::cout << "Module 2: " << multicounter[1] <<  std::endl;
+      std::cout << "Module 3: " << multicounter[2] <<  std::endl;
+      std::cout << "Module 4: " << multicounter[3] <<  std::endl;
+      std::cout << "Module 5: " << multicounter[4] <<  std::endl;
     }
-    if (eventCastor->GetCastorModule4Energy(j) > ChannelThreshold){ 
-      multicounter[3]++;
-      energymodule[3]+=eventCastor->GetCastorModule4Energy(j);
-      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(j));
-      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(j));
+
+    for (int l=0; l<5; l++){
+      if (SectorCastorHit==10 && multicounter[l]==10 && chk[l]<5) {
+	for (int j=0; j<5; j++){
+	  for (int k=0;k<16;k++){
+	    if (mapping[j][k]==1){
+	      m_hVector_CastorMappingEnergySnapshot[l].at(chk[l])->Fill(j+1,k+1,energymapping[j][k]);
+	      m_hVector_CastorMappingMultiplicitySnapshot[l].at(chk[l])->Fill(j+1,k+1);
+	      if (debug) std::cout << "Mapping[" << j << "," << k << "]" << " | chk[l]: "<< chk[l] << " | Module: " << l <<  std::endl;
+	    }
+	  }
+	}
+	chk[l]++;
+	if (debug) std::cout << "Counter["<< l << "]: "<< chk[l] << std::endl;
+      }
+
     }
-    if (eventCastor->GetCastorModule5Energy(j) > ChannelThreshold){ 
-      multicounter[4]++;
-      energymodule[4]+=eventCastor->GetCastorModule5Energy(j);
-      m_hVector_AlongZ_EnergyVsModule[j].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(j));
-      m_hVector_AlongZ_EnergyVsModuleTProf[j].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(j));
-    }
+
   }
 
-  for (l=0; l<16;l++){
-    if (CastorEnergySector[l] > SectorThreshold){
-      ++SectorCastorHit;
-      sumCastorEnergy+=CastorEnergySector[l];
-      x_temp = 15*cos(castorId[l]*PI/180.0);
-      y_temp = 15*sin(castorId[l]*PI/180.0);
-      num_phi += castorId[l]*CastorEnergySector[l];
-      num_x_centroid += x_temp*CastorEnergySector[l];
-      num_y_centroid += y_temp*CastorEnergySector[l];
-      m_hVector_ECastorSector.at(index)->Fill(l+1,CastorEnergySector[l]);
-      m_hVector_ECastorSectorTProf.at(index)->Fill(l+1,CastorEnergySector[l]);
-      m_hVector_ECastorSectorBin1D.at(index)->Fill(l+1,CastorEnergySector[l]);
+  if (ChannelThreshold < 0. && SectorThreshold > 0.){
+    sprintf(selCastor,">> Castor Sector Threshold: %0.2f GeV",SectorThreshold);
+    for (int i=0; i < 16; i++){
+      CastorEnergySector[i]=0.;
+      if (i==4 || i==5){ // removing channel 5 and 6, module1
+	CastorEnergySector[i] += eventCastor->GetCastorModule2Energy(i);
+	CastorEnergySector[i] += eventCastor->GetCastorModule3Energy(i);
+	CastorEnergySector[i] += eventCastor->GetCastorModule4Energy(i);
+	CastorEnergySector[i] += eventCastor->GetCastorModule5Energy(i);
+      }else{
+	CastorEnergySector[i] += eventCastor->GetCastorModule1Energy(i);
+	CastorEnergySector[i] += eventCastor->GetCastorModule2Energy(i);
+	CastorEnergySector[i] += eventCastor->GetCastorModule3Energy(i);
+	CastorEnergySector[i] += eventCastor->GetCastorModule4Energy(i);
+	CastorEnergySector[i] += eventCastor->GetCastorModule5Energy(i);
+      }
+      if (CastorEnergySector[i] > SectorThreshold){
+	SectorCastorHit++;
+	sumCastorEnergy+=CastorEnergySector[i];
+	x_temp = 15*cos(castorId[i]*PI/180.0);
+	y_temp = 15*sin(castorId[i]*PI/180.0);
+	num_phi += castorId[i]*CastorEnergySector[i];
+	num_x_centroid += x_temp*CastorEnergySector[i];
+	num_y_centroid += y_temp*CastorEnergySector[i];
+	m_hVector_ECastorSector.at(index)->Fill(i+1,CastorEnergySector[i]);
+	m_hVector_ECastorSectorTProf.at(index)->Fill(i+1,CastorEnergySector[i]);
+	m_hVector_ECastorSectorBin1D.at(index)->Fill(i+1,CastorEnergySector[i]);
+      }
+      else{
+	sumCastorEnergy+=0;
+	SectorZeroCastorCounter++;
+	num_x_centroid += 0;
+	num_y_centroid += 0;
+	num_phi += 0;
+	m_hVector_ECastorSector.at(index)->Fill(i+1,0);
+      }
     }
-    else{
-      sumCastorEnergy+=0;
-      ++SectorZeroCastorCounter;
-      num_x_centroid += 0;
-      num_y_centroid += 0;
-      num_phi += 0;
-      m_hVector_ECastorSector.at(index)->Fill(l+1,0);
+
+    if (sumCastorEnergy > 0.){
+      x_centroid = num_x_centroid/sumCastorEnergy;
+      y_centroid = num_y_centroid/sumCastorEnergy;
+      phi_average = num_phi/sumCastorEnergy;
+      m_hVector_histo_castor_centroid.at(index)->Fill(x_centroid,y_centroid);
+      m_hVector_histo_castor_centroid_phi.at(index)->Fill(phi_average);
     }
+
   }
 
-  for (int j=0; j<5; j++){
-    if (debug) std::cout << "\nMultiplicity Module " << j+1 << ":" << multicounter[j] << std::endl;
-    m_hVector_CastorMultiplicityModule[j].at(index)->Fill(multicounter[j]);
-    m_hVector_CastorMultiplicityPerModule.at(index)->Fill(j+1,multicounter[j]);
-    m_hVector_CastorMultiplicityPerModuleTProf.at(index)->Fill(j+1,multicounter[j]);
-    m_hVector_CastorEnergyPerModule.at(index)->Fill(j+1,energymodule[j]);
-    m_hVector_CastorEnergyPerModuleTProf.at(index)->Fill(j+1,energymodule[j]);
-    m_hVector_CastorMultiplicityModuleAll[j].at(index)->Fill(multicounter[j],SectorCastorHit);
-  }
-
-  if (sumCastorEnergy > 0.){
-    x_centroid = num_x_centroid/sumCastorEnergy;
-    y_centroid = num_y_centroid/sumCastorEnergy;
-    phi_average = num_phi/sumCastorEnergy;
-    m_hVector_histo_castor_centroid.at(index)->Fill(x_centroid,y_centroid);
-    m_hVector_histo_castor_centroid_phi.at(index)->Fill(phi_average);
+  if (debugmult && (multicounter[0] > SectorCastorHit)) {
+    std::cout << selCastor << std::endl;
+    std::cout << "\nBug: multicounter[" << 0 << "]:" << multicounter[0] << " | SectorCounter: " << SectorCastorHit << std::endl;
+    std::cout << "Sum Castor Energy: " << sumCastorEnergy << std::endl;
+    std::cout << "Sector Threshold: " << SectorThreshold << " | Channel Threshold: " << ChannelThreshold << std::endl;
+    for (int i=0; i < 16; i++){
+      std::cout << "Energy per Sector " << i+1 << " (m1 + m2 + m3 + m4 + m5): "<< CastorEnergySector[i] << std::endl;
+      std::cout << "Energy per Module 1: " << eventCastor->GetCastorModule1Energy(i) << std::endl;
+      std::cout << "Energy per Module 2: " << eventCastor->GetCastorModule2Energy(i) << std::endl;
+      std::cout << "Energy per Module 3: " << eventCastor->GetCastorModule3Energy(i) << std::endl;
+      std::cout << "Energy per Module 4: " << eventCastor->GetCastorModule4Energy(i) << std::endl;
+      std::cout << "Energy per Module 5: " << eventCastor->GetCastorModule5Energy(i) << std::endl;
+    }
   }
 
   for (k=0; k<eventCastor->GetEachTowerCounter();k++){
@@ -464,6 +618,7 @@ void CastorAnalysis::FillHistos(int index){
     }
   }
 
+
   if (SectorCastorHit >= 0 && SectorCastorHit <= 4){
     m_hVector_sumECastorMinusBinSlice[0].at(index)->Fill(sumCastorEnergy);
     m_hVector_sumEHFplusBinSlice[0].at(index)->Fill(eventdiff->GetSumEnergyHFPlus());
@@ -492,10 +647,11 @@ void CastorAnalysis::FillHistos(int index){
 
 void CastorAnalysis::SaveHistos(){
 
+
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
+
     m_hVector_histo_castor_centroid[j]->Write();
     m_hVector_histo_castor_centroid_phi[j]->Write();
-
     m_hVector_ECastorSector[j]->Write();
     m_hVector_ECastorSectorTProf[j]->Write();
     m_hVector_ECastorSectorBin1D[j]->Write();
@@ -520,6 +676,8 @@ void CastorAnalysis::SaveHistos(){
     m_hVector_CastorMultiplicityPerModuleTProf[j]->Write();
     m_hVector_CastorEnergyPerModule[j]->Write();
     m_hVector_CastorEnergyPerModuleTProf[j]->Write();
+    m_hVector_CastorMappingMultiplicity[j]->Write();
+    m_hVector_CastorMappingEnergy[j]->Write();
 
     for (int id=0; id<16; id++){
       m_hVector_TotalEnergySectors[id].at(j)->Write();
@@ -541,11 +699,23 @@ void CastorAnalysis::SaveHistos(){
 
   }
 
+  for (int i=0;i<5;i++){
+    for (int j=0;j<5;j++){
+      m_hVector_CastorMappingMultiplicitySnapshot[i].at(j)->Write();
+      m_hVector_CastorMappingEnergySnapshot[i].at(j)->Write();
+    }
+  }
+
 }
 
-void CastorAnalysis::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string typesel_, double SectorThreshold_){
+
+void CastorAnalysis::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string typesel_, double SectorThreshold_, double ChannelThreshold_){
 
   bool debug = false;
+
+  for (int i=0;i<5;i++){
+    chk[i] = 0;
+  }
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -560,6 +730,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
   lepton2pt = lepton2pt_;
   typesel = typesel_;
   SectorThreshold = SectorThreshold_;
+  ChannelThreshold = ChannelThreshold_;
 
   std::string selStatus;
   std::string TriggerStatus;
@@ -600,7 +771,6 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
   outstring << "Twiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookPickEvents " << std::endl;
   outstring << ">>---------------------------------------------------------------------- " << std::endl;
 
-  int NEVENTS = tr->GetEntries();
   int triggercounter[20]={0};
   int totalT=0;
 
@@ -628,14 +798,14 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
 
-  unsigned NEntries = tr->GetEntries();
+  NEntries = tr->GetEntries();
   std::cout << "" << std::endl;
   std::cout<< "Reading Tree: "<< NEntries << " events"<<std::endl;
   std::cout << "" << std::endl;
 
   std::string status;  
 
-  for(int i=0;i<NEVENTS;i++){
+  for(int i=0;i<NEntries;i++){
 
     tr->GetEntry(i);
 
@@ -645,14 +815,13 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
       }
     }
 
-
     if (!debug){
       if (i==0) {
 	std::cout << "" << std::endl;
 	std::cout<< "Status Bar" << std::endl;
 	std::cout << "" << std::endl;
       }
-      loadBar(i,NEVENTS,100,100);
+      loadBar(i,NEntries,100,100);
     }
 
     if (debug){
@@ -932,7 +1101,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
   outstring << ">> Lepton1(pT) > " << lepton1pt <<std::endl;
   outstring << ">> Lepton2(pT) > " << lepton2pt <<std::endl;
   outstring << ">> Type of Selection: " << selStatus << std::endl;
-  outstring << ">> Sector Castor Threshold [GeV]: " << SectorThreshold <<  std::endl;
+  outstring << selCastor << std::endl;
   outstring << " " << std::endl;
   outstring << "<< TRIGGER >> " << std::endl;
   outstring << " " << std::endl;
@@ -988,6 +1157,7 @@ int main(int argc, char **argv)
   std::string switchtrigger_;
   std::string typesel_;
   double SectorThreshold_;
+  double ChannelThreshold_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0) filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0) processname_ = argv[2];
@@ -999,6 +1169,7 @@ int main(int argc, char **argv)
   if (argc > 8 && strcmp(s1,argv[8]) != 0) nVertex_ = atoi(argv[8]);
   if (argc > 9 && strcmp(s1,argv[9]) != 0) typesel_ = argv[9];
   if (argc > 10 && strcmp(s1,argv[10]) != 0) SectorThreshold_ = atof(argv[10]);
+  if (argc > 11 && strcmp(s1,argv[11]) != 0) ChannelThreshold_ = atof(argv[11]);
 
   std::cout << " " << std::endl;
   std::cout << ">>>>> Run with the Options <<<<< " << std::endl;
@@ -1012,6 +1183,7 @@ int main(int argc, char **argv)
   std::cout << "# Vertex: " << nVertex_ << std::endl;
   std::cout << "Type of Selection: " << typesel_ << std::endl;
   std::cout << "Sector Castor Threshold [GeV]: " << SectorThreshold_ <<  std::endl;
+  std::cout << "Channel Castor Threshold [GeV]: " << ChannelThreshold_ <<  std::endl;
   std::cout << "" << std::endl;
 
   if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger" || switchtrigger_=="trigger_all_electron") {}
@@ -1033,22 +1205,39 @@ int main(int argc, char **argv)
     return 0;
   }
 
-  if (nVertex_ <= 0 || optTrigger_ < 0 || lepton1pt_ < 0 || lepton2pt_ < 0 || SectorThreshold_ < 0 ){
+  if (nVertex_ <= 0 || optTrigger_ < 0 || lepton1pt_ < 0 || lepton2pt_ < 0){
     std::cout << "----------------------------------------------" << std::endl;
     std::cout << " Pay attention on the input numbers parameters" << std::endl;
     std::cout << "----------------------------------------------" << std::endl;
     std::cout << ">> Requirements:                             " << std::endl;
     std::cout << "I)   nVertex_ > 0 " << std::endl;
     std::cout << "II)  optTrigger >= 0" << std::endl;
-    std::cout << "III) mcweight_ > 0" << std::endl;
-    std::cout << "IV)  Lepton1pt_ and Lepton2pt_ >= 0" << std::endl;  
+    std::cout << "III) SectorThreshold_ > 0" << std::endl;
+    std::cout << "IV)  ChannelThreshold_ >= 0" << std::endl;  
+    std::cout << "V )  Lepton1pt_ and Lepton2pt_ >= 0" << std::endl;
     std::cout << "----------------------------------------------" << std::endl; 
+    return 0;
+  }
+
+  if ( (SectorThreshold_ < 0 && ChannelThreshold_ < 0) || (SectorThreshold_ > 0 && ChannelThreshold_ > 0) ){
+    std::cout << "---------------------------------------------------" << std::endl;
+    std::cout << "   Pay attention on the input numbers parameters" << std::endl;
+    std::cout << "---------------------------------------------------" << std::endl;
+    std::cout << ">> Requirements:                             " << std::endl;
+    std::cout << "If castorthreshold_ and channelsthreshold are both" << std::endl;
+    std::cout << "positive or negative, you can not run program. "           << std::endl;
+    std::cout << "" << std::endl;
+    std::cout << "----------------------------------------------------------------------------" << std::endl;
+    std::cout << ">> Instructions: " << std::endl;
+    std::cout << "I) SectorThreshold_ > 0 and ChannelThreshold_ < 0, allow Sector threshold." << std::endl;
+    std::cout << "I) SectorThreshold_ < 0 and ChannelThreshold_ > 0, allow Channel threshold." << std::endl;
+    std::cout << "----------------------------------------------------------------------------" << std::endl;
     return 0;
   }
 
   CastorAnalysis* CastorRun = new CastorAnalysis();
   CastorRun->CreateHistos();
-  CastorRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, typesel_, SectorThreshold_);
+  CastorRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, typesel_, SectorThreshold_, ChannelThreshold_);
   return 0;
 }
 

@@ -56,6 +56,8 @@ class CastorAnalysis {
   double sumCastorAndHFMinusEnergy;
   int SectorCastorHit;
   double sumCastorEnergy;
+  int SectorCastorHitTh;
+  double sumCastorEnergyTh;
 
   std::string filein;
   std::string processname;
@@ -67,8 +69,11 @@ class CastorAnalysis {
   double lepton1pt;
   double lepton2pt;
   double SectorThreshold;
+  double ChannelThreshold;
   int SectorZeroCastorCounter;
+  int NEntries;
 
+  int chk[5];
   double x_centroid;
   double y_centroid;
   double x_temp;
@@ -78,6 +83,8 @@ class CastorAnalysis {
   double num_phi;
   double phi_average;
   double CastorEnergySector[16];
+  double CastorEnergySectorTh[16];
+  char selCastor[300];
 
   std::vector<TH2F*> m_hVector_histo_castor_centroid;
   std::vector<TH1F*> m_hVector_histo_castor_centroid_phi;
@@ -106,7 +113,7 @@ class CastorAnalysis {
   std::vector<TH2F*> m_hVector_CastorMultiplicityPerModule;
   std::vector<TProfile*> m_hVector_CastorEnergyPerModuleTProf;
   std::vector<TH2F*> m_hVector_CastorEnergyPerModule;
- 
+
   std::vector<std::vector<TH1F*> > m_hVector_TotalEnergySectors;
   std::vector<std::vector<TH1F*> > m_hVector_sumEHFplusBinSlice;
   std::vector<std::vector<TH1F*> > m_hVector_sumEHFminusBinSlice; 
@@ -117,6 +124,12 @@ class CastorAnalysis {
   std::vector<std::vector<TProfile*> > m_hVector_AlongZ_EnergyVsModuleTProf;
   std::vector<std::vector<TH2F*> > m_hVector_CastorMultiplicityModuleAll;
 
+  std::vector<TH2F*> m_hVector_CastorMappingMultiplicity;
+  std::vector<TH2F*> m_hVector_CastorMappingEnergy;
+
+  std::vector<std::vector<TH2F*> > m_hVector_CastorMappingMultiplicitySnapshot;
+  std::vector<std::vector<TH2F*> > m_hVector_CastorMappingEnergySnapshot;
+
   std::vector <std::string> Folders;
 
   public :
@@ -125,7 +138,7 @@ class CastorAnalysis {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, double);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, double, double);
   void LoadFile(std::string,std::string);
   void CreateHistos();
   void FillHistos(int);
