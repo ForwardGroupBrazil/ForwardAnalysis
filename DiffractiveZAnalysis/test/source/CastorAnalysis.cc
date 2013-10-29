@@ -95,8 +95,6 @@ void CastorAnalysis::CreateHistos(){
   std::string step5 = "step5"; 
   std::string step6 = "step6"; 
   std::string step7 = "step7"; 
-  std::string step8 = "GapHFMinus";
-  std::string step9 = "GapHFPlus";
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -106,8 +104,6 @@ void CastorAnalysis::CreateHistos(){
   Folders.push_back(step5);
   Folders.push_back(step6);
   Folders.push_back(step7);
-  Folders.push_back(step8);
-  Folders.push_back(step9);
 
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
@@ -708,7 +704,6 @@ void CastorAnalysis::SaveHistos(){
 
 }
 
-
 void CastorAnalysis::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string typesel_, double SectorThreshold_, double ChannelThreshold_){
 
   bool debug = false;
@@ -842,10 +837,15 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
       }
     }
 
+    bool triggerE_a = false;
+    bool triggerE_b = false;
+    bool triggerE_c = false;
+    bool triggerE_d = false;
+    bool triggerE_e = false;
+    bool triggerE_f = false;
+    bool triggerE_g = false;
     bool trigger = false;
     bool vertex = false;
-    bool diffseln = false;
-    bool diffselp = false;
 
     bool presel = false;
     bool charge = false;
@@ -863,7 +863,14 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     bool isolation = false;
 
     if (switchtrigger == "trigger_all_electron"){
-      if (eventCastor->GetHLTPath(0) || eventCastor->GetHLTPath(1) || eventCastor->GetHLTPath(2) || eventCastor->GetHLTPath(3) || eventCastor->GetHLTPath(4) || eventCastor->GetHLTPath(5) || eventCastor->GetHLTPath(6)) trigger = true;
+      if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventCastor->GetHLTPath(0) ) triggerE_a = true;
+      if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventCastor->GetHLTPath(1) ) triggerE_b = true;
+      if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventCastor->GetHLTPath(2) ) triggerE_c = true;
+      if ( (eventdiff->GetRunNumber() >= 144115 && eventdiff->GetRunNumber() <= 147145) && eventCastor->GetHLTPath(3) ) triggerE_d = true;
+      if ( (eventdiff->GetRunNumber() >= 147146 && eventdiff->GetRunNumber() <= 148058) && eventCastor->GetHLTPath(4) ) triggerE_e = true;
+      if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventCastor->GetHLTPath(5) ) triggerE_f = true;
+      if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventCastor->GetHLTPath(6) ) triggerE_g = true;
+      if (triggerE_a || triggerE_b || triggerE_c || triggerE_d || triggerE_e || triggerE_f || triggerE_g) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
@@ -882,8 +889,6 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     }
 
     if (eventdiff->GetNVertex() == nVertex) vertex = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -3.)) diffseln = true;
-    if ((eventdiff->GetEtaMaxFromPFCands() <  3.)) diffselp = true;
 
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
@@ -1031,7 +1036,6 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
       }
 
       if ((eleEndCap1 || eleBarrel1) && (eleEndCap2 || eleBarrel2)) candSel = true;
-
     }
 
     else if(typesel == "PatMuon"){
@@ -1044,10 +1048,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
 	candSel = true;
 	isolation = true;
       }
-
-
     }
-
     else{
       exit(EXIT_FAILURE);
     }
@@ -1064,8 +1065,6 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
       if(trigger && vertex && presel && nSel && charge && dimass) FillHistos(5);
       if(trigger && vertex && presel && nSel && charge && dimass && isolation) FillHistos(6);
       if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel) FillHistos(7);
-      if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8);
-      if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp) FillHistos(9);
     }
 
     else if (switchtrigger =="no_trigger"){
@@ -1077,14 +1076,10 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
       if(vertex && presel && nSel && charge && dimass) FillHistos(5);
       if(vertex && presel && nSel && charge && dimass && isolation) FillHistos(6);
       if(vertex && presel && nSel && charge && dimass && isolation && candSel) FillHistos(7);
-      if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8);
-      if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp) FillHistos(9);
     }
-
     else{
       exit(EXIT_FAILURE);
     }
-
   }
 
   outstring << "" << std::endl;
