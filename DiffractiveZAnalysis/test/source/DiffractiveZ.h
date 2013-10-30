@@ -70,6 +70,10 @@ class DiffractiveZ {
   double sumCastorAndHFMinusEnergy;
   int SectorCastorHit;
   double castorthreshold;
+  double channelsthreshold;
+  double etamin_;
+  bool castoractivity;
+  bool castorgap;
 
   std::string filein;
   std::string processname;
@@ -85,15 +89,6 @@ class DiffractiveZ {
   double lepton2pt;
   int SectorZeroCastorCounter;
   double CastorEnergySector[16];
-
-  double x_centroid;
-  double y_centroid;
-  double x_temp;
-  double y_temp;
-  double num_x_centroid;
-  double num_y_centroid;
-  double num_phi;
-  double phi_average;
 
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronMass;
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronEta;
@@ -136,6 +131,7 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_tracks;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamax;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamin;
+  std::vector<std::vector<TH1F*> > m_hVector_pfetamincastor;
   std::vector<std::vector<TH1F*> > m_hVector_vertex;
 
   std::vector<std::vector<TH1F*> > m_hVector_deltaphielectrons;
@@ -348,7 +344,7 @@ class DiffractiveZ {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double, double);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);

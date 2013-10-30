@@ -85,9 +85,10 @@ void DiffractiveZ::LoadFile(std::string fileinput, std::string processinput){
 
 void DiffractiveZ::CreateHistos(std::string type){
 
-  double binarrayplus[18] = {0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.,2.25,2.5,2.75,3.,3.25,3.5,3.75,4.,5.2};
-  double binarrayminus[18] = {-5.2,-4.,-3.75,-3.5,-3.25,-3.,-2.75,-2.5,-2.25,-2.,-1.75,-1.5,-1.25,-1.,-0.75,-0.5,-0.25,0.};
+  double binarrayplus[19] = {0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.,2.25,2.5,2.75,3.,3.25,3.5,3.75,4.,5.2,6.2};
+  double binarrayminus[19] = {-6.2,-5.2,-4.,-3.75,-3.5,-3.25,-3.,-2.75,-2.5,-2.25,-2.,-1.75,-1.5,-1.25,-1.,-0.75,-0.5,-0.25,0.};
   double binarraydelta[15] = {0.,0.5,1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.,5.5,6.,7.,9.};
+  double xi_bin[18]={0.0003,0.002,0.0045,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1};
 
   std::string step0 = "without_cuts"; 
   std::string step1 = "with_trigger"; 
@@ -373,6 +374,7 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_XiPlusPF.push_back( std::vector<TH1F*>() );
     m_hVector_XiMinusPF.push_back( std::vector<TH1F*>() );
     m_hVector_XiPF.push_back( std::vector<TH1F*>() );
+    m_hVector_pfetamincastor.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -530,12 +532,12 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name30[300];
       sprintf(name30,"pfetamax_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_PFEtamax = new TH1F(name30,"Particle Flow #eta_{max} Distribution; #eta; N events",17,binarrayplus);
+      TH1F *histo_PFEtamax = new TH1F(name30,"Particle Flow #eta_{max} Distribution; #eta; N events",18,binarrayplus);
       m_hVector_pfetamax[j].push_back(histo_PFEtamax);
 
       char name31[300];
       sprintf(name31,"pfetamin_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_PFEtamin = new TH1F(name31,"Particle Flow #eta_{min} Distribution; #eta; N events",17,binarrayminus);
+      TH1F *histo_PFEtamin = new TH1F(name31,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
       m_hVector_pfetamin[j].push_back(histo_PFEtamin);
 
       char name32[300];
@@ -1495,18 +1497,23 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name223[300];
       sprintf(name223,"xiPlusPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_XiPlusPF = new TH1F(name223,"#xi_{plus} Particle Flow; #xi_{plus}; N Event",100,0.,1.);
+      TH1F *histo_XiPlusPF = new TH1F(name223,"#xi_{plus} Particle Flow; #xi_{plus}; N Event",17,xi_bin);
       m_hVector_XiPlusPF[j].push_back(histo_XiPlusPF);
 
       char name224[300];
       sprintf(name224,"xiMinusPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_XiMinusPF = new TH1F(name224,"#xi_{minus} Particle Flow; #xi_{minus}; N Event",100,0.,1.);
+      TH1F *histo_XiMinusPF = new TH1F(name224,"#xi_{minus} Particle Flow; #xi_{minus}; N Event",17,xi_bin);
       m_hVector_XiMinusPF[j].push_back(histo_XiMinusPF);
 
       char name225[300];
       sprintf(name225,"xiPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_XiPF = new TH1F(name225,"#xi Particle Flow; #xi; N Event",100,0.,1.);
+      TH1F *histo_XiPF = new TH1F(name225,"#xi Particle Flow; #xi; N Event",17,xi_bin);
       m_hVector_XiPF[j].push_back(histo_XiPF);
+
+      char name226[300];
+      sprintf(name226,"pfetamincastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_PFEtamincastor = new TH1F(name226,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
+      m_hVector_pfetamincastor[j].push_back(histo_PFEtamincastor);
 
     }
   }
@@ -1548,8 +1555,6 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_asumE[index].at(pileup)->Fill(aSumE,totalweight);
   m_hVector_multhf[index].at(pileup)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
   m_hVector_tracks[index].at(pileup)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-  m_hVector_pfetamax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-  m_hVector_pfetamin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
   m_hVector_vertex[index].at(pileup)->Fill(eventdiff->GetNVertex(),totalweight);
   m_hVector_deltaphielectrons[index].at(pileup)->Fill(deltaphielectrons,totalweight);
   m_hVector_deltaphimuons[index].at(pileup)->Fill(deltaphimuons,totalweight);
@@ -1672,37 +1677,20 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_correlationMuon2Phi[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPhi(),eventdiffZ->GetPatMuon2Phi());
   m_hVector_correlationMuon2Iso[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr03(),eventdiffZ->GetPatMuon2relIsoDr03());
 
-  sumCastorEnergy = 0.;
-  sumCastorAndHFMinusEnergy = 0.;
-  SectorCastorHit = 0.;
-  SectorZeroCastorCounter = 0.;
-
-  for (int i=0; i < 16; i++){
-    CastorEnergySector[i]=0;
-    if (i==4 || i==5){
-      CastorEnergySector[i]=eventdiffZ->GetCastorModule2Energy(i)+eventdiffZ->GetCastorModule3Energy(i)+eventdiffZ->GetCastorModule4Energy(i)+eventdiffZ->GetCastorModule5Energy(i);
-    }else{
-      CastorEnergySector[i]=eventdiffZ->GetCastorModule1Energy(i)+eventdiffZ->GetCastorModule2Energy(i)+eventdiffZ->GetCastorModule3Energy(i)+eventdiffZ->GetCastorModule4Energy(i)+eventdiffZ->GetCastorModule5Energy(i);
-    }
-  }
-
   for (l=0; l<16;l++){
-    if (CastorEnergySector[l] > castorthreshold){
-      ++SectorCastorHit;
-      sumCastorEnergy+=CastorEnergySector[l];
+    if (CastorEnergySector[l] >=1.){
       m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
       m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
       m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
     }
     else{
-      sumCastorEnergy+=0;
-      ++SectorZeroCastorCounter;
-      num_x_centroid += 0;
-      num_y_centroid += 0;
-      num_phi += 0;
       m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,0);
     }
   }
+
+  m_hVector_pfetamin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
+  m_hVector_pfetamincastor[index].at(pileup)->Fill(etamin_,totalweight);
+  m_hVector_pfetamax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
 
   m_hVector_SectorVsTotalCastorEnergy[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
   m_hVector_SectorVsTotalCastorEnergyTProf[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
@@ -2045,12 +2033,14 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_XiPlusPF[j].at(i)->Write();
       m_hVector_XiPF[j].at(i)->Write();
 
+      m_hVector_pfetamincastor[j].at(i)->Write();
+
     }
   }
 
 }
 
-void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_, double castorthreshold_){
+void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_, double castorthreshold_, double channelsthreshold_){
 
   bool debug = false;
 
@@ -2070,9 +2060,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   lepton2pt = lepton2pt_;
   typesel = typesel_;
   castorthreshold = castorthreshold_;
+  channelsthreshold = channelsthreshold_;
 
   std::string selStatus;
   std::string TriggerStatus;
+  char selCastor[300];
 
   TFile check1(filein.c_str());
 
@@ -2188,8 +2180,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     deltaetamuons = eventdiffZ->GetLeadingMuonEta() - eventdiffZ->GetSecondMuonEta();
     deltapTelectrons = eventdiffZ->GetLeadingElectronPt() - eventdiffZ->GetSecondElectronPt();
     deltapTmuons = eventdiffZ->GetLeadingMuonPt() - eventdiffZ->GetSecondMuonPt();
-    deltaetapf = eventdiff->GetEtaMaxFromPFCands() - eventdiff->GetEtaMinFromPFCands();
-    absdeltaetapf = fabs(eventdiff->GetEtaMaxFromPFCands() - eventdiff->GetEtaMinFromPFCands()); 
 
     double totalcommon = 1.;
     double mclumiweight = 1.;
@@ -2239,9 +2229,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool vertex = false;
     bool diffseln = false;
     bool diffselp = false;
-    int castorcount = 0;
-    bool castorgap = false;
-    bool castoractivity = false;
 
     bool presel = false;
     bool charge = false;
@@ -2261,7 +2248,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool ZKinP = false;
 
     if (switchtrigger == "trigger_all_electron"){
-
       if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffZ->GetHLTPath(0) ) triggerE_a = true;
       if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventdiffZ->GetHLTPath(1) ) triggerE_b = true;
       if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventdiffZ->GetHLTPath(2) ) triggerE_c = true;
@@ -2269,9 +2255,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if ( (eventdiff->GetRunNumber() >= 147146 && eventdiff->GetRunNumber() <= 148058) && eventdiffZ->GetHLTPath(4) ) triggerE_e = true;
       if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventdiffZ->GetHLTPath(5) ) triggerE_f = true;
       if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventdiffZ->GetHLTPath(6) ) triggerE_g = true;
-
       if (triggerE_a || triggerE_b || triggerE_c || triggerE_d || triggerE_e || triggerE_f || triggerE_g) trigger = true;
-
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
@@ -2289,19 +2273,92 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       exit(EXIT_FAILURE);
     }
 
-    if (eventdiff->GetNVertex() == nVertex) vertex = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -3.)) diffseln = true;
-    if ((eventdiff->GetEtaMaxFromPFCands() <  3.)) diffselp = true;
+    sumCastorEnergy = 0.;
+    sumCastorAndHFMinusEnergy = 0.;
+    SectorCastorHit = 0.;
+    SectorZeroCastorCounter = 0.;
+    castorgap = false;
+    castoractivity = false;
 
-    for(int sec=0; sec<16; sec++){
-      if (eventdiffZ->GetCastorTowerEnergy(sec) > 10.) ++castorcount; 
+    if (channelsthreshold > 0. && castorthreshold < 0.){
+      sprintf(selCastor,">> Castor Channel Threshold: %0.2f GeV",channelsthreshold);
+      for (int i=0; i < 16; i++){
+	CastorEnergySector[i]=0.;
+	if (i==4 || i==5){
+	  if (eventdiffZ->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i);
+	  if (eventdiffZ->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i);
+	  if (eventdiffZ->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i);
+	  if (eventdiffZ->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i);
+	}else{
+	  if (eventdiffZ->GetCastorModule1Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule1Energy(i);
+	  if (eventdiffZ->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i);
+	  if (eventdiffZ->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i);
+	  if (eventdiffZ->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i);
+	  if (eventdiffZ->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i);
+	}
+      }
+
+      for (l=0; l<16;l++){
+	if (CastorEnergySector[l] >= channelsthreshold){
+	  ++SectorCastorHit;
+	  sumCastorEnergy+=CastorEnergySector[l];
+	}
+	else{
+	  sumCastorEnergy+=0;
+	  ++SectorZeroCastorCounter;
+	}
+      }
+
     }
 
-    if (castorcount > 0){
+    if ( castorthreshold > 0. && channelsthreshold < 0. ) {
+      sprintf(selCastor,">> Castor Sector Threshold: %0.2f GeV",castorthreshold);
+      for (int i=0; i < 16; i++){
+	CastorEnergySector[i]=0.;
+	if (i==4 || i==5){
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i);
+	}else{
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule1Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i);
+	}
+      }
+      for (l=0; l<16;l++){
+	if (CastorEnergySector[l] >= castorthreshold){
+	  ++SectorCastorHit;
+	  sumCastorEnergy+=CastorEnergySector[l];
+	}
+	else{
+	  sumCastorEnergy+=0;
+	  ++SectorZeroCastorCounter;
+	}
+      }
+    } 
+
+    if (SectorCastorHit >= 1){
       castoractivity = true;
     }else{
       castorgap = true;
-    } 
+    }
+
+    etamin_=0.;
+    if (castoractivity) {
+      etamin_ = -6.;
+    }else{
+      etamin_ = eventdiff->GetEtaMinFromPFCands();
+    }
+
+    if (eventdiff->GetNVertex() == nVertex) vertex = true;
+    if ((etamin_ > -3.)) diffseln = true;
+    if ((eventdiff->GetEtaMaxFromPFCands() <  3.)) diffselp = true;
+
+    deltaetapf = eventdiff->GetEtaMaxFromPFCands() - etamin_;
+    absdeltaetapf = fabs(eventdiff->GetEtaMaxFromPFCands() - etamin_);
 
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
@@ -2551,7 +2608,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   outstring << ">> Lepton1(pT) > " << lepton1pt <<std::endl;
   outstring << ">> Lepton2(pT) > " << lepton2pt <<std::endl;
   outstring << ">> Type of Selection: " << selStatus << std::endl;
-  outstring << ">> Castor Threshold: " << castorthreshold << std::endl;
+  outstring << selCastor << std::endl;
   outstring << " " << std::endl;
   outstring << "<< TRIGGER >> " << std::endl;
   outstring << " " << std::endl;
@@ -2610,6 +2667,7 @@ int main(int argc, char **argv)
   std::string type_;
   std::string typesel_;
   double castorthreshold_;
+  double channelsthreshold_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0) filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0) processname_ = argv[2];
@@ -2624,6 +2682,7 @@ int main(int argc, char **argv)
   if (argc > 11 && strcmp(s1,argv[11]) != 0) mcweight_ = atof(argv[11]);
   if (argc > 12 && strcmp(s1,argv[12]) != 0) typesel_ = argv[12];
   if (argc > 13 && strcmp(s1,argv[13]) != 0) castorthreshold_ = atof(argv[13]);
+  if (argc > 14 && strcmp(s1,argv[14]) != 0) channelsthreshold_ = atof(argv[14]);
 
   std::cout << " " << std::endl;
   std::cout << ">>>>> Run with the Options <<<<< " << std::endl;
@@ -2640,6 +2699,7 @@ int main(int argc, char **argv)
   std::cout << "MC Weight: " << mcweight_ << std::endl;
   std::cout << "Type of Selection: " << typesel_ << std::endl;
   std::cout << "Castor Threshold: " << castorthreshold_ << std::endl;
+  std::cout << "Channels Threshold: " << channelsthreshold_ << std::endl;
   std::cout << "" << std::endl;
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
@@ -2663,7 +2723,7 @@ int main(int argc, char **argv)
       return 0;
     }
 
-    if (nVertex_ <= 0 || optTrigger_ < 0 || mcweight_ <= 0 || lepton1pt_ < 0 || lepton2pt_ < 0 || castorthreshold_ < 0){
+    if (nVertex_ <= 0 || optTrigger_ < 0 || mcweight_ <= 0 || lepton1pt_ < 0 || lepton2pt_ < 0){
       std::cout << "----------------------------------------------" << std::endl;
       std::cout << " Pay attention on the input numbers parameters" << std::endl;
       std::cout << "----------------------------------------------" << std::endl;
@@ -2672,14 +2732,29 @@ int main(int argc, char **argv)
       std::cout << "II)  optTrigger >= 0" << std::endl;
       std::cout << "III) mcweight_ > 0" << std::endl;
       std::cout << "IV)  Lepton1pt_ and Lepton2pt_ >= 0" << std::endl;  
-      std::cout << "V)   castorthreshold_ >= 0" << std::endl;
       std::cout << "----------------------------------------------" << std::endl; 
+      return 0;
+    }
+
+    if ( (castorthreshold_ < 0 && channelsthreshold_ < 0) || (castorthreshold_ > 0 && channelsthreshold_ > 0) ){
+      std::cout << "---------------------------------------------------" << std::endl;
+      std::cout << "   Pay attention on the input numbers parameters" << std::endl;
+      std::cout << "---------------------------------------------------" << std::endl;
+      std::cout << ">> Requirements:                             " << std::endl;
+      std::cout << "If castorthreshold_ and channelsthreshold are both" << std::endl;
+      std::cout << "positive or negative, you can not run program. "           << std::endl; 
+      std::cout << "" << std::endl;
+      std::cout << "----------------------------------------------------------------------------" << std::endl;
+      std::cout << ">> Instructions: " << std::endl;
+      std::cout << "I) castorthreshold_ > 0 and channelsthreshold_ < 0, allow Sector threshold." << std::endl;
+      std::cout << "I) castorthreshold_ < 0 and channelsthreshold_ > 0, allow Channel threshold." << std::endl;
+      std::cout << "----------------------------------------------------------------------------" << std::endl;
       return 0;
     }
 
     DiffractiveZ* diffZRun = new DiffractiveZ();
     diffZRun->CreateHistos(type_);
-    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_, castorthreshold_);
+    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_, castorthreshold_, channelsthreshold_);
     return 0;
   }
 
