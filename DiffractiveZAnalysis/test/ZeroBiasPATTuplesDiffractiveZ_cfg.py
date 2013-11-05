@@ -372,9 +372,14 @@ process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessZDCInfo = False
 if config.runOnMC:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = True
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.9375
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.castorHitsTag = "castorreco"
+     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.castorRecHitTag ="castorreco"
+
 else:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.castorHitsTag = "castorRecHitCorrector"
+     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.castorRecHitTag = "castorRecHitCorrector"
 
 if options.condition=="A":
      print("")

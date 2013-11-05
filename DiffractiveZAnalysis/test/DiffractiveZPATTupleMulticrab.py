@@ -40,7 +40,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = -1
+config.NumberOfEvents = 5000
 
 #
 # Define Options to Run
@@ -419,9 +419,14 @@ else:
 if config.runOnMC:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = True
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.9375
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.castorHitsTag = "castorreco"
+     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.castorRecHitTag ="castorreco"
+
 else:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.castorHitsTag = "castorRecHitCorrector"
+     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.castorRecHitTag = "castorRecHitCorrector"
 
 #
 # Define MC Access
