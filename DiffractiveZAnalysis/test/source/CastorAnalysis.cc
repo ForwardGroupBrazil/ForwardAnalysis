@@ -169,7 +169,7 @@ void CastorAnalysis::CreateHistos(){
 
     char name11[300];
     sprintf(name11,"CastorMultiplicity_%s",Folders.at(j).c_str());
-    TH1F *histo_CastorMultiplicity = new TH1F(name11,"Castor: number of sectors with activity; #Sectors; N events",18,0,18);
+    TH1F *histo_CastorMultiplicity = new TH1F(name11,"Castor: number of sectors with activity; N Sectors (#phi); N events",18,0,18);
     m_hVector_CastorMultiplicity.push_back(histo_CastorMultiplicity);
 
     char name12[300];
@@ -291,14 +291,14 @@ void CastorAnalysis::CreateHistos(){
       char name30[300];
       char name30t[300];
       sprintf(name30,"CastorMultiplicityModule%d_%s",i,Folders.at(j).c_str());
-      sprintf(name30t,"Castor Module %d: number of channels with activity; #Sectors; N events", i);
+      sprintf(name30t,"Castor Module %d: number of channels with activity; N Sectors (#phi); N events", i);
       TH1F *histo_CastorMultiplicityModule = new TH1F(name30,name30t,17,0,17);
       m_hVector_CastorMultiplicityModule[i-1].push_back(histo_CastorMultiplicityModule);
 
       char name31[300];
       char name31t[300];
       sprintf(name31,"CastorMultiplicityModule%dVsTotal_%s",i,Folders.at(j).c_str());
-      sprintf(name31t,"Castor Module %d Vs All Modules Multiplicities; Castor Module %d; #Sectors", i, i);
+      sprintf(name31t,"Castor Module %d Vs All Modules Multiplicities; N Castor Module %d; N Castor Module 1,2,3,4 and 5", i, i);
       TH2F *histo_CastorMultiplicityModuleAll = new TH2F(name31,name31t,17,0,17,17,0,17);
       m_hVector_CastorMultiplicityModuleAll[i-1].push_back(histo_CastorMultiplicityModuleAll);
 
@@ -316,35 +316,57 @@ void CastorAnalysis::CreateHistos(){
 
     char name34[300];
     sprintf(name34,"CastorMappingMultiplicities_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorMappingMultiplicity = new TH2F(name34,"Mapping Multiplicities; Module Id (Z); Channel Id",7,0,7,17,0,17);
+    TH2F *histo_CastorMappingMultiplicity = new TH2F(name34,"Mapping Multiplicities; Module Id (Z); Sector (#phi)",5,1,6,16,1,17);
     m_hVector_CastorMappingMultiplicity.push_back(histo_CastorMappingMultiplicity);
 
     char name35[300];
     sprintf(name35,"CastorMappingEnergy_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorMappingEnergy = new TH2F(name35,"Mapping Energy; Module Id (Z); Channel Id",7,0,7,17,0,17);
+    TH2F *histo_CastorMappingEnergy = new TH2F(name35,"Mapping Energy [GeV]; Module Id (Z); Sector (#phi)",5,1,6,16,1,17);
     m_hVector_CastorMappingEnergy.push_back(histo_CastorMappingEnergy);
+
+    for (int i=1;i<6;i++){
+      m_hVector_CastorModuleFraction.push_back( std::vector<TH1F*>() );
+
+      char name36[300];
+      char name36t[300];
+      sprintf(name36,"CastorFraction_Module_%d_%s",i,Folders.at(j).c_str());
+      sprintf(name36t,"Castor Module %d; #frac{N_module %d}{N_module(1,2,3,4,5)}; N events", i,i);
+      TH1F *histo_CastorModuleFraction = new TH1F(name36,name36t,100,0,1);
+      m_hVector_CastorModuleFraction[i-1].push_back(histo_CastorModuleFraction);
+    }
+
+    char name37[300];
+    sprintf(name37,"CastorMappingMultiplicities3D_%s",Folders.at(j).c_str());
+    TH2F *histo_CastorMappingMultiplicity3D = new TH2F(name37,"Mapping Multiplicities; Sector (#phi); Module Id (Z)",16,1,17,5,1,6);
+    m_hVector_CastorMappingMultiplicity3D.push_back(histo_CastorMappingMultiplicity3D);
+
+    char name38[300];
+    sprintf(name38,"CastorMappingEnergy3D_%s",Folders.at(j).c_str());
+    TH2F *histo_CastorMappingEnergy3D = new TH2F(name38,"Mapping Energy [GeV]; Sector (#phi); Module Id (Z)",16,1,17,5,1,6);
+    m_hVector_CastorMappingEnergy3D.push_back(histo_CastorMappingEnergy3D);
 
   }
 
-  for (int i=1;i<6;i++)
+  for (int i=1;i<6;i++){
     for (int j=1;j<6;j++){
       m_hVector_CastorMappingEnergySnapshot.push_back( std::vector<TH2F*>() );
       m_hVector_CastorMappingMultiplicitySnapshot.push_back( std::vector<TH2F*>() );
 
-      char name36[300];
-      char name36t[300];
-      sprintf(name36,"CastorMappingMultiplicities_module_%d_snapshot_%d",i,j);
-      sprintf(name36t,"Castor Mapping Module %d, Snapshot %d. Multiplicities; Module Id (Z); Channel Id", i,j);
-      TH2F *histo_CastorMappingMultiplicitySnapshot = new TH2F(name36,name36t,7,0,7,17,0,17);
+      char name39[300];
+      char name39t[300];
+      sprintf(name39,"CastorMappingMultiplicities_module_%d_snapshot_%d",i,j);
+      sprintf(name39t,"Castor Mapping Module %d, Snapshot %d. Multiplicities; Sector (#phi); Module Id (Z)", i,j);
+      TH2F *histo_CastorMappingMultiplicitySnapshot = new TH2F(name39,name39t,16,1,17,5,1,6);
       m_hVector_CastorMappingMultiplicitySnapshot[i-1].push_back(histo_CastorMappingMultiplicitySnapshot);
 
-      char name37[300];
-      char name37t[300];
-      sprintf(name37,"CastorMappingEnergy_module%d_snapshot_%d",i,j);
-      sprintf(name37t,"Castor Mapping Module %d, Snapshot %d. Energy; Module Id (Z); Channel Id", i, j);
-      TH2F *histo_CastorMappingEnergySnapshot = new TH2F(name37,name37t,7,0,7,17,0,17);
+      char name40[300];
+      char name40t[300];
+      sprintf(name40,"CastorMappingEnergy_module_%d_snapshot_%d",i,j);
+      sprintf(name40t,"Castor Mapping Module %d, Snapshot %d. Energy [GeV]; Sector (#phi); Module Id (Z)", i, j);
+      TH2F *histo_CastorMappingEnergySnapshot = new TH2F(name40,name40t,16,1,17,5,1,6);
       m_hVector_CastorMappingEnergySnapshot[i-1].push_back(histo_CastorMappingEnergySnapshot);
     }
+  }
 
 }
 
@@ -387,6 +409,7 @@ void CastorAnalysis::FillHistos(int index){
 	if (eventCastor->GetCastorModule3Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule3Energy(i);
 	if (eventCastor->GetCastorModule4Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule4Energy(i);
 	if (eventCastor->GetCastorModule5Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule5Energy(i);
+        if (debug) std::cout << "Removing Channel " << i << "."<< std::endl;
       }else{
 	if (eventCastor->GetCastorModule1Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule1Energy(i);
 	if (eventCastor->GetCastorModule2Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule2Energy(i);
@@ -395,16 +418,19 @@ void CastorAnalysis::FillHistos(int index){
 	if (eventCastor->GetCastorModule5Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule5Energy(i);
       }
       if (eventCastor->GetCastorModule1Energy(i) > ChannelThreshold){
-	if (i!=4 || i!=5){ //remove channel 5 and 6, module1
+	  if (i==0 || i==1 || i==2 || i==3 || i==6 || i==7 || i==8 || i==9 || i==10 || i==11 || i==12 || i==13 || i==14 || i==15){; //remove channel 5 and 6, module1
 	  multicounter[0]++;
 	  energymodule[0]+=eventCastor->GetCastorModule1Energy(i);
 	  m_hVector_AlongZ_EnergyVsModule[i].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(i));
 	  m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(i));
 	  m_hVector_CastorMappingEnergy.at(index)->Fill(1,i,eventCastor->GetCastorModule1Energy(i));
 	  m_hVector_CastorMappingMultiplicity.at(index)->Fill(1,i);
+	  m_hVector_CastorMappingEnergy3D.at(index)->Fill(i,1,eventCastor->GetCastorModule1Energy(i));
+	  m_hVector_CastorMappingMultiplicity3D.at(index)->Fill(i,1);
 	  mapping[0][i]=1;
 	  energymapping[0][i]=eventCastor->GetCastorModule1Energy(i);
-	}
+          if (debug) std::cout << "Using channel " << i << ", module 1." << std::endl;
+       }
       }
       if (eventCastor->GetCastorModule2Energy(i) > ChannelThreshold){
 	multicounter[1]++;
@@ -413,6 +439,8 @@ void CastorAnalysis::FillHistos(int index){
 	m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(2,eventCastor->GetCastorModule2Energy(i));
 	m_hVector_CastorMappingEnergy.at(index)->Fill(2,i,eventCastor->GetCastorModule2Energy(i));
 	m_hVector_CastorMappingMultiplicity.at(index)->Fill(2,i);
+	m_hVector_CastorMappingEnergy3D.at(index)->Fill(i,2,eventCastor->GetCastorModule2Energy(i));
+	m_hVector_CastorMappingMultiplicity3D.at(index)->Fill(i,2);
 	mapping[1][i]=1;
 	energymapping[1][i]=eventCastor->GetCastorModule2Energy(i);
       }
@@ -423,6 +451,8 @@ void CastorAnalysis::FillHistos(int index){
 	m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(3,eventCastor->GetCastorModule3Energy(i));
 	m_hVector_CastorMappingEnergy.at(index)->Fill(3,i,eventCastor->GetCastorModule3Energy(i));
 	m_hVector_CastorMappingMultiplicity.at(index)->Fill(3,i);
+	m_hVector_CastorMappingEnergy3D.at(index)->Fill(i,3,eventCastor->GetCastorModule3Energy(3));
+	m_hVector_CastorMappingMultiplicity3D.at(index)->Fill(i,3);
 	mapping[2][i]=1;
 	energymapping[2][i]=eventCastor->GetCastorModule3Energy(i);
       }
@@ -433,6 +463,8 @@ void CastorAnalysis::FillHistos(int index){
 	m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(4,eventCastor->GetCastorModule4Energy(i));
 	m_hVector_CastorMappingEnergy.at(index)->Fill(4,i,eventCastor->GetCastorModule4Energy(i));
 	m_hVector_CastorMappingMultiplicity.at(index)->Fill(4,i);
+	m_hVector_CastorMappingEnergy3D.at(index)->Fill(i,4,eventCastor->GetCastorModule4Energy(i));
+	m_hVector_CastorMappingMultiplicity3D.at(index)->Fill(i,4);
 	mapping[3][i]=1;
 	energymapping[3][i]=eventCastor->GetCastorModule4Energy(i);
       }
@@ -443,6 +475,8 @@ void CastorAnalysis::FillHistos(int index){
 	m_hVector_AlongZ_EnergyVsModuleTProf[i].at(index)->Fill(5,eventCastor->GetCastorModule5Energy(i));
 	m_hVector_CastorMappingEnergy.at(index)->Fill(5,i,eventCastor->GetCastorModule5Energy(i));
 	m_hVector_CastorMappingMultiplicity.at(index)->Fill(5,i);
+	m_hVector_CastorMappingEnergy3D.at(index)->Fill(i,5,eventCastor->GetCastorModule5Energy(i));
+	m_hVector_CastorMappingMultiplicity3D.at(index)->Fill(i,5);
 	mapping[4][i]=1;
 	energymapping[4][i]=eventCastor->GetCastorModule5Energy(i);
       }
@@ -497,21 +531,45 @@ void CastorAnalysis::FillHistos(int index){
       std::cout << "Module 5: " << multicounter[4] <<  std::endl;
     }
 
-    for (int l=0; l<5; l++){
-      if (SectorCastorHit==10 && multicounter[l]==10 && chk[l]<5) {
-	for (int j=0; j<5; j++){
-	  for (int k=0;k<16;k++){
-	    if (mapping[j][k]==1){
-	      m_hVector_CastorMappingEnergySnapshot[l].at(chk[l])->Fill(j+1,k+1,energymapping[j][k]);
-	      m_hVector_CastorMappingMultiplicitySnapshot[l].at(chk[l])->Fill(j+1,k+1);
-	      if (debug) std::cout << "Mapping[" << j << "," << k << "]" << " | chk[l]: "<< chk[l] << " | Module: " << l <<  std::endl;
+    int sumMulti = multicounter[0]+multicounter[1]+multicounter[2]+multicounter[3]+multicounter[4];
+    double percentage[5];
+
+    for (int l=0;l<5;l++){
+      percentage[l] = 0.;
+      if (sumMulti > 0) {percentage[l] = multicounter[l]/(double)sumMulti;
+	m_hVector_CastorModuleFraction[l].at(index)->Fill(percentage[l]);
+      }if (debug){
+	std::cout << "Percentage: " << percentage[l] << std::endl;
+	std::cout << "Module["<<l+1<<"]: " << multicounter[l] << std::endl;
+	std::cout << "Castor total multiplicity: " << sumMulti << std::endl;
+      }
+    }
+
+    if (index==7){
+      for (int l=0; l<5; l++){
+	if (percentage[l] >= 0.4 && chk[l]<5) {
+	  for (int j=0; j<5; j++){
+	    for (int k=0;k<16;k++){
+	      if (mapping[j][k]==1){
+		m_hVector_CastorMappingEnergySnapshot[l].at(chk[l])->Fill(k+1,j+1,energymapping[j][k]);
+		m_hVector_CastorMappingMultiplicitySnapshot[l].at(chk[l])->Fill(k+1,j+1);
+		if (debug) std::cout << "Mapping[" << j << "," << k << "]" << " | chk[l]: "<< chk[l] << " | Module: " << l <<  std::endl;
+	      }
 	    }
 	  }
+	  chk[l]++;
+	  if (debug) std::cout << "Counter["<< l << "]: "<< chk[l] << std::endl;
 	}
-	chk[l]++;
-	if (debug) std::cout << "Counter["<< l << "]: "<< chk[l] << std::endl;
       }
+    }
 
+    for(int id=0; id < 16; id++){
+      if (CastorEnergySector[id] > ChannelThreshold){
+	m_hVector_TotalEnergySectors[id].at(index)->Fill(CastorEnergySector[id]);
+	m_hVector_Sector_EnergyVsMultiplicity[id].at(index)->Fill(SectorCastorHit,CastorEnergySector[id]);
+      }else{
+	m_hVector_TotalEnergySectors[id].at(index)->Fill(0.);
+      }
     }
 
   }
@@ -562,6 +620,15 @@ void CastorAnalysis::FillHistos(int index){
       m_hVector_histo_castor_centroid_phi.at(index)->Fill(phi_average);
     }
 
+    for(int id=0; id < 16; id++){
+      if (CastorEnergySector[id] > SectorThreshold){
+	m_hVector_TotalEnergySectors[id].at(index)->Fill(CastorEnergySector[id]);
+	m_hVector_Sector_EnergyVsMultiplicity[id].at(index)->Fill(SectorCastorHit,CastorEnergySector[id]);
+      }else{
+	m_hVector_TotalEnergySectors[id].at(index)->Fill(0.);
+      }
+    }
+
   }
 
   if (debugmult && (multicounter[0] > SectorCastorHit)) {
@@ -604,16 +671,6 @@ void CastorAnalysis::FillHistos(int index){
     m_hVector_CastorBadChannels.at(index)->Fill(eventCastor->GetCastorBadChannels(l));
     if (eventCastor->GetCastorBadChannels(l) >=1 && eventCastor->GetCastorBadChannels(l) <= 80) m_hVector_CastorBadRuns.at(index)->Fill(eventdiff->GetRunNumber());
   }
-
-  for(int id=0; id < 16; id++){
-    if (CastorEnergySector[id] > SectorThreshold){
-      m_hVector_TotalEnergySectors[id].at(index)->Fill(CastorEnergySector[id]);
-      m_hVector_Sector_EnergyVsMultiplicity[id].at(index)->Fill(SectorCastorHit,CastorEnergySector[id]);
-    }else{
-      m_hVector_TotalEnergySectors[id].at(index)->Fill(0.);
-    }
-  }
-
 
   if (SectorCastorHit >= 0 && SectorCastorHit <= 4){
     m_hVector_sumECastorMinusBinSlice[0].at(index)->Fill(sumCastorEnergy);
@@ -674,6 +731,8 @@ void CastorAnalysis::SaveHistos(){
     m_hVector_CastorEnergyPerModuleTProf[j]->Write();
     m_hVector_CastorMappingMultiplicity[j]->Write();
     m_hVector_CastorMappingEnergy[j]->Write();
+    m_hVector_CastorMappingMultiplicity3D[j]->Write();
+    m_hVector_CastorMappingEnergy3D[j]->Write();
 
     for (int id=0; id<16; id++){
       m_hVector_TotalEnergySectors[id].at(j)->Write();
@@ -691,6 +750,7 @@ void CastorAnalysis::SaveHistos(){
     for (int id=0;id<5;id++){
       m_hVector_CastorMultiplicityModule[id].at(j)->Write();
       m_hVector_CastorMultiplicityModuleAll[id].at(j)->Write();
+      m_hVector_CastorModuleFraction[id].at(j)->Write();
     }
 
   }

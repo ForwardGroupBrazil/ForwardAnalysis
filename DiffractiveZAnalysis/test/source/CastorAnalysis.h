@@ -113,6 +113,7 @@ class CastorAnalysis {
   std::vector<TH2F*> m_hVector_CastorMultiplicityPerModule;
   std::vector<TProfile*> m_hVector_CastorEnergyPerModuleTProf;
   std::vector<TH2F*> m_hVector_CastorEnergyPerModule;
+  std::vector<std::vector<TH1F*> > m_hVector_CastorModuleFraction;
 
   std::vector<std::vector<TH1F*> > m_hVector_TotalEnergySectors;
   std::vector<std::vector<TH1F*> > m_hVector_sumEHFplusBinSlice;
@@ -126,6 +127,9 @@ class CastorAnalysis {
 
   std::vector<TH2F*> m_hVector_CastorMappingMultiplicity;
   std::vector<TH2F*> m_hVector_CastorMappingEnergy;
+
+  std::vector<TH2F*> m_hVector_CastorMappingMultiplicity3D;
+  std::vector<TH2F*> m_hVector_CastorMappingEnergy3D;
 
   std::vector<std::vector<TH2F*> > m_hVector_CastorMappingMultiplicitySnapshot;
   std::vector<std::vector<TH2F*> > m_hVector_CastorMappingEnergySnapshot;
