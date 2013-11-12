@@ -21,6 +21,8 @@ class DiffractiveEvent {
     void SetCastorModule3Energy(const std::vector<double>& fCastorModule3Energy) { CastorModule3Energy_ = fCastorModule3Energy; }
     void SetCastorModule4Energy(const std::vector<double>& fCastorModule4Energy) { CastorModule4Energy_ = fCastorModule4Energy; }
     void SetCastorModule5Energy(const std::vector<double>& fCastorModule5Energy) { CastorModule5Energy_ = fCastorModule5Energy; }
+    void SetCastorBadChannels(const std::vector<int>& fCastorBadChannels) { CastorBadChannels_ = fCastorBadChannels; }
+    void SetCastorNumberBadChannels(int fCastorNumberBadChannels) { CastorNumberBadChannels_ = fCastorNumberBadChannels;}
 
     int GetProcessId() const {return processId_;}
     int GetRunNumber() const {return runNumber_;}
@@ -126,6 +128,8 @@ class DiffractiveEvent {
     double GetCastorModule3Energy(int i) const { return CastorModule3Energy_[i]; }
     double GetCastorModule4Energy(int i) const { return CastorModule4Energy_[i]; }
     double GetCastorModule5Energy(int i) const { return CastorModule5Energy_[i]; }
+    int GetCastorBadChannels(int i) const { return CastorBadChannels_[i]; }
+    int GetCastorNumberBadChannels() const { return CastorNumberBadChannels_;}
 
   private:
     friend class diffractiveAnalysis::DiffractiveAnalysis;
@@ -214,12 +218,14 @@ class DiffractiveEvent {
     int BeamHaloTightId_;
     int LooseNoiseFilter_;
     int TightNoiseFilter_;
+    int CastorNumberBadChannels_;
     std::vector<double> CastorTowerEnergy_;
     std::vector<double> CastorModule1Energy_;
     std::vector<double> CastorModule2Energy_;
     std::vector<double> CastorModule3Energy_;
     std::vector<double> CastorModule4Energy_;
     std::vector<double> CastorModule5Energy_;
+    std::vector<int> CastorBadChannels_;
 
 };
 

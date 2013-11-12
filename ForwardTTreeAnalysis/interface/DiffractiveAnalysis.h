@@ -40,6 +40,7 @@ namespace diffractiveAnalysis {
       void fillJetInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillCaloTowerInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillCastorInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillCastorDebug(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillZDCInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillDiffVariables(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillGenInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
@@ -113,6 +114,7 @@ namespace diffractiveAnalysis {
       int ttBit_;
 
       TH1F *histo_castor_channels;
+      TH1F *CastorChannelHisto_;
       std::vector<TH1F*> m_hVector_histo_castor_channels;
 
   };
