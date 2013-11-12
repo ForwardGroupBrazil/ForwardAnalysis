@@ -94,6 +94,7 @@ void DiffractiveAnalysis::setTFileService(){
   edm::LogVerbatim("Analysis") << oss.str();
 
   TFileDirectory castorDir = fs->mkdir("CastorInfo");
+  CastorChannelHisto_ = castorDir.make<TH1F>("CastorChannelWorking","Working Channel; Channel (id); # Times of working",240,0,240);
   for (int chan=1; chan <=224; chan++){
     char castor_channels[300];
     char castor_title[300];
@@ -135,7 +136,10 @@ void DiffractiveAnalysis::fill(DiffractiveEvent& eventData, const edm::Event& ev
   fillJetInfo(eventData,event,setup);
   fillMETInfo(eventData,event,setup);
   fillCaloTowerInfo(eventData,event,setup);
-  if (accessCastorInfo_) fillCastorInfo(eventData,event,setup);
+  if (accessCastorInfo_){
+    fillCastorInfo(eventData,event,setup);
+    fillCastorDebug(eventData,event,setup);
+  }
   if (accessZDCInfo_) fillZDCInfo(eventData,event,setup); 
   fillDiffVariables(eventData,event,setup);
   fillGenInfo(eventData,event,setup);
@@ -736,6 +740,80 @@ void DiffractiveAnalysis::fillCastorInfo(DiffractiveEvent& eventData, const edm:
   }
 
 }
+
+//
+// Fill Castor Check Channels
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void DiffractiveAnalysis::fillCastorDebug(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  // Phi: 16 modules, rh.id().sector();
+  // Z: 14 modules, rh.id().module();
+  // Channel definition: 16*(rh.id().module()-1) + rh.id().sector();
+  // For 2010, Castor uses only first five modules.
+
+  bool debug = false;
+  bool debug_deep = false;
+
+  int NRecHits = 0;
+  int NRecHitsPartial = 0;
+  int BadChannels = 0;
+  std::vector<int> Channels;
+  std::vector<int> BChannels;
+
+  edm::Handle<CastorRecHitCollection> CastorRecHits;
+  event.getByLabel(castorRecHitTag_,CastorRecHits);
+
+  if( CastorRecHits.isValid() ){
+
+    for (size_t i = 0; i < CastorRecHits->size(); ++i) {
+
+      const CastorRecHit & rh = (*CastorRecHits)[i];
+      int cha = 16*(rh.id().module()-1) + rh.id().sector();
+
+      CastorChannelHisto_->Fill(cha);
+      Channels.push_back(cha);
+
+      ++NRecHits;
+      if (rh.id().module() > 5 ) ++NRecHitsPartial;
+
+      if (debug_deep){
+	std::cout << "Channel: " << cha << std::endl;
+      }
+
+    }
+
+    // Search Bad Channels
+    const int size = (int) Channels.size();
+    for (int i=1; i<=224; i++) {
+      bool found=false;
+      for (int j=0; j<size; j++){
+	if (Channels[j]==i) {
+	  if (debug) std::cout << "There is channel " << Channels[j] << std::endl;
+	  found=true;
+	  break;
+	}
+      }
+      if (!found) {
+	++BadChannels;
+	BChannels.push_back(i);
+	if (debug) std::cout << "Channel " << i << " was not working." << std::endl;
+      }
+    }
+
+    if (BadChannels < 1){
+      BChannels.push_back(-999);
+    }
+
+    eventData.SetCastorNumberBadChannels(BadChannels);
+    eventData.SetCastorBadChannels(BChannels);
+
+  }else{
+    if (debug) std::cout << "There is no Castor valid recHitSector "<< std::cout;
+  }
+
+}
+
 
 void DiffractiveAnalysis::fillZDCInfo(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 

@@ -113,5 +113,7 @@ void DiffractiveEvent::reset(){
   CastorModule3Energy_.clear();
   CastorModule4Energy_.clear();
   CastorModule5Energy_.clear();
+  CastorBadChannels_.clear();
+  CastorNumberBadChannels_ = -999;
 
 }
