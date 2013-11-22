@@ -87,6 +87,7 @@ class CastorAnalysis {
   double CastorEnergySectorTh[16];
   char selCastor[300];
 
+  TH2F* h_castor_channel;
   std::vector<TH2F*> m_hVector_histo_castor_centroid;
   std::vector<TH1F*> m_hVector_histo_castor_centroid_phi;
   std::vector<TProfile*> m_hVector_SectorVsTotalCastorEnergyTProf;
@@ -126,8 +127,8 @@ class CastorAnalysis {
   std::vector<std::vector<TProfile*> > m_hVector_AlongZ_EnergyVsModuleTProf;
   std::vector<std::vector<TH2F*> > m_hVector_CastorMultiplicityModuleAll;
 
-  std::vector<TH2F*> m_hVector_CastorMappingMultiplicity;
-  std::vector<TH2F*> m_hVector_CastorMappingEnergy;
+  std::vector<std::vector<TH2F*> > m_hVector_CastorMappingMultiplicity;
+  std::vector<std::vector<TH2F*> > m_hVector_CastorMappingEnergy;
 
   std::vector<TH2F*> m_hVector_CastorMappingMultiplicity3D;
   std::vector<TH2F*> m_hVector_CastorMappingEnergy3D;
