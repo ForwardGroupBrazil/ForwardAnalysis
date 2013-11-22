@@ -64,6 +64,7 @@ class CastorAnalysis {
   std::string savehistofile;
   std::string switchtrigger;
   std::string typesel;
+  std::string channelcorrfile;
   int nVertex;
   int optTrigger;
   double lepton1pt;
@@ -142,7 +143,7 @@ class CastorAnalysis {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, double, double);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, double, double, std::string);
   void LoadFile(std::string,std::string);
   void CreateHistos();
   void FillHistos(int);

@@ -764,7 +764,7 @@ void CastorAnalysis::SaveHistos(){
 
 }
 
-void CastorAnalysis::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string typesel_, double SectorThreshold_, double ChannelThreshold_){
+void CastorAnalysis::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string typesel_, double SectorThreshold_, double ChannelThreshold_, bool channelcorrfile_){
 
   bool debug = false;
 
@@ -786,11 +786,13 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
   typesel = typesel_;
   SectorThreshold = SectorThreshold_;
   ChannelThreshold = ChannelThreshold_;
+  channelcorrfile = channelcorrfile_;
 
   std::string selStatus;
   std::string TriggerStatus;
 
   TFile check1(filein.c_str());
+  TFile check2(channelcorrfile.c_str());
 
   if (check1.IsZombie()){
 
@@ -801,11 +803,10 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     return;
 
   }
-
+  
   if (check1.GetDirectory(processname.c_str())){
     LoadFile(filein,processname);
   }
-
   else{
     std::cout << "---------------------------------------------------" << std::endl;
     std::cout << " There is no directory/path " << processname << std::endl;
@@ -813,7 +814,22 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     std::cout << "---------------------------------------------------" << std::endl;
     return;
   }
-
+  
+  if (check2.IsZombie()){
+    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << " There is no the file " << channelcorrfile << " or the"   << std::endl;
+    std::cout << " path is not correct." << std::endl;
+    std::cout << "------------------------------------------------" << std::endl;
+    return;
+  }
+  else if (!check2.GetListOfKeys()->Contains("channelcorrector")){
+        std::cout << "------------------------------------------------" << std::endl;
+        std::cout << " There is no CASTOR channel corrector histogram" << std::endl;
+        std::cout << "------------------------------------------------" << std::endl;
+        return 0;
+  }
+  
+  
   TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
   TString outtxt = savehistofile;
   outtxt.ReplaceAll("root","txt");
@@ -1147,6 +1163,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
   outstring << " " << std::endl;
   outstring << ">> Input file: " << filein << std::endl;
   outstring << ">> Output file: " << savehistofile << std::endl;
+  outstring << ">> Channel Correction file: " << channelcorrfile << std::endl;
   outstring << ">> TTree Name: " << processname << std::endl;
   outstring << " " << std::endl;
   outstring << "<< OPTIONS >>" << std::endl; 
@@ -1213,6 +1230,7 @@ int main(int argc, char **argv)
   std::string typesel_;
   double SectorThreshold_;
   double ChannelThreshold_;
+  std::string channelcorrfile_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0) filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0) processname_ = argv[2];
@@ -1225,6 +1243,7 @@ int main(int argc, char **argv)
   if (argc > 9 && strcmp(s1,argv[9]) != 0) typesel_ = argv[9];
   if (argc > 10 && strcmp(s1,argv[10]) != 0) SectorThreshold_ = atof(argv[10]);
   if (argc > 11 && strcmp(s1,argv[11]) != 0) ChannelThreshold_ = atof(argv[11]);
+  if (argc > 12 && strcmp(s1,argv[12]) != 0) channelcorrfile_ = argv[12];
 
   std::cout << " " << std::endl;
   std::cout << ">>>>> Run with the Options <<<<< " << std::endl;
@@ -1239,6 +1258,7 @@ int main(int argc, char **argv)
   std::cout << "Type of Selection: " << typesel_ << std::endl;
   std::cout << "Sector Castor Threshold [GeV]: " << SectorThreshold_ <<  std::endl;
   std::cout << "Channel Castor Threshold [GeV]: " << ChannelThreshold_ <<  std::endl;
+  std::cout << "Channel Correction File: " << channelcorrfile_ <<  std::endl;
   std::cout << "" << std::endl;
 
   if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger" || switchtrigger_=="trigger_all_electron") {}
@@ -1292,7 +1312,7 @@ int main(int argc, char **argv)
 
   CastorAnalysis* CastorRun = new CastorAnalysis();
   CastorRun->CreateHistos();
-  CastorRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, typesel_, SectorThreshold_, ChannelThreshold_);
+  CastorRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, typesel_, SectorThreshold_, ChannelThreshold_, channelcorrfile_);
   return 0;
 }
 
