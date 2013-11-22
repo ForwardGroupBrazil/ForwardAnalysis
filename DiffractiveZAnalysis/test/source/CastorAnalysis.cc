@@ -764,7 +764,7 @@ void CastorAnalysis::SaveHistos(){
 
 }
 
-void CastorAnalysis::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string typesel_, double SectorThreshold_, double ChannelThreshold_, bool channelcorrfile_){
+void CastorAnalysis::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string typesel_, double SectorThreshold_, double ChannelThreshold_, std::string channelcorrfile_){
 
   bool debug = false;
 
@@ -826,7 +826,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
         std::cout << "------------------------------------------------" << std::endl;
         std::cout << " There is no CASTOR channel corrector histogram" << std::endl;
         std::cout << "------------------------------------------------" << std::endl;
-        return 0;
+        return;
   }
   
   
