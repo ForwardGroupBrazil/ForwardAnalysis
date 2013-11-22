@@ -412,7 +412,7 @@ void CastorAnalysis::FillHistos(int index){
 
   for(int i=1; i<6;i++){
     for(int j=1; j<17; j++){
-      if (switchtrigger == "no_trigger"){
+      if (switchtrigger == "no_trigger_correction"){
 	energycorr[i-1][j-1]=h_castor_channel->GetBinContent(i,j);
 	if (debug_correction) std::cout << "GetBinContent(" << i << "," << j << "): " << h_castor_channel->GetBinContent(i,j) << std::endl;
 	if (debug_factor) std::cout << "Factor: "<< energycorr[i-1][j-1] << std::endl;
@@ -1011,10 +1011,15 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
       if (debug) std::cout << "\nTrigger Status: " << trigger <<", trigger accepted." << std::endl;
       TriggerStatus = "trigger";
     }
-    else if (switchtrigger == "no_trigger") {
+    else if (switchtrigger =="no_trigger_nocorrection") {
       trigger = true;
-      if (debug) std::cout << "\nTrigger Status: " << trigger << ", no trigger." << std::endl; 
-      TriggerStatus = "no_trigger";
+      if (debug) std::cout << "\nTrigger Status: " << trigger << ", no trigger and no correction." << std::endl; 
+      TriggerStatus = "no_trigger_nocorrection";
+    }
+    else if (switchtrigger =="no_trigger_correction") {
+      trigger = true;
+      if (debug) std::cout << "\nTrigger Status: " << trigger << ", no trigger and correction." << std::endl;
+      TriggerStatus = "no_trigger_correction";
     }
     else{
       exit(EXIT_FAILURE);
@@ -1199,7 +1204,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
       if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel) FillHistos(7);
     }
 
-    else if (switchtrigger =="no_trigger"){
+    else if (switchtrigger=="no_trigger_nocorrection" || switchtrigger =="no_trigger_correction"){
       --totalT;
       FillHistos(0);
       if(vertex && presel) FillHistos(2);
@@ -1317,7 +1322,7 @@ int main(int argc, char **argv)
   std::cout << "Channel Correction File: " << channelcorrfile_ <<  std::endl;
   std::cout << "" << std::endl;
 
-  if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger" || switchtrigger_=="trigger_all_electron") {}
+  if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger_nocorrection" || switchtrigger_=="no_trigger_correction" || switchtrigger_=="trigger_all_electron") {}
   else{
     std::cout << "Please Insert type of Swithtrigger: " << std::endl;
     std::cout << "1) trigger: run with trigger. Need optTrigger >=0;" << std::endl;
