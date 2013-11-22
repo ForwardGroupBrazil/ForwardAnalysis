@@ -134,7 +134,7 @@ void CastorThreshold::CreateHistos(std::string type){
       char name6t[300];
       sprintf(name6,"Channel%d_Energy_%s",bs+1,Folders.at(j).c_str());
       sprintf(name6t,"#Castor Channel %d; #E_{Channel %d} [GeV]; N events", bs+1, bs+1);
-      TH1F *histo_ChannelCastorEnergy = new TH1F(name6,name6t,200,-10,10);
+      TH1F *histo_ChannelCastorEnergy = new TH1F(name6,name6t,200,-1,1);
       m_hVector_ChannelCastorEnergy[bs].push_back(histo_ChannelCastorEnergy);
     }
 

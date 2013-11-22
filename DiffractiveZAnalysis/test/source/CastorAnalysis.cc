@@ -316,12 +316,12 @@ void CastorAnalysis::CreateHistos(){
 
     char name34[300];
     sprintf(name34,"CastorMappingMultiplicities_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorMappingMultiplicity = new TH2F(name34,"Mapping Multiplicities; Module Id (Z); Sector (#phi)",5,1,6,16,1,17);
+    TH2F *histo_CastorMappingMultiplicity = new TH2F(name34,"Mapping Multiplicities; Module Id (Z); Sector (#phi)",5,1,6,16,0,16);
     m_hVector_CastorMappingMultiplicity.push_back(histo_CastorMappingMultiplicity);
 
     char name35[300];
     sprintf(name35,"CastorMappingEnergy_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorMappingEnergy = new TH2F(name35,"Mapping Energy [GeV]; Module Id (Z); Sector (#phi)",5,1,6,16,1,17);
+    TH2F *histo_CastorMappingEnergy = new TH2F(name35,"Mapping Energy [GeV]; Module Id (Z); Sector (#phi)",5,1,6,16,0,16);
     m_hVector_CastorMappingEnergy.push_back(histo_CastorMappingEnergy);
 
     for (int i=1;i<6;i++){
@@ -337,12 +337,12 @@ void CastorAnalysis::CreateHistos(){
 
     char name37[300];
     sprintf(name37,"CastorMappingMultiplicities3D_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorMappingMultiplicity3D = new TH2F(name37,"Mapping Multiplicities; Sector (#phi); Module Id (Z)",16,1,17,5,1,6);
+    TH2F *histo_CastorMappingMultiplicity3D = new TH2F(name37,"Mapping Multiplicities; Sector (#phi); Module Id (Z)",16,0,16,5,1,6);
     m_hVector_CastorMappingMultiplicity3D.push_back(histo_CastorMappingMultiplicity3D);
 
     char name38[300];
     sprintf(name38,"CastorMappingEnergy3D_%s",Folders.at(j).c_str());
-    TH2F *histo_CastorMappingEnergy3D = new TH2F(name38,"Mapping Energy [GeV]; Sector (#phi); Module Id (Z)",16,1,17,5,1,6);
+    TH2F *histo_CastorMappingEnergy3D = new TH2F(name38,"Mapping Energy [GeV]; Sector (#phi); Module Id (Z)",16,0,16,5,1,6);
     m_hVector_CastorMappingEnergy3D.push_back(histo_CastorMappingEnergy3D);
 
   }
