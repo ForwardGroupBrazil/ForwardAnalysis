@@ -349,17 +349,20 @@ if config.runOnMC:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.fCGeVCastor = 0.9375
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = True
      process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.AccessMCInfo = True
+     process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.CastorRecHitTag = "castorreco"
+     process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.castorRecHitTag ="castorreco"
      process.gen_step = cms.Path(process.genChargedParticles+
                               process.genProtonDissociative*process.edmNtupleMxGen+
                               process.genStableParticles*
                               process.etaMaxGen+process.etaMinGen*
                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 
-
 else:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = False
      process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.AccessMCInfo = False
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.fCGeVCastor = 0.015
+     process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.CastorRecHitTag = "castorRecHitCorrector"
+     process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.castorRecHitTag ="castorRecHitCorrector"
 
 process.exclusiveDijetsAnalysisTTreeBefore = process.exclusiveDijetsAnalysisTTree.clone()
 process.exclusiveDijetsAnalysisTTreeAfter = process.exclusiveDijetsAnalysisTTree.clone()
