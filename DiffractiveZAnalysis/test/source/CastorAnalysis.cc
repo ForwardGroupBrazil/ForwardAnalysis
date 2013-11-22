@@ -400,6 +400,12 @@ void CastorAnalysis::FillHistos(int index){
     }
   }
 
+  for(int i=1; i<6;i++){
+    for(int j=1; j<17; j++){
+      std::cout << "GetBinContent(" << i << "," < j << "): " << h_castor_channel->GetBinContent(i,j) << std::endl;
+    }
+  }
+
   if (ChannelThreshold > 0. && SectorThreshold < 0.){
     sprintf(selCastor,">> Castor Channel Threshold: %0.2f GeV",ChannelThreshold);
     for (int i=0; i < 16; i++){
@@ -409,7 +415,7 @@ void CastorAnalysis::FillHistos(int index){
 	if (eventCastor->GetCastorModule3Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule3Energy(i);
 	if (eventCastor->GetCastorModule4Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule4Energy(i);
 	if (eventCastor->GetCastorModule5Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule5Energy(i);
-        if (debug) std::cout << "Removing Channel " << i << "."<< std::endl;
+	if (debug) std::cout << "Removing Channel " << i << "."<< std::endl;
       }else{
 	if (eventCastor->GetCastorModule1Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule1Energy(i);
 	if (eventCastor->GetCastorModule2Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule2Energy(i);
@@ -418,7 +424,7 @@ void CastorAnalysis::FillHistos(int index){
 	if (eventCastor->GetCastorModule5Energy(i) > ChannelThreshold) CastorEnergySector[i] += eventCastor->GetCastorModule5Energy(i);
       }
       if (eventCastor->GetCastorModule1Energy(i) > ChannelThreshold){
-	  if (i==0 || i==1 || i==2 || i==3 || i==6 || i==7 || i==8 || i==9 || i==10 || i==11 || i==12 || i==13 || i==14 || i==15){; //remove channel 5 and 6, module1
+	if (i==0 || i==1 || i==2 || i==3 || i==6 || i==7 || i==8 || i==9 || i==10 || i==11 || i==12 || i==13 || i==14 || i==15){; //remove channel 5 and 6, module1
 	  multicounter[0]++;
 	  energymodule[0]+=eventCastor->GetCastorModule1Energy(i);
 	  m_hVector_AlongZ_EnergyVsModule[i].at(index)->Fill(1,eventCastor->GetCastorModule1Energy(i));
@@ -429,8 +435,8 @@ void CastorAnalysis::FillHistos(int index){
 	  m_hVector_CastorMappingMultiplicity3D.at(index)->Fill(i,1);
 	  mapping[0][i]=1;
 	  energymapping[0][i]=eventCastor->GetCastorModule1Energy(i);
-          if (debug) std::cout << "Using channel " << i << ", module 1." << std::endl;
-       }
+	  if (debug) std::cout << "Using channel " << i << ", module 1." << std::endl;
+	}
       }
       if (eventCastor->GetCastorModule2Energy(i) > ChannelThreshold){
 	multicounter[1]++;
@@ -803,7 +809,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     return;
 
   }
-  
+
   if (check1.GetDirectory(processname.c_str())){
     LoadFile(filein,processname);
   }
@@ -814,7 +820,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     std::cout << "---------------------------------------------------" << std::endl;
     return;
   }
-  
+
   if (check2.IsZombie()){
     std::cout << "------------------------------------------------" << std::endl;
     std::cout << " There is no the file " << channelcorrfile << " or the"   << std::endl;
@@ -823,13 +829,14 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     return;
   }
   else if (!check2.GetListOfKeys()->Contains("channelcorrector")){
-        std::cout << "------------------------------------------------" << std::endl;
-        std::cout << " There is no CASTOR channel corrector histogram" << std::endl;
-        std::cout << "------------------------------------------------" << std::endl;
-        return;
+    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << " There is no CASTOR channel corrector histogram" << std::endl;
+    std::cout << "------------------------------------------------" << std::endl;
+    return;
   }
-  
-  
+
+  TH2F* h_castor_channel = (TH2F*)h_castor_channel->Get("channelcorrector");
+
   TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
   TString outtxt = savehistofile;
   outtxt.ReplaceAll("root","txt");
