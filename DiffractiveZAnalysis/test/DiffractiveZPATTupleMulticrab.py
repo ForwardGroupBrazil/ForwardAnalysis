@@ -55,7 +55,7 @@ if options.Run == "data_MuonP1":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu9','HLT_DoubleMu3'
+  triggerlist = 'HLT_Mu9','HLT_Mu9_v*','HLT_DoubleMu3'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
@@ -70,7 +70,7 @@ elif options.Run == "data_MuonP2":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu15','HLT_DoubleMu5_v*'
+  triggerlist = 'HLT_Mu15','HLT_Mu15_v*','HLT_DoubleMu5_v*'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
