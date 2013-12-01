@@ -249,6 +249,12 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
       if (electron2==NULL) {electron2=electronAll; continue;}
       if (electronAll->pt()>electron2->pt()) electron2 = electronAll;
 
+      if(debug){
+	if(electronAll->pt() > 25){
+	  std::cout << ">>>> RECO: Lepton from Z! eta: " << electronAll->eta() << " | pt: " << electronAll->pt() << std::endl;
+	}
+      }
+
     }
 
     double relIsoFirstElectronDr03 = (electron1->dr03TkSumPt()+electron1->dr03EcalRecHitSumEt()+electron1->dr03HcalTowerSumEt())/electron1->et();
@@ -476,6 +482,11 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
       if (muon2==NULL) {muon2=muonAll; continue;}
       if (muonAll->pt()>muon2->pt()) muon2 = muonAll;
 
+      if(debug){
+	if(muonAll->pt() > 20){
+	  std::cout << ">>>> RECO: Lepton from Z! eta: " << muonAll->eta() << " | pt: " << muonAll->pt() << std::endl;
+	}
+      }
 
       if (debug){
 	std::cout << ">>> Reco Muon" << std::endl;
@@ -1388,15 +1399,20 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       sumpy +=py;
       sumpz +=pz;
       sumEnergyPF +=energy;
-      
-      std::cout << "eta: " << eta << "id: " << particle->particleId() << std::endl;
-      if(particle->particleId()==reco::PFCandidate::e || particle->particleId()==reco::PFCandidate::e){
-      if(pt > 25) leptonZ==true; 
+
+      if(particle->particleId()==reco::PFCandidate::e){ 
+	if(pt > 25) leptonZ=true;
       }
-            
+
+      if(particle->particleId()==reco::PFCandidate::mu){
+	if(pt > 20) leptonZ=true;
+      }            
+
+      // Excluding Z from LRG calculation
       if(!leptonZ){
-      std::cout << "eta: " << eta << "id: " << particle->particleId() << std::endl;
-      etas.push_back(eta);
+	etas.push_back(eta);
+      }else{
+	if(debug) std::cout << ">>>> Lepton from Z! eta: " << eta << "| id: " << particle->particleId() << " | pt: " << pt << std::endl;
       }
 
     } 
@@ -1515,6 +1531,9 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   int nplus =0;
   int nminus =0;
 
+  double sumPTPFm = 0.;
+  double sumPTPFp = 0.;
+
   for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
     const reco::PFCandidate *particle = &(*iter);
     double energy=particle->energy();
@@ -1536,17 +1555,22 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
     {        
 
-      if ( eta >= eta_gap_limplus ) {
+      if ( eta >= eta_gap_limplus ){
 	dataMass_plus+=tmp;
 	nplus++;
+	sumPTPFp += pt;
       }
       else {
 	dataMass_minus+=tmp;
 	nminus++;
+	sumPTPFm += pt;
       }
+
     }
   }  // PF loop
 
+  eventData.SetPTLimPlusGapPF(sumPTPFp);
+  eventData.SetPTLimPlusGapPF(sumPTPFm);
   eventData.SetElectronEnergyPF(-999.); // First Electron, Fill Second Electron also. Eta, phi, pT and ISO from PF.
   eventData.SetMuEnergyPF(-999.); // First Muon, Fill Second Muon also. Eta, phi, pT and ISO from PF.
   eventData.SetMultiplicityGapPlusPF(nplus);
@@ -2085,27 +2109,27 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
 
 	  if (rh.id().module() == 1){
 	    energyModule1[isec] = rh.energy()*fCGeVCastor_;
-            if (idmod1) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
+	    if (idmod1) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 
 	  if (rh.id().module() == 2){
 	    energyModule2[isec] = rh.energy()*fCGeVCastor_;
-            if (idmod2) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
+	    if (idmod2) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 
 	  if (rh.id().module() == 3){
 	    energyModule3[isec] = rh.energy()*fCGeVCastor_;
-            if (idmod3) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
+	    if (idmod3) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 
 	  if (rh.id().module() == 4){
 	    energyModule4[isec] = rh.energy()*fCGeVCastor_;
-            if (idmod4) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
+	    if (idmod4) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 
 	  if (rh.id().module() == 5){
 	    energyModule5[isec] = rh.energy()*fCGeVCastor_;
-            if (idmod5) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
+	    if (idmod5) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 	}
       }

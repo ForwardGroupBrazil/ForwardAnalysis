@@ -141,6 +141,8 @@ void DiffractiveZEvent::reset(){
   SecondMaxGapPF_ = -999.;
   LimPlusGapPF_ = -999.;
   LimMinusGapPF_ = -999.;
+  PTLimPlusGapPF_ = -999.;
+  PTLimMinusGapPF_ = -999.;
   MultiplicityGapPlusPF_ = -999;
   MultiplicityGapMinusPF_ = -999;
 
