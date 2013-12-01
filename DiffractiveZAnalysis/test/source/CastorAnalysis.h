@@ -84,8 +84,8 @@ class CastorAnalysis {
   double num_phi;
   double phi_average;
   double CastorEnergySector[16];
-  double CastorEnergySectorTh[16];
   char selCastor[300];
+  double energymappinguncsqr[4][5][16];
 
   TH2F* h_castor_channel;
   std::vector<TH2F*> m_hVector_histo_castor_centroid;
@@ -115,6 +115,8 @@ class CastorAnalysis {
   std::vector<TH2F*> m_hVector_CastorMultiplicityPerModule;
   std::vector<TProfile*> m_hVector_CastorEnergyPerModuleTProf;
   std::vector<TH2F*> m_hVector_CastorEnergyPerModule;
+  std::vector<TH1F*> m_hVector_FirstModuleHitCastor;
+  std::vector<TH1F*> m_hVector_CastorMultiplicityChannels;
   std::vector<std::vector<TH1F*> > m_hVector_CastorModuleFraction;
 
   std::vector<std::vector<TH1F*> > m_hVector_TotalEnergySectors;
