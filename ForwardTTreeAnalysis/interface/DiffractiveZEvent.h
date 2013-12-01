@@ -196,6 +196,8 @@ class DiffractiveZEvent {
     void SetSecondMaxGapPF(double fSecondMaxGapPF)    { SecondMaxGapPF_ = fSecondMaxGapPF;}
     void SetLimPlusGapPF(double fLimPlusGapPF)    { LimPlusGapPF_ = fLimPlusGapPF;}
     void SetLimMinusGapPF(double fLimMinusGapPF)    { LimMinusGapPF_ = fLimMinusGapPF;}
+    void SetPTLimPlusGapPF(double fPTLimPlusGapPF)    { PTLimPlusGapPF_ = fPTLimPlusGapPF;}
+    void SetPTLimMinusGapPF(double fPTLimMinusGapPF)    { PTLimMinusGapPF_ = fPTLimMinusGapPF;}
     void SetMultiplicityGapPlusPF(int fMultiplicityGapPlusPF)    { MultiplicityGapPlusPF_ = fMultiplicityGapPlusPF;}
     void SetMultiplicityGapMinusPF(int fMultiplicityGapMinusPF)    { MultiplicityGapMinusPF_ = fMultiplicityGapMinusPF;}
 
@@ -511,6 +513,8 @@ class DiffractiveZEvent {
     double GetSecondMaxGapPF()    const {return SecondMaxGapPF_;}
     double GetLimPlusGapPF()    const {return LimPlusGapPF_;}
     double GetLimMinusGapPF()    const {return LimMinusGapPF_;}
+    double GetPTLimPlusGapPF()    const {return PTLimPlusGapPF_;}
+    double GetPTLimMinusGapPF()    const {return PTLimMinusGapPF_;}
     int GetMultiplicityGapPlusPF()    const {return MultiplicityGapPlusPF_;}
     int GetMultiplicityGapMinusPF()    const {return MultiplicityGapMinusPF_;}
 
@@ -839,6 +843,8 @@ class DiffractiveZEvent {
     double SecondMaxGapPF_;
     double LimPlusGapPF_;
     double LimMinusGapPF_;
+    double PTLimPlusGapPF_;
+    double PTLimMinusGapPF_;
     int MultiplicityGapPlusPF_;
     int MultiplicityGapMinusPF_;
 
