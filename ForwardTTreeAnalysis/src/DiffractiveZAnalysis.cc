@@ -1353,6 +1353,7 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     double eta=particle->eta();
     double charge=particle->charge();
     double theta=particle->theta();
+    bool leptonZ=false;
 
     // Fill 2D TTree (eta,energy);
 
@@ -1387,7 +1388,16 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       sumpy +=py;
       sumpz +=pz;
       sumEnergyPF +=energy;
+      
+      std::cout << "eta: " << eta << "id: " << particle->particleId() << std::endl;
+      if(particle->particleId()==reco::PFCandidate::e || particle->particleId()==reco::PFCandidate::e){
+      if(pt > 25) leptonZ==true; 
+      }
+            
+      if(!leptonZ){
+      std::cout << "eta: " << eta << "id: " << particle->particleId() << std::endl;
       etas.push_back(eta);
+      }
 
     } 
 
