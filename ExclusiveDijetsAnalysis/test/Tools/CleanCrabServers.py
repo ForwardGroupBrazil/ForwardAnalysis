@@ -23,7 +23,7 @@ def main(argv):
    print "=========="
    print ""
    listOfservers = ['hcc-crabserver.unl.edu','vocms20.cern.ch','vocms83.cern.ch','submit-4.t2.ucsd.edu','submit-6.t2.ucsd.edu']
-
+   os.system("voms-proxy-init --voms cms")
    for line in listOfservers:
      os.environ["SERVERNAME"] = line
      print "<<< SERVER ", line, " >>>"
