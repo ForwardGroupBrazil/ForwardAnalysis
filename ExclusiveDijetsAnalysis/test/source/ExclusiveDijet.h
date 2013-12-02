@@ -110,7 +110,13 @@ class ExclusiveDijet {
   std::vector<std::vector<TH1D*> > m_hVector_uncJet1;
   std::vector<std::vector<TH1D*> > m_hVector_uncJet2;
   std::vector<std::vector<TH1D*> > m_hVector_sumECastorHFMinus;
-
+  std::vector<std::vector<TH1D*> > m_hVector_TracksNonCone;
+  std::vector<std::vector<TH1D*> > m_hVector_TracksTransverse;
+  std::vector<std::vector<TH1D*> > m_hVector_TracksOutsideJets;
+  std::vector<std::vector<TH1D*> > m_hVector_XiPlusPF;
+  std::vector<std::vector<TH1D*> > m_hVector_XiMinusPF;
+  std::vector<std::vector<TH1D*> > m_hVector_XiPF;
+ 
   std::vector <std::string> Folders;
 
   public :

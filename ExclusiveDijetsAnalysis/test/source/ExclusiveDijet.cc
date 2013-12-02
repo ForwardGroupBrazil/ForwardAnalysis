@@ -87,6 +87,8 @@ void ExclusiveDijet::LoadFile(std::string fileinput, std::string processinput){
 
 void ExclusiveDijet::CreateHistos(std::string type){
 
+  double xi_bin[18]={0.0003,0.002,0.0045,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1};
+
   std::string step0 = "without_cuts"; // Without cuts
   std::string step1 = "with_trigger"; // Trigger
   std::string step2 = "step1"; // Trigger + Presel
@@ -163,6 +165,12 @@ void ExclusiveDijet::CreateHistos(std::string type){
     m_hVector_uncJet1.push_back( std::vector<TH1D*>() );
     m_hVector_uncJet2.push_back( std::vector<TH1D*>() );
     m_hVector_sumECastorHFMinus.push_back( std::vector<TH1D*>() );
+    m_hVector_TracksNonCone.push_back( std::vector<TH1D*>() );
+    m_hVector_TracksTransverse.push_back( std::vector<TH1D*>() );
+    m_hVector_TracksOutsideJets.push_back( std::vector<TH1D*>() );
+    m_hVector_XiPlusPF.push_back( std::vector<TH1D*>() );
+    m_hVector_XiMinusPF.push_back( std::vector<TH1D*>() );
+    m_hVector_XiPF.push_back( std::vector<TH1D*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -369,6 +377,36 @@ void ExclusiveDijet::CreateHistos(std::string type){
       TH1D *histo_sumECastorHFMinus = new TH1D(name37,"HF Minus and Castor - Total Energy; #sum E_{Castor} + #sum E_{HF^{-}} [GeV]; N events",4000,0,2000);
       m_hVector_sumECastorHFMinus[j].push_back(histo_sumECastorHFMinus);
 
+      char name38[300];
+      sprintf(name38,"TracksNonCone_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_TracksNonCone = new TH1D(name38,"Tracks Non Cone; N events",300,0,300);
+      m_hVector_TracksNonCone[j].push_back(histo_TracksNonCone);
+
+      char name39[300];
+      sprintf(name39,"TracksTransverse_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_TracksTransverse = new TH1D(name39,"Tracks Transverse; N events",300,0,300);
+      m_hVector_TracksTransverse[j].push_back(histo_TracksTransverse);
+
+      char name40[300];
+      sprintf(name40,"TracksOutsideJets_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_TracksOutsideJets = new TH1D(name40,"Tracks Outside Jet Cone; N events",300,0,300);
+      m_hVector_TracksOutsideJets[j].push_back(histo_TracksOutsideJets);
+
+      char name41[300];
+      sprintf(name41,"xiPlusPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_XiPlusPF = new TH1D(name41,"#xi_{plus} Particle Flow; #xi_{plus}; N Event",17,xi_bin);
+      m_hVector_XiPlusPF[j].push_back(histo_XiPlusPF);
+
+      char name42[300];
+      sprintf(name42,"xiMinusPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_XiMinusPF = new TH1D(name42,"#xi_{minus} Particle Flow; #xi_{minus}; N Event",17,xi_bin);
+      m_hVector_XiMinusPF[j].push_back(histo_XiMinusPF);
+
+      char name43[300];
+      sprintf(name43,"xiPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_XiPF = new TH1D(name43,"#xi Particle Flow; #xi; N Event",17,xi_bin);
+      m_hVector_XiPF[j].push_back(histo_XiPF);
+
     }
   }
 }
@@ -412,6 +450,13 @@ void ExclusiveDijet::FillHistos(int index, int pileup, double totalweight){
   m_hVector_sumECastorHFMinus[index].at(pileup)->Fill(sumCastorAndHFMinusEnergy,totalweight);
   m_hVector_uncJet1[index].at(pileup)->Fill(eventexcl->GetUnc1());
   m_hVector_uncJet2[index].at(pileup)->Fill(eventexcl->GetUnc2());
+  m_hVector_TracksNonCone[index].at(pileup)->Fill(eventexcl->GetTracksNonCone());
+  m_hVector_TracksTransverse[index].at(pileup)->Fill(eventexcl->GetTracksTransverse());
+  m_hVector_TracksOutsideJets[index].at(pileup)->Fill(eventexcl->GetTracksOutsideJets());
+  m_hVector_XiPlusPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
+  m_hVector_XiMinusPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
+  m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
+  m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
 }
 
 void ExclusiveDijet::SaveHistos(std::string type){
@@ -460,6 +505,12 @@ void ExclusiveDijet::SaveHistos(std::string type){
       m_hVector_sumECastorHFMinus[j].at(i)->Write();
       m_hVector_uncJet1[j].at(i)->Write();
       m_hVector_uncJet2[j].at(i)->Write();
+      m_hVector_TracksNonCone[j].at(i)->Write();
+      m_hVector_TracksTransverse[j].at(i)->Write();
+      m_hVector_TracksOutsideJets[j].at(i)->Write();
+      m_hVector_XiMinusPF[j].at(i)->Write();
+      m_hVector_XiPlusPF[j].at(i)->Write();
+      m_hVector_XiPF[j].at(i)->Write();
     }
   }
 
@@ -814,7 +865,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       // Get CASTOR Corrections
       for(int i=1; i<6;i++){
 	for(int j=1; j<17; j++){
-          energycorr[i-1][j-1]=0;
+	  energycorr[i-1][j-1]=0;
 	  if (switchcastor == "castor_correction"){
 	    energycorr[i-1][j-1]=h_castor_channel->GetBinContent(i,j);
 	  }else{
@@ -910,13 +961,13 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	  FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
 	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	}
-        if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4*triggereff4);
-        if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3*triggereff3);
-        if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2*triggereff2);
-        if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta1){
-          FillHistos(12,pileup,totalcommon*cuteff_step4_1*triggereff1);
-          outstring << "CASTOR GAP " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-        }
+	if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3*triggereff3);
+	if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta1){
+	  FillHistos(12,pileup,totalcommon*cuteff_step4_1*triggereff1);
+	  outstring << "CASTOR GAP " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	}
       }
 
       else if (switchtrigger =="no_trigger"){
@@ -928,10 +979,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
 	if(presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
 	if(presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
-        if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4*triggereff4);
-        if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3*triggereff3);
-        if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2*triggereff2);
-        if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta1) FillHistos(12,pileup,totalcommon*cuteff_step4_1*triggereff1); 
+	if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3*triggereff3);
+	if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta1) FillHistos(12,pileup,totalcommon*cuteff_step4_1*triggereff1); 
       }
       else {
 	exit(EXIT_FAILURE);
