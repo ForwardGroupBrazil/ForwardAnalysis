@@ -23,6 +23,7 @@ class ExclusiveDijet {
   TFile* pudata;
   TFile* pumc;
   TTree* tr;
+  TH1* h_castor_channel;
   TBranch *diff;
   TBranch *excl;
   TBranch *info;
@@ -55,6 +56,7 @@ class ExclusiveDijet {
   std::string switchtriggercorr;
   std::string switchlumiweight;
   std::string switchcastor;
+  std::string castorcorrfile;
   std::string switchpresel;
   double lumiweight;
   std::string switchmceventweight;
@@ -62,6 +64,12 @@ class ExclusiveDijet {
   int optTrigger;
   double jet1pT;
   double jet2pT;
+  double castorthreshold;
+  double sumCastorEnergy;
+  double sumCastorAndHFMinusEnergy;
+  int SectorCastorHit;
+  int SectorZeroCastorCounter;
+  double etamin_;
 
   std::vector<std::vector<TH1D*> > m_hVector_rjj;
   std::vector<std::vector<TH1D*> > m_hVector_detagen;
@@ -101,6 +109,7 @@ class ExclusiveDijet {
   std::vector<std::vector<TH2D*> > m_hVector_sumEHFpfminusVsetaMin;
   std::vector<std::vector<TH1D*> > m_hVector_uncJet1;
   std::vector<std::vector<TH1D*> > m_hVector_uncJet2;
+  std::vector<std::vector<TH1D*> > m_hVector_sumECastorHFMinus;
 
   std::vector <std::string> Folders;
 
@@ -110,7 +119,7 @@ class ExclusiveDijet {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, double, std::string, int, int, double, double, std::string, std::string);
+  void Run(std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, double, std::string, int, int, double, double, std::string, std::string, double, std::string);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);
