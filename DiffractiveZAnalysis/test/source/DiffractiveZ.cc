@@ -2040,7 +2040,7 @@ void DiffractiveZ::SaveHistos(std::string type){
 
 }
 
-void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_, double castorthreshold_, double channelsthreshold_){
+void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_, double castorthreshold_, double channelsthreshold_, std::string castorcorrfile_){
 
   bool debug = false;
 
@@ -2061,6 +2061,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   typesel = typesel_;
   castorthreshold = castorthreshold_;
   channelsthreshold = channelsthreshold_;
+  castorcorrfile = castorcorrfile_;
 
   std::string selStatus;
   std::string TriggerStatus;
@@ -2668,6 +2669,7 @@ int main(int argc, char **argv)
   std::string typesel_;
   double castorthreshold_;
   double channelsthreshold_;
+  std::string castorcorrfile_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0) filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0) processname_ = argv[2];
@@ -2683,6 +2685,7 @@ int main(int argc, char **argv)
   if (argc > 12 && strcmp(s1,argv[12]) != 0) typesel_ = argv[12];
   if (argc > 13 && strcmp(s1,argv[13]) != 0) castorthreshold_ = atof(argv[13]);
   if (argc > 14 && strcmp(s1,argv[14]) != 0) channelsthreshold_ = atof(argv[14]);
+  if (argc > 15 && strcmp(s1,argv[15]) != 0) castorcorrfile_ = argv[15];
 
   std::cout << " " << std::endl;
   std::cout << ">>>>> Run with the Options <<<<< " << std::endl;
@@ -2704,7 +2707,7 @@ int main(int argc, char **argv)
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
 
-    if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger" || switchtrigger_=="trigger_all_electron") {}
+    if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger_nocorrection" || switchtrigger_=="no_trigger_correction" || switchtrigger_=="trigger_all_electron") {}
     else{
       std::cout << "Please Insert type of Swithtrigger: " << std::endl;
       std::cout << "1) trigger: run with trigger. Need optTrigger >=0;" << std::endl;
@@ -2752,9 +2755,20 @@ int main(int argc, char **argv)
       return 0;
     }
 
+    if(switchtrigger_=="no_trigger_correction"){
+      TFile castorfile(castorcorrfile_.c_str());
+      if (castorfile.IsZombie()){
+	std::cout << "-------------------------------------------" << std::endl;
+	std::cout << " There is no the file " << castorcorrfile_ << " or the" << std::endl;
+	std::cout << " path is not correct." << std::endl;
+	std::cout << "-------------------------------------------" << std::endl;
+	return 0;
+      }
+    }
+
     DiffractiveZ* diffZRun = new DiffractiveZ();
     diffZRun->CreateHistos(type_);
-    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_, castorthreshold_, channelsthreshold_);
+    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_, castorthreshold_, channelsthreshold_, castorcorrfile_);
     return 0;
   }
 
