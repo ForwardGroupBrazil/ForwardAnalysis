@@ -104,6 +104,7 @@ void DiffractiveZ::CreateHistos(std::string type){
   std::string step11 = "GapHFPlusAndCastorActivity";
   std::string step12 = "GapHFMinusAndCastorZKinPositive";
   std::string step13 = "GapHFPlusAndCastorActivityZKinNegative";
+  std::string step14 = "CastorGap";
 
 
   Folders.push_back(step0);
@@ -120,6 +121,7 @@ void DiffractiveZ::CreateHistos(std::string type){
   Folders.push_back(step11);
   Folders.push_back(step12);
   Folders.push_back(step13);
+  Folders.push_back(step14);
 
   int nloop=-999;
 
@@ -2226,6 +2228,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool triggerE_e = false;
     bool triggerE_f = false;
     bool triggerE_g = false;
+    bool triggerMu_a = false;
+    bool triggerMu_b = false;
     bool trigger = false;
     bool vertex = false;
     bool diffseln = false;
@@ -2260,19 +2264,46 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
+    if (switchtrigger == "trigger_all_muon"){
+      if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventdiffZ->GetHLTPath(5) ) triggerMu_a = true;
+      if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventdiffZ->GetHLTPath(6) ) triggerMu_b = true;
+      if (triggerMu_a || triggerMu_b) trigger = true;
+      if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
+      TriggerStatus = "trigger_all_muon";
+    }
     else if (switchtrigger == "trigger"){
       if (eventdiffZ->GetHLTPath(optTrigger)) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger <<", trigger accepted." << std::endl;
       TriggerStatus = "trigger";
     }
-    else if (switchtrigger == "no_trigger") {
+    else if (switchtrigger == "no_trigger_nocorrection") {
       trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", no trigger." << std::endl; 
-      TriggerStatus = "no_trigger";
+      TriggerStatus = "no_trigger_nocorrection";
+    }
+    else if (switchtrigger == "no_trigger_correction") {
+      trigger = true;
+      if (debug) std::cout << "\nTrigger Status: " << trigger << ", no trigger." << std::endl; 
+      TriggerStatus = "no_trigger_correction";
     }
     else{
       exit(EXIT_FAILURE);
     }
+
+      double energycorr[5][16];
+      h_castor_channel = (TH2F*)check2.Get("channelcorrector");
+
+      // Get CASTOR Corrections
+      for(int i=1; i<6;i++){
+	   for(int j=1; j<17; j++){
+	    energycorr[i-1][j-1]=0;
+	    if (switchtrigger == "no_trigger_correction"){
+	       energycorr[i-1][j-1]=h_castor_channel->GetBinContent(i,j);
+	    }else{
+	      energycorr[i-1][j-1]=1.;
+	    }
+	   }
+      }
 
     sumCastorEnergy = 0.;
     sumCastorAndHFMinusEnergy = 0.;
@@ -2286,16 +2317,16 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       for (int i=0; i < 16; i++){
 	CastorEnergySector[i]=0.;
 	if (i==4 || i==5){
-	  if (eventdiffZ->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i);
-	  if (eventdiffZ->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i);
-	  if (eventdiffZ->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i);
-	  if (eventdiffZ->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i);
+	  if (eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i];
+	  if (eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i];
+	  if (eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i];
+	  if (eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i];
 	}else{
-	  if (eventdiffZ->GetCastorModule1Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule1Energy(i);
-	  if (eventdiffZ->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i);
-	  if (eventdiffZ->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i);
-	  if (eventdiffZ->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i);
-	  if (eventdiffZ->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i);
+	  if (eventdiffZ->GetCastorModule1Energy(i)*energycorr[0][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule1Energy(i)*energycorr[0][i];
+	  if (eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i];
+	  if (eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i];
+	  if (eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i];
+	  if (eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i];
 	}
       }
 
@@ -2312,21 +2343,22 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     }
 
-    if ( castorthreshold > 0. && channelsthreshold < 0. ) {
+    if (castorthreshold > 0. && channelsthreshold < 0. ) {
+    
       sprintf(selCastor,">> Castor Sector Threshold: %0.2f GeV",castorthreshold);
       for (int i=0; i < 16; i++){
 	CastorEnergySector[i]=0.;
 	if (i==4 || i==5){
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i);
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i);
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i);
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i];
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i];
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i];
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i];
 	}else{
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule1Energy(i);
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i);
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i);
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i);
-	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i);
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule1Energy(i)*energycorr[0][i];
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i];
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i];
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i];
+	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i];
 	}
       }
       for (l=0; l<16;l++){
@@ -2543,7 +2575,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
 
-      if(switchtrigger == "trigger" || switchtrigger == "trigger_all_electron"){ 
+      if(switchtrigger == "trigger" || switchtrigger == "trigger_all_electron" || switchtrigger == "trigger_all_muon"){ 
 	FillHistos(0,pileup,totalcommon); 
 	if(trigger) {
 	  ++totalT;
@@ -2567,10 +2599,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	  FillHistos(13,pileup,totalcommon);
 	  outstring << "Negative Z Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	}
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap) FillHistos(14,pileup,totalcommon);
 
       }
 
-      else if (switchtrigger =="no_trigger"){
+      else if (switchtrigger =="no_trigger_nocorrection" || switchtrigger == "no_trigger_correction" ){
 	--totalT;
 	FillHistos(0,pileup,totalcommon);
 	if(vertex && presel) FillHistos(2,pileup,totalcommon);
@@ -2585,6 +2618,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity) FillHistos(11,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(12,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(13,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap) FillHistos(14,pileup,totalcommon);
       }
 
       else{
@@ -2707,7 +2741,7 @@ int main(int argc, char **argv)
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
 
-    if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger_nocorrection" || switchtrigger_=="no_trigger_correction" || switchtrigger_=="trigger_all_electron") {}
+    if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger_nocorrection" || switchtrigger_=="no_trigger_correction" || switchtrigger_=="trigger_all_electron" || switchtrigger_=="trigger_all_muon") {}
     else{
       std::cout << "Please Insert type of Swithtrigger: " << std::endl;
       std::cout << "1) trigger: run with trigger. Need optTrigger >=0;" << std::endl;

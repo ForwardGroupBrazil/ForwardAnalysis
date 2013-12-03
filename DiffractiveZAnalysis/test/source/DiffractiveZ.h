@@ -82,7 +82,7 @@ class DiffractiveZ {
   std::string type;
   std::string typesel;
   std::string switchlumiweight;
-  std::string castorcorrfile_;
+  std::string castorcorrfile;
   double mcweight;
   int nVertex;
   int optTrigger;
