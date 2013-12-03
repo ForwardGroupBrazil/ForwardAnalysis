@@ -2093,6 +2093,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     return;
   }
 
+  TFile check2(castorcorrfile.c_str());
+
   TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
   TString outtxt = savehistofile;
   outtxt.ReplaceAll("root","txt");

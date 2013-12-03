@@ -26,6 +26,7 @@ class DiffractiveZ {
   TBranch *diff;
   TBranch *diffZ;
   TBranch *info;
+  TH1* h_castor_channel;
   DiffractiveEvent *eventdiff;
   DiffractiveZEvent *eventdiffZ;
   EventInfoEvent *eventinfo;
