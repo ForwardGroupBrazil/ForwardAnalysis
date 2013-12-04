@@ -302,6 +302,10 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_SumEHFminus_L;
 
   std::vector<std::vector<TH1F*> > m_hVector_maxetagap;
+  std::vector<std::vector<TH1F*> > m_hVector_LimPlusgap;
+  std::vector<std::vector<TH1F*> > m_hVector_LimMinusgap;
+  std::vector<std::vector<TH1F*> > m_hVector_SumPTLimPlusgap;
+  std::vector<std::vector<TH1F*> > m_hVector_SumPTLimMinusgap;
 
   std::vector<std::vector<TH1F*> > m_hVector_ElectronsPt;
   std::vector<std::vector<TH1F*> > m_hVector_ElectronsEta;

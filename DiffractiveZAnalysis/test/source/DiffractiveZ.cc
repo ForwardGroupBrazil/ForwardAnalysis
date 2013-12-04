@@ -336,7 +336,11 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_SumEHFminus_L.push_back( std::vector<TH1F*>() );
 
     m_hVector_maxetagap.push_back( std::vector<TH1F*>() );
-
+    m_hVector_LimPlusgap.push_back( std::vector<TH1F*>() );
+    m_hVector_LimMinusgap.push_back( std::vector<TH1F*>() );
+    m_hVector_SumPTLimPlusgap.push_back( std::vector<TH1F*>() );
+    m_hVector_SumPTLimMinusgap.push_back( std::vector<TH1F*>() );
+    
     m_hVector_ElectronsPt.push_back( std::vector<TH1F*>() );
     m_hVector_ElectronsEta.push_back( std::vector<TH1F*>() );
     m_hVector_ElectronsPhi.push_back( std::vector<TH1F*>() );
@@ -1516,7 +1520,27 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name226,"pfetamincastor_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_PFEtamincastor = new TH1F(name226,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
       m_hVector_pfetamincastor[j].push_back(histo_PFEtamincastor);
-
+      
+      char name227[300];
+      sprintf(name227,"LimPlusgap_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LimPlusgap = new TH1F(name227,"Particle Flow #eta_{max} Gap upper limit; #eta; N events",50,-5.2,5.2);
+      m_hVector_LimPlusgap[j].push_back(histo_LimPlusgap);
+      
+      char name228[300];
+      sprintf(name228,"SumPTLimPlusgap_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SumPTLimPlusgap = new TH1F(name228,"Particle Flow P_{T} Gap upper limit; P_{T} [GeV]; N events",1200,0,600);
+      m_hVector_SumPTLimPlusgap[j].push_back(histo_SumPTLimPlusgap);
+      
+      char name229[300];
+      sprintf(name229,"LimMinusgap_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LimMinusgap = new TH1F(name229,"Particle Flow #eta_{max} Gap lower limit; #eta; N events",50,-5.2,5.2);
+      m_hVector_LimMinusgap[j].push_back(histo_LimMinusgap);
+      
+      char name230[300];
+      sprintf(name230,"SumPTLimMinusgap_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SumPTLimMinusgap = new TH1F(name230,"Particle Flow P_{T} Gap lower limit; P_{T} [GeV]; N events",1200,0,600);
+      m_hVector_SumPTLimMinusgap[j].push_back(histo_SumPTLimMinusgap);
+    
     }
   }
 }
@@ -1761,6 +1785,10 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_SumEHFplus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LPlus(),totalweight);
   m_hVector_SumEHFminus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LMinus(),totalweight);
   m_hVector_maxetagap[index].at(pileup)->Fill(eventdiffZ->GetMaxGapPF(),totalweight);
+  m_hVector_LimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetLimPlusGapPF(),totalweight);
+  m_hVector_LimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetLimMinusGapPF(),totalweight);
+  m_hVector_SumPTLimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetPTLimPlusGapPF(),totalweight);
+  m_hVector_SumPTLimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetPTLimMinusGapPF(),totalweight);
 
   m_hVector_ElectronsPt[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPt(),totalweight);
   m_hVector_ElectronsEta[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEta(),totalweight);
@@ -2001,6 +2029,10 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_SumEHFplus_L[j].at(i)->Write();
       m_hVector_SumEHFminus_L[j].at(i)->Write();
       m_hVector_maxetagap[j].at(i)->Write();
+      m_hVector_LimPlusgap[j].at(i)->Write();
+      m_hVector_LimMinusgap[j].at(i)->Write();
+      m_hVector_SumPTLimPlusgap[j].at(i)->Write();
+      m_hVector_SumPTLimMinusgap[j].at(i)->Write();
       m_hVector_ElectronsPt[j].at(i)->Write();
       m_hVector_ElectronsEta[j].at(i)->Write();
       m_hVector_ElectronsPhi[j].at(i)->Write();
@@ -2230,8 +2262,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool triggerE_e = false;
     bool triggerE_f = false;
     bool triggerE_g = false;
-    bool triggerMu_a = false;
-    bool triggerMu_b = false;
     bool trigger = false;
     bool vertex = false;
     bool diffseln = false;
@@ -2267,9 +2297,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       TriggerStatus = "trigger_all_electron";
     }
     if (switchtrigger == "trigger_all_muon"){
-      if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventdiffZ->GetHLTPath(5) ) triggerMu_a = true;
-      if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventdiffZ->GetHLTPath(6) ) triggerMu_b = true;
-      if (triggerMu_a || triggerMu_b) trigger = true;
+      if (eventdiffZ->GetHLTPath(0) || eventdiffZ->GetHLTPath(1)) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_muon";
     }
