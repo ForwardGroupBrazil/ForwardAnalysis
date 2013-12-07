@@ -1553,19 +1553,19 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 
       if(particle->particleId()==reco::PFCandidate::mu){
 	if(PFMuonVector.size()>1){
-	  if(!z1 && (PFMuonVector[0]->pt()!=pt || PFMuonVector[1]->pt()!=pt)) continue;
+	  if(z1 && (PFMuonVector[0]->pt()==pt || PFMuonVector[1]->pt()==pt)) continue;
 	}
 	if(MuonVector.size()>1){
-	  if(!z3 && (MuonVector[0]->pt()!=pt || MuonVector[1]->pt()!=pt)) continue;
+	  if(z3 && (MuonVector[0]->pt()==pt || MuonVector[1]->pt()==pt)) continue;
 	}
       }  
 
       if(particle->particleId()==reco::PFCandidate::e){ 
 	if(PFElectronVector.size()>1){
-	  if(!z2 && (PFElectronVector[0]->pt()!=pt || PFElectronVector[1]->pt()!=pt)) continue;
+	  if(z2 && (PFElectronVector[0]->pt()==pt || PFElectronVector[1]->pt()==pt)) continue;
 	}
 	if(ElectronVector.size()>1){
-	  if(!z4 && (ElectronVector[0]->pt()!=pt || ElectronVector[1]->pt()!=pt)) continue;
+	  if(z4 && (ElectronVector[0]->pt()==pt || ElectronVector[1]->pt()==pt)) continue;
 	}
       }
 
