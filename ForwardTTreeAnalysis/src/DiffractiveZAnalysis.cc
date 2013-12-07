@@ -251,12 +251,6 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
       if (electron2==NULL) {electron2=electronAll; continue;}
       if (electronAll->pt()>electron2->pt()) electron2 = electronAll;
 
-      if(debug){
-	if(electronAll->pt() > 25){
-	  std::cout << ">>>> RECO: Lepton from Z! eta: " << electronAll->eta() << " | pt: " << electronAll->pt() << std::endl;
-	}
-      }
-
     }
 
     ElectronVector.push_back(electron1);
@@ -488,12 +482,6 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
 
       if (muon2==NULL) {muon2=muonAll; continue;}
       if (muonAll->pt()>muon2->pt()) muon2 = muonAll;
-
-      if(debug){
-	if(muonAll->pt() > 20){
-	  std::cout << ">>>> RECO: Lepton from Z! eta: " << muonAll->eta() << " | pt: " << muonAll->pt() << std::endl;
-	}
-      }
 
       if (debug){
 	std::cout << ">>> Reco Muon" << std::endl;
@@ -1327,7 +1315,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   bool debug=false;
-  bool debugOrder=true;
+  bool debugOrder=false;
 
   std::vector<double> etas;
   double etaTimesEnergy=0.;
@@ -1570,7 +1558,7 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       }
 
       // Excluding Z from LRG calculation
-      std::cout << "Compute LRG, eta: " << eta << ", pT: "<< pt << " GeV" << std::endl;
+      if (debugOrder) std::cout << "Compute LRG, eta: " << eta << ", pT: "<< pt << " GeV" << std::endl;
       etas.push_back(eta);
 
     } 
@@ -1711,7 +1699,25 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
 				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
 				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
-    {        
+    {
+
+      if(particle->particleId()==reco::PFCandidate::mu){
+	if(PFMuonVector.size()>1){
+	  if(z1 && (PFMuonVector[0]->pt()==pt || PFMuonVector[1]->pt()==pt)) continue;
+	}
+	if(MuonVector.size()>1){
+	  if(z3 && (MuonVector[0]->pt()==pt || MuonVector[1]->pt()==pt)) continue;
+	}
+      }
+
+      if(particle->particleId()==reco::PFCandidate::e){
+	if(PFElectronVector.size()>1){
+	  if(z2 && (PFElectronVector[0]->pt()==pt || PFElectronVector[1]->pt()==pt)) continue;
+	}
+	if(ElectronVector.size()>1){
+	  if(z4 && (ElectronVector[0]->pt()==pt || ElectronVector[1]->pt()==pt)) continue;
+	}
+      }
 
       if ( eta >= eta_gap_limplus ){
 	dataMass_plus+=tmp;
@@ -1723,6 +1729,8 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 	nminus++;
 	sumPTPFm += pt;
       }
+
+      if (debugOrder) std::cout << "SUM, pT: Compute LRG, eta: " << eta << ", pT: "<< pt << " GeV" << std::endl;
 
     }
   }  // PF loop
