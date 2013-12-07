@@ -144,11 +144,11 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
   fillTriggerInfo(eventData,event,setup);
   fillMuonsInfo(eventData,event,setup);
   fillElectronsInfo(eventData,event,setup);
+  if (RunZPat_) fillZPat(eventData,event,setup);
   fillTracksInfo(eventData,event,setup);
   fillDetectorVariables(eventData,event,setup);
   fillVariables(eventData,event,setup);
   if (RunMC_) fillGenInfo(eventData,event,setup); 
-  if (RunZPat_) fillZPat(eventData,event,setup);
   if (RunCastor_){
     fillCastor(eventData,event,setup);
     fillCastorDebug(eventData,event,setup);
@@ -230,6 +230,8 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
   int electronsize = electrons->size();
   int itElectron;
 
+  ElectronVector.clear();
+
   if(electrons->size()>1){
 
     for(itElectron=0; itElectron < electronsize; ++itElectron){
@@ -256,6 +258,9 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
       }
 
     }
+
+    ElectronVector.push_back(electron1);
+    ElectronVector.push_back(electron2);
 
     double relIsoFirstElectronDr03 = (electron1->dr03TkSumPt()+electron1->dr03EcalRecHitSumEt()+electron1->dr03HcalTowerSumEt())/electron1->et();
     double relIsoFirstElectronDr04 = (electron1->dr04TkSumPt()+electron1->dr04EcalRecHitSumEt()+electron1->dr04HcalTowerSumEt())/electron1->et();
@@ -462,6 +467,8 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
   int muonsize = muons->size();
   int itMuon;
 
+  MuonVector.clear();
+
   if(muons->size()>1){
 
     for(itMuon=0; itMuon < muonsize; ++itMuon){
@@ -500,6 +507,9 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
       }
 
     }
+
+    MuonVector.push_back(muon1);
+    MuonVector.push_back(muon2);
 
     double muon1SumPtR03 = muon1->isolationR03().sumPt;
     double muon1EmEtR03 = muon1->isolationR03().emEt;
@@ -1317,6 +1327,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   bool debug=false;
+  bool debugOrder=true;
 
   std::vector<double> etas;
   double etaTimesEnergy=0.;
@@ -1351,6 +1362,150 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 
   eventData.SetVertex(Vertexes->size());
 
+  PFMuonVector.clear();
+  PFElectronVector.clear();
+
+  // Fill All Electrons and Muons from Particle Flow Objects
+  int NMuonsPF = 0;
+  int NElectronsPF = 0;
+  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
+
+    const reco::PFCandidate *particle = &(*iter);
+
+    //eta cut - excluding ring 12 13 HF  
+    if (fabs(particle->eta())>4.7) continue;
+    if (particle->particleId()==reco::PFCandidate::e) ++NElectronsPF;
+    if (particle->particleId()==reco::PFCandidate::mu) ++NMuonsPF;
+
+  }
+
+  const reco::PFCandidate* pf1e=NULL;
+  const reco::PFCandidate* pf2e=NULL;
+  const reco::PFCandidate* pf1m=NULL;
+  const reco::PFCandidate* pf2m=NULL;
+  int pfsize = PFCandidates->size();
+
+  for(int i=0; i < pfsize; ++i){
+
+    const reco::PFCandidate* pfAll = &((*PFCandidates)[i]);
+
+    if(NElectronsPF > 1){
+
+      if (pfAll->particleId()==reco::PFCandidate::e){
+	const reco::PFCandidate* pfAlle = &((*PFCandidates)[i]);
+	if (pfAlle==NULL) continue;
+	if (pf1e==NULL) {pf1e=pfAlle; continue;}
+	if (pfAlle->pt()>pf1e->pt()) {
+	  pf2e=pf1e;
+	  pf1e=pfAlle;
+	  continue;
+	}
+	if (pf2e==NULL) {pf2e=pfAlle; continue;}
+	if (pfAlle->pt()>pf2e->pt()) pf2e = pfAlle;
+      }  
+    }  
+    if(NMuonsPF > 1){
+      if (pfAll->particleId()==reco::PFCandidate::mu){
+	const reco::PFCandidate* pfAllm = &((*PFCandidates)[i]);
+	if (pfAllm==NULL) continue;
+	if (pf1m==NULL) {pf1m=pfAllm; continue;}
+	if (pfAllm->pt()>pf1m->pt()) {
+	  pf2m=pf1m;
+	  pf1m=pfAllm;
+	  continue;
+	}
+	if (pf2m==NULL) {pf2m=pfAllm; continue;}
+	if (pfAllm->pt()>pf2m->pt()) pf2m = pfAllm;
+      }  
+    }
+  }
+
+  if(NMuonsPF > 1) {
+    PFMuonVector.push_back(pf1m);
+    PFMuonVector.push_back(pf2m);
+  }
+  if(NElectronsPF > 1){
+    PFElectronVector.push_back(pf1e);
+    PFElectronVector.push_back(pf2e);
+  }
+
+  //Print PF Objects
+  if(debugOrder){
+    if(PFMuonVector.size()>1){
+      for (unsigned int i=0;i<PFMuonVector.size();i++){
+	std::cout << "PF Muon, pT: " << PFMuonVector[i]->pt() << " GeV | eta: " << PFMuonVector[i]->eta() << std::endl;
+      }
+    }
+
+    //Print PF Objects
+    if(MuonVector.size()>1){
+      for (unsigned int i=0;i<MuonVector.size();i++){
+	std::cout << "Muon, pT: " << MuonVector[i]->pt() << " GeV | eta: " << MuonVector[i]->eta() << std::endl;
+      }
+    }
+
+    //Print PF Objects
+    if(PFElectronVector.size()>1){
+      for (unsigned int i=0;i<PFElectronVector.size();i++){
+	std::cout << "PF Electron, pT: " << PFElectronVector[i]->pt() << " GeV | eta: " << PFElectronVector[i]->eta() << std::endl;
+      }
+    }
+
+    //Print PF Objects
+    if(ElectronVector.size()>1){
+      for (unsigned int i=0;i<ElectronVector.size();i++){
+	std::cout << "Electron, pT: " << ElectronVector[i]->pt() << " GeV | eta: " << ElectronVector[i]->eta() << std::endl;
+      }
+    }
+  }
+
+  math::XYZTLorentzVector ZBosonMuonPFSystem(0.,0.,0.,0.);
+  math::XYZTLorentzVector ZBosonElectronPFSystem(0.,0.,0.,0.);
+  math::XYZTLorentzVector ZBosonMuonSystem(0.,0.,0.,0.);
+  math::XYZTLorentzVector ZBosonElectronSystem(0.,0.,0.,0.);
+
+  bool z1 = false;
+  bool z2 = false;
+  bool z3 = false;
+  bool z4 = false;
+
+  if(PFMuonVector.size()>1){
+    ZBosonMuonPFSystem += PFMuonVector[0]->p4();
+    ZBosonMuonPFSystem += PFMuonVector[1]->p4();
+    if (ZBosonMuonPFSystem.M() > 60 && ZBosonMuonPFSystem.M() < 110.){
+      if(debugOrder)std::cout << "Mass Z, muon PF: " << ZBosonMuonPFSystem.M() << std::endl;
+      z1=true;
+    }
+  }
+
+  if(PFElectronVector.size()>1){
+    ZBosonElectronPFSystem += PFElectronVector[0]->p4();
+    ZBosonElectronPFSystem += PFElectronVector[1]->p4();
+    if (ZBosonElectronPFSystem.M() > 60 && ZBosonElectronPFSystem.M() < 110.){
+      if(debugOrder)std::cout << "Mass Z, electron PF: " << ZBosonElectronPFSystem.M() << std::endl;
+      z2=true;
+    }
+  }
+
+  if(MuonVector.size()>1){
+    ZBosonMuonSystem += MuonVector[0]->p4();
+    ZBosonMuonSystem += MuonVector[1]->p4();
+    if (ZBosonMuonSystem.M() > 60 && ZBosonMuonSystem.M() < 110.) {
+      if(debugOrder)std::cout << "Mass Z, muon: " << ZBosonMuonSystem.M() << std::endl;
+      z3=true;
+    }
+  }
+
+  if(ElectronVector.size()>1){
+    ZBosonElectronSystem += ElectronVector[0]->p4();
+    ZBosonElectronSystem += ElectronVector[1]->p4();
+    if (ZBosonElectronSystem.M() > 60 && ZBosonElectronSystem.M() < 110.){ 
+      if(debugOrder)std::cout << "Mass Z, electron: " << ZBosonElectronSystem.M() << std::endl;
+      z4=true;
+    }
+  }
+
+  // Compute Gap Size Excluding Z Candidates
   for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
 
     const reco::PFCandidate *particle = &(*iter);
@@ -1364,7 +1519,6 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     double eta=particle->eta();
     double charge=particle->charge();
     double theta=particle->theta();
-    bool leptonZ=false;
 
     // Fill 2D TTree (eta,energy);
 
@@ -1372,9 +1526,6 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     if (fabs(eta)>4.7) continue;
 
     //int type=particle->particleId();
-
-    if (particle->particleId()==reco::PFCandidate::e) electronEnergy.push_back(et);
-    if (particle->particleId()==reco::PFCandidate::mu) muEnergy.push_back(et);
 
     TLorentzVector tmp(px,py,pz,energy);
 
@@ -1400,20 +1551,27 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       sumpz +=pz;
       sumEnergyPF +=energy;
 
-      if(particle->particleId()==reco::PFCandidate::e){ 
-	if(pt > 25) leptonZ=true;
-      }
-
       if(particle->particleId()==reco::PFCandidate::mu){
-	if(pt > 20) leptonZ=true;
-      }            
+	if(PFMuonVector.size()>1){
+	  if(!z1 && (PFMuonVector[0]->pt()!=pt || PFMuonVector[1]->pt()!=pt)) continue;
+	}
+	if(MuonVector.size()>1){
+	  if(!z3 && (MuonVector[0]->pt()!=pt || MuonVector[1]->pt()!=pt)) continue;
+	}
+      }  
+
+      if(particle->particleId()==reco::PFCandidate::e){ 
+	if(PFElectronVector.size()>1){
+	  if(!z2 && (PFElectronVector[0]->pt()!=pt || PFElectronVector[1]->pt()!=pt)) continue;
+	}
+	if(ElectronVector.size()>1){
+	  if(!z4 && (ElectronVector[0]->pt()!=pt || ElectronVector[1]->pt()!=pt)) continue;
+	}
+      }
 
       // Excluding Z from LRG calculation
-      if(!leptonZ){
-	etas.push_back(eta);
-      }else{
-	if(debug) std::cout << ">>>> Lepton from Z! eta: " << eta << "| id: " << particle->particleId() << " | pt: " << pt << std::endl;
-      }
+      std::cout << "Compute LRG, eta: " << eta << ", pT: "<< pt << " GeV" << std::endl;
+      etas.push_back(eta);
 
     } 
 
