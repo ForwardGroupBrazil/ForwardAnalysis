@@ -1735,8 +1735,12 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     }
   }  // PF loop
 
-  eventData.SetPTLimPlusGapPF(sumPTPFp);
-  eventData.SetPTLimMinusGapPF(sumPTPFm);
+  if (sumPTPFp > sumPTPFm){
+   eventData.SetPTMaxGapMaxPF(sumPTPFp);
+  }else{
+   eventData.SetPTMinGapMaxPF(sumPTPFm);
+  }
+  
   eventData.SetElectronEnergyPF(-999.); // First Electron, Fill Second Electron also. Eta, phi, pT and ISO from PF.
   eventData.SetMuEnergyPF(-999.); // First Muon, Fill Second Muon also. Eta, phi, pT and ISO from PF.
   eventData.SetMultiplicityGapPlusPF(nplus);
