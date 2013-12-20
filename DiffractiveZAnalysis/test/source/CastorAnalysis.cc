@@ -630,7 +630,8 @@ void CastorAnalysis::FillHistos(int index){
 	m_hVector_CastorMappingMultiplicity[l+1].at(index)->Fill(x+1,i,mapping[x][i-1]);
 	energymappinguncsqr[l+1][x][i-1]+= pow(energymappingunc[x][i-1],2); 
 	}
-	 */
+
+        }*/
 
 	if(energymodule[h] > 0 && energymodule[h] < 50){
 	  m_hVector_CastorMappingEnergy[1].at(index)->Fill(h+1,i,energymapping[h][i-1]);
@@ -650,7 +651,6 @@ void CastorAnalysis::FillHistos(int index){
 	  energymappinguncsqr[3][h][i-1]+= pow(energymappingunc[h][i-1],2);
 	}
 
-	//}
       }
     }
 
