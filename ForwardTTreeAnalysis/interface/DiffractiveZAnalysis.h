@@ -7,6 +7,24 @@
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
 
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
+
+#include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
+
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
+
+#include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
+
+#include "DataFormats/ParticleFlowReco/interface/PFBlockElementTrack.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
+#include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
+#include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
+
+
 #include <vector>
 #include <string>
 #include <map>
@@ -77,6 +95,13 @@ namespace diffractiveZAnalysis {
       edm::InputTag trackTag_;
 
       std::string selectionPathName_;
+      
+      std::vector<const reco::Muon*> MuonVector;
+      std::vector<const reco::GsfElectron*> ElectronVector;
+      std::vector<const pat::Muon*> PatMuonVector;
+      std::vector<const pat::Electron*> PatElectronVector;
+      std::vector<const reco::PFCandidate*> PFMuonVector;
+      std::vector<const reco::PFCandidate*> PFElectronVector;
 
       TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
       TH1F *CastorChannelHisto_;
