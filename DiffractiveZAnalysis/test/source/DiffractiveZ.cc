@@ -340,7 +340,7 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_LimMinusgap.push_back( std::vector<TH1F*>() );
     m_hVector_SumPTLimPlusgap.push_back( std::vector<TH1F*>() );
     m_hVector_SumPTLimMinusgap.push_back( std::vector<TH1F*>() );
-    
+
     m_hVector_ElectronsPt.push_back( std::vector<TH1F*>() );
     m_hVector_ElectronsEta.push_back( std::vector<TH1F*>() );
     m_hVector_ElectronsPhi.push_back( std::vector<TH1F*>() );
@@ -1520,27 +1520,27 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name226,"pfetamincastor_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_PFEtamincastor = new TH1F(name226,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
       m_hVector_pfetamincastor[j].push_back(histo_PFEtamincastor);
-      
+
       char name227[300];
       sprintf(name227,"LimPlusgap_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_LimPlusgap = new TH1F(name227,"Particle Flow #eta_{max} Gap upper limit; #eta; N events",50,-5.2,5.2);
       m_hVector_LimPlusgap[j].push_back(histo_LimPlusgap);
-      
+
       char name228[300];
       sprintf(name228,"SumPTMaxgap_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_SumPTLimPlusgap = new TH1F(name228,"Particle Flow P_{T}; #sum P_{T} [GeV], max; N events",1200,0,600);
       m_hVector_SumPTLimPlusgap[j].push_back(histo_SumPTLimPlusgap);
-      
+
       char name229[300];
       sprintf(name229,"LimMinusgapmax_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_LimMinusgap = new TH1F(name229,"Particle Flow #eta_{max} Gap lower limit; #eta; N events",50,-5.2,5.2);
       m_hVector_LimMinusgap[j].push_back(histo_LimMinusgap);
-      
+
       char name230[300];
       sprintf(name230,"SumPTMingapmax_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_SumPTLimMinusgap = new TH1F(name230,"Particle Flow P_{T}; #sum P_{T}, min [GeV]; N events",1200,0,600);
       m_hVector_SumPTLimMinusgap[j].push_back(histo_SumPTLimMinusgap);
-    
+
     }
   }
 }
@@ -2183,6 +2183,21 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
   std::string status;  
 
+  double energycorr[5][16];
+  h_castor_channel = (TH2F*)check2.Get("channelcorrector");
+
+  // Get CASTOR Corrections
+  for(int i=1; i<6;i++){
+    for(int j=1; j<17; j++){
+      energycorr[i-1][j-1]=0;
+      if (switchtrigger == "no_trigger_correction"){
+	energycorr[i-1][j-1]=h_castor_channel->GetBinContent(i,j);
+      }else{
+	energycorr[i-1][j-1]=1.;
+      }
+    }
+  }
+
   for(int i=0;i<NEVENTS;i++){
 
     tr->GetEntry(i);
@@ -2320,21 +2335,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       exit(EXIT_FAILURE);
     }
 
-      double energycorr[5][16];
-      h_castor_channel = (TH2F*)check2.Get("channelcorrector");
-
-      // Get CASTOR Corrections
-      for(int i=1; i<6;i++){
-	   for(int j=1; j<17; j++){
-	    energycorr[i-1][j-1]=0;
-	    if (switchtrigger == "no_trigger_correction"){
-	       energycorr[i-1][j-1]=h_castor_channel->GetBinContent(i,j);
-	    }else{
-	      energycorr[i-1][j-1]=1.;
-	    }
-	   }
-      }
-
     sumCastorEnergy = 0.;
     sumCastorAndHFMinusEnergy = 0.;
     SectorCastorHit = 0.;
@@ -2374,7 +2374,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     }
 
     if (castorthreshold > 0. && channelsthreshold < 0. ) {
-    
+
       sprintf(selCastor,">> Castor Sector Threshold: %0.2f GeV",castorthreshold);
       for (int i=0; i < 16; i++){
 	CastorEnergySector[i]=0.;
