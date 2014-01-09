@@ -2311,7 +2311,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
-    if (switchtrigger == "trigger_all_muon"){
+    else if (switchtrigger == "trigger_all_muon"){
       if (eventdiffZ->GetHLTPath(0) || eventdiffZ->GetHLTPath(1)) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_muon";
