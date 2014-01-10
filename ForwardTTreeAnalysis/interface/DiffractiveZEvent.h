@@ -508,8 +508,8 @@ class DiffractiveZEvent {
     double GetSumpzPF()    const {return SumpzPF_;}
     double GetSumEnergyPF()    const {return SumEnergyPF_;}
     double GetMuEnergyPF()    const {return MuEnergyPF_;}
-    double GetElectronEnergyPF()    const {return MaxGapPF_;}
-    double GetMaxGapPF()    const {return EtaCaloMin_;}
+    double GetElectronEnergyPF()    const {return ElectronEnergyPF_;}
+    double GetMaxGapPF()    const {return MaxGapPF_;}
     double GetSecondMaxGapPF()    const {return SecondMaxGapPF_;}
     double GetLimPlusGapPF()    const {return LimPlusGapPF_;}
     double GetLimMinusGapPF()    const {return LimMinusGapPF_;}
