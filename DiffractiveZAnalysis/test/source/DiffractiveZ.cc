@@ -1353,7 +1353,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name193[300];
       sprintf(name193,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_maxetagap = new TH1F(name193,"Particle Flow #eta_{max} Gap Distribution; #eta_{max, gap}; N events",40,-6.,6);
+      TH1F *histo_maxetagap = new TH1F(name193,"Particle Flow #eta_{max} Gap Distribution; #eta_{max, gap}; N events",20,0.,10.);
       m_hVector_maxetagap[j].push_back(histo_maxetagap);
 
       char name194[300];
@@ -1532,12 +1532,12 @@ void DiffractiveZ::CreateHistos(std::string type){
       m_hVector_SumPTLimPlusgap[j].push_back(histo_SumPTLimPlusgap);
 
       char name229[300];
-      sprintf(name229,"LimMinusgapmax_%s_%s",tag,Folders.at(j).c_str());
+      sprintf(name229,"LimMinusgap_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_LimMinusgap = new TH1F(name229,"Particle Flow #eta_{max} Gap lower limit; #eta; N events",50,-5.2,5.2);
       m_hVector_LimMinusgap[j].push_back(histo_LimMinusgap);
 
       char name230[300];
-      sprintf(name230,"SumPTMingapmax_%s_%s",tag,Folders.at(j).c_str());
+      sprintf(name230,"SumPTMingap_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_SumPTLimMinusgap = new TH1F(name230,"Particle Flow P_{T}; #sum P_{T}, min [GeV]; N events",1200,0,600);
       m_hVector_SumPTLimMinusgap[j].push_back(histo_SumPTLimMinusgap);
 
@@ -1784,7 +1784,7 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_SumEHFminus_S[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_SMinus(),totalweight);
   m_hVector_SumEHFplus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LPlus(),totalweight);
   m_hVector_SumEHFminus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LMinus(),totalweight);
-  m_hVector_maxetagap[index].at(pileup)->Fill(eventdiffZ->GetMaxGapPF(),totalweight);
+  m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffZ->GetMaxGapPF()),totalweight);
   m_hVector_LimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetLimPlusGapPF(),totalweight);
   m_hVector_LimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetLimMinusGapPF(),totalweight);
   m_hVector_SumPTLimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMaxGapMaxPF(),totalweight);
