@@ -39,7 +39,8 @@ void TriggerEff::LoadFile(std::string fileinput, std::string processinput){
   inf = NULL;
   tr  = NULL;
   inf = TFile::Open(fileinput.c_str(),"read");
-  tr = (TTree*)inf->Get(processinput.c_str());
+  std::string fdirectory = processinput + "/ProcessedTree";
+  tr = (TTree*)inf->Get(fdirectory.c_str());
   eventdiff = new DiffractiveEvent();
   eventexcl = new ExclusiveDijetsEvent();
   eventinfo = new EventInfoEvent();
@@ -96,7 +97,15 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 
   }
 
-  LoadFile(filein,processname);
+ if (check1.GetDirectory(processname.c_str())){
+    LoadFile(filein,processname);
+  }else{
+    std::cout << "---------------------------------------------------" << std::endl;
+    std::cout << " There is no directory/path " << processname << std::endl;
+    std::cout << " in the file." << std::endl;
+    std::cout << "---------------------------------------------------" << std::endl;
+    return;
+  }
 
   TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
 
@@ -144,7 +153,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta2_castorgap");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta1_castorgap");
 
-  for (int j=0; j<18; j++){
+  for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
     char name1[300];
     sprintf(name1,"Events_%s",Folders.at(j).c_str());
@@ -233,13 +242,8 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
       castorgap = true;
     }
     
-    
-    
-    
     counter[0]++;
     
-    
-
     m_hVector_Evt_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Eff_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Evt_pfetamax.at(0)->Fill(eventdiff->GetEtaMaxFromPFCands());
@@ -266,7 +270,6 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 	    if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
 	      if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){      
 		if( (eventdiff->GetEtaMinFromPFCands() > -etacut && eventdiff->GetEtaMaxFromPFCands() < etacut ) || (gap) ){
-
 		  counter[i+2]++;
 		  m_hVector_Evt_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
 		  m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
@@ -274,14 +277,12 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		  m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
 		  
 		  if(castorgap){
-		    //cout<<"castorgap :"<< castorgap<<endl;
 		    counter[i+6]++;
 		    m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		    m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
            }
-
 		  if(eventexcl->GetHLTPath(optTrigger)||eventexcl->GetHLTPath(optTriggerOR)){
 		    counter[i+10]++;
 		    m_hVector_Evt_lumis.at(i+10)->Fill(eventinfo->GetInstLumiBunch());
@@ -289,14 +290,12 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		    m_hVector_Evt_pfetamax.at(i+10)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		    m_hVector_Evt_pfetamin.at(i+10)->Fill(eventdiff->GetEtaMinFromPFCands());
 		    if(castorgap){
-		    //cout<<"castorgap :"<< castorgap<<endl;
 		    counter[i+14]++;
 		    m_hVector_Evt_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Eff_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Evt_pfetamax.at(i+14)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		    m_hVector_Evt_pfetamin.at(i+14)->Fill(eventdiff->GetEtaMinFromPFCands());
             }
-		    
 		  } 	
 		}
 	      } 
@@ -308,8 +307,8 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   }
 
   //Scalling Plots
-  for (int k=0; k<18; k++){
-    m_hVector_Eff_lumis.at(k)->Scale(1./counter[k]);
+  for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
+    m_hVector_Eff_lumis.at(j)->Scale(1./counter[j]);
   }
 
   outstring << "" << std::endl;
@@ -401,8 +400,6 @@ int main(int argc, char **argv)
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  bin_   = atoi(argv[8]);
   if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_   = atof(argv[9]);
   
-  
-  
   if (channelsthreshold_ < 0){
     std::cout << "----------------------------------------------" << std::endl;
     std::cout << " Pay attention on the input numbers parameters" << std::endl;
@@ -417,6 +414,7 @@ int main(int argc, char **argv)
   triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTriggerRefOR_, optTrigger_,optTriggerOR_, bin_, channelsthreshold_);
 
   return 0;
+  
 }
 #endif
 

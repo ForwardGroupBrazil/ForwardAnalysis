@@ -406,8 +406,6 @@ int main(int argc, char **argv)
   EffMacro* exclDijets = new EffMacro();   
   exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_, channelsthreshold_);
 
-
-
   return 0;
 }
 #endif
