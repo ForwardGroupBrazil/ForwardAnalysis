@@ -97,7 +97,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 
   }
 
- if (check1.GetDirectory(processname.c_str())){
+  if (check1.GetDirectory(processname.c_str())){
     LoadFile(filein,processname);
   }else{
     std::cout << "---------------------------------------------------" << std::endl;
@@ -137,17 +137,17 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   Folders.push_back("with_RefTriggerCutsOffLine_eta3");
   Folders.push_back("with_RefTriggerCutsOffLine_eta2");
   Folders.push_back("with_RefTriggerCutsOffLine_eta1");
-  
+
   Folders.push_back("with_RefTriggerCutsOffLine_eta4_castorgap");
   Folders.push_back("with_RefTriggerCutsOffLine_eta3_castorgap");
   Folders.push_back("with_RefTriggerCutsOffLine_eta2_castorgap");
   Folders.push_back("with_RefTriggerCutsOffLine_eta1_castorgap");
-  
+
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta4");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta3");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta2");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta1");
-  
+
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta4_castorgap");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta3_castorgap");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta2_castorgap");
@@ -213,26 +213,26 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
     bool castorgap = false;
     bool castoractivity = false;
     int SectorCastorHit = 0;
-    
+
     for (int i=0; i < 16; i++){
       CastorEnergySector[i]=0.;
       if (i==4 || i==5){
-        if (eventdiff->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule2Energy(i);
-        if (eventdiff->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule3Energy(i);
-        if (eventdiff->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule4Energy(i);
-        if (eventdiff->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule5Energy(i);
+	if (eventdiff->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule2Energy(i);
+	if (eventdiff->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule3Energy(i);
+	if (eventdiff->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule4Energy(i);
+	if (eventdiff->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule5Energy(i);
       }else{
-        if (eventdiff->GetCastorModule1Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule1Energy(i);
-        if (eventdiff->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule2Energy(i);
-        if (eventdiff->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule3Energy(i);
-        if (eventdiff->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule4Energy(i);
-        if (eventdiff->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule5Energy(i);
+	if (eventdiff->GetCastorModule1Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule1Energy(i);
+	if (eventdiff->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule2Energy(i);
+	if (eventdiff->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule3Energy(i);
+	if (eventdiff->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule4Energy(i);
+	if (eventdiff->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule5Energy(i);
       }
     }
 
     for (l=0; l<16;l++){
       if (CastorEnergySector[l] >= channelsthreshold){
-        ++SectorCastorHit;
+	++SectorCastorHit;
       }
     }
 
@@ -241,9 +241,9 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
     }else{
       castorgap = true;
     }
-    
+
     counter[0]++;
-    
+
     m_hVector_Evt_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Eff_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Evt_pfetamax.at(0)->Fill(eventdiff->GetEtaMaxFromPFCands());
@@ -257,7 +257,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
       m_hVector_Evt_pfetamax.at(1)->Fill(eventdiff->GetEtaMaxFromPFCands());
       m_hVector_Evt_pfetamin.at(1)->Fill(eventdiff->GetEtaMinFromPFCands());
 
- for (int i=0; i < 4; i++ ){
+      for (int i=0; i < 4; i++ ){
 	if(i==0) etacut = 4.;
 	if(i==1) etacut = 3.;
 	if(i==2) etacut = 2.;
@@ -275,14 +275,14 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		  m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
 		  m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		  m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
-		  
+
 		  if(castorgap){
 		    counter[i+6]++;
 		    m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		    m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
-           }
+		  }
 		  if(eventexcl->GetHLTPath(optTrigger)||eventexcl->GetHLTPath(optTriggerOR)){
 		    counter[i+10]++;
 		    m_hVector_Evt_lumis.at(i+10)->Fill(eventinfo->GetInstLumiBunch());
@@ -290,12 +290,12 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		    m_hVector_Evt_pfetamax.at(i+10)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		    m_hVector_Evt_pfetamin.at(i+10)->Fill(eventdiff->GetEtaMinFromPFCands());
 		    if(castorgap){
-		    counter[i+14]++;
-		    m_hVector_Evt_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
-		    m_hVector_Eff_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
-		    m_hVector_Evt_pfetamax.at(i+14)->Fill(eventdiff->GetEtaMaxFromPFCands());
-		    m_hVector_Evt_pfetamin.at(i+14)->Fill(eventdiff->GetEtaMinFromPFCands());
-            }
+		      counter[i+14]++;
+		      m_hVector_Evt_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
+		      m_hVector_Eff_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
+		      m_hVector_Evt_pfetamax.at(i+14)->Fill(eventdiff->GetEtaMaxFromPFCands());
+		      m_hVector_Evt_pfetamin.at(i+14)->Fill(eventdiff->GetEtaMinFromPFCands());
+		    }
 		  } 	
 		}
 	      } 
@@ -399,7 +399,7 @@ int main(int argc, char **argv)
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  optTriggerOR_   = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  bin_   = atoi(argv[8]);
   if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_   = atof(argv[9]);
-  
+
   if (channelsthreshold_ < 0){
     std::cout << "----------------------------------------------" << std::endl;
     std::cout << " Pay attention on the input numbers parameters" << std::endl;
@@ -409,12 +409,12 @@ int main(int argc, char **argv)
     std::cout << "----------------------------------------------" << std::endl;
     return 0;
   }
- 
+
   TriggerEff* triggereff = new TriggerEff();   
   triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTriggerRefOR_, optTrigger_,optTriggerOR_, bin_, channelsthreshold_);
 
   return 0;
-  
+
 }
 #endif
 
