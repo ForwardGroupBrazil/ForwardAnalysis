@@ -168,6 +168,9 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
   }
 
+  bool switchcastor = false;
+  if (channelsthreshold >= 0.) switchcastor = true;
+
   for(int i=0;i<NEVENTS;i++) {
 
     ++TotalE;
@@ -197,7 +200,6 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
     bool eta3 = false;
     bool eta2 = false;
     bool eta1 = false;
-    bool switchcastor = false;
     int SectorCastorHit = 0;
 
     for (int i=0; i < 16; i++){
@@ -227,8 +229,6 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
     }else{
       castorgap = true;
     }
-
-    if (channelsthreshold >= 0.) switchcastor = true;
 
     if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))) trigger = true;
     if (!switchPreSel || (switchPreSel && ( (eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ))) presel = true;  
@@ -315,7 +315,6 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   outstring << "Trigger Switch: " << switchTrigger << std::endl;
   outstring << "Vertex  Switch: " << switchVertex << std::endl;
   outstring << "Pre-Selection Switch: " << switchPreSel << std::endl;
-  outstring << "Castor Switch: " << switchcastor << std::endl;
   outstring << "" << std::endl;
   outstring << "<< EVENT INFO >> " << std::endl;
   outstring << " " << std::endl;
