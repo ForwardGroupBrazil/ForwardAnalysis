@@ -30,7 +30,9 @@ class TriggerEff {
    std::string processinput; 
    std::string savehistofile;
    int optTrigger;
+   int optTriggerOR;
    int optTriggerRef;
+   int optTriggerRefOR;
    int bin;
    std::vector<TH1D*> m_hVector_Evt_lumis;
    std::vector<TH1D*> m_hVector_Eff_lumis;
@@ -40,7 +42,7 @@ class TriggerEff {
    TriggerEff() {}
    ~TriggerEff() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, int, int, int);
+   void Run(std::string, std::string, std::string, int, int, int, int, int);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
