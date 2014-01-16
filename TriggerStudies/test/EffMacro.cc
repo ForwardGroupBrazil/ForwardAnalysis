@@ -51,7 +51,7 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchVertex_, bool switchTrigger_, bool switchcastor_){
+void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchVertex_, bool switchTrigger_, double channelsthreshold_){
 
   filein = filein_;
   savehistofile = savehistofile_;
@@ -62,7 +62,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   switchPreSel = switchPreSel_;
   switchVertex = switchVertex_;
   switchTrigger = switchTrigger_;
-  switchcastor = switchcastor_;
+  channelsthreshold = channelsthreshold_;
 
   std::cout << "" << std::endl;
   std::cout << "Running..." << std::endl;
@@ -80,6 +80,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   std::cout << "Vertex Switch: " << switchVertex << std::endl;
   std::cout << "Trigger Switch: " << switchTrigger << std::endl;
   std::cout << "Pre-Selection Switch: " << switchPreSel << std::endl;
+  std::cout << "CASTOR Threshold: " << channelsthreshold << std::endl;
   std::cout << " " << std::endl;
 
 
@@ -130,13 +131,15 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   int decade = 0;
 
   double TotalE = 0.;
-  double counterTrigger = 0.;
-  double counterPreSel=0.;
-  double counterVertex = 0.;
-  double counterAllstep4_4 = 0.;
-  double counterAllstep4_3 = 0.;
-  double counterAllstep4_2 = 0.;
-  double counterAllstep4_1 = 0.;
+  int counterTrigger = 0;
+  int counterPreSel=0;
+  int counterVertex = 0;
+  int counterAllstep4_4 = 0;
+  int counterAllstep4_3 = 0;
+  int counterAllstep4_2 = 0;
+  int counterAllstep4_1 = 0;
+  int counterAllstep4_4_castorgap = 0;
+  int counterAllstep4_3_castorgap = 0;
 
   std::vector <std::string> Folders;
   Folders.push_back("without_cuts");
@@ -145,10 +148,12 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   Folders.push_back("with_trigger_presel_vertex");
   Folders.push_back("All_step4_4");
   Folders.push_back("All_step4_3");
+  Folders.push_back("All_step4_4_castorgap");
+  Folders.push_back("All_step4_3_castorgap");
   Folders.push_back("All_step4_2");
   Folders.push_back("All_step4_1");
 
-  for (int j=0; j<8; j++)
+  for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++)
   {
 
     char name1[300];
@@ -182,70 +187,113 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
       std::cout << "\nEvent " << i << std::endl;
     }
 
+    bool castorgapOn = false;
+    bool trigger = false;
+    bool presel = false;
+    bool castorgap = false;
+    bool castoractivity = false;
+    bool vertex = false;
+    bool eta4 = false;
+    bool eta3 = false;
+    bool eta2 = false;
+    bool eta1 = false;
+    bool switchcastor = false;
+    int SectorCastorHit = 0;
+
+    for (int i=0; i < 16; i++){
+      CastorEnergySector[i]=0.;
+      if (i==4 || i==5){
+	if (eventdiff->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule2Energy(i);
+	if (eventdiff->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule3Energy(i);
+	if (eventdiff->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule4Energy(i);
+	if (eventdiff->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule5Energy(i);
+      }else{
+	if (eventdiff->GetCastorModule1Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule1Energy(i);
+	if (eventdiff->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule2Energy(i);
+	if (eventdiff->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule3Energy(i);
+	if (eventdiff->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule4Energy(i);
+	if (eventdiff->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule5Energy(i);
+      }
+    }
+
+    for (l=0; l<16;l++){
+      if (CastorEnergySector[l] >= channelsthreshold){
+	++SectorCastorHit;
+      }
+    }
+
+    if (SectorCastorHit >= 1){
+      castoractivity = true;
+    }else{
+      castorgap = true;
+    }
+
+    if (channelsthreshold >= 0.) switchcastor = true;
+
+    if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))) trigger = true;
+    if (!switchPreSel || (switchPreSel && ( (eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ))) presel = true;  
+    if (!switchcastor || (switchcastor && castorgap)) castorgapOn = true;
+    if (!switchVertex || (switchVertex && eventexcl->GetNVertex()<= optnVertex)) vertex = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990 && castorgapOn)) eta4 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990 && castorgapOn)) eta3 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990 && castorgapOn)) eta2 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990 && castorgapOn)) eta1 = true;
+
     m_hVector_Evt_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Eff_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
 
-
-    if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))){
-
+    if(trigger){
       ++counterTrigger;     
       m_hVector_Evt_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
       m_hVector_Eff_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
-
-
-      if ( !switchPreSel || (switchPreSel && ( (eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ))){
-
-	if ( !switchcastor || (switchcastor && eventdiff->GetSumETotCastor() < 400) ){
-
-	  ++counterPreSel;
-	  m_hVector_Evt_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
-	  m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
-
-
-	  if( !switchVertex || (switchVertex && eventexcl->GetNVertex()<= optnVertex )){
-
-	    ++counterVertex;
-	    m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
-	    m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
-
-
-	    // Eta max and Eta min cut
-	    if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
-
-	      ++counterAllstep4_4;
-	      m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
-	      m_hVector_Eff_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
-	    }
-
-	    if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
-
-	      ++counterAllstep4_3;
-	      m_hVector_Evt_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
-	      m_hVector_Eff_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
-	    }
-
-	    if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
-
-	      ++counterAllstep4_2;
-	      m_hVector_Evt_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
-	      m_hVector_Eff_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
-	    }
-
-	    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
-
-	      ++counterAllstep4_1;
-	      m_hVector_Evt_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
-	      m_hVector_Eff_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
-	    }
-
-	  }  
-
-	} 
-
-      }   
-
     }
 
+    if(trigger && presel){
+      ++counterPreSel;
+      m_hVector_Evt_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
+    }
+
+    if(trigger && presel && vertex){
+      ++counterVertex;
+      m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
+    }
+
+    if(trigger && presel && vertex && eta4){
+      ++counterAllstep4_4;
+      m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_Eff_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
+    }
+
+    if(trigger && presel && vertex && eta3){
+      ++counterAllstep4_3;
+      m_hVector_Evt_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_Eff_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
+    }
+
+    if(trigger && presel && vertex && eta4 && castorgapOn){
+      ++counterAllstep4_4_castorgap;
+      m_hVector_Evt_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_Eff_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
+    }
+
+    if(trigger && presel && vertex && eta3 && castorgapOn){
+      ++counterAllstep4_3_castorgap;
+      m_hVector_Evt_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_Eff_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
+    }
+
+    if(trigger && presel && vertex && eta2){
+      ++counterAllstep4_2;
+      m_hVector_Evt_lumis.at(8)->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_Eff_lumis.at(8)->Fill(eventinfo->GetInstLumiBunch());
+    }
+    if(trigger && presel && vertex && eta1){
+      ++counterAllstep4_1;
+      m_hVector_Evt_lumis.at(9)->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_Eff_lumis.at(9)->Fill(eventinfo->GetInstLumiBunch());
+    }
   }
 
 
@@ -276,6 +324,8 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   outstring << "Trigger: " << counterTrigger << std::endl;
   outstring << "Trigger + Pre Sel.: " << counterPreSel << std::endl;
   outstring << "Trigger + Pre Sel. + Vertex: " << counterVertex << std::endl;
+  if (switchcastor) outstring << "STEP4_4_Castor (CMS Acceptance): " << counterAllstep4_4_castorgap << std::endl;
+  if (switchcastor) outstring << "STEP4_3_Castor (CMS Acceptance): " << counterAllstep4_3_castorgap << std::endl;
   outstring << "STEP4_4 (CMS Acceptance): " << counterAllstep4_4 << std::endl;
   outstring << "STEP4_3 (CMS Acceptance): " << counterAllstep4_3 << std::endl;
   outstring << "STEP4_2 (CMS Acceptance): " << counterAllstep4_2 << std::endl;
@@ -306,7 +356,7 @@ int main(int argc, char **argv)
   bool switchPreSel_;
   bool switchVertex_;
   bool switchTrigger_;
-  bool switchcastor_;
+  double channelsthreshold_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
@@ -316,10 +366,12 @@ int main(int argc, char **argv)
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  switchPreSel_   = atoi(argv[6]);
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  switchVertex_   = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchTrigger_   = atoi(argv[8]);
-  if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchcastor_   = atoi(argv[9]);
+  if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_   = atof(argv[9]);
 
   EffMacro* exclDijets = new EffMacro();   
-  exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_, switchcastor_);
+  exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_, channelsthreshold_);
+
+
 
   return 0;
 }
