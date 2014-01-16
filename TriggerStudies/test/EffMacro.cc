@@ -38,7 +38,8 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
   inf = NULL;
   tr  = NULL;
   inf = TFile::Open(fileinput.c_str(),"read");
-  tr = (TTree*)inf->Get(processinput.c_str());
+  std::string fdirectory = processinput + "/ProcessedTree";
+  tr = (TTree*)inf->Get(fdirectory.c_str());
   eventdiff = new DiffractiveEvent();
   eventexcl = new ExclusiveDijetsEvent();
   eventinfo = new EventInfoEvent();
@@ -106,14 +107,10 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
     return;
 
   }
-  //--------------------------------------------------------------------------------------------------------------------------
 
-
-if (check1.GetDirectory(processname.c_str())){
+  if (check1.GetDirectory(processname.c_str())){
     LoadFile(filein,processname);
-  }
-
-  else{
+  }else{
     std::cout << "---------------------------------------------------" << std::endl;
     std::cout << " There is no directory/path " << processname << std::endl;
     std::cout << " in the file." << std::endl;
@@ -200,10 +197,6 @@ if (check1.GetDirectory(processname.c_str())){
 
     tr->GetEntry(i);
 
-    if( i % 1000 == 0 ){
-      std::cout << "\nEvent " << i << std::endl;
-    }
-
     bool trigger = false;
     bool presel = false;
     bool castorgap = false;
@@ -271,7 +264,7 @@ if (check1.GetDirectory(processname.c_str())){
       m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
       m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
     }
-    
+
     if(trigger && presel && vertex && eta4){
       ++counterAllstep4_4;
       m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
@@ -289,13 +282,13 @@ if (check1.GetDirectory(processname.c_str())){
       m_hVector_Evt_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
       m_hVector_Eff_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
     }
-    
+
     if(trigger && presel && vertex && eta1){
       ++counterAllstep4_1;
       m_hVector_Evt_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
       m_hVector_Eff_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
     }
-    
+
     if(trigger && presel && vertex && castorgap){
       ++counterVertex_castorgap;
       m_hVector_Evt_lumis.at(8)->Fill(eventinfo->GetInstLumiBunch());
@@ -319,13 +312,13 @@ if (check1.GetDirectory(processname.c_str())){
       m_hVector_Evt_lumis.at(11)->Fill(eventinfo->GetInstLumiBunch());
       m_hVector_Eff_lumis.at(11)->Fill(eventinfo->GetInstLumiBunch());
     }
-    
+
     if(trigger && presel && vertex && eta1 && castorgap){
       ++counterAllstep4_1_castorgap;
       m_hVector_Evt_lumis.at(12)->Fill(eventinfo->GetInstLumiBunch());
       m_hVector_Eff_lumis.at(12)->Fill(eventinfo->GetInstLumiBunch());
     }
-    
+
   }
 
   //Scalling Plots
@@ -400,15 +393,15 @@ int main(int argc, char **argv)
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchTrigger_   = atoi(argv[8]);
   if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_   = atof(argv[9]);
 
- if (channelsthreshold_ < 0){
-      std::cout << "----------------------------------------------" << std::endl;
-      std::cout << " Pay attention on the input numbers parameters" << std::endl;
-      std::cout << "----------------------------------------------" << std::endl;
-      std::cout << ">> Requirements: " << std::endl;
-      std::cout << ">> channelthreshold must be >= 0 GeV" << std::endl;
-      std::cout << "----------------------------------------------" << std::endl;
-      return 0;
-    }
+  if (channelsthreshold_ < 0){
+    std::cout << "----------------------------------------------" << std::endl;
+    std::cout << " Pay attention on the input numbers parameters" << std::endl;
+    std::cout << "----------------------------------------------" << std::endl;
+    std::cout << ">> Requirements: " << std::endl;
+    std::cout << ">> channelthreshold must be >= 0 GeV" << std::endl;
+    std::cout << "----------------------------------------------" << std::endl;
+    return 0;
+  }
 
   EffMacro* exclDijets = new EffMacro();   
   exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_, channelsthreshold_);
