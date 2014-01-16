@@ -52,7 +52,7 @@ void TriggerEff::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_, int optTrigger_, int bin_, bool castor_){
+void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_, int optTrigger_, int bin_){
 
   filein = filein_;
   savehistofile = savehistofile_;
@@ -61,7 +61,6 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   optTrigger = optTrigger_;
   optTriggerRef = optTriggerRef_;
   bin = bin_;
-  castor = castor_;
 
   std::cout << "" << std::endl;
   std::cout << "Running..." << std::endl;
@@ -75,7 +74,6 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   std::cout << "Reference Trigger Option: " << optTriggerRef << std::endl;
   std::cout << "Trigger Option: " << optTrigger << std::endl;
   std::cout << "Bin: " << bin << std::endl;
-  std::cout << "Castor: " << castor << std::endl;
   std::cout << " " << std::endl;
 
 
@@ -172,16 +170,13 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
       std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
     }
 
-
     for (int nt=0;nt<20;nt++){
       if(eventexcl->GetHLTPath(nt)){
 	triggercounter[nt]++;
       }
     }
 
-
     decade = l;          
-
     tr->GetEntry(i);
 
     if( i % 1000 == 0 ){
@@ -197,8 +192,6 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
     m_hVector_Evt_pfetamax.at(0)->Fill(eventdiff->GetEtaMaxFromPFCands());
     m_hVector_Evt_pfetamin.at(0)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-
-
     if(eventexcl->GetHLTPath(optTriggerRef)){
 
       counter[1]++;
@@ -212,7 +205,6 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 	if(i==1) etacut = 3.;
 	if(i==2) etacut = 2.;
 	if(i==3) etacut = 1.;
-
 
 	if(eventdiff->GetEtaMinFromPFCands() < -990. && eventdiff->GetEtaMaxFromPFCands() < -990.) gap = true;
 	if((eventexcl->GetLeadingJetP4().Pt() > 60.)){
@@ -315,7 +307,6 @@ int main(int argc, char **argv)
   int optTrigger_;
   int optTriggerRef_;
   int bin_;
-  bool castor_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
@@ -323,10 +314,9 @@ int main(int argc, char **argv)
   if (argc > 4 && strcmp(s1,argv[4]) != 0)  optTriggerRef_   = atoi(argv[4]);
   if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTrigger_   = atoi(argv[5]);
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  bin_   = atoi(argv[6]);
-  if (argc > 7 && strcmp(s1,argv[7]) != 0)  castor_   = atoi(argv[7]);
 
   TriggerEff* triggereff = new TriggerEff();   
-  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTrigger_, bin_, castor_);
+  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTrigger_, bin_);
 
   return 0;
 }
