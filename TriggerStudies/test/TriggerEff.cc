@@ -249,7 +249,6 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   outstring << " " << std::endl;
   outstring << "Trigger Ref Option: " << optTriggerRef << std::endl;
   outstring << "Trigger Option: " << optTrigger << std::endl;
-  outstring << "Castor: " << castor << std::endl;
   outstring << "Bin: " << bin << std::endl;
   outstring << " " << std::endl;
   outstring << "Number of Events: " << TotalE << std::endl;
