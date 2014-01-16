@@ -108,7 +108,18 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   }
   //--------------------------------------------------------------------------------------------------------------------------
 
-  LoadFile(filein,processname);
+
+if (check1.GetDirectory(processname.c_str())){
+    LoadFile(filein,processname);
+  }
+
+  else{
+    std::cout << "---------------------------------------------------" << std::endl;
+    std::cout << " There is no directory/path " << processname << std::endl;
+    std::cout << " in the file." << std::endl;
+    std::cout << "---------------------------------------------------" << std::endl;
+    return;
+  }
 
   // Root file with histograms
   TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
