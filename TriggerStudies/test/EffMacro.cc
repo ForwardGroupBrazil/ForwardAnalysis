@@ -319,7 +319,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
   //Scalling Plots
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
-    m_hVector_Eff_lumis.at(k)->Scale(1./TotalE);
+    m_hVector_Eff_lumis.at(j)->Scale(1./TotalE);
   }
 
   outstring << "" << std::endl;
@@ -389,7 +389,7 @@ int main(int argc, char **argv)
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchTrigger_   = atoi(argv[8]);
   if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_   = atof(argv[9]);
 
- if (channelsthreshold < 0){
+ if (channelsthreshold_ < 0){
       std::cout << "----------------------------------------------" << std::endl;
       std::cout << " Pay attention on the input numbers parameters" << std::endl;
       std::cout << "----------------------------------------------" << std::endl;
