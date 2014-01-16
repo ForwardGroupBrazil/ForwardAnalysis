@@ -52,14 +52,16 @@ void TriggerEff::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_, int optTrigger_, int bin_){
+void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_,int optTriggerRefOR_, int optTrigger_,int optTriggerOR_,  int bin_){
 
   filein = filein_;
   savehistofile = savehistofile_;
   processname = processname_;
   filein = filein_;
   optTrigger = optTrigger_;
+  optTriggerOR = optTriggerOR_;
   optTriggerRef = optTriggerRef_;
+  optTriggerRefOR = optTriggerRefOR_;
   bin = bin_;
 
   std::cout << "" << std::endl;
@@ -72,7 +74,9 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   std::cout << "Output file: " << savehistofile << std::endl;
   std::cout << " " << std::cout; 
   std::cout << "Reference Trigger Option: " << optTriggerRef << std::endl;
+  std::cout << "Reference Trigger Option OR: " << optTriggerRefOR << std::endl;
   std::cout << "Trigger Option: " << optTrigger << std::endl;
+  std::cout << "Trigger Option OR: " << optTriggerOR << std::endl;
   std::cout << "Bin: " << bin << std::endl;
   std::cout << " " << std::endl;
 
@@ -192,7 +196,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
     m_hVector_Evt_pfetamax.at(0)->Fill(eventdiff->GetEtaMaxFromPFCands());
     m_hVector_Evt_pfetamin.at(0)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-    if(eventexcl->GetHLTPath(optTriggerRef)){
+    if(eventexcl->GetHLTPath(optTriggerRef)||eventexcl->GetHLTPath(optTriggerRefOR)){
 
       counter[1]++;
       m_hVector_Evt_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
@@ -220,7 +224,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		  m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		  m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-		  if(eventexcl->GetHLTPath(optTrigger)){
+		  if(eventexcl->GetHLTPath(optTrigger)||eventexcl->GetHLTPath(optTriggerOR)){
 		    counter[i+6]++;
 		    m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
@@ -248,7 +252,9 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   outstring << "Output file: " << savehistofile << std::endl;
   outstring << " " << std::endl;
   outstring << "Trigger Ref Option: " << optTriggerRef << std::endl;
+  outstring << "Trigger Ref Option OR: " << optTriggerRefOR << std::endl;
   outstring << "Trigger Option: " << optTrigger << std::endl;
+  outstring << "Trigger Option OR: " << optTriggerOR << std::endl;
   outstring << "Bin: " << bin << std::endl;
   outstring << " " << std::endl;
   outstring << "Number of Events: " << TotalE << std::endl;
@@ -304,18 +310,22 @@ int main(int argc, char **argv)
   std::string savehistofile_;
   std::string processname_;
   int optTrigger_;
+  int optTriggerOR_;
   int optTriggerRef_;
+  int optTriggerRefOR_;
   int bin_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
   if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
   if (argc > 4 && strcmp(s1,argv[4]) != 0)  optTriggerRef_   = atoi(argv[4]);
-  if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTrigger_   = atoi(argv[5]);
-  if (argc > 6 && strcmp(s1,argv[6]) != 0)  bin_   = atoi(argv[6]);
+  if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTriggerRefOR_   = atoi(argv[5]);
+  if (argc > 6 && strcmp(s1,argv[6]) != 0)  optTrigger_   = atoi(argv[6]);
+  if (argc > 7 && strcmp(s1,argv[7]) != 0)  optTriggerOR_   = atoi(argv[7]);
+  if (argc > 8 && strcmp(s1,argv[8]) != 0)  bin_   = atoi(argv[8]);
 
   TriggerEff* triggereff = new TriggerEff();   
-  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTrigger_, bin_);
+  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTriggerRefOR_, optTrigger_,optTriggerOR_, bin_);
 
   return 0;
 }
