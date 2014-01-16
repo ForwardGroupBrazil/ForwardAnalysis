@@ -63,6 +63,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   optTriggerRef = optTriggerRef_;
   optTriggerRefOR = optTriggerRefOR_;
   bin = bin_;
+  channelsthreshold = channelsthreshold_;
 
   std::cout << "" << std::endl;
   std::cout << "Running..." << std::endl;
@@ -78,6 +79,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   std::cout << "Trigger Option: " << optTrigger << std::endl;
   std::cout << "Trigger Option OR: " << optTriggerOR << std::endl;
   std::cout << "Bin: " << bin << std::endl;
+  std::cout << "CASTOR Threshold: " << channelsthreshold << std::endl;
   std::cout << " " << std::endl;
 
 
@@ -116,7 +118,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 
   int triggercounter[20]={0};
   double TotalE = 0.;
-  double counter[10] = {0};
+  double counter[18] = {0};
   double deltaphi_ = 0.;
 
   std::vector <std::string> Folders;
@@ -126,12 +128,23 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   Folders.push_back("with_RefTriggerCutsOffLine_eta3");
   Folders.push_back("with_RefTriggerCutsOffLine_eta2");
   Folders.push_back("with_RefTriggerCutsOffLine_eta1");
+  
+  Folders.push_back("with_RefTriggerCutsOffLine_eta4_castorgap");
+  Folders.push_back("with_RefTriggerCutsOffLine_eta3_castorgap");
+  Folders.push_back("with_RefTriggerCutsOffLine_eta2_castorgap");
+  Folders.push_back("with_RefTriggerCutsOffLine_eta1_castorgap");
+  
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta4");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta3");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta2");
   Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta1");
+  
+  Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta4_castorgap");
+  Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta3_castorgap");
+  Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta2_castorgap");
+  Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta1_castorgap");
 
-  for (int j=0; j<10; j++){
+  for (int j=0; j<18; j++){
 
     char name1[300];
     sprintf(name1,"Events_%s",Folders.at(j).c_str());
@@ -188,8 +201,44 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
     }
 
     deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
+    bool castorgap = false;
+    bool castoractivity = false;
+    int SectorCastorHit = 0;
+    
+    for (int i=0; i < 16; i++){
+      CastorEnergySector[i]=0.;
+      if (i==4 || i==5){
+        if (eventdiff->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule2Energy(i);
+        if (eventdiff->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule3Energy(i);
+        if (eventdiff->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule4Energy(i);
+        if (eventdiff->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule5Energy(i);
+      }else{
+        if (eventdiff->GetCastorModule1Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule1Energy(i);
+        if (eventdiff->GetCastorModule2Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule2Energy(i);
+        if (eventdiff->GetCastorModule3Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule3Energy(i);
+        if (eventdiff->GetCastorModule4Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule4Energy(i);
+        if (eventdiff->GetCastorModule5Energy(i) > channelsthreshold) CastorEnergySector[i]+=eventdiff->GetCastorModule5Energy(i);
+      }
+    }
 
+    for (l=0; l<16;l++){
+      if (CastorEnergySector[l] >= channelsthreshold){
+        ++SectorCastorHit;
+      }
+    }
+
+    if (SectorCastorHit >= 1){
+      castoractivity = true;
+    }else{
+      castorgap = true;
+    }
+    
+    
+    
+    
     counter[0]++;
+    
+    
 
     m_hVector_Evt_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Eff_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
@@ -204,7 +253,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
       m_hVector_Evt_pfetamax.at(1)->Fill(eventdiff->GetEtaMaxFromPFCands());
       m_hVector_Evt_pfetamin.at(1)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-      for (int i=0; i < 4; i++ ){
+ for (int i=0; i < 4; i++ ){
 	if(i==0) etacut = 4.;
 	if(i==1) etacut = 3.;
 	if(i==2) etacut = 2.;
@@ -223,13 +272,31 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		  m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
 		  m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		  m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
-
-		  if(eventexcl->GetHLTPath(optTrigger)||eventexcl->GetHLTPath(optTriggerOR)){
+		  
+		  if(castorgap){
+		     cout<<"castorgap :"<< castorgap<< endl;
 		    counter[i+6]++;
 		    m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		    m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
+           }
+
+		  if(eventexcl->GetHLTPath(optTrigger)||eventexcl->GetHLTPath(optTriggerOR)){
+		    counter[i+10]++;
+		    m_hVector_Evt_lumis.at(i+10)->Fill(eventinfo->GetInstLumiBunch());
+		    m_hVector_Eff_lumis.at(i+10)->Fill(eventinfo->GetInstLumiBunch());
+		    m_hVector_Evt_pfetamax.at(i+10)->Fill(eventdiff->GetEtaMaxFromPFCands());
+		    m_hVector_Evt_pfetamin.at(i+10)->Fill(eventdiff->GetEtaMinFromPFCands());
+		    if(castorgap){
+		    cout<<"castorgap :"<< castorgap<< endl;
+		    counter[i+14]++;
+		    m_hVector_Evt_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
+		    m_hVector_Eff_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
+		    m_hVector_Evt_pfetamax.at(i+14)->Fill(eventdiff->GetEtaMaxFromPFCands());
+		    m_hVector_Evt_pfetamin.at(i+14)->Fill(eventdiff->GetEtaMinFromPFCands());
+            }
+		    
 		  } 	
 		}
 	      } 
@@ -241,7 +308,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   }
 
   //Scalling Plots
-  for (int k=0; k<10; k++){
+  for (int k=0; k<18; k++){
     m_hVector_Eff_lumis.at(k)->Scale(1./counter[k]);
   }
 
@@ -264,10 +331,18 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   outstring << "Number of Events With Cut Off Line Eta3 : " << counter[3] << std::endl;
   outstring << "Number of Events With Cut Off Line Eta2 : " << counter[4] << std::endl;
   outstring << "Number of Events With Cut Off Line Eta1 : " << counter[5] << std::endl;
-  outstring << "Number of Events With Trigger and Eta4 : " << counter[6] << std::endl;
-  outstring << "Number of Events With Trigger and Eta3 : " << counter[7] << std::endl;
-  outstring << "Number of Events With Trigger and Eta2 : " << counter[8] << std::endl;
-  outstring << "Number of Events With Trigger and Eta1 : " << counter[9] << std::endl;
+  outstring << "Number of Events With Cut Off Line Eta4_castorgap : " << counter[6] << std::endl;
+  outstring << "Number of Events With Cut Off Line Eta3_castorgap : " << counter[7] << std::endl;
+  outstring << "Number of Events With Cut Off Line Eta2_castorgap : " << counter[8] << std::endl;
+  outstring << "Number of Events With Cut Off Line Eta1_castorgap : " << counter[9] << std::endl;
+  outstring << "Number of Events With Trigger and Eta4 : " << counter[10] << std::endl;
+  outstring << "Number of Events With Trigger and Eta3 : " << counter[11] << std::endl;
+  outstring << "Number of Events With Trigger and Eta2 : " << counter[12] << std::endl;
+  outstring << "Number of Events With Trigger and Eta1 : " << counter[13] << std::endl;
+  outstring << "Number of Events With Trigger and Eta4_castorgap : " << counter[14] << std::endl;
+  outstring << "Number of Events With Trigger and Eta3_castorgap : " << counter[15] << std::endl;
+  outstring << "Number of Events With Trigger and Eta2_castorgap : " << counter[16] << std::endl;
+  outstring << "Number of Events With Trigger and Eta1_castorgap : " << counter[17] << std::endl;
   outstring << "" << std::endl;
   outstring << "Total Trigger Fired: " <<  std::endl;
   outstring << "Trigger 0: " << triggercounter[0] << std::endl;
@@ -314,6 +389,7 @@ int main(int argc, char **argv)
   int optTriggerRef_;
   int optTriggerRefOR_;
   int bin_;
+  double channelsthreshold_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
@@ -323,9 +399,22 @@ int main(int argc, char **argv)
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  optTrigger_   = atoi(argv[6]);
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  optTriggerOR_   = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  bin_   = atoi(argv[8]);
-
+  if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_   = atof(argv[9]);
+  
+  
+  
+  if (channelsthreshold_ < 0){
+    std::cout << "----------------------------------------------" << std::endl;
+    std::cout << " Pay attention on the input numbers parameters" << std::endl;
+    std::cout << "----------------------------------------------" << std::endl;
+    std::cout << ">> Requirements: " << std::endl;
+    std::cout << ">> channelthreshold must be >= 0 GeV" << std::endl;
+    std::cout << "----------------------------------------------" << std::endl;
+    return 0;
+  }
+ 
   TriggerEff* triggereff = new TriggerEff();   
-  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTriggerRefOR_, optTrigger_,optTriggerOR_, bin_);
+  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTriggerRefOR_, optTrigger_,optTriggerOR_, bin_, channelsthreshold_);
 
   return 0;
 }
