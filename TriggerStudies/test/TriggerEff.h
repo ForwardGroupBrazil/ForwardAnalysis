@@ -34,6 +34,8 @@ class TriggerEff {
    int optTriggerRef;
    int optTriggerRefOR;
    int bin;
+   double channelsthreshold;
+   double CastorEnergySector[16];
    std::vector<TH1D*> m_hVector_Evt_lumis;
    std::vector<TH1D*> m_hVector_Eff_lumis;
    std::vector<TH1D*> m_hVector_Evt_pfetamax;
@@ -42,9 +44,10 @@ class TriggerEff {
    TriggerEff() {}
    ~TriggerEff() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, int, int, int, int, int);
+   void Run(std::string, std::string, std::string, int, int, int, int, int, double);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
 };
 #endif
+

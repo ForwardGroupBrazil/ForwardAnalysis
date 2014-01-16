@@ -52,7 +52,7 @@ void TriggerEff::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_,int optTriggerRefOR_, int optTrigger_,int optTriggerOR_,  int bin_){
+void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_,int optTriggerRefOR_, int optTrigger_,int optTriggerOR_,  int bin_, double channelsthreshold_){
 
   filein = filein_;
   savehistofile = savehistofile_;
@@ -274,7 +274,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		  m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
 		  
 		  if(castorgap){
-		     cout<<"castorgap :"<< castorgap<< endl;
+		    //cout<<"castorgap :"<< castorgap<<endl;
 		    counter[i+6]++;
 		    m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
@@ -289,7 +289,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		    m_hVector_Evt_pfetamax.at(i+10)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		    m_hVector_Evt_pfetamin.at(i+10)->Fill(eventdiff->GetEtaMinFromPFCands());
 		    if(castorgap){
-		    cout<<"castorgap :"<< castorgap<< endl;
+		    //cout<<"castorgap :"<< castorgap<<endl;
 		    counter[i+14]++;
 		    m_hVector_Evt_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Eff_lumis.at(i+14)->Fill(eventinfo->GetInstLumiBunch());
@@ -419,3 +419,4 @@ int main(int argc, char **argv)
   return 0;
 }
 #endif
+
