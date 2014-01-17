@@ -22,6 +22,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "statusbar.h"
 #include "CastorAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
@@ -34,37 +35,6 @@ using namespace eventInfo;
 using namespace reweight;
 
 #define PI 3.14159265
-
-static inline void loadBar(int x, int n, int r, int w)
-{
-  // Modified
-  // http://www.rosshemsley.co.uk/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/
-
-  // Only update r times.
-  if ( x % (n/r) != 0 ) return;
-
-  // Calculuate the correlation of complete-to-incomplete.
-  double correlation = x/(double)n;
-  int   c     = correlation * w;
-
-  // Show the percentage complete.
-  printf("%3d%%[", (int)(correlation*100) );
-
-  // Show the load bar.
-  for (int x=0; x<c; x++)
-    printf("=");
-
-  for (int x=c; x<w; x++)
-    printf(" ");
-
-  // ANSI Control codes to go back to the
-  // previous line and clear it.
-  // printf("]\n33[F33[J");
-
-  printf("\r"); // Move to the first column
-  fflush(stdout);
-}
-
 
 void CastorAnalysis::LoadFile(std::string fileinput, std::string processinput){
 
@@ -1016,7 +986,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     tr->GetEntry(i);
 
     for (int nt=0;nt<20;nt++){
-      if(eventCastor->GetHLTPath(nt)){
+      if(eventCastor->GetHLTPath(nt)>0){
 	triggercounter[nt]++;
       }
     }
@@ -1074,19 +1044,19 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
     bool isolation = false;
 
     if (switchtrigger == "trigger_all_electron"){
-      if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventCastor->GetHLTPath(0) ) triggerE_a = true;
-      if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventCastor->GetHLTPath(1) ) triggerE_b = true;
-      if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventCastor->GetHLTPath(2) ) triggerE_c = true;
-      if ( (eventdiff->GetRunNumber() >= 144115 && eventdiff->GetRunNumber() <= 147145) && eventCastor->GetHLTPath(3) ) triggerE_d = true;
-      if ( (eventdiff->GetRunNumber() >= 147146 && eventdiff->GetRunNumber() <= 148058) && eventCastor->GetHLTPath(4) ) triggerE_e = true;
-      if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventCastor->GetHLTPath(5) ) triggerE_f = true;
-      if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventCastor->GetHLTPath(6) ) triggerE_g = true;
+      if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventCastor->GetHLTPath(0) >0) triggerE_a = true;
+      if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventCastor->GetHLTPath(1) >0) triggerE_b = true;
+      if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventCastor->GetHLTPath(2) >0) triggerE_c = true;
+      if ( (eventdiff->GetRunNumber() >= 144115 && eventdiff->GetRunNumber() <= 147145) && eventCastor->GetHLTPath(3) >0) triggerE_d = true;
+      if ( (eventdiff->GetRunNumber() >= 147146 && eventdiff->GetRunNumber() <= 148058) && eventCastor->GetHLTPath(4) >0) triggerE_e = true;
+      if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventCastor->GetHLTPath(5) >0) triggerE_f = true;
+      if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventCastor->GetHLTPath(6) >0) triggerE_g = true;
       if (triggerE_a || triggerE_b || triggerE_c || triggerE_d || triggerE_e || triggerE_f || triggerE_g) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
     else if (switchtrigger == "trigger"){
-      if (eventCastor->GetHLTPath(optTrigger)) trigger = true;
+      if (eventCastor->GetHLTPath(optTrigger)>0) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger <<", trigger accepted." << std::endl;
       TriggerStatus = "trigger";
     }

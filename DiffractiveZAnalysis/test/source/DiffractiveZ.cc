@@ -22,6 +22,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "statusbar.h"
 #include "DiffractiveZ.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
@@ -32,37 +33,6 @@ using namespace diffractiveAnalysis;
 using namespace diffractiveZAnalysis;
 using namespace eventInfo;
 using namespace reweight;
-
-static inline void loadBar(int x, int n, int r, int w)
-{
-  // Modified
-  // http://www.rosshemsley.co.uk/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/
-
-  // Only update r times.
-  if ( x % (n/r) != 0 ) return;
-
-  // Calculuate the correlation of complete-to-incomplete.
-  double correlation = x/(double)n;
-  int   c     = correlation * w;
-
-  // Show the percentage complete.
-  printf("%3d%%[", (int)(correlation*100) );
-
-  // Show the load bar.
-  for (int x=0; x<c; x++)
-    printf("=");
-
-  for (int x=c; x<w; x++)
-    printf(" ");
-
-  // ANSI Control codes to go back to the
-  // previous line and clear it.
-  // printf("]\n33[F33[J");
-
-  printf("\r"); // Move to the first column
-  fflush(stdout);
-}
-
 
 void DiffractiveZ::LoadFile(std::string fileinput, std::string processinput){
 
@@ -1353,7 +1323,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name193[300];
       sprintf(name193,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_maxetagap = new TH1F(name193,"Particle Flow #eta_{max} Gap Distribution; #eta_{max, gap}; N events",20,0.,10.);
+      TH1F *histo_maxetagap = new TH1F(name193,"Particle Flow #Delta#eta_{max} Distribution; #Delta#eta_{max}; N events",40,0.,6.);
       m_hVector_maxetagap[j].push_back(histo_maxetagap);
 
       char name194[300];
@@ -2220,7 +2190,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     }
 
     for (int nt=0;nt<20;nt++){
-      if(eventdiffZ->GetHLTPath(nt)){
+      if(eventdiffZ->GetHLTPath(nt) > 0){
 	triggercounter[nt]++;
       }
     }
@@ -2300,24 +2270,24 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool ZKinP = false;
 
     if (switchtrigger == "trigger_all_electron"){
-      if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffZ->GetHLTPath(0) ) triggerE_a = true;
-      if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventdiffZ->GetHLTPath(1) ) triggerE_b = true;
-      if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventdiffZ->GetHLTPath(2) ) triggerE_c = true;
-      if ( (eventdiff->GetRunNumber() >= 144115 && eventdiff->GetRunNumber() <= 147145) && eventdiffZ->GetHLTPath(3) ) triggerE_d = true;
-      if ( (eventdiff->GetRunNumber() >= 147146 && eventdiff->GetRunNumber() <= 148058) && eventdiffZ->GetHLTPath(4) ) triggerE_e = true;
-      if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventdiffZ->GetHLTPath(5) ) triggerE_f = true;
-      if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventdiffZ->GetHLTPath(6) ) triggerE_g = true;
+      if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffZ->GetHLTPath(0) > 0 ) triggerE_a = true;
+      if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventdiffZ->GetHLTPath(1) > 0) triggerE_b = true;
+      if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventdiffZ->GetHLTPath(2) > 0) triggerE_c = true;
+      if ( (eventdiff->GetRunNumber() >= 144115 && eventdiff->GetRunNumber() <= 147145) && eventdiffZ->GetHLTPath(3) > 0) triggerE_d = true;
+      if ( (eventdiff->GetRunNumber() >= 147146 && eventdiff->GetRunNumber() <= 148058) && eventdiffZ->GetHLTPath(4) > 0) triggerE_e = true;
+      if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventdiffZ->GetHLTPath(5) > 0) triggerE_f = true;
+      if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventdiffZ->GetHLTPath(6) > 0) triggerE_g = true;
       if (triggerE_a || triggerE_b || triggerE_c || triggerE_d || triggerE_e || triggerE_f || triggerE_g) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
     else if (switchtrigger == "trigger_all_muon"){
-      if (eventdiffZ->GetHLTPath(0) || eventdiffZ->GetHLTPath(1)) trigger = true;
+      if (eventdiffZ->GetHLTPath(0) > 0|| eventdiffZ->GetHLTPath(1) > 0) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_muon";
     }
     else if (switchtrigger == "trigger"){
-      if (eventdiffZ->GetHLTPath(optTrigger)) trigger = true;
+      if (eventdiffZ->GetHLTPath(optTrigger) > 0) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger <<", trigger accepted." << std::endl;
       TriggerStatus = "trigger";
     }

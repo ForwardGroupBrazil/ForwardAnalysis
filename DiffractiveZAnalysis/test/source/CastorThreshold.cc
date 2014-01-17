@@ -20,6 +20,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "statusbar.h"
 #include "CastorThreshold.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
@@ -34,36 +35,6 @@ using namespace eventInfo;
 using namespace reweight;
 
 #define PI 3.14159265
-
-static inline void loadBar(int x, int n, int r, int w)
-{
-  // Modified
-  // http://www.rosshemsley.co.uk/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/
-
-  // Only update r times.
-  if ( x % (n/r) != 0 ) return;
-
-  // Calculuate the correlation of complete-to-incomplete.
-  double correlation = x/(double)n;
-  int   c     = correlation * w;
-
-  // Show the percentage complete.
-  printf("%3d%%[", (int)(correlation*100) );
-
-  // Show the load bar.
-  for (int x=0; x<c; x++)
-    printf("=");
-
-  for (int x=c; x<w; x++)
-    printf(" ");
-
-  // ANSI Control codes to go back to the
-  // previous line and clear it.
-  // printf("]\n33[F33[J");
-
-  printf("\r"); // Move to the first column
-  fflush(stdout);
-}
 
 void CastorThreshold::LoadFile(std::string fileinput, std::string processinput){
 
@@ -261,7 +232,7 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
     }
 
     for (int nt=0;nt<20;nt++){
-      if(eventCastor->GetHLTPath(nt)){
+      if(eventCastor->GetHLTPath(nt)>0){
 	triggercounter[nt]++;
       }
     }
@@ -277,9 +248,9 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
     bool runselection = false;
 
     if (eventdiff->GetRunNumber() >= runmin && eventdiff->GetRunNumber() <= runmax) runselection = true;
-    if (eventCastor->GetHLTPath(0)) triggerZeroBias = true;
-    if (eventCastor->GetHLTPath(1)) triggerHLTPlus = true;
-    if (eventCastor->GetHLTPath(2)) triggerHLTMinus = true;
+    if (eventCastor->GetHLTPath(0)>0) triggerZeroBias = true;
+    if (eventCastor->GetHLTPath(1)>0) triggerHLTPlus = true;
+    if (eventCastor->GetHLTPath(2)>0) triggerHLTMinus = true;
     if (eventdiff->GetMultiplicityTracks() > 0) tracks = true;  
     if (eventdiff->GetNVertex() > 0) vertex = true;
 
