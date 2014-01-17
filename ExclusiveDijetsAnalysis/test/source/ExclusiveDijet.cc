@@ -22,6 +22,7 @@
 #include <fstream>
 #include <math.h>
 
+#include "statusbar.h"
 #include "ExclusiveDijet.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
@@ -34,37 +35,6 @@ using namespace diffractiveAnalysis;
 using namespace exclusiveDijetsAnalysis;
 using namespace eventInfo;
 using namespace reweight;
-
-static inline void loadBar(int x, int n, int r, int w)
-{
-  // Modified
-  // http://www.rosshemsley.co.uk/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/
-
-  // Only update r times.
-  if ( x % (n/r) != 0 ) return;
-
-  // Calculuate the ratio of complete-to-incomplete.
-  float ratio = x/(float)n;
-  int   c     = ratio * w;
-
-  // Show the percentage complete.
-  printf("%3d%%[", (int)(ratio*100) );
-
-  // Show the load bar.
-  for (int x=0; x<c; x++)
-    printf("=");
-
-  for (int x=c; x<w; x++)
-    printf(" ");
-
-  // ANSI Control codes to go back to the
-  // previous line and clear it.
-  // printf("]\n33[F33[J");
-
-  printf("\r"); // Move to the first column
-  fflush(stdout);
-}
-
 
 void ExclusiveDijet::LoadFile(std::string fileinput, std::string processinput){
 
@@ -733,7 +703,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     }
 
     for (int nt=0;nt<20;nt++){
-      if(eventexcl->GetHLTPath(nt)){
+      if(eventexcl->GetHLTPath(nt)>0){
 	triggercounter[nt]++;
       }
     }
@@ -932,7 +902,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     bool d_eta2 = false;
     bool d_eta1 = false;
 
-    if (eventexcl->GetHLTPath(optTrigger)) trigger = true;
+    if (eventexcl->GetHLTPath(optTrigger)>0) trigger = true;
 
     if (switchpresel == "preselection") {
       if ( (eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) presel = true;
