@@ -25,9 +25,7 @@ class TriggerEff {
   EventInfoEvent *eventinfo;
 
   std::string filein;
-  std::string fileinput;
   std::string processname;
-  std::string processinput; 
   std::string savehistofile;
   int optTrigger;
   int optTriggerOR;

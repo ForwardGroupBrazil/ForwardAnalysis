@@ -23,6 +23,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "statusbar.h"
 #include "TriggerEff.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
@@ -53,36 +54,19 @@ void TriggerEff::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_,int optTriggerRefOR_, int optTrigger_,int optTriggerOR_,  int bin_, double channelsthreshold_){
+void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_, int optTriggerRefOR_, int optTrigger_, int optTriggerOR_, int bin_, double channelsthreshold_){
+
+  bool debug = false;
 
   filein = filein_;
   savehistofile = savehistofile_;
   processname = processname_;
-  filein = filein_;
-  optTrigger = optTrigger_;
-  optTriggerOR = optTriggerOR_;
   optTriggerRef = optTriggerRef_;
   optTriggerRefOR = optTriggerRefOR_;
+  optTrigger = optTrigger_;
+  optTriggerOR = optTriggerOR_;
   bin = bin_;
   channelsthreshold = channelsthreshold_;
-
-  std::cout << "" << std::endl;
-  std::cout << "Running..." << std::endl;
-  std::cout << "" << std::endl;
-  std::cout << "<< INPUTS >>" << std::endl;
-  std::cout << " " << std::endl;
-  std::cout << "Input file: " << filein << std::endl;
-  std::cout << " " << std::cout;
-  std::cout << "Output file: " << savehistofile << std::endl;
-  std::cout << " " << std::cout; 
-  std::cout << "Reference Trigger Option: " << optTriggerRef << std::endl;
-  std::cout << "Reference Trigger Option OR: " << optTriggerRefOR << std::endl;
-  std::cout << "Trigger Option: " << optTrigger << std::endl;
-  std::cout << "Trigger Option OR: " << optTriggerOR << std::endl;
-  std::cout << "Bin: " << bin << std::endl;
-  std::cout << "CASTOR Threshold: " << channelsthreshold << std::endl;
-  std::cout << " " << std::endl;
-
 
   TFile check1(filein.c_str());
 
@@ -123,12 +107,13 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   std::cout<< "Reading Tree: "<< NEntries << " events"<<std::endl;
   std::cout << "" << std::endl;
 
-  int decade = 0;
-
   int triggercounter[20]={0};
   double TotalE = 0.;
   double counter[18] = {0};
   double deltaphi_ = 0.;
+
+  TH1D *histo_checktrigger = new TH1D("checktrigger","Check Trigger; Trigger; N events",21,0,21);
+  TH1D *histo_checkcuts = new TH1D("checkcuts","Check Cuts; Cut Order; N events",19,0,19);
 
   std::vector <std::string> Folders;
   Folders.push_back("without_cuts");
@@ -179,34 +164,28 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 
   for(int i=0;i<NEVENTS;i++) {
 
+    tr->GetEntry(i);
+
     bool gap = false;
     double etacut;
 
     ++TotalE;
 
-    double progress = 10.0*i/(1.0*NEVENTS);
-    int l = TMath::FloorNint(progress); 
-
-    if (l > decade){
-      std::cout <<"\n<<<<<< STATUS >>>>>>" << std::endl; 
-      std::cout<<10*l<<" % completed." << std::endl;
-      for(int k=0; k < 20; k++){
-	std::cout <<"Trigger List Fired: "<< eventexcl->GetHLTPath(k) << std::endl; 
+    if (!debug){
+      if (i==0) {
+	std::cout << "" << std::endl;
+	std::cout<< "Status Bar" << std::endl;
+	std::cout << "" << std::endl;
       }
-      std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
+      loadBar(i,NEVENTS,100,100);
     }
 
     for (int nt=0;nt<20;nt++){
-      if(eventexcl->GetHLTPath(nt)){
+      if(eventexcl->GetHLTPath(nt)>0){
+	if(debug) std::cout << "Trigger: " << eventexcl->GetHLTPath(nt) << std::endl;
+	histo_checktrigger->Fill(nt,eventexcl->GetHLTPath(nt));
 	triggercounter[nt]++;
       }
-    }
-
-    decade = l;          
-    tr->GetEntry(i);
-
-    if( i % 1000 == 0 ){
-      std::cout << "\nEvent " << i << std::endl;
     }
 
     deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
@@ -230,8 +209,8 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
       }
     }
 
-    for (l=0; l<16;l++){
-      if (CastorEnergySector[l] >= channelsthreshold){
+    for (int i=0; i<16;i++){
+      if (CastorEnergySector[i] >= channelsthreshold){
 	++SectorCastorHit;
       }
     }
@@ -249,7 +228,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
     m_hVector_Evt_pfetamax.at(0)->Fill(eventdiff->GetEtaMaxFromPFCands());
     m_hVector_Evt_pfetamin.at(0)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-    if(eventexcl->GetHLTPath(optTriggerRef)||eventexcl->GetHLTPath(optTriggerRefOR)){
+    if(eventexcl->GetHLTPath(optTriggerRef)>0 || eventexcl->GetHLTPath(optTriggerRefOR)>0 ){
 
       counter[1]++;
       m_hVector_Evt_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
@@ -283,7 +262,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 		    m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
 		    m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
 		  }
-		  if(eventexcl->GetHLTPath(optTrigger)||eventexcl->GetHLTPath(optTriggerOR)){
+		  if(eventexcl->GetHLTPath(optTrigger)>0 || eventexcl->GetHLTPath(optTriggerOR)>0 ){
 		    counter[i+10]++;
 		    m_hVector_Evt_lumis.at(i+10)->Fill(eventinfo->GetInstLumiBunch());
 		    m_hVector_Eff_lumis.at(i+10)->Fill(eventinfo->GetInstLumiBunch());
@@ -311,6 +290,29 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
     m_hVector_Eff_lumis.at(j)->Scale(1./counter[j]);
   }
 
+  histo_checkcuts->Fill("No Cuts",1);
+  histo_checkcuts->Fill("Ref. Trigger",1);
+  histo_checkcuts->Fill("Off line cut & |#eta_{max,min}| < 4",1);
+  histo_checkcuts->Fill("Off line cut & |#eta_{max,min}| < 3",1);
+  histo_checkcuts->Fill("Off line cut & |#eta_{max,min}| < 2",1);
+  histo_checkcuts->Fill("Off line cut & |#eta_{max,min}| < 1",1);
+  histo_checkcuts->Fill("Off line cut & |#eta_{max,min}| < 4 & CASTOR",1);
+  histo_checkcuts->Fill("Off line cut & |#eta_{max,min}| < 3 & CASTOR",1);
+  histo_checkcuts->Fill("Off line cut & |#eta_{max,min}| < 2 & CASTOR",1);
+  histo_checkcuts->Fill("Off line cut & |#eta_{max,min}| < 1 & CASTOR",1);
+  histo_checkcuts->Fill("Trigger & Off line cut & |#eta_{max,min}| < 4",1);
+  histo_checkcuts->Fill("Trigger & Off line cut & |#eta_{max,min}| < 3",1);
+  histo_checkcuts->Fill("Trigger & Off line cut & |#eta_{max,min}| < 2",1);
+  histo_checkcuts->Fill("Trigger & Off line cut & |#eta_{max,min}| < 1",1);
+  histo_checkcuts->Fill("Trigger & Off line cut & |#eta_{max,min}| < 4 & CASTOR",1);
+  histo_checkcuts->Fill("Trigger & Off line cut & |#eta_{max,min}| < 3 & CASTOR",1);
+  histo_checkcuts->Fill("Trigger & Off line cut & |#eta_{max,min}| < 2 & CASTOR",1);
+  histo_checkcuts->Fill("Trigger & Off line cut & |#eta_{max,min}| < 1 & CASTOR",1);
+
+  for(int i=0; i<18; i++){
+    histo_checkcuts->SetBinContent(i+1,counter[i]);
+  }
+
   outstring << "" << std::endl;
   outstring << "<< INPUTS >>" << std::endl;
   outstring << " " << std::endl;
@@ -322,6 +324,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   outstring << "Trigger Option: " << optTrigger << std::endl;
   outstring << "Trigger Option OR: " << optTriggerOR << std::endl;
   outstring << "Bin: " << bin << std::endl;
+  outstring << "CASTOR Threshold: " << channelsthreshold << " GeV" << std::endl; 
   outstring << " " << std::endl;
   outstring << "Number of Events: " << TotalE << std::endl;
   outstring << "Number of Events Without Cuts: " << counter[0] << std::endl;
@@ -398,7 +401,22 @@ int main(int argc, char **argv)
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  optTrigger_   = atoi(argv[6]);
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  optTriggerOR_   = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  bin_   = atoi(argv[8]);
-  if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_   = atof(argv[9]);
+  if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_ = atof(argv[9]);
+
+  std::cout << "" << std::endl;
+  std::cout << "Running..." << std::endl;
+  std::cout << "" << std::endl;
+  std::cout << "<< INPUTS >>" << std::endl;
+  std::cout << "" << std::endl;
+  std::cout << "Input file: " << filein_ << std::endl;
+  std::cout << "Output file: " << savehistofile_ << std::endl;
+  std::cout << "Reference Trigger Option: " << optTriggerRef_ << std::endl;
+  std::cout << "Reference Trigger Option OR: " << optTriggerRefOR_ << std::endl;
+  std::cout << "Trigger Option: " << optTrigger_ << std::endl;
+  std::cout << "Trigger Option OR: " << optTriggerOR_ << std::endl;
+  std::cout << "Bin: " << bin_ << std::endl;
+  std::cout << "CASTOR Threshold per Channel: " << channelsthreshold_ << std::endl;
+  std::cout << " " << std::endl;
 
   if (channelsthreshold_ < 0){
     std::cout << "----------------------------------------------" << std::endl;
@@ -411,7 +429,7 @@ int main(int argc, char **argv)
   }
 
   TriggerEff* triggereff = new TriggerEff();   
-  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTriggerRefOR_, optTrigger_,optTriggerOR_, bin_, channelsthreshold_);
+  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTriggerRefOR_, optTrigger_, optTriggerOR_, bin_, channelsthreshold_);
 
   return 0;
 

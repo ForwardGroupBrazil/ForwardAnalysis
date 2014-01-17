@@ -22,6 +22,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "statusbar.h"
 #include "EffMacro.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
@@ -54,6 +55,8 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
 
 void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchVertex_, bool switchTrigger_, double channelsthreshold_){
 
+  bool debug = false;
+
   filein = filein_;
   savehistofile = savehistofile_;
   processname = processname_;
@@ -64,26 +67,6 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   switchVertex = switchVertex_;
   switchTrigger = switchTrigger_;
   channelsthreshold = channelsthreshold_;
-
-  std::cout << "" << std::endl;
-  std::cout << "Running..." << std::endl;
-  std::cout << "" << std::endl;
-  std::cout << "<< INPUTS >>" << std::endl;
-  std::cout << " " << std::endl;
-  std::cout << "Input file: " << filein << std::endl;
-  std::cout << " " << std::cout;
-  std::cout << "Output file: " << savehistofile << std::endl;
-  std::cout << " " << std::cout; 
-  std::cout << "# Vertex: " << optnVertex << std::endl;
-  std::cout << "Trigger Option: " << optTrigger << std::endl;
-  std::cout << " " << std::endl;
-  std::cout << "--> TRUE = 1 FALSE = 0" << std::endl;
-  std::cout << "Vertex Switch: " << switchVertex << std::endl;
-  std::cout << "Trigger Switch: " << switchTrigger << std::endl;
-  std::cout << "Pre-Selection Switch: " << switchPreSel << std::endl;
-  std::cout << "CASTOR Threshold: " << channelsthreshold << std::endl;
-  std::cout << " " << std::endl;
-
 
   // Code Protection
   if (optnVertex == 0){
@@ -136,8 +119,6 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   std::cout<< "Reading Tree: "<< NEntries << " events"<<std::endl;
   std::cout << "" << std::endl;
 
-  int decade = 0;
-
   int TotalE = 0;
   int counterTrigger = 0;
   int counterPreSel=0;
@@ -151,6 +132,8 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   int counterAllstep4_3_castorgap = 0;
   int counterAllstep4_2_castorgap = 0;
   int counterAllstep4_1_castorgap = 0;
+
+  TH1D *histo_checkcuts = new TH1D("checkcuts","Check Cuts; Cut Order; N events",14,0,14);
 
   std::vector <std::string> Folders;
   Folders.push_back("without_cuts");
@@ -184,18 +167,18 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
   for(int i=0;i<NEVENTS;i++) {
 
-    ++TotalE;
-
-    double progress = 10.0*i/(1.0*NEVENTS);
-    int l = TMath::FloorNint(progress); 
-    if (l > decade){
-      std::cout <<"\n<<<<<< STATUS >>>>>>" << std::endl; 
-      std::cout<<10*l<<" % completed." << std::endl;
-      std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
-    }
-    decade = l;          
-
     tr->GetEntry(i);
+
+    if (!debug){
+      if (i==0) {
+	std::cout << "" << std::endl;
+	std::cout<< "Status Bar" << std::endl;
+	std::cout << "" << std::endl;
+      }
+      loadBar(i,NEVENTS,100,100);
+    }
+
+    ++TotalE;
 
     bool trigger = false;
     bool presel = false;
@@ -224,8 +207,8 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
       }
     }
 
-    for (l=0; l<16;l++){
-      if (CastorEnergySector[l] >= channelsthreshold){
+    for (int i=0; i<16;i++){
+      if (CastorEnergySector[i] >= channelsthreshold){
 	++SectorCastorHit;
       }
     }
@@ -236,7 +219,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
       castorgap = true;
     }
 
-    if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))) trigger = true;
+    if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger)>0)) trigger = true;
     if (!switchPreSel || (switchPreSel && ( (eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990 && castorgap) ))) presel = true;
     if (!switchVertex || (switchVertex && eventexcl->GetNVertex()<= optnVertex)) vertex = true;
     if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990 && castorgap)) eta4 = true;
@@ -360,6 +343,30 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   outstring << "STEP4_X: Trigger + Pre Sel. + Vertex + Eta_max < X and Eta_min > X." << std::endl;
   outstring << " " << std::endl;
 
+  histo_checkcuts->Fill("Trigger",1);
+  histo_checkcuts->Fill("PreSelection",1);
+  histo_checkcuts->Fill("Vertex",1);
+  histo_checkcuts->Fill("|#eta_{max,min}| < 4",1);
+  histo_checkcuts->Fill("|#eta_{max,min}| < 3",1);
+  histo_checkcuts->Fill("|#eta_{max,min}| < 2",1);
+  histo_checkcuts->Fill("|#eta_{max,min}| < 1",1);
+  histo_checkcuts->Fill("|#eta_{max,min}| < 4 & CASTOR",1);
+  histo_checkcuts->Fill("|#eta_{max,min}| < 3 & CASTOR",1);
+  histo_checkcuts->Fill("|#eta_{max,min}| < 2 & CASTOR",1);
+  histo_checkcuts->Fill("|#eta_{max,min}| < 1 & CASTOR",1);
+
+  histo_checkcuts->SetBinContent(1,counterTrigger);
+  histo_checkcuts->SetBinContent(2,counterPreSel);
+  histo_checkcuts->SetBinContent(3,counterVertex);
+  histo_checkcuts->SetBinContent(4,counterAllstep4_4);
+  histo_checkcuts->SetBinContent(5,counterAllstep4_3);
+  histo_checkcuts->SetBinContent(6,counterAllstep4_2);
+  histo_checkcuts->SetBinContent(7,counterAllstep4_1);
+  histo_checkcuts->SetBinContent(8,counterAllstep4_4_castorgap);
+  histo_checkcuts->SetBinContent(9,counterAllstep4_3_castorgap);
+  histo_checkcuts->SetBinContent(10,counterAllstep4_2_castorgap);
+  histo_checkcuts->SetBinContent(11,counterAllstep4_1_castorgap);
+
   outf->Write();
   outf->Close();
   outstring.close();
@@ -392,6 +399,24 @@ int main(int argc, char **argv)
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  switchVertex_   = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchTrigger_   = atoi(argv[8]);
   if (argc > 9 && strcmp(s1,argv[9]) != 0)  channelsthreshold_   = atof(argv[9]);
+
+  std::cout << "" << std::endl;
+  std::cout << "Running..." << std::endl;
+  std::cout << "" << std::endl;
+  std::cout << "<< INPUTS >>" << std::endl;
+  std::cout << " " << std::endl;
+  std::cout << "Input file: " << filein_ << std::endl;
+  std::cout << "Output file: " << savehistofile_ << std::endl;
+  std::cout << " " << std::endl;
+  std::cout << "Vertex: " << optnVertex_ << std::endl;
+  std::cout << "Trigger Option: " << optTrigger_ << std::endl;
+  std::cout << " " << std::endl;
+  std::cout << "--> TRUE = 1 FALSE = 0" << std::endl;
+  std::cout << "Vertex Switch: " << switchVertex_ << std::endl;
+  std::cout << "Trigger Switch: " << switchTrigger_ << std::endl;
+  std::cout << "Pre-Selection Switch: " << switchPreSel_ << std::endl;
+  std::cout << "CASTOR Threshold per Channel: " << channelsthreshold_ << std::endl;
+  std::cout << " " << std::endl;
 
   if (channelsthreshold_ < 0){
     std::cout << "----------------------------------------------" << std::endl;
