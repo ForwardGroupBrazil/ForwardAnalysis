@@ -19,9 +19,9 @@
 void Systematics(){
   //PurityTriggerService("histo_purity_nopresel_jet2_pT10.root",0);
   //TriggerEfficiency("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_270313pT5030.root","effTriggerMultijetsRunB_RefDijetAve50U_And30U_pT50_30.root");
-  EachCutEfficiency("histo_effCutsMinBias2010RunB_inclusive.root",0);
-  //TriggerEfficiencyMerge("histo_effTriggerMultijetsRunB_RefDijetAve50U_Or30U_castor.root","histo_effTriggerMultijetsRunB_RefOr30U_And30U_castor.root","histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root");
-  //Systematic("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root", "sigmaPlusHLTDijet50_And30U_pT60_castor.root","sigmaMinusHLTDijet50_And30U_pT60_castor.root");
+  //EachCutEfficiency("histo_effCutsMinBias2010RunB_inclusive.root",0);
+  //TriggerEfficiencyMerge("histo_effTriggerMultijetsRunB_RefDijet50_OR.root","histo_effTriggerMultijetsRunB_RefOR_AND.root","histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root");
+  Systematic("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root", "sigmaPlusHLTDijet50_And30U_pT60_castor.root","sigmaMinusHLTDijet50_And30U_pT60_castor.root");
 }
 
 
@@ -383,6 +383,15 @@ void TriggerEfficiencyMerge(TString file1, TString file2, TString output){
   TH1F* h1_RefTriggerCutAndTriggerEta3 = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3");
   TH1F* h1_RefTriggerCutAndTriggerEta2 = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2");
   TH1F* h1_RefTriggerCutAndTriggerEta1 = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1");
+  
+  TH1F* h1_RefTriggerCutEta4_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLine_eta4_castorgap");
+  TH1F* h1_RefTriggerCutEta3_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLine_eta3_castorgap");
+  TH1F* h1_RefTriggerCutEta2_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLine_eta2_castorgap");
+  TH1F* h1_RefTriggerCutEta1_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLine_eta1_castorgap");
+  TH1F* h1_RefTriggerCutAndTriggerEta4_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta4_castorgap");
+  TH1F* h1_RefTriggerCutAndTriggerEta3_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3_castorgap");
+  TH1F* h1_RefTriggerCutAndTriggerEta2_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2_castorgap");
+  TH1F* h1_RefTriggerCutAndTriggerEta1_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1_castorgap");
 
   TH1F* h2_without_cuts = (TH1F*)l2->Get("Events_without_cuts");
   TH1F* h2_RefTrigger = (TH1F*)l2->Get("Events_with_RefTrigger");
@@ -394,6 +403,15 @@ void TriggerEfficiencyMerge(TString file1, TString file2, TString output){
   TH1F* h2_RefTriggerCutAndTriggerEta3 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3");
   TH1F* h2_RefTriggerCutAndTriggerEta2 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2");
   TH1F* h2_RefTriggerCutAndTriggerEta1 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1");
+  TH1F* h2_RefTriggerCutEta4_castorgap = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLine_eta4_castorgap");
+  TH1F* h2_RefTriggerCutEta3_castorgap = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLine_eta3_castorgap");
+  TH1F* h2_RefTriggerCutEta2_castorgap = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLine_eta2_castorgap");
+  TH1F* h2_RefTriggerCutEta1_castorgap = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLine_eta1_castorgap");
+  TH1F* h2_RefTriggerCutAndTriggerEta4_castorgap = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta4_castorgap");
+  TH1F* h2_RefTriggerCutAndTriggerEta3_castorgap = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3_castorgap");
+  TH1F* h2_RefTriggerCutAndTriggerEta2_castorgap = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2_castorgap");
+  TH1F* h2_RefTriggerCutAndTriggerEta1_castorgap = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1_castorgap");
+
 
   //Efficiency File1 Calculation
   TH1F *h1_ratiorefer = h1_RefTrigger->Clone(); 
@@ -410,6 +428,18 @@ void TriggerEfficiencyMerge(TString file1, TString file2, TString output){
 
   TH1F *h1_ratioRefTriggerCutAndTriggerEta1 = h1_RefTriggerCutAndTriggerEta1->Clone(); 
   h1_ratioRefTriggerCutAndTriggerEta1->Divide(h1_RefTriggerCutAndTriggerEta1,h1_RefTriggerCutEta1,1.,1.,"B");
+  
+  TH1F *h1_ratioRefTriggerCutAndTriggerEta4_castorgap = h1_RefTriggerCutAndTriggerEta4_castorgap->Clone(); 
+  h1_ratioRefTriggerCutAndTriggerEta4_castorgap->Divide(h1_RefTriggerCutAndTriggerEta4_castorgap,h1_RefTriggerCutEta4_castorgap,1.,1.,"B");
+
+  TH1F *h1_ratioRefTriggerCutAndTriggerEta3_castorgap = h1_RefTriggerCutAndTriggerEta3_castorgap->Clone(); 
+  h1_ratioRefTriggerCutAndTriggerEta3_castorgap->Divide(h1_RefTriggerCutAndTriggerEta3_castorgap,h1_RefTriggerCutEta3_castorgap,1.,1.,"B");
+
+  TH1F *h1_ratioRefTriggerCutAndTriggerEta2_castorgap = h1_RefTriggerCutAndTriggerEta2_castorgap->Clone(); 
+  h1_ratioRefTriggerCutAndTriggerEta2_castorgap->Divide(h1_RefTriggerCutAndTriggerEta2_castorgap,h1_RefTriggerCutEta2_castorgap,1.,1.,"B");
+
+  TH1F *h1_ratioRefTriggerCutAndTriggerEta1_castorgap = h1_RefTriggerCutAndTriggerEta1_castorgap->Clone(); 
+  h1_ratioRefTriggerCutAndTriggerEta1_castorgap->Divide(h1_RefTriggerCutAndTriggerEta1_castorgap,h1_RefTriggerCutEta1_castorgap,1.,1.,"B");
 
 
   //Efficiency File2 Calculation
@@ -427,6 +457,18 @@ void TriggerEfficiencyMerge(TString file1, TString file2, TString output){
 
   TH1F *h2_ratioRefTriggerCutAndTriggerEta1 = h2_RefTriggerCutAndTriggerEta1->Clone(); 
   h2_ratioRefTriggerCutAndTriggerEta1->Divide(h2_RefTriggerCutAndTriggerEta1,h2_RefTriggerCutEta1,1.,1.,"B");
+  
+  TH1F *h2_ratioRefTriggerCutAndTriggerEta4_castorgap = h2_RefTriggerCutAndTriggerEta4_castorgap->Clone(); 
+  h2_ratioRefTriggerCutAndTriggerEta4_castorgap->Divide(h2_RefTriggerCutAndTriggerEta4_castorgap,h2_RefTriggerCutEta4_castorgap,1.,1.,"B");
+
+  TH1F *h2_ratioRefTriggerCutAndTriggerEta3_castorgap = h2_RefTriggerCutAndTriggerEta3_castorgap->Clone(); 
+  h2_ratioRefTriggerCutAndTriggerEta3_castorgap->Divide(h2_RefTriggerCutAndTriggerEta3_castorgap,h2_RefTriggerCutEta3_castorgap,1.,1.,"B");
+
+  TH1F *h2_ratioRefTriggerCutAndTriggerEta2_castorgap = h2_RefTriggerCutAndTriggerEta2_castorgap->Clone(); 
+  h2_ratioRefTriggerCutAndTriggerEta2_castorgap->Divide(h2_RefTriggerCutAndTriggerEta2_castorgap,h2_RefTriggerCutEta2_castorgap,1.,1.,"B");
+
+  TH1F *h2_ratioRefTriggerCutAndTriggerEta1_castorgap = h2_RefTriggerCutAndTriggerEta1_castorgap->Clone(); 
+  h2_ratioRefTriggerCutAndTriggerEta1_castorgap->Divide(h2_RefTriggerCutAndTriggerEta1_castorgap,h2_RefTriggerCutEta1_castorgap,1.,1.,"B");
 
   // Efficiency1*Efficiency2 Calculation
   h1_ratiorefer->Multiply(h2_ratiorefer);
@@ -434,6 +476,10 @@ void TriggerEfficiencyMerge(TString file1, TString file2, TString output){
   h1_ratioRefTriggerCutAndTriggerEta3->Multiply(h2_ratioRefTriggerCutAndTriggerEta3);
   h1_ratioRefTriggerCutAndTriggerEta2->Multiply(h2_ratioRefTriggerCutAndTriggerEta2);
   h1_ratioRefTriggerCutAndTriggerEta1->Multiply(h2_ratioRefTriggerCutAndTriggerEta1);
+  h1_ratioRefTriggerCutAndTriggerEta4_castorgap->Multiply(h2_ratioRefTriggerCutAndTriggerEta4_castorgap);
+  h1_ratioRefTriggerCutAndTriggerEta3_castorgap->Multiply(h2_ratioRefTriggerCutAndTriggerEta3_castorgap);
+  h1_ratioRefTriggerCutAndTriggerEta2_castorgap->Multiply(h2_ratioRefTriggerCutAndTriggerEta2_castorgap);
+  h1_ratioRefTriggerCutAndTriggerEta1_castorgap->Multiply(h2_ratioRefTriggerCutAndTriggerEta1_castorgap);
 
   // Protection
   setHBins(h1_ratiorefer);
@@ -441,6 +487,10 @@ void TriggerEfficiencyMerge(TString file1, TString file2, TString output){
   setHBins(h1_ratioRefTriggerCutAndTriggerEta3);
   setHBins(h1_ratioRefTriggerCutAndTriggerEta2);
   setHBins(h1_ratioRefTriggerCutAndTriggerEta1);
+  setHBins(h1_ratioRefTriggerCutAndTriggerEta4_castorgap);
+  setHBins(h1_ratioRefTriggerCutAndTriggerEta3_castorgap);
+  setHBins(h1_ratioRefTriggerCutAndTriggerEta2_castorgap);
+  setHBins(h1_ratioRefTriggerCutAndTriggerEta1_castorgap);
 
   File = new TFile(output,"RECREATE");
   File->cd();
@@ -449,6 +499,10 @@ void TriggerEfficiencyMerge(TString file1, TString file2, TString output){
   h1_ratioRefTriggerCutAndTriggerEta3->Write();
   h1_ratioRefTriggerCutAndTriggerEta2->Write();
   h1_ratioRefTriggerCutAndTriggerEta1->Write();
+  h1_ratioRefTriggerCutAndTriggerEta4_castorgap->Write();
+  h1_ratioRefTriggerCutAndTriggerEta3_castorgap->Write();
+  h1_ratioRefTriggerCutAndTriggerEta2_castorgap->Write();
+  h1_ratioRefTriggerCutAndTriggerEta1_castorgap->Write();
   File->Close();
 
 }
@@ -473,6 +527,23 @@ void Systematic(TString filein, TString outplus, TString outminus){
   TH1F *heff_trigger1 = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1");
   TH1F *heff_trigger1plus = heff_trigger1->Clone();
   TH1F *heff_trigger1minus = heff_trigger1->Clone();  
+  
+  
+  TH1F *heff_trigger4_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta4_castorgap");
+  TH1F *heff_trigger4plus_castorgap = heff_trigger4_castorgap->Clone();
+  TH1F *heff_trigger4minus_castorgap = heff_trigger4_castorgap->Clone(); 
+
+  TH1F *heff_trigger3_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3_castorgap");
+  TH1F *heff_trigger3plus_castorgap = heff_trigger3_castorgap->Clone();
+  TH1F *heff_trigger3minus_castorgap = heff_trigger3_castorgap->Clone(); 
+
+  TH1F *heff_trigger2_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2_castorgap");
+  TH1F *heff_trigger2plus_castorgap = heff_trigger2_castorgap->Clone();
+  TH1F *heff_trigger2minus_castorgap = heff_trigger2_castorgap->Clone(); 
+
+  TH1F *heff_trigger1_castorgap = (TH1F*)l1->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1_castorgap");
+  TH1F *heff_trigger1plus_castorgap = heff_trigger1_castorgap->Clone();
+  TH1F *heff_trigger1minus_castorgap = heff_trigger1_castorgap->Clone();  
 
   int nBins = heff_trigger4->GetNbinsX();
   int binFirst = heff_trigger4->FindFirstBinAbove(0,1);
@@ -506,6 +577,34 @@ void Systematic(TString filein, TString outplus, TString outminus){
     float sigmaminus1 = binContent1 - binError1;
     heff_trigger1plus->SetBinContent(ibin,sigmaplus1);
     heff_trigger1minus->SetBinContent(ibin,sigmaminus1);
+ 
+    float binError1cg = heff_trigger1_castorgap->GetBinError(ibin);
+    float binContent1cg = heff_trigger1_castorgap->GetBinContent(ibin);
+    float sigmaplus1cg = binContent1cg + binError1cg;
+    float sigmaminus1cg = binContent1cg - binError1cg;
+    heff_trigger1plus_castorgap->SetBinContent(ibin,sigmaplus1cg);
+    heff_trigger1minus_castorgap->SetBinContent(ibin,sigmaminus1cg);
+ 
+    float binError2cg = heff_trigger2_castorgap->GetBinError(ibin);
+    float binContent2cg = heff_trigger2_castorgap->GetBinContent(ibin);
+    float sigmaplus2cg = binContent2cg + binError2cg;
+    float sigmaminus2cg = binContent2cg - binError2cg;
+    heff_trigger2plus_castorgap->SetBinContent(ibin,sigmaplus2cg);
+    heff_trigger2minus_castorgap->SetBinContent(ibin,sigmaminus2cg);
+    
+    float binError3cg = heff_trigger3_castorgap->GetBinError(ibin);
+    float binContent3cg = heff_trigger3_castorgap->GetBinContent(ibin);
+    float sigmaplus3cg = binContent3cg + binError3cg;
+    float sigmaminus3cg = binContent3cg - binError3cg;
+    heff_trigger3plus_castorgap->SetBinContent(ibin,sigmaplus3cg);
+    heff_trigger3minus_castorgap->SetBinContent(ibin,sigmaminus3cg);
+    
+    float binError4cg = heff_trigger4_castorgap->GetBinError(ibin);
+    float binContent4cg = heff_trigger4_castorgap->GetBinContent(ibin);
+    float sigmaplus4cg = binContent4cg + binError4cg;
+    float sigmaminus4cg = binContent4cg - binError4cg;
+    heff_trigger4plus_castorgap->SetBinContent(ibin,sigmaplus4cg);
+    heff_trigger4minus_castorgap->SetBinContent(ibin,sigmaminus4cg);
   }
 
   // Protection
@@ -518,6 +617,14 @@ void Systematic(TString filein, TString outplus, TString outminus){
   setHBins(heff_trigger2minus);
   setHBins(heff_trigger1minus);
 
+  setHBins(heff_trigger4plus_castorgap);
+  setHBins(heff_trigger3plus_castorgap);
+  setHBins(heff_trigger2plus_castorgap);
+  setHBins(heff_trigger1plus_castorgap);
+  setHBins(heff_trigger4minus_castorgap);
+  setHBins(heff_trigger3minus_castorgap);
+  setHBins(heff_trigger2minus_castorgap);
+  setHBins(heff_trigger1minus_castorgap);
 
   File1 = new TFile(outplus,"RECREATE");
   File1->cd();
@@ -525,6 +632,10 @@ void Systematic(TString filein, TString outplus, TString outminus){
   heff_trigger3plus->Write();
   heff_trigger2plus->Write();
   heff_trigger1plus->Write();
+  heff_trigger4plus_castorgap->Write();
+  heff_trigger3plus_castorgap->Write();
+  heff_trigger2plus_castorgap->Write();
+  heff_trigger1plus_castorgap->Write();
   File1->Close();
 
   File2 = new TFile(outminus,"RECREATE");
@@ -533,6 +644,10 @@ void Systematic(TString filein, TString outplus, TString outminus){
   heff_trigger3minus->Write();
   heff_trigger2minus->Write();
   heff_trigger1minus->Write();
+  heff_trigger4minus_castorgap->Write();
+  heff_trigger3minus_castorgap->Write();
+  heff_trigger2minus_castorgap->Write();
+  heff_trigger1minus_castorgap->Write();
   File2->Close();
 
 }
