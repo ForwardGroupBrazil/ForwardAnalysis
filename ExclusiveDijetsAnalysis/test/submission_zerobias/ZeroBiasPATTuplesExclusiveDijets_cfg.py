@@ -40,6 +40,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = -1
+config.After = False
 
 #
 # Define Options to Run
@@ -374,11 +375,23 @@ process.castor_step = cms.Path(process.castorSequence)
 
 if config.TriggerOn:
        print(">> With Trigger.")
-       process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.eventSelectionOnlyHLT + process.exclusiveDijetsAnalysisTTreeBefore + process.eventSelection +  process.exclusiveDijetsAnalysisTTreeAfter)
+       if config.After:
+            print("With Scaled Energy TTree")
+            process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
+            process.analysisSequences + process.eventSelectionOnlyHLT + process.exclusiveDijetsAnalysisTTreeBefore + process.eventSelection +  process.exclusiveDijetsAnalysisTTreeAfter)
+       else:
+            print("Without Scaled Energy TTree")
+            process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
+            process.analysisSequences + process.eventSelectionOnlyHLT + process.exclusiveDijetsAnalysisTTreeBefore) 
 
 else:
        print(">> No Trigger.")
-       process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.exclusiveDijetsAnalysisTTreeBefore + process.eventSelection + process.exclusiveDijetsAnalysisTTreeAfter)
+       if config.After:
+            print("With Scaled Energy")
+            process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
+            process.analysisSequences + process.exclusiveDijetsAnalysisTTreeBefore + process.eventSelection + process.exclusiveDijetsAnalysisTTreeAfter)
+       else:
+            print("Without Scaled Energy")
+            process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
+            process.analysisSequences + process.exclusiveDijetsAnalysisTTreeBefore)
 
