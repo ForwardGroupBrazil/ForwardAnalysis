@@ -19,9 +19,9 @@
 void Systematics(){
   //PurityTriggerService("histo_purity_nopresel_jet2_pT10.root",0);
   //TriggerEfficiency("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_270313pT5030.root","effTriggerMultijetsRunB_RefDijetAve50U_And30U_pT50_30.root");
-  //EachCutEfficiency("histo_effCutsMinBias2010RunB_inclusive.root",0);
+  EachCutEfficiency("histo_effCutsMinBias2010RunB_castor.root",0);
   //TriggerEfficiencyMerge("histo_effTriggerMultijetsRunB_RefDijet50_OR.root","histo_effTriggerMultijetsRunB_RefOR_AND.root","histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root");
-  Systematic("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root", "sigmaPlusHLTDijet50_And30U_pT60_castor.root","sigmaMinusHLTDijet50_And30U_pT60_castor.root");
+  //Systematic("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root", "sigmaPlusHLTDijet50_And30U_pT60_castor.root","sigmaMinusHLTDijet50_And30U_pT60_castor.root");
 }
 
 
@@ -43,6 +43,11 @@ void EachCutEfficiency(TString name, bool logscale){
   TH1F* h_step4_3 = (TH1F*)l1->Get("Events_All_step4_3");
   TH1F* h_step4_2 = (TH1F*)l1->Get("Events_All_step4_2");
   TH1F* h_step4_1 = (TH1F*)l1->Get("Events_All_step4_1");
+  TH1F* h_Triggerpreselvertex_castorgap = (TH1F*)l1->Get("Events_with_trigger_presel_vertex_castorgap");
+  TH1F* h_step4_4_castorgap = (TH1F*)l1->Get("Events_All_step4_4_castorgap");
+  TH1F* h_step4_3_castorgap = (TH1F*)l1->Get("Events_All_step4_3_castorgap");
+  TH1F* h_step4_2_castorgap = (TH1F*)l1->Get("Events_All_step4_2_castorgap");
+  TH1F* h_step4_1_castorgap = (TH1F*)l1->Get("Events_All_step4_1_castorgap");
 
   TH1F *ratiopresel = h_Trigger->Clone();
   ratiopresel->SetName("RatioPreSel");
@@ -70,6 +75,17 @@ void EachCutEfficiency(TString name, bool logscale){
   ratiovertex->SetTitle("Efficiency, Cut: #sum E_HF^{+}< 30 GeV and #sum E_HF^{-}< 30 GeV and Vertex");
   ratiovertex->GetXaxis()->SetRangeUser(0,0.8);
   ratiovertex->Draw();
+  
+  TH1F *ratiovertex_castorgap = h_Trigger->Clone();
+  ratiovertex_castorgap->SetName("RatioVertex_castorgap");
+  ratiovertex_castorgap->Divide(h_Triggerpreselvertex_castorgap,h_Trigger,1.,1.,"B");
+  ratiovertex_castorgap->GetYaxis()->SetTitle("#frac{N^{pass,cut}_{ZeroBias}}{N^{total}_{ZeroBias}}");
+  ratiovertex_castorgap->GetYaxis()->SetTitleOffset(1.1);
+  ratiovertex_castorgap->GetYaxis()->SetTitleSize(0.03);
+  ratiovertex_castorgap->GetXaxis()->SetTitle("L_{Bunch} [#mub^{-1}s^{-1}]");
+  ratiovertex_castorgap->SetTitle("Efficiency, Cut: #sum E_HF^{+}< 30 GeV and #sum E_HF^{-}< 30 GeV and Vertex and CASTOR GAP");
+  ratiovertex_castorgap->GetXaxis()->SetRangeUser(0,0.8);
+  ratiovertex_castorgap->Draw();
 
   TString filename(name);
   c1->SaveAs(filename.TString::ReplaceAll(".root","_vertex.png"));
@@ -134,11 +150,75 @@ void EachCutEfficiency(TString name, bool logscale){
   ratiostep4_1->SetTitle("Efficiency, Cut: #sum E_HF^{+}< 30 GeV and #sum E_HF^{-}< 30 GeV and Vertex and |#eta_{pf(max,min)}|<1");
   ratiostep4_1->GetXaxis()->SetRangeUser(0,0.8);
   ratiostep4_1->Draw();
-
+  
   TString filename(name);
   c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_1.png"));
   TString filename(name);
   c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_1.C"));
+  
+  TH1F *ratiostep4_4_castorgap = h_Trigger->Clone();
+  ratiostep4_4_castorgap->SetName("RatioStep4_4_castorgap");
+  ratiostep4_4_castorgap->Divide(h_step4_4_castorgap,h_Trigger,1.,1.,"B");
+  ratiostep4_4_castorgap->GetYaxis()->SetTitle("#frac{N^{pass,cut}_{ZeroBias}}{N^{total}_{ZeroBias}}");
+  ratiostep4_4_castorgap->GetYaxis()->SetTitleOffset(1.1);
+  ratiostep4_4_castorgap->GetYaxis()->SetTitleSize(0.03);
+  ratiostep4_4_castorgap->GetXaxis()->SetTitle("L_{Bunch} [#mub^{-1}s^{-1}]");
+  ratiostep4_4_castorgap->SetTitle("Efficiency, Cut: #sum E_HF^{+}< 30 GeV and #sum E_HF^{-}< 30 GeV and Vertex and |#eta_{pf(max,min)}|<4 and CASTOR GAP");
+  ratiostep4_4_castorgap->GetXaxis()->SetRangeUser(0,0.8);
+  ratiostep4_4_castorgap->Draw();
+
+  TString filename(name);
+  c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_4_castorgap.png"));
+  TString filename(name);
+  c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_4_castorgap.C"));
+
+  TH1F *ratiostep4_3_castorgap = h_Trigger->Clone();
+  ratiostep4_3_castorgap->SetName("RatioStep4_3_castorgap");
+  ratiostep4_3_castorgap->Divide(h_step4_3_castorgap,h_Trigger,1.,1.,"B");
+  ratiostep4_3_castorgap->GetYaxis()->SetTitle("#frac{N^{pass,cut}_{ZeroBias}}{N^{total}_{ZeroBias}}");
+  ratiostep4_3_castorgap->GetYaxis()->SetTitleOffset(1.1);
+  ratiostep4_3_castorgap->GetYaxis()->SetTitleSize(0.03);
+  ratiostep4_3_castorgap->GetXaxis()->SetTitle("L_{Bunch} [#mub^{-1}s^{-1}]");
+  ratiostep4_3_castorgap->SetTitle("Efficiency, Cut: #sum E_HF^{+}< 30 GeV and #sum E_HF^{-}< 30 GeV and Vertex and |#eta_{pf(max,min)}|<3 and CASTOR GAP");
+  ratiostep4_3_castorgap->GetXaxis()->SetRangeUser(0,0.8);
+  ratiostep4_3_castorgap->Draw();
+
+  TString filename(name);
+  c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_3_castorgap.png"));
+  TString filename(name);
+  c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_3_castorgap.C"));
+
+  TH1F *ratiostep4_2_castorgap = h_Trigger->Clone();
+  ratiostep4_2_castorgap->SetName("RatioStep4_2_castorgap");
+  ratiostep4_2_castorgap->Divide(h_step4_2_castorgap,h_Trigger,1.,1.,"B");
+  ratiostep4_2_castorgap->GetYaxis()->SetTitle("#frac{N^{pass,cut}_{ZeroBias}}{N^{total}_{ZeroBias}}");
+  ratiostep4_2_castorgap->GetYaxis()->SetTitleOffset(1.1);
+  ratiostep4_2_castorgap->GetYaxis()->SetTitleSize(0.03);
+  ratiostep4_2_castorgap->GetXaxis()->SetTitle("L_{Bunch} [#mub^{-1}s^{-1}]");
+  ratiostep4_2_castorgap->SetTitle("Efficiency, Cut: #sum E_HF^{+}< 30 GeV and #sum E_HF^{-}< 30 GeV and Vertex and |#eta_{pf(max,min)}|<2 and CASTOR GAP");
+  ratiostep4_2_castorgap->GetXaxis()->SetRangeUser(0,0.8);
+  ratiostep4_2_castorgap->Draw();
+
+  TString filename(name);
+  c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_2_castorgap.png"));
+  TString filename(name);
+  c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_2_castorgap.C"));
+
+  TH1F *ratiostep4_1_castorgap = h_Trigger->Clone();
+  ratiostep4_1_castorgap->SetName("RatioStep4_1_castorgap");
+  ratiostep4_1_castorgap->Divide(h_step4_1_castorgap,h_Trigger,1.,1.,"B");
+  ratiostep4_1_castorgap->GetYaxis()->SetTitle("#frac{N^{pass,cut}_{ZeroBias}}{N^{total}_{ZeroBias}}");
+  ratiostep4_1_castorgap->GetYaxis()->SetTitleOffset(1.1);
+  ratiostep4_1_castorgap->GetYaxis()->SetTitleSize(0.03);
+  ratiostep4_1_castorgap->GetXaxis()->SetTitle("L_{Bunch} [#mub^{-1}s^{-1}]");
+  ratiostep4_1_castorgap->SetTitle("Efficiency, Cut: #sum E_HF^{+}< 30 GeV and #sum E_HF^{-}< 30 GeV and Vertex and |#eta_{pf(max,min)}|<1 and CASTOR GAP");
+  ratiostep4_1_castorgap->GetXaxis()->SetRangeUser(0,0.8);
+  ratiostep4_1_castorgap->Draw();
+  
+  TString filename(name);
+  c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_1_castorgap.png"));
+  TString filename(name);
+  c1->SaveAs(filename.TString::ReplaceAll(".root","_step4_1_castorgap.C"));
 
   TString filenameroot(name);
   File = new TFile(filenameroot.TString::ReplaceAll("histo_effCuts","eff"),"RECREATE");
@@ -151,6 +231,11 @@ void EachCutEfficiency(TString name, bool logscale){
   setHBins(ratiostep4_3);
   setHBins(ratiostep4_2);
   setHBins(ratiostep4_1);
+  setHBins(ratiovertex_castorgap);
+  setHBins(ratiostep4_4_castorgap);
+  setHBins(ratiostep4_3_castorgap);
+  setHBins(ratiostep4_2_castorgap);
+  setHBins(ratiostep4_1_castorgap);
 
   ratiopresel->Write();
   ratiovertex->Write();
@@ -158,6 +243,11 @@ void EachCutEfficiency(TString name, bool logscale){
   ratiostep4_3->Write();
   ratiostep4_2->Write();
   ratiostep4_1->Write();
+  ratiovertex_castorgap->Write();
+  ratiostep4_4_castorgap->Write();
+  ratiostep4_3_castorgap->Write();
+  ratiostep4_2_castorgap->Write();
+  ratiostep4_1_castorgap->Write();
   File->Close();
 
 }
