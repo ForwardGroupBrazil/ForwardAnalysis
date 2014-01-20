@@ -40,6 +40,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = -1
+config.After = False
 
 #
 # Define Options to Run
@@ -349,20 +350,17 @@ if config.runOnMC:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.fCGeVCastor = 0.9375
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = True
      process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.AccessMCInfo = True
-     process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.CastorRecHitTag = "castorreco"
-     process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.castorRecHitTag ="castorreco"
      process.gen_step = cms.Path(process.genChargedParticles+
                               process.genProtonDissociative*process.edmNtupleMxGen+
                               process.genStableParticles*
                               process.etaMaxGen+process.etaMinGen*
                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 
+
 else:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = False
      process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.AccessMCInfo = False
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.fCGeVCastor = 0.015
-     process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.CastorRecHitTag = "castorRecHitCorrector"
-     process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.castorRecHitTag ="castorRecHitCorrector"
 
 process.exclusiveDijetsAnalysisTTreeBefore = process.exclusiveDijetsAnalysisTTree.clone()
 process.exclusiveDijetsAnalysisTTreeAfter = process.exclusiveDijetsAnalysisTTree.clone()
@@ -377,11 +375,23 @@ process.castor_step = cms.Path(process.castorSequence)
 
 if config.TriggerOn:
        print(">> With Trigger.")
-       process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.eventSelectionOnlyHLT + process.exclusiveDijetsAnalysisTTreeBefore + process.eventSelection +  process.exclusiveDijetsAnalysisTTreeAfter)
+       if config.After:
+            print("With Scaled Energy TTree")
+            process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
+            process.analysisSequences + process.eventSelectionOnlyHLT + process.exclusiveDijetsAnalysisTTreeBefore + process.eventSelection +  process.exclusiveDijetsAnalysisTTreeAfter)
+       else:
+            print("Without Scaled Energy TTree")
+            process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
+            process.analysisSequences + process.eventSelectionOnlyHLT + process.exclusiveDijetsAnalysisTTreeBefore) 
 
 else:
        print(">> No Trigger.")
-       process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.exclusiveDijetsAnalysisTTreeBefore + process.eventSelection + process.exclusiveDijetsAnalysisTTreeAfter)
+       if config.After:
+            print("With Scaled Energy")
+            process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
+            process.analysisSequences + process.exclusiveDijetsAnalysisTTreeBefore + process.eventSelection + process.exclusiveDijetsAnalysisTTreeAfter)
+       else:
+            print("Without Scaled Energy")
+            process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
+            process.analysisSequences + process.exclusiveDijetsAnalysisTTreeBefore)
 
