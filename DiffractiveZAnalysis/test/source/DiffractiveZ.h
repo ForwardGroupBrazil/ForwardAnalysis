@@ -33,6 +33,7 @@ class DiffractiveZ {
 
   std::string fileinput;
   std::string processinput;
+  std::string gapseltype;
   int index;
   int pileup;
   int totalweight;
@@ -75,6 +76,8 @@ class DiffractiveZ {
   double etamin_;
   bool castoractivity;
   bool castorgap;
+  double AEcastor;
+  double etasigned;
 
   std::string filein;
   std::string processname;
@@ -92,6 +95,7 @@ class DiffractiveZ {
   int SectorZeroCastorCounter;
   double CastorEnergySector[16];
 
+  std::vector<std::vector<TH1F*> > m_hVector_sumECastorMinusLow;
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronMass;
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronEta;
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronPt;
@@ -341,6 +345,8 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_XiPlusPF;
   std::vector<std::vector<TH1F*> > m_hVector_XiMinusPF;
   std::vector<std::vector<TH1F*> > m_hVector_XiPF;
+  std::vector<std::vector<TH1F*> > m_hVector_AEcastor;
+  std::vector<std::vector<TH1F*> > m_hVector_etasigned;
 
   std::vector <std::string> Folders;
 
@@ -350,7 +356,7 @@ class DiffractiveZ {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double, double, std::string);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double, double, std::string, std::string);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);
