@@ -135,6 +135,7 @@ class DiffractiveZ {
   std::vector<std::vector<TH2F*> > m_hVector_etcalos_p;
   std::vector<std::vector<TH2F*> > m_hVector_etcalos_n;
   std::vector<std::vector<TH1F*> > m_hVector_tracks;
+  std::vector<std::vector<TH1F*> > m_hVector_tracksLow;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamax;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamin;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamincastor;
@@ -348,7 +349,25 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_AEcastor;
   std::vector<std::vector<TH1F*> > m_hVector_etasigned;
 
+  std::vector<std::vector<TH1F*> > m_hVector_sumEEEplus;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEEEminus;
+
+  std::vector<std::vector<TH2F*> > m_hVector_EnergyHFPlusVsEnergyHFMinus;
+  std::vector<std::vector<TH2F*> > m_hVector_EnergyEEPlusVsEnergyEEMinus;
+
+  std::vector<std::vector<TH1F*> > m_hVector_patBosonZPt;
+  std::vector<std::vector<TH1F*> > m_hVector_patBosonZEta;
+  std::vector<std::vector<TH1F*> > m_hVector_patBosonZPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_patBosonZMass;
+
+  std::vector<std::vector<TH1F*> > m_hVector_BosonZPt;
+  std::vector<std::vector<TH1F*> > m_hVector_BosonZEta;
+  std::vector<std::vector<TH1F*> > m_hVector_BosonZPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_BosonZMass;
+
   std::vector <std::string> Folders;
+
+  TDirectory *foldersFile[4];
 
   public :
   DiffractiveZ() {}
@@ -360,7 +379,7 @@ class DiffractiveZ {
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);
-  void SaveHistos(std::string);
+  void SaveHistos(std::string, std::string);
 
 };
 #endif
