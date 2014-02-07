@@ -37,6 +37,7 @@ class ExclusiveDijet {
   int pileup;
   int totalweight;
   double deltaphi, aSumE, absdeltaetapf, deltaetapf, ptJet1, ptJet2;
+  double energycorr[5][16];
 
   int counterinfcut;
   int counterinftrigger;
@@ -116,7 +117,7 @@ class ExclusiveDijet {
   std::vector<std::vector<TH1D*> > m_hVector_XiPlusPF;
   std::vector<std::vector<TH1D*> > m_hVector_XiMinusPF;
   std::vector<std::vector<TH1D*> > m_hVector_XiPF;
- 
+
   std::vector <std::string> Folders;
 
   public :
