@@ -82,10 +82,12 @@ void ExclusiveDijet::CreateHistos(std::string type){
   Folders.push_back(step6);
   Folders.push_back(step7);
   Folders.push_back(step8);
-  Folders.push_back(step9);
-  Folders.push_back(step10);
-  Folders.push_back(step11);
-  Folders.push_back(step12);
+  if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
+    Folders.push_back(step9);
+    Folders.push_back(step10);
+    Folders.push_back(step11);
+    Folders.push_back(step12);
+  }
 
   int nloop=-999;
 
@@ -497,7 +499,7 @@ double* ExclusiveDijet::cutCorrection(){
     exit(EXIT_FAILURE);
   }
 
-  double cutCorrection[6];
+  double cutCorrection[10];
   double* cutfactor;
 
   cutfactor = cutCorrection;
@@ -508,6 +510,10 @@ double* ExclusiveDijet::cutCorrection(){
   TH1F* h_eff_step_4_3 = (TH1F*)effcut->Get("RatioStep4_3");
   TH1F* h_eff_step_4_2 = (TH1F*)effcut->Get("RatioStep4_2");
   TH1F* h_eff_step_4_1 = (TH1F*)effcut->Get("RatioStep4_1");
+  TH1F* h_eff_step_4_4_castor = (TH1F*)effcut->Get("RatioStep4_4_castorgap");
+  TH1F* h_eff_step_4_3_castor = (TH1F*)effcut->Get("RatioStep4_3_castorgap");
+  TH1F* h_eff_step_4_2_castor = (TH1F*)effcut->Get("RatioStep4_2_castorgap");
+  TH1F* h_eff_step_4_1_castor = (TH1F*)effcut->Get("RatioStep4_1_castorgap");
 
   cutCorrection[0] = 1./h_eff_excl->GetBinContent(h_eff_excl->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
   cutCorrection[1] = 1./h_eff_vertex->GetBinContent(h_eff_vertex->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
@@ -515,8 +521,13 @@ double* ExclusiveDijet::cutCorrection(){
   cutCorrection[3] = 1./h_eff_step_4_3->GetBinContent(h_eff_step_4_3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
   cutCorrection[4] = 1./h_eff_step_4_2->GetBinContent(h_eff_step_4_2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
   cutCorrection[5] = 1./h_eff_step_4_1->GetBinContent(h_eff_step_4_1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[6] = 1./h_eff_step_4_4_castor->GetBinContent(h_eff_step_4_4_castor->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[7] = 1./h_eff_step_4_3_castor->GetBinContent(h_eff_step_4_3_castor->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[8] = 1./h_eff_step_4_2_castor->GetBinContent(h_eff_step_4_2_castor->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[9] = 1./h_eff_step_4_1_castor->GetBinContent(h_eff_step_4_1_castor->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
 
-  for (int i=0; i<6; i++){
+
+  for (int i=0; i<10; i++){
     if (!isfinite(cutCorrection[i])) {
       cutCorrection[i] = 1.;
       ++counterinfcut;
@@ -669,6 +680,23 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   if (switchtriggercorr == "trigger_correction") efftrigger = TFile::Open(triggercorrfile_.c_str());
   if (switchcutcorr == "cut_correction") effcut = TFile::Open(cutcorrfile_.c_str());
 
+  if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
+
+    h_castor_channel = (TH2F*)check2.Get("channelcorrector");
+
+    // Get CASTOR Corrections
+    for(int i=1; i<6;i++){
+      for(int j=1; j<17; j++){
+	energycorr[i-1][j-1]=0;
+	if (switchcastor == "castor_correction"){
+	  energycorr[i-1][j-1]=h_castor_channel->GetBinContent(i,j);
+	}else{
+	  energycorr[i-1][j-1]=1.;
+	}
+      }
+    }
+
+  }
 
   for(int i=0;i<NEVENTS;i++){
 
@@ -678,6 +706,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     deltaetapf = -999.;
     ptJet1 = -999.;
     ptJet2 = -999.;
+    double sumHFs = eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus();
 
     if (!debug) {
       loadBar(i,NEVENTS,100,100);
@@ -709,7 +738,11 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     }
 
     deltaphi = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
-    aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
+    if(sumHFs>0.){
+      aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
+    }else{
+      aSumE = 999.;
+    }
     absdeltaetapf = fabs(eventdiff->GetEtaMaxFromPFCands()-eventdiff->GetEtaMinFromPFCands());
     deltaetapf = (eventdiff->GetEtaMaxFromPFCands()-eventdiff->GetEtaMinFromPFCands());
 
@@ -754,6 +787,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     double cuteff_step4_3 = 1.; // presel + vertex + etamax 3
     double cuteff_step4_2 = 1.; // presel + vertex + etamax 2
     double cuteff_step4_1 = 1.; // presel + vertex + etamax 1
+    double cuteff_step4_4_castor = 1. ; // presel + vertex + etamax 4 + CASTOR
+    double cuteff_step4_3_castor = 1.; // presel + vertex + etamax 3 + CASTOR
+    double cuteff_step4_2_castor = 1.; // presel + vertex + etamax 2 + CASTOR
+    double cuteff_step4_1_castor = 1.; // presel + vertex + etamax 1 +CASTOR
 
     if (switchlumiweight == "mc_lumi_weight"){
       mclumiweight = lumiweight;
@@ -788,6 +825,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       cuteff_step4_3 = vfactorcut[3];
       cuteff_step4_2 = vfactorcut[4];
       cuteff_step4_1 = vfactorcut[5];
+      cuteff_step4_4_castor = vfactorcut[6];
+      cuteff_step4_3_castor = vfactorcut[7];
+      cuteff_step4_2_castor = vfactorcut[8];
+      cuteff_step4_1_castor = vfactorcut[9];
     }
 
     totalcommon = mcweightpu*mcweight*mclumiweight;
@@ -815,6 +856,11 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	std::cout << "Eff cuts eta 3: " << cuteff_step4_3 <<std::endl;
 	std::cout << "Eff cuts eta 2: " << cuteff_step4_2 <<std::endl;
 	std::cout << "Eff cuts eta 1: " << cuteff_step4_1 <<std::endl;  
+	std::cout << "Eff cuts eta 4 and CASTOR: " << cuteff_step4_4_castor <<std::endl;
+	std::cout << "Eff cuts eta 3 and CASTOR: " << cuteff_step4_3_castor <<std::endl;
+	std::cout << "Eff cuts eta 2 and CASTOR: " << cuteff_step4_2_castor <<std::endl;
+	std::cout << "Eff cuts eta 1 and CASTOR: " << cuteff_step4_1_castor <<std::endl;
+
       }
     }
 
@@ -829,20 +875,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
 
       double CastorEnergySector[16];
-      double energycorr[5][16];
-      h_castor_channel = (TH2F*)check2.Get("channelcorrector");
-
-      // Get CASTOR Corrections
-      for(int i=1; i<6;i++){
-	for(int j=1; j<17; j++){
-	  energycorr[i-1][j-1]=0;
-	  if (switchcastor == "castor_correction"){
-	    energycorr[i-1][j-1]=h_castor_channel->GetBinContent(i,j);
-	  }else{
-	    energycorr[i-1][j-1]=1.;
-	  }
-	}
-      }
 
       sprintf(channel_castor,">> Castor Channel Threshold: %0.2f GeV",castorthreshold);
       for (int i=0; i < 16; i++){
@@ -862,16 +894,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       }
 
       for (int l=0; l<16;l++){
-	if (CastorEnergySector[l] > castorthreshold){
-	  ++SectorCastorHit;
-	  sumCastorEnergy+=CastorEnergySector[l];
-	}
-	else{
-	  ++SectorZeroCastorCounter;
-	}
+	sumCastorEnergy+=CastorEnergySector[l];
       }
 
-      if (SectorCastorHit >= 1){
+      if (sumCastorEnergy > 0.){
 	castoractivity = true;
       }else{
 	castorgap = true;
@@ -931,12 +957,14 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	  FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
 	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	}
-	if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4*triggereff4);
-	if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3*triggereff3);
-	if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2*triggereff2);
-	if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta1){
-	  FillHistos(12,pileup,totalcommon*cuteff_step4_1*triggereff1);
-	  outstring << "CASTOR GAP " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4);
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3);
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2);
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta1){
+	    FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1);
+	    outstring << "CASTOR GAP " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	  }
 	}
       }
 
@@ -949,10 +977,12 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
 	if(presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
 	if(presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
-	if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4*triggereff4);
-	if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3*triggereff3);
-	if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2*triggereff2);
-	if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta1) FillHistos(12,pileup,totalcommon*cuteff_step4_1*triggereff1); 
+	if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4);
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3);
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2);
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta1) FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1); 
+	}
       }
       else {
 	exit(EXIT_FAILURE);
