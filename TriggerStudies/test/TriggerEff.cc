@@ -241,7 +241,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 	if(i==3) etacut = 1.;
 
 	if(eventdiff->GetEtaMinFromPFCands() < -990. && eventdiff->GetEtaMaxFromPFCands() < -990.) gap = true;
-	if((eventexcl->GetLeadingJetP4().Pt() > 60.)){
+	if((eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60)){
 	  if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
 	  if(deltaphi_>0.5*M_PI) {
 	    if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
