@@ -39,7 +39,7 @@ using namespace reweight;
 void ExclusiveDijet::LoadFile(std::string fileinput, std::string processinput){
 
   inf = NULL;
-  tr  = NULL;
+  tr = NULL;
   inf = TFile::Open(fileinput.c_str(),"read");
   std::string fdirectory = processinput + "/ProcessedTree";
   tr = (TTree*)inf->Get(fdirectory.c_str());
@@ -55,7 +55,7 @@ void ExclusiveDijet::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void ExclusiveDijet::CreateHistos(std::string type){
+void ExclusiveDijet::CreateHistos(std::string type, std::string switchCastorHisto){
 
   double xi_bin[18]={0.0003,0.002,0.0045,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1};
 
@@ -82,7 +82,7 @@ void ExclusiveDijet::CreateHistos(std::string type){
   Folders.push_back(step6);
   Folders.push_back(step7);
   Folders.push_back(step8);
-  if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
+  if (switchCastorHisto == "castor_correction" || switchCastorHisto == "castor_no_correction") {
     Folders.push_back(step9);
     Folders.push_back(step10);
     Folders.push_back(step11);
@@ -170,12 +170,12 @@ void ExclusiveDijet::CreateHistos(std::string type){
 
       char name4[300];
       sprintf(name4,"mHF_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_MultHF = new TH2F(name4,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+      TH2F *histo_MultHF = new TH2F(name4,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10, 0., 10., 10, 0., 10. );
       m_hVector_multhf[j].push_back(histo_MultHF);
 
       char name5[300];
       sprintf(name5,"ETCalos_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_ET_Calos = new TH2F(name5,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 400,  0., 2000., 500,  0., 5000. );
+      TH2F *histo_ET_Calos = new TH2F(name5,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 400, 0., 2000., 500, 0., 5000. );
       m_hVector_etcalos[j].push_back(histo_ET_Calos);
 
       char name6[300];
@@ -417,7 +417,7 @@ void ExclusiveDijet::FillHistos(int index, int pileup, double totalweight){
   m_hVector_sumEHFpfplusVsetaMax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),eventexcl->GetSumEHFPFlowPlus(),totalweight);
   m_hVector_sumEHFpfminusVsetaMin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),eventexcl->GetSumEHFPFlowMinus(),totalweight);
   m_hVector_sumEHFplusVsetaMax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),eventdiff->GetSumEnergyHFPlus(),totalweight);
-  m_hVector_sumEHFminusVsetaMin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),eventdiff->GetSumEnergyHFMinus(),totalweight);     
+  m_hVector_sumEHFminusVsetaMin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),eventdiff->GetSumEnergyHFMinus(),totalweight);
   m_hVector_sumECastor[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
   m_hVector_sumECastorHFMinus[index].at(pileup)->Fill(sumCastorAndHFMinusEnergy,totalweight);
   m_hVector_uncJet1[index].at(pileup)->Fill(eventexcl->GetUnc1());
@@ -494,7 +494,7 @@ double* ExclusiveDijet::cutCorrection(){
 
   if (eventinfo->GetInstLumiBunch() < -999){
     std::cout << "\n--------------------------------------------------------------" << std::endl;
-    std::cout << " Only apply cut correction in data, not in MC."   << std::endl;
+    std::cout << " Only apply cut correction in data, not in MC." << std::endl;
     std::cout << "--------------------------------------------------------------" << std::endl;
     exit(EXIT_FAILURE);
   }
@@ -548,12 +548,12 @@ double* ExclusiveDijet::triggerCorrection(){
 
   if (eventinfo->GetInstLumiBunch() < -999){
     std::cout << "\n--------------------------------------------------------------" << std::endl;
-    std::cout << " Only apply trigger correction in data, not in MC."   << std::endl;
+    std::cout << " Only apply trigger correction in data, not in MC." << std::endl;
     std::cout << "--------------------------------------------------------------" << std::endl;
     exit(EXIT_FAILURE);
   }
 
-  double triggerCorrection[4];
+  double triggerCorrection[8];
   double* triggerfactor;
 
   triggerfactor = triggerCorrection;
@@ -562,13 +562,21 @@ double* ExclusiveDijet::triggerCorrection(){
   TH1F* h_eff_trigger_eta2 = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2");
   TH1F* h_eff_trigger_eta3 = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3");
   TH1F* h_eff_trigger_eta4 = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta4");
+  TH1F* h_eff_trigger_eta1_castorgap = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1_castorgap");
+  TH1F* h_eff_trigger_eta2_castorgap = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2_castorgap");
+  TH1F* h_eff_trigger_eta3_castorgap = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3_castorgap");
+  TH1F* h_eff_trigger_eta4_castorgap = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta4_castorgap");
 
   triggerCorrection[0] = 1./h_eff_trigger_eta4->GetBinContent(h_eff_trigger_eta4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
   triggerCorrection[1] = 1./h_eff_trigger_eta3->GetBinContent(h_eff_trigger_eta3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
   triggerCorrection[2] = 1./h_eff_trigger_eta2->GetBinContent(h_eff_trigger_eta2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
   triggerCorrection[3] = 1./h_eff_trigger_eta1->GetBinContent(h_eff_trigger_eta1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  triggerCorrection[4] = 1./h_eff_trigger_eta4_castorgap->GetBinContent(h_eff_trigger_eta4_castorgap->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  triggerCorrection[5] = 1./h_eff_trigger_eta3_castorgap->GetBinContent(h_eff_trigger_eta3_castorgap->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  triggerCorrection[6] = 1./h_eff_trigger_eta2_castorgap->GetBinContent(h_eff_trigger_eta2_castorgap->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  triggerCorrection[7] = 1./h_eff_trigger_eta1_castorgap->GetBinContent(h_eff_trigger_eta1_castorgap->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
 
-  for (int i=0; i<4; i++){
+  for (int i=0; i<8; i++){
     if (!isfinite(triggerCorrection[i])) {
       triggerCorrection[i] = 1.;
       ++counterinftrigger;
@@ -624,7 +632,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   if (check1.IsZombie()){
 
     std::cout << "------------------------------------------------" << std::endl;
-    std::cout << " There is no the file " << filein << " or the"   << std::endl;
+    std::cout << " There is no the file " << filein << " or the" << std::endl;
     std::cout << " path is not correct." << std::endl;
     std::cout << "------------------------------------------------" << std::endl;
     return;
@@ -654,7 +662,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << "Please, insert this events in another text file to be used by PickEvent Tool. " << std::endl;
   outstring << "Twiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookPickEvents " << std::endl;
   outstring << ">>---------------------------------------------------------------------- " << std::endl;
-  outstring << "Selected Events: Trigger + PreSel + Vertex + Dijets (pT and Tracker acceptance) + etamax/etamin 2 " << std::endl; 
+  outstring << "Selected Events: Trigger + PreSel + Vertex + Dijets (pT and Tracker acceptance) + etamax/etamin 2 " << std::endl;
 
   int NEVENTS = tr->GetEntries();
   int pileup = -999;
@@ -669,7 +677,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   std::cout<< "Reading Tree: "<< NEntries << " events"<<std::endl;
   std::cout << "" << std::endl;
 
-  std::string status, jetstatus;  
+  std::string status, jetstatus;
 
   edm::LumiReWeighting LumiWeights_(pumcfile.c_str(),pudatafile.c_str(),"pileUpBx0_complete_without_cuts","pileup");
 
@@ -693,6 +701,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	}else{
 	  energycorr[i-1][j-1]=1.;
 	}
+	if (debug) std::cout << "Module " << i << " | Sector: " << j << ", Correction: " << energycorr[i-1][j-1] << std::endl;
       }
     }
 
@@ -715,9 +724,9 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     tr->GetEntry(i);
 
     if ( type=="multiple_pileup" && (eventexcl->GetNPileUpBx0()==-1 && eventexcl->GetNPileUpBxm1()==-1 && eventexcl->GetNPileUpBxp1()==-1 )){
-      std::cout << " " << std::endl; 
+      std::cout << " " << std::endl;
       std::cout << "--------------------------------------------------------------" << std::endl;
-      std::cout << " There is no pile-up TTree information in your PATTuplefile."   << std::endl;
+      std::cout << " There is no pile-up TTree information in your PATTuplefile." << std::endl;
       std::cout << " Please, use another PATTuple with PU information to run mul- " << std::endl;
       std::cout << " tiple PU option." << std::endl;
       std::cout << "--------------------------------------------------------------" << std::endl;
@@ -747,13 +756,13 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     deltaetapf = (eventdiff->GetEtaMaxFromPFCands()-eventdiff->GetEtaMinFromPFCands());
 
     if (jetunc == "plus"){
-      ptJet1 = eventexcl->GetLeadingJetPt() + eventexcl->GetUnc1()*eventexcl->GetLeadingJetPt(); 
+      ptJet1 = eventexcl->GetLeadingJetPt() + eventexcl->GetUnc1()*eventexcl->GetLeadingJetPt();
       ptJet2 = eventexcl->GetSecondJetPt() + eventexcl->GetUnc2()*eventexcl->GetSecondJetPt();
       jetstatus = "Jets Unc. Plus";
     }
 
     else if (jetunc == "minus"){
-      ptJet1 = eventexcl->GetLeadingJetPt() - eventexcl->GetUnc1()*eventexcl->GetLeadingJetPt();             
+      ptJet1 = eventexcl->GetLeadingJetPt() - eventexcl->GetUnc1()*eventexcl->GetLeadingJetPt();
       ptJet2 = eventexcl->GetSecondJetPt() - eventexcl->GetUnc2()*eventexcl->GetSecondJetPt();
       jetstatus = "Jets Unc. Minus";
     }
@@ -762,7 +771,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       ptJet1 = eventexcl->GetLeadingJetPt();
       ptJet2 = eventexcl->GetSecondJetPt();
       jetstatus = "Normal";
-    } 
+    }
 
     else {
       ptJet1 = eventexcl->GetLeadingJetPt();
@@ -780,6 +789,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     double triggereff3 = 1.;
     double triggereff2 = 1.;
     double triggereff1 = 1.;
+    double triggereff4_castorgap = 1.;
+    double triggereff3_castorgap = 1.;
+    double triggereff2_castorgap = 1.;
+    double triggereff1_castorgap = 1.;
 
     double cuteff_excl = 1.; // presel
     double cuteff_vertex = 1.; // presel + vertex
@@ -798,9 +811,9 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 
     if (switchmceventweight == "mc_event_weight"){
       if (eventinfo->GetGeneratorWeight() < 0){
-	std::cout << " " << std::endl; 
+	std::cout << " " << std::endl;
 	std::cout << "\n--------------------------------------------------------------" << std::endl;
-	std::cout << " The event mc weight is negative. Set up correct MC."   << std::endl;
+	std::cout << " The event mc weight is negative. Set up correct MC." << std::endl;
 	std::cout << "--------------------------------------------------------------" << std::endl;
 	exit(EXIT_FAILURE);
       }
@@ -815,6 +828,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       triggereff3 = vfactortrigger[1];
       triggereff2 = vfactortrigger[2];
       triggereff1 = vfactortrigger[3];
+      triggereff4_castorgap = vfactortrigger[4];
+      triggereff3_castorgap = vfactortrigger[3];
+      triggereff2_castorgap = vfactortrigger[2];
+      triggereff1_castorgap = vfactortrigger[1];
     }
 
     if (switchcutcorr == "cut_correction"){
@@ -845,7 +862,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	std::cout << "ReWeight Pile-up (a): " << mcweightpu << std::endl;
 	std::cout << "Event by Event MC flat weight (b): " << mcweight << std::endl;
 	std::cout << "Luminosity weight (c): " << mclumiweight <<std::endl;
-	std::cout << "Total Common weight (a*b*c): " << totalcommon <<std::endl; 
+	std::cout << "Total Common weight (a*b*c): " << totalcommon <<std::endl;
 	std::cout << "Trigger Eff. Corr Eta 4: " <<triggereff4 <<std::endl;
 	std::cout << "Trigger Eff. Corr Eta 3: " <<triggereff3 <<std::endl;
 	std::cout << "Trigger Eff. Corr Eta 2: " <<triggereff2 <<std::endl;
@@ -855,7 +872,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	std::cout << "Eff cuts eta 4: " << cuteff_step4_4 <<std::endl;
 	std::cout << "Eff cuts eta 3: " << cuteff_step4_3 <<std::endl;
 	std::cout << "Eff cuts eta 2: " << cuteff_step4_2 <<std::endl;
-	std::cout << "Eff cuts eta 1: " << cuteff_step4_1 <<std::endl;  
+	std::cout << "Eff cuts eta 1: " << cuteff_step4_1 <<std::endl;
 	std::cout << "Eff cuts eta 4 and CASTOR: " << cuteff_step4_4_castor <<std::endl;
 	std::cout << "Eff cuts eta 3 and CASTOR: " << cuteff_step4_3_castor <<std::endl;
 	std::cout << "Eff cuts eta 2 and CASTOR: " << cuteff_step4_2_castor <<std::endl;
@@ -871,10 +888,9 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 
     bool castorgap = false;
     bool castoractivity = false;
+    double CastorEnergySector[16]; 
 
     if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
-
-      double CastorEnergySector[16];
 
       sprintf(channel_castor,">> Castor Channel Threshold: %0.2f GeV",castorthreshold);
       for (int i=0; i < 16; i++){
@@ -894,6 +910,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       }
 
       for (int l=0; l<16;l++){
+	if (debug) std::cout << "Energy Sector " << l+1 << ": " << CastorEnergySector[l] << std::endl;
 	sumCastorEnergy+=CastorEnergySector[l];
       }
 
@@ -901,6 +918,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	castoractivity = true;
       }else{
 	castorgap = true;
+        if (debug) std::cout << "CASTOR gap!" << std::endl;
       }
 
       if (castoractivity) {
@@ -917,6 +935,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     }
 
     sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiff->GetSumEnergyHFMinus();
+    if (debug) std::cout << "CASTOR gap 2!" << std::endl;
 
     bool trigger = false;
     bool presel = false;
@@ -936,18 +955,18 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     if (switchpresel == "no_preselection") presel = true;
     if (eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex) vertex = true;
     if (ptJet1 > jet1pT && ptJet2 > jet2pT) dijetpt = true;
-    if (eventexcl->GetLeadingJetEta() < 2.9 && eventexcl->GetSecondJetEta() < 2.9 && eventexcl->GetLeadingJetEta() > -2.9 && eventexcl->GetSecondJetEta() > -2.9) dijeteta = true; 
+    if (eventexcl->GetLeadingJetEta() < 2.9 && eventexcl->GetSecondJetEta() < 2.9 && eventexcl->GetLeadingJetEta() > -2.9 && eventexcl->GetSecondJetEta() > -2.9) dijeteta = true;
     if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta4 = true;
     if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta3 = true;
     if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta2 = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta1 = true; 
+    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta1 = true;
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
 
-      if(switchtrigger == "trigger"){ 
-	FillHistos(0,pileup,totalcommon); 
+      if(switchtrigger == "trigger"){
+	FillHistos(0,pileup,totalcommon);
 	if(trigger) FillHistos(1,pileup,totalcommon);
-	if(trigger && presel) FillHistos(2,pileup,totalcommon*cuteff_excl);        
+	if(trigger && presel) FillHistos(2,pileup,totalcommon*cuteff_excl);
 	if(trigger && presel && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
 	if(trigger && presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
@@ -958,11 +977,11 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	}
 	if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
-	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4);
-	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3);
-	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2);
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4_castorgap);
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3_castorgap);
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2_castorgap);
 	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta1){
-	    FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1);
+	    FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1_castorgap);
 	    outstring << "CASTOR GAP " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  }
 	}
@@ -978,16 +997,16 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
 	if(presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
 	if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
-	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4);
-	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3);
-	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2);
-	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta1) FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1); 
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4_castorgap);
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3_castorgap);
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2_castorgap);
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta1) FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1_castorgap);
 	}
       }
       else {
 	exit(EXIT_FAILURE);
       }
-    }   
+    }
   }
 
   outstring << "" << std::endl;
@@ -1001,9 +1020,9 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << ">> Input Trigger Corr. file: " << triggercorrfile <<std::endl;
   outstring << ">> Input Cuts Corr. file: " << cutcorrfile <<std::endl;
   outstring << " " << std::endl;
-  outstring << "<< OPTIONS >>" << std::endl; 
+  outstring << "<< OPTIONS >>" << std::endl;
   outstring << " " << std::endl;
-  outstring << ">> Jet Uncertainty: " << jetstatus << std::endl; 
+  outstring << ">> Jet Uncertainty: " << jetstatus << std::endl;
   outstring << ">> Trigger: " << switchtrigger << " | Option: " << optTrigger << std::endl;
   outstring << ">> # Vertex: " << optnVertex << std::endl;
   outstring << ">> PU Reweight: " << switchpucorr << std::endl;
@@ -1020,7 +1039,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << " " << std::endl;
   outstring << "<< TRIGGER >> " << std::endl;
   outstring << " " << std::endl;
-  outstring << "Total Trigger Fired: " <<  std::endl;
+  outstring << "Total Trigger Fired: " << std::endl;
   outstring << "Trigger 0: " << triggercounter[0] << std::endl;
   outstring << "Trigger 1: " << triggercounter[1] << std::endl;
   outstring << "Trigger 2: " << triggercounter[2] << std::endl;
@@ -1046,7 +1065,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << " " << std::endl;
   outstring << "# of correction trigger efficiencies factors with NAN: " << counterinftrigger << std::endl;
   outstring << "# of correction cut efficiencies factors with NAN: " << counterinfcut << std::endl;
-  outstring << "These weights were treated as 1. TH1* root defense." << std::endl; 
+  outstring << "These weights were treated as 1. TH1* root defense." << std::endl;
   outstring << " " << std::endl;
 
   outf->cd();
@@ -1077,7 +1096,7 @@ int main(int argc, char **argv)
   std::string switchtriggercorr_;
   std::string switchlumiweight_;
   std::string switchcastor_;
-  std::string castorcorrfile_; 
+  std::string castorcorrfile_;
   std::string switchpresel_;
   double lumiweight_;
   std::string switchmceventweight_;
@@ -1104,7 +1123,7 @@ int main(int argc, char **argv)
   if (argc > 15 && strcmp(s1,argv[15]) != 0) lumiweight_ = atof(argv[15]);
   if (argc > 16 && strcmp(s1,argv[16]) != 0) switchmceventweight_ = argv[16];
   if (argc > 17 && strcmp(s1,argv[17]) != 0) optnVertex_ = atoi(argv[17]);
-  if (argc > 18 && strcmp(s1,argv[18]) != 0) optTrigger_   = atoi(argv[18]);
+  if (argc > 18 && strcmp(s1,argv[18]) != 0) optTrigger_ = atoi(argv[18]);
   if (argc > 19 && strcmp(s1,argv[19]) != 0) jet1pT_ = atof(argv[19]);
   if (argc > 20 && strcmp(s1,argv[20]) != 0) jet2pT_ = atof(argv[20]);
   if (argc > 21 && strcmp(s1,argv[21]) != 0) switchcastor_ = argv[21];
@@ -1167,7 +1186,7 @@ int main(int argc, char **argv)
     exit(EXIT_FAILURE);
   }
 
-  if(switchlumiweight_ == "mc_lumi_weight" || switchlumiweight_  == "no_mc_lumi_weight") {}
+  if(switchlumiweight_ == "mc_lumi_weight" || switchlumiweight_ == "no_mc_lumi_weight") {}
   else{
     std::cout << " " << std::endl;
     std::cout << "\nPlease Insert MC Cross Section Weight: " << std::endl;
@@ -1201,30 +1220,30 @@ int main(int argc, char **argv)
       std::cout << "----------------------------------------------" << std::endl;
       std::cout << " Pay attention on the input numbers parameters" << std::endl;
       std::cout << "----------------------------------------------" << std::endl;
-      std::cout << ">> Requirements:                             " << std::endl;
-      std::cout << "I)   optnVertex_ > 0 " << std::endl;
-      std::cout << "II)  optTrigger >= 0" << std::endl;
+      std::cout << ">> Requirements: " << std::endl;
+      std::cout << "I) optnVertex_ > 0 " << std::endl;
+      std::cout << "II) optTrigger >= 0" << std::endl;
       std::cout << "III) lumiweight_ > 0" << std::endl;
-      std::cout << "IV)  jet1pT_ and jet2pT_ >= 0" << std::endl;  
-      std::cout << "----------------------------------------------" << std::endl; 
+      std::cout << "IV) jet1pT_ and jet2pT_ >= 0" << std::endl;
+      std::cout << "----------------------------------------------" << std::endl;
       return 0;
     }
 
     ExclusiveDijet* exclusive = new ExclusiveDijet();
-    exclusive->CreateHistos(type_);
+    exclusive->CreateHistos(type_,switchcastor_);
 
     TFile pudata(pudatafile_.c_str());
     TFile pumc(pumcfile_.c_str());
     if (pudata.IsZombie() || pumc.IsZombie()){
       std::cout << "----------------------------------------------" << std::endl;
-      std::cout << " There is no Pile-Up data/mc file or the"   << std::endl;
+      std::cout << " There is no Pile-Up data/mc file or the" << std::endl;
       std::cout << " path is not correct." << std::endl;
-      std::cout << "----------------------------------------------" << std::endl; 
+      std::cout << "----------------------------------------------" << std::endl;
       return 0;
     }
     else if (!pudata.GetListOfKeys()->Contains("pileup") || !pumc.GetListOfKeys()->Contains("pileUpBx0_complete_without_cuts") ){
       std::cout << "----------------------------------------------" << std::endl;
-      std::cout << " There is no Pile-Up data/mc histograms: "   << std::endl;
+      std::cout << " There is no Pile-Up data/mc histograms: " << std::endl;
       std::cout << " data: pileup" << std::endl;
       std::cout << " mc: pileUpBx0_complete_without_cuts" << std::endl;
       std::cout << "----------------------------------------------" << std::endl;
@@ -1235,14 +1254,14 @@ int main(int argc, char **argv)
       TFile effcut(cutcorrfile_.c_str());
       if (effcut.IsZombie()){
 	std::cout << "---------------------------------------" << std::endl;
-	std::cout << " There is no Efficiency cut file or the"   << std::endl;
+	std::cout << " There is no Efficiency cut file or the" << std::endl;
 	std::cout << " path is not correct." << std::endl;
 	std::cout << "---------------------------------------" << std::endl;
 	return 0;
       }
       else if (!effcut.GetListOfKeys()->Contains("RatioPreSel") || !effcut.GetListOfKeys()->Contains("RatioVertex") || !effcut.GetListOfKeys()->Contains("RatioStep4_4") || !effcut.GetListOfKeys()->Contains("RatioStep4_3") || !effcut.GetListOfKeys()->Contains("RatioStep4_2")| !effcut.GetListOfKeys()->Contains("RatioStep4_1")){
 	std::cout << "----------------------------------------------" << std::endl;
-	std::cout << " There is no Eff. Cuts histograms " << std::endl; 
+	std::cout << " There is no Eff. Cuts histograms " << std::endl;
 	std::cout << "----------------------------------------------" << std::endl;
 	return 0;
       }
@@ -1251,7 +1270,7 @@ int main(int argc, char **argv)
       TFile efftrigger(triggercorrfile_.c_str());
       if (efftrigger.IsZombie()){
 	std::cout << "-------------------------------------------" << std::endl;
-	std::cout << " There is no trigger efficiency file or the"   << std::endl;
+	std::cout << " There is no trigger efficiency file or the" << std::endl;
 	std::cout << " path is not correct." << std::endl;
 	std::cout << "-------------------------------------------" << std::endl;
 	return 0;

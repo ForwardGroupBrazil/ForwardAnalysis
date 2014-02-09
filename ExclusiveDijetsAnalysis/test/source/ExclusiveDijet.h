@@ -37,7 +37,6 @@ class ExclusiveDijet {
   int pileup;
   int totalweight;
   double deltaphi, aSumE, absdeltaetapf, deltaetapf, ptJet1, ptJet2;
-  double energycorr[5][16];
 
   int counterinfcut;
   int counterinftrigger;
@@ -71,6 +70,7 @@ class ExclusiveDijet {
   int SectorCastorHit;
   int SectorZeroCastorCounter;
   double etamin_;
+  double energycorr[5][16];
 
   std::vector<std::vector<TH1D*> > m_hVector_rjj;
   std::vector<std::vector<TH1D*> > m_hVector_detagen;
@@ -128,7 +128,7 @@ class ExclusiveDijet {
 
   void Run(std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, double, std::string, int, int, double, double, std::string, std::string, double, std::string);
   void LoadFile(std::string,std::string);
-  void CreateHistos(std::string);
+  void CreateHistos(std::string, std::string);
   void FillHistos(int, int, double);
   void SaveHistos(std::string);
   double* cutCorrection();
