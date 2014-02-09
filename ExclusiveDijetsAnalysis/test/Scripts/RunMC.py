@@ -25,14 +25,14 @@ os.system("./ExclusiveDijet \"/storage1/eliza/Samples/ExclusiveDijets/Herwig/tot
 #
 # Pythia PU0
 #
-
-os.system("./ExclusiveDijet \"/storage1/eliza/Samples/ExclusiveDijets/Pythia/total/Pythia6QCD.root\" \"histo_pythia6pu_pT60_60_pu0.root\" \"exclusiveDijetsAnalysisTTree\" \"no_trigger\" \"multiple_pileup\" \"none\" \"no_pileup_correction\" \"pu_MultiJets_completejson_excldijets_march2013_68mb_bin24.root\" \"puHistoPythia6.root\" \"effMinBias2010RunB_hf7pf_exclusive.root\" \"histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root\" \"no_cut_correction\" \"no_trigger_correction\" \"mc_lumi_weight\" 365676.168663604 \"mc_event_weight\" 1 0 60 60 \"no_castor\" \"channelcorrection.root\" 1.0 \"preselection\"")
+ 
+os.system("./ExclusiveDijet \"/storage1/eliza/Samples/ExclusiveDijets/Pythia/Pythia6QCD.root\" \"histo_pythia6pu_pT60_60_pu0.root\" \"exclusiveDijetsAnalysisTTree\" \"no_trigger\" \"multiple_pileup\" \"none\" \"no_pileup_correction\" \"pu_MultiJets_completejson_excldijets_march2013_68mb_bin24.root\" \"puHistoPythia6.root\" \"effMinBias2010RunB_hf7pf_exclusive.root\" \"histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root\" \"no_cut_correction\" \"no_trigger_correction\" \"mc_lumi_weight\" 1139791.54667804 \"mc_event_weight\" 1 0 60 60 \"no_castor\" \"channelcorrection.root\" 1.0 \"preselection\"")
 
 #
 # Herwig PU0
 #
 
-os.system("./ExclusiveDijet \"/storage1/eliza/Samples/ExclusiveDijets/Herwig/total/HerwigQCD.root\" \"histo_herwigpu_pT60_60_pu0.root\" \"exclusiveDijetsAnalysisTTree\" \"no_trigger\" \"multiple_pileup\" \"none\" \"no_pileup_correction\" \"pu_MultiJets_completejson_excldijets_march2013_68mb_bin24.root\" \"puHistoHerwig.root\" \"effMinBias2010RunB_hf7pf_exclusive.root\" \"histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root\" \"no_cut_correction\" \"no_trigger_correction\" \"mc_lumi_weight\" 402676.822340036 \"mc_event_weight\" 1 0 60 60 \"no_castor\" \"channelcorrection.root\" 1.0 \"preselection\"")
+os.system("./ExclusiveDijet \"/storage1/eliza/Samples/ExclusiveDijets/Herwig/HerwigQCD.root\" \"histo_herwigpu_pT60_60_pu0.root\" \"exclusiveDijetsAnalysisTTree\" \"no_trigger\" \"multiple_pileup\" \"none\" \"no_pileup_correction\" \"pu_MultiJets_completejson_excldijets_march2013_68mb_bin24.root\" \"puHistoHerwig.root\" \"effMinBias2010RunB_hf7pf_exclusive.root\" \"histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root\" \"no_cut_correction\" \"no_trigger_correction\" \"mc_lumi_weight\" 826050.444947226 \"mc_event_weight\" 1 0 60 60 \"no_castor\" \"channelcorrection.root\" 1.0 \"preselection\"")
 
 
 #----------------------------------------------------------->>>
