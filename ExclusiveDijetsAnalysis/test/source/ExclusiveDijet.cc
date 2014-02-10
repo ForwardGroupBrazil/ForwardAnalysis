@@ -950,16 +950,16 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     if (eventexcl->GetHLTPath(optTrigger)>0) trigger = true;
 
     if (switchpresel == "preselection") {
-      if ( (eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) presel = true;
+      if ((eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30)) presel = true;
     }
     if (switchpresel == "no_preselection") presel = true;
     if (eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex) vertex = true;
     if (ptJet1 > jet1pT && ptJet2 > jet2pT) dijetpt = true;
     if (eventexcl->GetLeadingJetEta() < 2.9 && eventexcl->GetSecondJetEta() < 2.9 && eventexcl->GetLeadingJetEta() > -2.9 && eventexcl->GetSecondJetEta() > -2.9) dijeteta = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta4 = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta3 = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta2 = true;
-    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta1 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.)) d_eta4 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.)) d_eta3 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.)) d_eta2 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.)) d_eta1 = true;
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
 
