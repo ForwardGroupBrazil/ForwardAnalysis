@@ -1472,12 +1472,12 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name216[300];
       sprintf(name216,"CastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_CastorMultiplicity = new TH1F(name216,"Castor: number of sectors with activity; #Sectors; N events",17,0,17);
+      TH1F *histo_CastorMultiplicity = new TH1F(name216,"Castor: number of sectors with activity; #Sectors; N events",81,0,81);
       m_hVector_CastorMultiplicity[j].push_back(histo_CastorMultiplicity);
 
       char name217[300];
       sprintf(name217,"CastorMultiplicityVsLumi_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_CastorMultiplicityVsLumi = new TH2F(name217,"CastorMultiplicity Vs Luminosity; Luminosity per Bunch [#mub^{-1}s^{-1}]; Castor Multiplicity",5000,0,2,17,0,17);
+      TH2F *histo_CastorMultiplicityVsLumi = new TH2F(name217,"CastorMultiplicity Vs Luminosity; Luminosity per Bunch [#mub^{-1}s^{-1}]; Castor Multiplicity",5000,0,2,81,0,81);
       m_hVector_CastorMultiplicityVsLumi[j].push_back(histo_CastorMultiplicityVsLumi);
 
       char name218[300];
@@ -1813,8 +1813,8 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_etcalos_n[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),sumCastorEnergy,totalweight);
   m_hVector_EnergyHFMinusVsCastorTProf[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),sumCastorEnergy,totalweight);
   m_hVector_EnergyHFPlusVsCastorTProf[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),sumCastorEnergy,totalweight);
-  m_hVector_CastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,totalweight);
-  m_hVector_CastorMultiplicityVsLumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),SectorCastorHit,totalweight);
+  m_hVector_CastorMultiplicity[index].at(pileup)->Fill(counterHit,totalweight);
+  m_hVector_CastorMultiplicityVsLumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),counterHit,totalweight);
 
   if (SectorCastorHit < 1) m_hVector_RunNumberZeroCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
   if (SectorCastorHit > 15) m_hVector_RunNumberHighCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
@@ -2257,6 +2257,44 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   std::string TriggerStatus;
   char selCastor[300];
 
+  // Adding TTree Golden Events
+  TString TTreeoutput, TTreeAllZ;
+  TTreeoutput = "TTreeGoldenDiffZ_" + savehistofile;
+  fOut = new TFile(TTreeoutput, "RECREATE");
+  fOut->cd();
+
+  trout = new TTree("Events", "Events");
+  trout->Branch("RunNumber",&bRunNumber,"bRunNumber/I");
+  trout->Branch("InstLuminosity",&bInstLumiBunch,"bInstLumiBunch/D");
+  trout->Branch("DiMuonPt",&bDiMuonPt,"bDiMuonPt/D");
+  trout->Branch("DiMuonEta",&bDiMuonEta,"bDiMuonEta/D");
+  trout->Branch("DiMuonPhi",&bDiMuonPhi,"bDiMuonPhi/D");
+  trout->Branch("DiMuonMass",&bDiMuonMass,"bDiMuonMass/D");
+  trout->Branch("DiElectronPt",&bDiElectronPt,"bDiElectronPt/D");
+  trout->Branch("DiElectronEta",&bDiElectronEta,"bDiElectronEta/D");
+  trout->Branch("DiElectronPhi",&bDiElectronPhi,"bDiElectronPhi/D");
+  trout->Branch("DiElectronMass",&bDiElectronMass,"bDiElectronMass/D");
+  trout->Branch("MultiplicityTracks",&bMultiplicityTracks,"bMultiplicityTracks/D");
+  trout->Branch("SumEEEMinus",&bSumEEEMinus,"bSumEEEMinus/D");
+  trout->Branch("SumEEEPlus",&bSumEEEPlus,"bSumEEEPlus/D");
+  trout->Branch("SumEnergyHFMinus",&bSumEnergyHFMinus,"bSumEnergyHFMinus/D");
+  trout->Branch("SumEnergyHFPlus",&bSumEnergyHFPlus,"bSumEnergyHFPlus/D");
+  trout->Branch("sumCastorEnergy",&bsumCastorEnergy,"bsumCastorEnergy/D");
+  trout->Branch("SectorCastorHit",&bSectorCastorHit,"bSectorCastorHit/I");
+  trout->Branch("deltaetapf",&bdeltaetapf,"bdeltaetapf/D");
+  trout->Branch("AEcastor",&bAEcastor,"AEcastor/D");
+  trout->Branch("etasigned",&betasigned,"betasigned/D");
+  trout->Branch("MaxGapPF",&bMaxGapPF,"bMaxGapPF/D");
+  trout->Branch("PTMaxGapMaxPF",&bPTMaxGapMaxPF,"bPTMaxGapMaxPF/D");
+  trout->Branch("PTMinGapMaxPF",&bPTMinGapMaxPF,"bPTMinGapMaxPF/D");
+  trout->Branch("XiPlusFromPFCands",&bXiPlusFromPFCands,"bXiPlusFromPFCands/D");
+  trout->Branch("XiMinusFromPFCands",&bXiMinusFromPFCands,"bXiMinusFromPFCands/D");
+
+  TTreeAllZ = "TTreeAllZ_" + savehistofile;
+  fOutZ = new TFile(TTreeAllZ, "RECREATE");
+  fOutZ->cd();
+  troutZ = trout->CloneTree(0);
+
   TFile check1(filein.c_str());
 
   if (check1.IsZombie()){
@@ -2287,6 +2325,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   TString outtxt = savehistofile;
   outtxt.ReplaceAll("root","txt");
   std::ofstream outstring(outtxt);
+  outf->cd();
 
   outstring << "" << std::endl;
   outstring << "<< Gold Events >>" << std::endl;
@@ -2351,6 +2390,10 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	triggercounter[nt]++;
       }
     }
+
+    etasigned = -999.;
+    aSumE = -999.;
+    AEcastor = -999.;
 
     double totalASum = eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus();
     if (totalASum > 0.){
@@ -2431,7 +2474,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool isolation = false;
     bool ZKinN = false;
     bool ZKinP = false;
-    etasigned = -999.;
 
     if (switchtrigger == "trigger_all_electron"){
       if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffZ->GetHLTPath(0) > 0 ) triggerE_a = true;
@@ -2472,6 +2514,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     sumCastorEnergy = 0.;
     sumCastorAndHFMinusEnergy = 0.;
     SectorCastorHit = 0;
+    counterHit = 0;
     SectorZeroCastorCounter = 0;
     castorgap = false;
     castoractivity = false;
@@ -2481,16 +2524,16 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       for (int i=0; i < 16; i++){
 	CastorEnergySector[i]=0.;
 	if (i==4 || i==5){
-	  if (eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i];
-	  if (eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i];
-	  if (eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i];
-	  if (eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i];
+	  if (eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i]; ++counterHit;}
+	  if (eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i]; ++counterHit;}
+	  if (eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i]; ++counterHit;}
+	  if (eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i]; ++counterHit;}
 	}else{
-	  if (eventdiffZ->GetCastorModule1Energy(i)*energycorr[0][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule1Energy(i)*energycorr[0][i];
-	  if (eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i];
-	  if (eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i];
-	  if (eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i];
-	  if (eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i] > channelsthreshold) CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i];
+	  if (eventdiffZ->GetCastorModule1Energy(i)*energycorr[0][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule1Energy(i)*energycorr[0][i]; ++counterHit;}
+	  if (eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule2Energy(i)*energycorr[1][i]; ++counterHit;}
+	  if (eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule3Energy(i)*energycorr[2][i]; ++counterHit;}
+	  if (eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule4Energy(i)*energycorr[3][i]; ++counterHit;}
+	  if (eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i] > channelsthreshold){ CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i]; ++counterHit;}
 	}
       }
 
@@ -2528,6 +2571,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       for (l=0; l<16;l++){
 	if (CastorEnergySector[l] >= castorthreshold){
 	  ++SectorCastorHit;
+          ++counterHit;
 	  sumCastorEnergy+=CastorEnergySector[l];
 	}
 	else{
@@ -2777,6 +2821,33 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       exit(EXIT_FAILURE);
     }
 
+    //Branch Defining
+    bRunNumber = eventdiff->GetRunNumber();
+    bInstLumiBunch = eventinfo->GetInstLumiBunch();
+    bDiMuonPt = eventdiffZ->GetDiMuonPt();
+    bDiMuonEta = eventdiffZ->GetDiMuonEta();
+    bDiMuonPhi = eventdiffZ->GetDiMuonPhi();
+    bDiMuonMass = eventdiffZ->GetDiMuonMass();
+    bDiElectronPt = eventdiffZ->GetDiElectronPt();
+    bDiElectronEta = eventdiffZ->GetDiElectronEta();
+    bDiElectronPhi = eventdiffZ->GetDiElectronPhi();
+    bDiElectronMass = eventdiffZ->GetDiElectronMass();
+    bMultiplicityTracks = eventdiff->GetMultiplicityTracks();
+    bSumEEEMinus = eventdiffZ->GetSumEEEMinus();
+    bSumEEEPlus = eventdiffZ->GetSumEEEPlus();
+    bSumEnergyHFMinus = eventdiff->GetSumEnergyHFMinus();
+    bSumEnergyHFPlus = eventdiff->GetSumEnergyHFPlus();
+    bsumCastorEnergy = sumCastorEnergy;
+    bSectorCastorHit = counterHit;
+    bMaxGapPF = eventdiffZ->GetMaxGapPF();
+    bPTMaxGapMaxPF = eventdiffZ->GetPTMaxGapMaxPF();
+    bPTMinGapMaxPF = eventdiffZ->GetPTMinGapMaxPF();
+    bXiPlusFromPFCands = eventdiff->GetXiPlusFromPFCands();
+    bXiMinusFromPFCands = eventdiff->GetXiMinusFromPFCands();
+    betasigned = etasigned;
+    bAEcastor = AEcastor;
+    bdeltaetapf = deltaetapf;
+
     if(pileup < 21){ // Never comment this line. It is the program defense.
 
       if(switchtrigger == "trigger" || switchtrigger == "trigger_all_electron" || switchtrigger == "trigger_all_muon"){ 
@@ -2790,7 +2861,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass) FillHistos(5,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation) FillHistos(6,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel) FillHistos(7,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel) {
+	  FillHistos(7,pileup,totalcommon);
+	  fOutZ->cd();
+	  troutZ->Fill();
+	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp) FillHistos(9,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap) FillHistos(10,pileup,totalcommon);
@@ -2809,6 +2884,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
 	  outstring << "CASTOR Gap, Z Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(17,pileup,totalcommon);
+	  fOut->cd();
+	  trout->Fill();
 	}
 
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
@@ -2824,7 +2901,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass) FillHistos(5,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation) FillHistos(6,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel) FillHistos(7,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel) {
+	  FillHistos(7,pileup,totalcommon);
+	  fOutZ->cd();
+	  troutZ->Fill();
+	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp) FillHistos(9,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap) FillHistos(10,pileup,totalcommon);
@@ -2834,7 +2915,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(14,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(15,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap) FillHistos(16,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP) FillHistos(17,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
+	  FillHistos(17,pileup,totalcommon);
+	  fOut->cd();
+	  trout->Fill();
+	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap && ZKinP) FillHistos(19,pileup,totalcommon);
       }
@@ -2901,6 +2986,14 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   SaveHistos(type,typesel);
   outf->Close();
   std::cout << "\n" << std::endl;
+  fOut->cd();
+  trout->Write();
+  fOut->Close();
+
+  fOutZ->cd();
+  troutZ->Write();
+  fOutZ->Close();
+
 }
 
 #if !defined(__CINT__) || defined(__MAKECINT__)

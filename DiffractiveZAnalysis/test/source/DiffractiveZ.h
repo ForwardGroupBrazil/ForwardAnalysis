@@ -22,10 +22,15 @@ class DiffractiveZ {
   TFile* inf;
   TFile* pudata;
   TFile* pumc;
+  TFile* fOut;
+  TFile* fOutZ;
   TTree* tr;
   TBranch *diff;
   TBranch *diffZ;
   TBranch *info;
+  TTree* trout;
+  TTree* troutZ;
+
   TH1* h_castor_channel;
   DiffractiveEvent *eventdiff;
   DiffractiveZEvent *eventdiffZ;
@@ -78,6 +83,33 @@ class DiffractiveZ {
   bool castorgap;
   double AEcastor;
   double etasigned;
+  int counterHit;
+
+  int bRunNumber;
+  double bInstLumiBunch;
+  double bDiMuonPt;
+  double bDiMuonEta;
+  double bDiMuonPhi;
+  double bDiMuonMass;
+  double bDiElectronPt;
+  double bDiElectronEta;
+  double bDiElectronPhi;
+  double bDiElectronMass;
+  double bMultiplicityTracks;
+  double bSumEEEMinus;
+  double bSumEEEPlus;
+  double bSumEnergyHFMinus;
+  double bSumEnergyHFPlus;
+  double bsumCastorEnergy;
+  int bSectorCastorHit;
+  double bdeltaetapf;
+  double bAEcastor;
+  double betasigned;
+  double bMaxGapPF;
+  double bPTMinGapMaxPF;
+  double bPTMaxGapMaxPF;
+  double bXiPlusFromPFCands;
+  double bXiMinusFromPFCands;
 
   std::string filein;
   std::string processname;
