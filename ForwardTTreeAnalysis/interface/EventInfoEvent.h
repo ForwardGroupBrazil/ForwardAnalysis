@@ -42,6 +42,7 @@ class EventInfoEvent {
   int  GetRunNumber()                        const {return runNumber_;}
   int  GetEventNumber()                      const {return eventNumber_;}
   int  GetBunchCrossing()                    const {return bunchCrossing_;}
+  int  GetLumiSection()                      const {return lumiSection_;}
   int  GetOrbitNumber()                      const {return orbitNumber_;}
   double GetLumiWeight()                     const { return lumiWeight_;}
   float GetInstLumiBunch()                   const {return instLumiBunchOCC1_;}
