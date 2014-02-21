@@ -415,9 +415,9 @@ void ExclusiveDijet::FillHistos(int index, int pileup, double totalweight){
   m_hVector_vertex[index].at(pileup)->Fill(eventexcl->GetNVertex(),totalweight);
   m_hVector_lumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch());
   m_hVector_sumEHFpfplusVsetaMax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),eventexcl->GetSumEHFPFlowPlus(),totalweight);
-  m_hVector_sumEHFpfminusVsetaMin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),eventexcl->GetSumEHFPFlowMinus(),totalweight);
+  m_hVector_sumEHFpfminusVsetaMin[index].at(pileup)->Fill(etamin_,eventexcl->GetSumEHFPFlowMinus(),totalweight);
   m_hVector_sumEHFplusVsetaMax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),eventdiff->GetSumEnergyHFPlus(),totalweight);
-  m_hVector_sumEHFminusVsetaMin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),eventdiff->GetSumEnergyHFMinus(),totalweight);
+  m_hVector_sumEHFminusVsetaMin[index].at(pileup)->Fill(etamin_,eventdiff->GetSumEnergyHFMinus(),totalweight);
   m_hVector_sumECastor[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
   m_hVector_sumECastorHFMinus[index].at(pileup)->Fill(sumCastorAndHFMinusEnergy,totalweight);
   m_hVector_uncJet1[index].at(pileup)->Fill(eventexcl->GetUnc1());
@@ -593,7 +593,8 @@ double* ExclusiveDijet::triggerCorrection(){
 
 void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_, std::string switchcastor_, std::string castorcorrfile_, double castorthreshold_, std::string switchpresel_){
 
-  bool debug = false;
+  bool debug = true;
+  bool debugcastor = true;
 
   counterinfcut = 0.;
   counterinftrigger = 0.;
@@ -625,6 +626,55 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   castorthreshold = castorthreshold_;
   castorcorrfile = castorcorrfile_;
   switchpresel = switchpresel_;
+
+  // Adding TTree Golden Events
+  TString TTreeoutput;
+  TTreeoutput = "TTreeGoldenCEP_" + savehistofile;
+  fOut = new TFile(TTreeoutput, "RECREATE");
+  fOut->cd();
+  trout = new TTree("Events", "Events");
+  trout->Branch("RunNumber",&bRunNumber,"bRunNumber/I");
+  trout->Branch("LumiSection",&bLumiSection,"bLumiSection/I");
+  trout->Branch("EventNumber",&bEventNumber,"bEventNumber/I");
+  trout->Branch("LeadingJetPt",&bptJet1,"bptJet1/D");
+  trout->Branch("SecondJetPt",&bptJet2,"bptJet2/D");
+  trout->Branch("LeadingJetPtUnci",&bUnc1,"bUnc1/D");
+  trout->Branch("SecondJetPtUnc",&bUnc2,"bUnc2/D");
+  trout->Branch("LeadingJetEta",&bLeadingJetEta,"bLeadingJetEta/D");
+  trout->Branch("SecondJetEta",&bSecondJetEta,"bSecondJetEta/D");
+  trout->Branch("LeadingJetPhi",&bLeadingJetPhi,"bLeadingJetPhi/D");
+  trout->Branch("SecondJetPhi",&bSecondJetPhi,"bSecondJetPhi/D");
+  trout->Branch("JetsDeltaEta",&bJetsDeltaEta,"bJetsDeltaEta/D");
+  trout->Branch("JetsDeltaPhi",&bJetsDeltaphi,"bJetsDeltaphi/D");
+  trout->Branch("JetsDeltaPt",&bJetsDeltaPt,"bJetsDeltaPt/D");
+  trout->Branch("MassDijets",&bMassDijets,"bMassDijets/D");
+  trout->Branch("SumEHFMinus",&bSumEnergyHFPlus,"bSumEnergyHFPlus/D");
+  trout->Branch("SumEHFPlus",&bSumEnergyHFMinus,"bSumEnergyHFMinus/D");
+  trout->Branch("SumEHEPlus",&bSumEnergyHEPlus,"bSumEnergyHEPlus/D");
+  trout->Branch("SumEHEMinus",&bSumEnergyHEMinus,"bSumEnergyHEMinus/D");
+  trout->Branch("SumEHFPFlowPlus",&bSumEHFPFlowPlus,"bSumEHFPFlowPlus/D");
+  trout->Branch("SumEHFPFlowMinus",&bSumEHFPFlowMinus,"bSumEHFPFlowMinus/D");
+  trout->Branch("SumECASTOR",&bsumCastorEnergy,"bsumCastorEnergy/D");
+  trout->Branch("SumECastorAndHFMinus",&bsumCastorAndHFMinusEnergy,"bsumCastorAndHFMinusEnergy/D");
+  trout->Branch("nHFPlus",&bMultiplicityHFPlus,"bMultiplicityHFPlus/I");
+  trout->Branch("nHFMinus",&bMultiplicityHFMinus,"bMultiplicityHFMinus/I");
+  trout->Branch("nTracks",&bMultiplicityTracks,"bMultiplicityTracks/I");
+  trout->Branch("nTracksNonCone",&bTracksNonCone,"bTracksNonCone/I");
+  trout->Branch("nTracksTransverse",&bTracksTransverse,"bTracksTransverse/I");
+  trout->Branch("nTracksOutsideJets",&bTracksOutsideJets,"bTracksOutsideJets/I");
+  trout->Branch("Rjj",&bRjjFromJets,"bRjjFromJets/D");
+  trout->Branch("EtaMax",&bEtaMaxFromPFCands,"bEtaMaxFromPFCands/D");
+  trout->Branch("EtaMin",&betamin,"betamin/D");
+  trout->Branch("aSumE",&baSumE,"baSumE/D");
+  trout->Branch("DeltaEtaPF",&bdeltaetapf,"bdeltaetapf/D");
+  trout->Branch("XiPlus",&bXiPlusFromPFCands,"bXiPlusFromPFCands/D");
+  trout->Branch("XiMinus",&bXiMinusFromPFCands,"bXiMinusFromPFCands/D");
+
+  TString TTreeoutputAll;
+  TTreeoutputAll = "TTreeAllJets_" + savehistofile;
+  fOutAll = new TFile(TTreeoutputAll, "RECREATE");
+  fOutAll->cd();
+  troutAll = trout->CloneTree(0);
 
   TFile check1(filein.c_str());
   TFile check2(castorcorrfile.c_str());
@@ -701,7 +751,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	}else{
 	  energycorr[i-1][j-1]=1.;
 	}
-	if (debug) std::cout << "Module " << i << " | Sector: " << j << ", Correction: " << energycorr[i-1][j-1] << std::endl;
+	if (debugcastor) std::cout << "Module " << i << " | Sector: " << j << ", Correction: " << energycorr[i-1][j-1] << std::endl;
       }
     }
 
@@ -910,7 +960,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       }
 
       for (int l=0; l<16;l++){
-	if (debug) std::cout << "Energy Sector " << l+1 << ": " << CastorEnergySector[l] << std::endl;
 	sumCastorEnergy+=CastorEnergySector[l];
       }
 
@@ -918,7 +967,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	castoractivity = true;
       }else{
 	castorgap = true;
-        if (debug) std::cout << "CASTOR gap!" << std::endl;
       }
 
       if (castoractivity) {
@@ -935,7 +983,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     }
 
     sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiff->GetSumEnergyHFMinus();
-    if (debug) std::cout << "CASTOR gap 2!" << std::endl;
 
     bool trigger = false;
     bool presel = false;
@@ -946,6 +993,44 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     bool d_eta3 = false;
     bool d_eta2 = false;
     bool d_eta1 = false;
+
+    // Defining Branchs
+    bRunNumber = eventdiff->GetRunNumber();
+    bLumiSection = eventdiff->GetLumiSection();
+    bEventNumber = eventdiff->GetEventNumber();
+    bptJet1 = ptJet1;
+    bptJet2 = ptJet2;
+    bUnc1 = eventexcl->GetUnc1();
+    bUnc2 = eventexcl->GetUnc2();
+    bLeadingJetEta = eventexcl->GetLeadingJetEta();
+    bSecondJetEta = eventexcl->GetSecondJetEta();
+    bLeadingJetPhi = eventexcl->GetLeadingJetPhi();
+    bSecondJetPhi = eventexcl->GetSecondJetPhi();
+    bJetsDeltaEta = eventexcl->GetJetsDeltaEta();
+    bJetsDeltaphi = deltaphi;
+    bJetsDeltaPt = eventexcl->GetJetsDeltaPt();
+    bMassDijets = eventexcl->GetMassDijets();
+    bSumEnergyHFPlus = eventdiff->GetSumEnergyHFPlus();
+    bSumEnergyHFMinus = eventdiff->GetSumEnergyHFMinus();
+    bSumEnergyHEPlus = eventdiff->GetSumEnergyHEPlus();
+    bSumEnergyHEMinus = eventdiff->GetSumEnergyHEMinus();
+    bSumEHFPFlowPlus = eventexcl->GetSumEHFPFlowPlus();
+    bSumEHFPFlowMinus = eventexcl->GetSumEHFPFlowMinus();
+    bsumCastorEnergy = sumCastorEnergy;
+    bsumCastorAndHFMinusEnergy = sumCastorAndHFMinusEnergy;
+    bMultiplicityHFPlus = eventdiff->GetMultiplicityHFPlus();
+    bMultiplicityHFMinus = eventdiff->GetMultiplicityHFMinus();
+    bMultiplicityTracks = eventdiff->GetMultiplicityTracks();
+    bTracksNonCone = eventexcl->GetTracksNonCone();
+    bTracksTransverse = eventexcl->GetTracksTransverse();
+    bTracksOutsideJets = eventexcl->GetTracksOutsideJets();
+    bRjjFromJets = eventexcl->GetRjjFromJets();
+    bEtaMaxFromPFCands = eventdiff->GetEtaMaxFromPFCands();
+    betamin = etamin_;
+    baSumE = aSumE;
+    bdeltaetapf = deltaetapf;
+    bXiPlusFromPFCands = eventdiff->GetXiPlusFromPFCands();
+    bXiMinusFromPFCands = eventdiff->GetXiMinusFromPFCands();
 
     if (eventexcl->GetHLTPath(optTrigger)>0) trigger = true;
 
@@ -969,21 +1054,34 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(trigger && presel) FillHistos(2,pileup,totalcommon*cuteff_excl);
 	if(trigger && presel && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
 	if(trigger && presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1){
-	  FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
-	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta4){
+	  FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	  fOutAll->cd();
+	  troutAll->Fill();
 	}
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta2){
+	  FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	  fOut->cd();
+	  trout->Fill();
+	}
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
+
 	if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
-	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4_castorgap);
-	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3_castorgap);
-	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2_castorgap);
-	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta1){
-	    FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1_castorgap);
-	    outstring << "CASTOR GAP " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta4){
+	    FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4_castorgap);
+	    fOutAll->cd();
+	    troutAll->Fill();
 	  }
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3_castorgap);
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta2){
+	    FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2_castorgap);
+	    outstring << "CASTOR GAP " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	    fOut->cd();
+	    trout->Fill();
+	  }
+	  if(trigger && presel && vertex && dijetpt && dijeteta && castorgap && d_eta1) FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1_castorgap);
 	}
       }
 
@@ -992,14 +1090,30 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(presel) FillHistos(2,pileup,totalcommon*cuteff_excl);
 	if(presel && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
 	if(presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
-	if(presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	if(presel && vertex && dijetpt && dijeteta && d_eta4){
+	  FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	  fOutAll->cd();
+	  troutAll->Fill();
+	}
 	if(presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
-	if(presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	if(presel && vertex && dijetpt && dijeteta && d_eta2){
+	  FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	  fOut->cd();
+	  trout->Fill();
+	}
 	if(presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
 	if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
-	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4) FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4_castorgap);
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4){
+	    FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4_castorgap);
+	    fOut->cd();
+	    trout->Fill();
+	  }
 	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3_castorgap);
-	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2) FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2_castorgap);
+	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2){
+	    FillHistos(11,pileup,totalcommon*cuteff_step4_2_castor*triggereff2_castorgap);
+	    fOut->cd();
+	    trout->Fill();
+	  }
 	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta1) FillHistos(12,pileup,totalcommon*cuteff_step4_1_castor*triggereff1_castorgap);
 	}
       }
@@ -1071,6 +1185,13 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outf->cd();
   SaveHistos(type);
   outf->Close();
+
+  fOut->cd();
+  trout->Write();
+  fOut->Close();
+
+  fOutAll->cd();
+  troutAll->Fill();
 
 }
 
