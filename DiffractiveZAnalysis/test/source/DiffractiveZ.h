@@ -86,7 +86,8 @@ class DiffractiveZ {
   int counterHit;
 
   int bRunNumber;
-  double bInstLumiBunch;
+  int bLumiSection;
+  int bEventNumber;
   double bDiMuonPt;
   double bDiMuonEta;
   double bDiMuonPhi;

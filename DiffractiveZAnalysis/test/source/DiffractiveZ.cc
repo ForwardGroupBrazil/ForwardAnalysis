@@ -2265,7 +2265,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
   trout = new TTree("Events", "Events");
   trout->Branch("RunNumber",&bRunNumber,"bRunNumber/I");
-  trout->Branch("InstLuminosity",&bInstLumiBunch,"bInstLumiBunch/D");
+  trout->Branch("LumiSection",&bLumiSection,"bLumiSection/I");
+  trout->Branch("EventNumber",&bEventNumber,"bEventNumber/I");
   trout->Branch("DiMuonPt",&bDiMuonPt,"bDiMuonPt/D");
   trout->Branch("DiMuonEta",&bDiMuonEta,"bDiMuonEta/D");
   trout->Branch("DiMuonPhi",&bDiMuonPhi,"bDiMuonPhi/D");
@@ -2823,7 +2824,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     //Branch Defining
     bRunNumber = eventdiff->GetRunNumber();
-    bInstLumiBunch = eventinfo->GetInstLumiBunch();
+    bLumiSection = eventdiff->GetLumiSection();
+    bEventNumber = eventdiff->GetEventNumber();
     bDiMuonPt = eventdiffZ->GetDiMuonPt();
     bDiMuonEta = eventdiffZ->GetDiMuonEta();
     bDiMuonPhi = eventdiffZ->GetDiMuonPhi();
