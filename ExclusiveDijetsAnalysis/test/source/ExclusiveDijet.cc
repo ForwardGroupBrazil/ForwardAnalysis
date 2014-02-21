@@ -1105,8 +1105,8 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
 	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta4){
 	    FillHistos(9,pileup,totalcommon*cuteff_step4_4_castor*triggereff4_castorgap);
-	    fOut->cd();
-	    trout->Fill();
+	    fOutAll->cd();
+	    troutAll->Fill();
 	  }
 	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta3) FillHistos(10,pileup,totalcommon*cuteff_step4_3_castor*triggereff3_castorgap);
 	  if(presel && vertex && dijetpt && dijeteta && castorgap && d_eta2){
@@ -1192,6 +1192,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 
   fOutAll->cd();
   troutAll->Fill();
+  fOutAll->Close();
 
 }
 
