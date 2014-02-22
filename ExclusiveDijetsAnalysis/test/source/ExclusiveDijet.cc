@@ -1191,7 +1191,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   fOut->Close();
 
   fOutAll->cd();
-  troutAll->Fill();
+  troutAll->Write();
   fOutAll->Close();
 
 }
