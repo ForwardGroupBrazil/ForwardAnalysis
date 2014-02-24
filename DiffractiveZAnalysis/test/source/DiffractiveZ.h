@@ -88,14 +88,10 @@ class DiffractiveZ {
   int bRunNumber;
   int bLumiSection;
   int bEventNumber;
-  double bDiMuonPt;
-  double bDiMuonEta;
-  double bDiMuonPhi;
-  double bDiMuonMass;
-  double bDiElectronPt;
-  double bDiElectronEta;
-  double bDiElectronPhi;
-  double bDiElectronMass;
+  double bDiBosonPt;
+  double bDiBosonEta;
+  double bDiBosonPhi;
+  double bDiBosonMass;
   double bMultiplicityTracks;
   double bSumEEEMinus;
   double bSumEEEPlus;

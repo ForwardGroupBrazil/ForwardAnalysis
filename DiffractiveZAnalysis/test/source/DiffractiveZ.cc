@@ -1922,25 +1922,30 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_EnergyHFPlusVsEnergyHFMinus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),eventdiff->GetSumEnergyHFMinus(),totalweight);
   m_hVector_EnergyEEPlusVsEnergyEEMinus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEPlus(),eventdiffZ->GetSumEEEMinus(),totalweight);
 
-  m_hVector_BosonZPt[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPt(),totalweight);
-  m_hVector_BosonZEta[index].at(pileup)->Fill(eventdiffZ->GetDiMuonEta(),totalweight);
-  m_hVector_BosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPhi(),totalweight);
-  m_hVector_BosonZMass[index].at(pileup)->Fill(eventdiffZ->GetDiMuonMass(),totalweight);
-
-  m_hVector_BosonZPt[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPt(),totalweight);
-  m_hVector_BosonZEta[index].at(pileup)->Fill(eventdiffZ->GetDiElectronEta(),totalweight);
-  m_hVector_BosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPhi(),totalweight);
-  m_hVector_BosonZMass[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
-
-  m_hVector_patBosonZPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPt(),totalweight);
-  m_hVector_patBosonZEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonEta(),totalweight);
-  m_hVector_patBosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPhi(),totalweight);
-  m_hVector_patBosonZMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonMass(),totalweight);
-
-  m_hVector_patBosonZPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPt(),totalweight);
-  m_hVector_patBosonZEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronEta(),totalweight);
-  m_hVector_patBosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPhi(),totalweight);
-  m_hVector_patBosonZMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronMass(),totalweight); 
+  if (typesel == "RecoMuon"){
+    m_hVector_BosonZPt[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPt(),totalweight);
+    m_hVector_BosonZEta[index].at(pileup)->Fill(eventdiffZ->GetDiMuonEta(),totalweight);
+    m_hVector_BosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPhi(),totalweight);
+    m_hVector_BosonZMass[index].at(pileup)->Fill(eventdiffZ->GetDiMuonMass(),totalweight);
+  }
+  if (typesel == "PatMuon"){
+    m_hVector_patBosonZPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPt(),totalweight);
+    m_hVector_patBosonZEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonEta(),totalweight);
+    m_hVector_patBosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPhi(),totalweight);
+    m_hVector_patBosonZMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonMass(),totalweight);
+  }
+  if (typesel == "RecoElectron"){
+    m_hVector_BosonZPt[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPt(),totalweight);
+    m_hVector_BosonZEta[index].at(pileup)->Fill(eventdiffZ->GetDiElectronEta(),totalweight);
+    m_hVector_BosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPhi(),totalweight);
+    m_hVector_BosonZMass[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
+  }
+  if (typesel == "PatElectron"){
+    m_hVector_patBosonZPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPt(),totalweight);
+    m_hVector_patBosonZEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronEta(),totalweight);
+    m_hVector_patBosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPhi(),totalweight);
+    m_hVector_patBosonZMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronMass(),totalweight);
+  }
 
 }
 
@@ -2267,14 +2272,10 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("RunNumber",&bRunNumber,"bRunNumber/I");
   trout->Branch("LumiSection",&bLumiSection,"bLumiSection/I");
   trout->Branch("EventNumber",&bEventNumber,"bEventNumber/I");
-  trout->Branch("DiMuonPt",&bDiMuonPt,"bDiMuonPt/D");
-  trout->Branch("DiMuonEta",&bDiMuonEta,"bDiMuonEta/D");
-  trout->Branch("DiMuonPhi",&bDiMuonPhi,"bDiMuonPhi/D");
-  trout->Branch("DiMuonMass",&bDiMuonMass,"bDiMuonMass/D");
-  trout->Branch("DiElectronPt",&bDiElectronPt,"bDiElectronPt/D");
-  trout->Branch("DiElectronEta",&bDiElectronEta,"bDiElectronEta/D");
-  trout->Branch("DiElectronPhi",&bDiElectronPhi,"bDiElectronPhi/D");
-  trout->Branch("DiElectronMass",&bDiElectronMass,"bDiElectronMass/D");
+  trout->Branch("DiBosonPt",&bDiBosonPt,"bDiBosonPt/D");
+  trout->Branch("DiBosonEta",&bDiBosonEta,"bDiBosonEta/D");
+  trout->Branch("DiBosonPhi",&bDiBosonPhi,"bDiBosonPhi/D");
+  trout->Branch("DiBosonMass",&bDiBosonMass,"bDiBosonMass/D");
   trout->Branch("MultiplicityTracks",&bMultiplicityTracks,"bMultiplicityTracks/D");
   trout->Branch("SumEEEMinus",&bSumEEEMinus,"bSumEEEMinus/D");
   trout->Branch("SumEEEPlus",&bSumEEEPlus,"bSumEEEPlus/D");
@@ -2572,7 +2573,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       for (l=0; l<16;l++){
 	if (CastorEnergySector[l] >= castorthreshold){
 	  ++SectorCastorHit;
-          ++counterHit;
+	  ++counterHit;
 	  sumCastorEnergy+=CastorEnergySector[l];
 	}
 	else{
@@ -2826,14 +2827,30 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bRunNumber = eventdiff->GetRunNumber();
     bLumiSection = eventdiff->GetLumiSection();
     bEventNumber = eventdiff->GetEventNumber();
-    bDiMuonPt = eventdiffZ->GetDiMuonPt();
-    bDiMuonEta = eventdiffZ->GetDiMuonEta();
-    bDiMuonPhi = eventdiffZ->GetDiMuonPhi();
-    bDiMuonMass = eventdiffZ->GetDiMuonMass();
-    bDiElectronPt = eventdiffZ->GetDiElectronPt();
-    bDiElectronEta = eventdiffZ->GetDiElectronEta();
-    bDiElectronPhi = eventdiffZ->GetDiElectronPhi();
-    bDiElectronMass = eventdiffZ->GetDiElectronMass();
+    if (typesel == "RecoMuon"){ 
+      bDiBosonPt = eventdiffZ->GetDiMuonPt();
+      bDiBosonEta = eventdiffZ->GetDiMuonEta();
+      bDiBosonPhi = eventdiffZ->GetDiMuonPhi();
+      bDiBosonMass = eventdiffZ->GetDiMuonMass();
+    }
+    if (typesel == "PatMuon"){
+      bDiBosonPt = eventdiffZ->GetPatDiMuonPt();
+      bDiBosonEta = eventdiffZ->GetPatDiMuonEta();
+      bDiBosonPhi = eventdiffZ->GetPatDiMuonPhi();
+      bDiBosonMass = eventdiffZ->GetPatDiMuonMass();
+    }
+    if (typesel == "RecoElectron"){
+      bDiBosonPt = eventdiffZ->GetDiElectronPt();
+      bDiBosonEta = eventdiffZ->GetDiElectronEta();
+      bDiBosonPhi = eventdiffZ->GetDiElectronPhi();
+      bDiBosonMass = eventdiffZ->GetDiElectronMass();
+    }
+    if (typesel == "PatElectron"){
+      bDiBosonPt = eventdiffZ->GetPatDiElectronPt();
+      bDiBosonEta = eventdiffZ->GetPatDiElectronEta();
+      bDiBosonPhi = eventdiffZ->GetPatDiElectronPhi();
+      bDiBosonMass = eventdiffZ->GetPatDiElectronMass();
+    }
     bMultiplicityTracks = eventdiff->GetMultiplicityTracks();
     bSumEEEMinus = eventdiffZ->GetSumEEEMinus();
     bSumEEEPlus = eventdiffZ->GetSumEEEPlus();
