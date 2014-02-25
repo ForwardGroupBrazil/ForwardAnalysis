@@ -666,7 +666,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   trout->Branch("EventNumber",&bEventNumber,"bEventNumber/I");
   trout->Branch("LeadingJetPt",&bptJet1,"bptJet1/D");
   trout->Branch("SecondJetPt",&bptJet2,"bptJet2/D");
-  trout->Branch("LeadingJetPtUnci",&bUnc1,"bUnc1/D");
+  trout->Branch("LeadingJetPtUnc",&bUnc1,"bUnc1/D");
   trout->Branch("SecondJetPtUnc",&bUnc2,"bUnc2/D");
   trout->Branch("LeadingJetEta",&bLeadingJetEta,"bLeadingJetEta/D");
   trout->Branch("SecondJetEta",&bSecondJetEta,"bSecondJetEta/D");
