@@ -158,6 +158,9 @@ class ExclusiveDijet {
   std::vector<std::vector<TH1D*> > m_hVector_XiPlusPF;
   std::vector<std::vector<TH1D*> > m_hVector_XiMinusPF;
   std::vector<std::vector<TH1D*> > m_hVector_XiPF;
+  std::vector<std::vector<TH1D*> > m_hVector_ptjets;
+  std::vector<std::vector<TH1D*> > m_hVector_etajets;
+  std::vector<std::vector<TH1D*> > m_hVector_phijets;
 
   std::vector <std::string> Folders;
 

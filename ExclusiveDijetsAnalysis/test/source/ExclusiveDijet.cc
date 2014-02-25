@@ -143,6 +143,9 @@ void ExclusiveDijet::CreateHistos(std::string type, std::string switchCastorHist
     m_hVector_XiPlusPF.push_back( std::vector<TH1D*>() );
     m_hVector_XiMinusPF.push_back( std::vector<TH1D*>() );
     m_hVector_XiPF.push_back( std::vector<TH1D*>() );
+    m_hVector_ptjets.push_back( std::vector<TH1D*>() );
+    m_hVector_etajets.push_back( std::vector<TH1D*>() );
+    m_hVector_phijets.push_back( std::vector<TH1D*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -379,6 +382,21 @@ void ExclusiveDijet::CreateHistos(std::string type, std::string switchCastorHist
       TH1D *histo_XiPF = new TH1D(name43,"#xi Particle Flow; #xi; N Event",17,xi_bin);
       m_hVector_XiPF[j].push_back(histo_XiPF);
 
+      char name44[300];
+      sprintf(name44,"pTJets_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_ptjets = new TH1D(name44,"Jets P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+      m_hVector_ptjets[j].push_back(histo_ptjets);
+
+      char name45[300];
+      sprintf(name45,"etaJets_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_etajets = new TH1D(name45,"Jets #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_etajets[j].push_back(histo_etajets);
+
+      char name46[300];
+      sprintf(name46,"phiJets_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_phijets = new TH1D(name46,"Jets #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      m_hVector_phijets[j].push_back(histo_phijets);
+
     }
   }
 }
@@ -429,6 +447,12 @@ void ExclusiveDijet::FillHistos(int index, int pileup, double totalweight){
   m_hVector_XiMinusPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
   m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
   m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
+  m_hVector_ptjets[index].at(pileup)->Fill(ptJet1,totalweight);
+  m_hVector_ptjets[index].at(pileup)->Fill(ptJet2,totalweight);
+  m_hVector_etajets[index].at(pileup)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
+  m_hVector_etajets[index].at(pileup)->Fill(eventexcl->GetSecondJetEta(),totalweight);
+  m_hVector_phijets[index].at(pileup)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
+  m_hVector_phijets[index].at(pileup)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
 }
 
 void ExclusiveDijet::SaveHistos(std::string type){
@@ -483,6 +507,10 @@ void ExclusiveDijet::SaveHistos(std::string type){
       m_hVector_XiMinusPF[j].at(i)->Write();
       m_hVector_XiPlusPF[j].at(i)->Write();
       m_hVector_XiPF[j].at(i)->Write();
+      m_hVector_ptjets[j].at(i)->Write();
+      m_hVector_etajets[j].at(i)->Write();
+      m_hVector_phijets[j].at(i)->Write();
+
     }
   }
 
