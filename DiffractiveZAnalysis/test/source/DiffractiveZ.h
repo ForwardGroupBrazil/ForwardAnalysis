@@ -24,12 +24,14 @@ class DiffractiveZ {
   TFile* pumc;
   TFile* fOut;
   TFile* fOutZ;
+  TFile* fOutCASTOR;
   TTree* tr;
   TBranch *diff;
   TBranch *diffZ;
   TBranch *info;
   TTree* trout;
   TTree* troutZ;
+  TTree* troutCASTOR;
 
   TH1* h_castor_channel;
   DiffractiveEvent *eventdiff;

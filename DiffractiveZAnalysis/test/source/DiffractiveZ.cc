@@ -2263,7 +2263,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   char selCastor[300];
 
   // Adding TTree Golden Events
-  TString TTreeoutput, TTreeAllZ;
+  TString TTreeoutput, TTreeAllZ, TTreeCASTOR;
   TTreeoutput = "TTreeGoldenDiffZ_" + savehistofile;
   fOut = new TFile(TTreeoutput, "RECREATE");
   fOut->cd();
@@ -2291,6 +2291,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("PTMinGapMaxPF",&bPTMinGapMaxPF,"bPTMinGapMaxPF/D");
   trout->Branch("XiPlusFromPFCands",&bXiPlusFromPFCands,"bXiPlusFromPFCands/D");
   trout->Branch("XiMinusFromPFCands",&bXiMinusFromPFCands,"bXiMinusFromPFCands/D");
+
+  TTreeCASTOR = "TTreeCASTOR_" + savehistofile;
+  fOutCASTOR = new TFile(TTreeCASTOR, "RECREATE");
+  fOutCASTOR->cd();
+  troutCASTOR = trout->CloneTree(0);
 
   TTreeAllZ = "TTreeAllZ_" + savehistofile;
   fOutZ = new TFile(TTreeAllZ, "RECREATE");
@@ -2899,7 +2904,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(14,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(15,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap) FillHistos(16,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap){
+	  FillHistos(16,pileup,totalcommon);
+	  fOutCASTOR->cd();
+	  troutCASTOR->Fill();
+	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
 	  outstring << "CASTOR Gap, Z Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(17,pileup,totalcommon);
@@ -2933,7 +2942,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && ZKinN) FillHistos(13,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(14,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(15,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap) FillHistos(16,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap){ 
+	  FillHistos(16,pileup,totalcommon);
+	  fOutCASTOR->cd();
+	  troutCASTOR->Fill();
+	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
 	  FillHistos(17,pileup,totalcommon);
 	  fOut->cd();
@@ -3012,6 +3025,10 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   fOutZ->cd();
   troutZ->Write();
   fOutZ->Close();
+
+  fOutCASTOR->cd();
+  troutCASTOR->Write();
+  fOutCASTOR->Close();
 
 }
 
