@@ -99,12 +99,12 @@ class ExclusiveDijet {
   double bSumEHFPFlowMinus;
   double bsumCastorEnergy;
   double bsumCastorAndHFMinusEnergy;
-  int bMultiplicityHFPlus;
-  int bMultiplicityHFMinus;
-  int bMultiplicityTracks;
-  int bTracksNonCone;
-  int bTracksTransverse;
-  int bTracksOutsideJets;
+  double bMultiplicityHFPlus;
+  double bMultiplicityHFMinus;
+  double bMultiplicityTracks;
+  double bTracksNonCone;
+  double bTracksTransverse;
+  double bTracksOutsideJets;
   double bRjjFromJets;
   double bEtaMaxFromPFCands;
   double betamin;
