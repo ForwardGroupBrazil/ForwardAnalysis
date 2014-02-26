@@ -100,7 +100,7 @@ class DiffractiveZ {
   double bSumEnergyHFMinus;
   double bSumEnergyHFPlus;
   double bsumCastorEnergy;
-  int bSectorCastorHit;
+  double bSectorCastorHit;
   double bdeltaetapf;
   double bAEcastor;
   double betasigned;

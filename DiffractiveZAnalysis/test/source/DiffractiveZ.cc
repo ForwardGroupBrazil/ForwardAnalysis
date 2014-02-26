@@ -2282,7 +2282,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("SumEnergyHFMinus",&bSumEnergyHFMinus,"bSumEnergyHFMinus/D");
   trout->Branch("SumEnergyHFPlus",&bSumEnergyHFPlus,"bSumEnergyHFPlus/D");
   trout->Branch("sumCastorEnergy",&bsumCastorEnergy,"bsumCastorEnergy/D");
-  trout->Branch("SectorCastorHit",&bSectorCastorHit,"bSectorCastorHit/I");
+  trout->Branch("SectorCastorHit",&bSectorCastorHit,"bSectorCastorHit/D");
   trout->Branch("deltaetapf",&bdeltaetapf,"bdeltaetapf/D");
   trout->Branch("AEcastor",&bAEcastor,"AEcastor/D");
   trout->Branch("etasigned",&betasigned,"betasigned/D");
