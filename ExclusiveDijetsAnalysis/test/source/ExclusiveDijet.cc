@@ -684,12 +684,12 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   trout->Branch("SumEHFPFlowMinus",&bSumEHFPFlowMinus,"bSumEHFPFlowMinus/D");
   trout->Branch("SumECASTOR",&bsumCastorEnergy,"bsumCastorEnergy/D");
   trout->Branch("SumECastorAndHFMinus",&bsumCastorAndHFMinusEnergy,"bsumCastorAndHFMinusEnergy/D");
-  trout->Branch("nHFPlus",&bMultiplicityHFPlus,"bMultiplicityHFPlus/D");
-  trout->Branch("nHFMinus",&bMultiplicityHFMinus,"bMultiplicityHFMinus/D");
-  trout->Branch("nTracks",&bMultiplicityTracks,"bMultiplicityTracks/D");
-  trout->Branch("nTracksNonCone",&bTracksNonCone,"bTracksNonCone/D");
-  trout->Branch("nTracksTransverse",&bTracksTransverse,"bTracksTransverse/D");
-  trout->Branch("nTracksOutsideJets",&bTracksOutsideJets,"bTracksOutsideJets/D");
+  trout->Branch("nHFPlus",&bMultiplicityHFPlus,"bMultiplicityHFPlus/I");
+  trout->Branch("nHFMinus",&bMultiplicityHFMinus,"bMultiplicityHFMinus/I");
+  trout->Branch("nTracks",&bMultiplicityTracks,"bMultiplicityTracks/I");
+  trout->Branch("nTracksNonCone",&bTracksNonCone,"bTracksNonCone/I");
+  trout->Branch("nTracksTransverse",&bTracksTransverse,"bTracksTransverse/I");
+  trout->Branch("nTracksOutsideJets",&bTracksOutsideJets,"bTracksOutsideJets/I");
   trout->Branch("Rjj",&bRjjFromJets,"bRjjFromJets/D");
   trout->Branch("EtaMax",&bEtaMaxFromPFCands,"bEtaMaxFromPFCands/D");
   trout->Branch("EtaMin",&betamin,"betamin/D");
