@@ -370,7 +370,8 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_pfetamincastor.push_back( std::vector<TH1F*>() );
 
     m_hVector_AEcastor.push_back( std::vector<TH1F*>() );
-    m_hVector_etasigned.push_back( std::vector<TH1F*>() );
+    m_hVector_etasignedHF.push_back( std::vector<TH1F*>() );
+    m_hVector_etasignedCASTOR.push_back( std::vector<TH1F*>() );
 
     m_hVector_sumEEEminus.push_back( std::vector<TH1F*>() );
     m_hVector_sumEEEplus.push_back( std::vector<TH1F*>() );
@@ -1551,9 +1552,9 @@ void DiffractiveZ::CreateHistos(std::string type){
       m_hVector_AEcastor[j].push_back(histo_AEcastor);
 
       char name232[300];
-      sprintf(name232,"etasigned_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_etasigned = new TH1F(name232,"Signed #eta_{l} Distribution; #tilde{#eta_{l}}; N events",100,-10.,10.);
-      m_hVector_etasigned[j].push_back(histo_etasigned);
+      sprintf(name232,"etasignedHF_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_etasignedHF = new TH1F(name232,"Signed #eta_{l} Distribution; #tilde{#eta_{l}}; N events",100,-10.,10.);
+      m_hVector_etasignedHF[j].push_back(histo_etasignedHF);
 
       char name233[300];
       sprintf(name233,"sumECastorMinusLowEnergy_%s_%s",tag,Folders.at(j).c_str());
@@ -1624,6 +1625,11 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name246,"patBosonZMass_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_patBosonZMass = new TH1F(name246,"Boson Z Mass Distribution; M_{Z} [GeV]; N events",500,0,500);
       m_hVector_patBosonZMass[j].push_back(histo_patBosonZMass);
+
+      char name247[300];
+      sprintf(name247,"etasignedCASTOR_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_etasignedCASTOR = new TH1F(name247,"Signed #eta_{l} Distribution; #tilde{#eta_{l}}; N events",100,-10.,10.);
+      m_hVector_etasignedCASTOR[j].push_back(histo_etasignedCASTOR);
 
     }
   }
@@ -1914,7 +1920,8 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
 
   m_hVector_AEcastor[index].at(pileup)->Fill(AEcastor,totalweight);
-  m_hVector_etasigned[index].at(pileup)->Fill(etasigned,totalweight);
+  m_hVector_etasignedHF[index].at(pileup)->Fill(etasignedHF,totalweight);
+  m_hVector_etasignedCASTOR[index].at(pileup)->Fill(etasignedCASTOR,totalweight);
 
   m_hVector_sumEEEminus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEMinus(),totalweight);
   m_hVector_sumEEEplus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEPlus(),totalweight);
@@ -2228,7 +2235,8 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
       m_hVector_XiPF[j].at(i)->Write();
       m_hVector_pfetamincastor[j].at(i)->Write();
       m_hVector_AEcastor[j].at(i)->Write();
-      m_hVector_etasigned[j].at(i)->Write();
+      m_hVector_etasignedHF[j].at(i)->Write();
+      m_hVector_etasignedCASTOR[j].at(i)->Write();
     }
   }
 
@@ -2276,7 +2284,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("DiBosonEta",&bDiBosonEta,"bDiBosonEta/D");
   trout->Branch("DiBosonPhi",&bDiBosonPhi,"bDiBosonPhi/D");
   trout->Branch("DiBosonMass",&bDiBosonMass,"bDiBosonMass/D");
-  trout->Branch("MultiplicityTracks",&bMultiplicityTracks,"bMultiplicityTracks/D");
+  trout->Branch("MultiplicityTracks",&bMultiplicityTracks,"bMultiplicityTracks/I");
   trout->Branch("SumEEEMinus",&bSumEEEMinus,"bSumEEEMinus/D");
   trout->Branch("SumEEEPlus",&bSumEEEPlus,"bSumEEEPlus/D");
   trout->Branch("SumEnergyHFMinus",&bSumEnergyHFMinus,"bSumEnergyHFMinus/D");
@@ -2285,12 +2293,17 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("SectorCastorHit",&bSectorCastorHit,"bSectorCastorHit/D");
   trout->Branch("deltaetapf",&bdeltaetapf,"bdeltaetapf/D");
   trout->Branch("AEcastor",&bAEcastor,"AEcastor/D");
-  trout->Branch("etasigned",&betasigned,"betasigned/D");
+  trout->Branch("etasignedHF",&betasignedHF,"betasignedHF/D");
+  trout->Branch("etasignedCASTOR",&betasignedCASTOR,"betasignedCASTOR/D");
   trout->Branch("MaxGapPF",&bMaxGapPF,"bMaxGapPF/D");
   trout->Branch("PTMaxGapMaxPF",&bPTMaxGapMaxPF,"bPTMaxGapMaxPF/D");
   trout->Branch("PTMinGapMaxPF",&bPTMinGapMaxPF,"bPTMinGapMaxPF/D");
   trout->Branch("XiPlusFromPFCands",&bXiPlusFromPFCands,"bXiPlusFromPFCands/D");
   trout->Branch("XiMinusFromPFCands",&bXiMinusFromPFCands,"bXiMinusFromPFCands/D");
+  trout->Branch("EtaMaxPF",&betamax,"betamax/D");
+  trout->Branch("EtaMinPF",&betamin,"betamin/D");
+  trout->Branch("EtaLimMinus",&betalimmin,"betalimmin/D");
+  trout->Branch("EtaLimPlus",&betalimmax,"betalimmax/D");
 
   TTreeCASTOR = "TTreeCASTOR_" + savehistofile;
   fOutCASTOR = new TFile(TTreeCASTOR, "RECREATE");
@@ -2398,7 +2411,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       }
     }
 
-    etasigned = -999.;
+    etasignedHF = -999.;
+    etasignedCASTOR = -999;
     aSumE = -999.;
     AEcastor = -999.;
 
@@ -2593,17 +2607,30 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       castorgap = true;
     }
 
+    // Redefinition of etamin_
+    //------------------------
+
+    // It is possible to include CASTOR as the min. eta with activity.
+
+    /*
+    // CMS and CASTOR acceptance
     etamin_=0.;
     if (castoractivity) {
       etamin_ = -6.;
     }else{
       etamin_ = eventdiff->GetEtaMinFromPFCands();
     }
+    */
+
+    // Only CMS
+    etamin_= eventdiff->GetEtaMinFromPFCands();
+
+    //----->
 
     if (eventdiff->GetNVertex() == nVertex) vertex = true;
 
     if (gapseltype == "PF" || gapseltype == "pf"){
-      if ((etamin_ > -3.)) diffseln = true;
+      if ((eventdiff->GetEtaMinFromPFCands() > -3.)) diffseln = true;
       if ((eventdiff->GetEtaMaxFromPFCands() <  3.)) diffselp = true;
     }
     else if(gapseltype == "HF" || gapseltype == "hf"){
@@ -2698,10 +2725,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetDiElectronEta()>0.) ZKinP = true;
       if (eventdiffZ->GetDiElectronEta()<0.) ZKinN = true;
 
-      if (diffselp && ZKinP){ etasigned = fabs(eventdiffZ->GetDiElectronEta());}
-      if (diffselp && ZKinN){ etasigned = -1*fabs(eventdiffZ->GetDiElectronEta());}
-      if (diffseln && ZKinN){ etasigned = fabs(eventdiffZ->GetDiElectronEta());}
-      if (diffseln && ZKinP){ etasigned = -1*fabs(eventdiffZ->GetDiElectronEta());}
+      if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffZ->GetDiElectronEta()); }
+      else{ etasignedHF = fabs(eventdiffZ->GetDiElectronEta()); }
+
+      if (castorgap){ etasignedCASTOR = -1*fabs(eventdiffZ->GetDiElectronEta());}
+      else {etasignedCASTOR = fabs(eventdiffZ->GetDiElectronEta());}
 
     }
 
@@ -2719,10 +2747,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetDiMuonEta()>0.) ZKinP = true;
       if (eventdiffZ->GetDiMuonEta()<0.) ZKinN = true;
 
-      if (diffselp && ZKinP){ etasigned = fabs(eventdiffZ->GetDiMuonEta());}
-      if (diffselp && ZKinN){ etasigned = -1*fabs(eventdiffZ->GetDiMuonEta());}
-      if (diffseln && ZKinN){ etasigned = fabs(eventdiffZ->GetDiMuonEta());}
-      if (diffseln && ZKinP){ etasigned = -1*fabs(eventdiffZ->GetDiMuonEta());}
+      if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffZ->GetDiMuonEta()); }
+      else{ etasignedHF = fabs(eventdiffZ->GetDiMuonEta()); }
+      
+      if (castorgap){ etasignedCASTOR = -1*fabs(eventdiffZ->GetDiMuonEta());}
+      else {etasignedCASTOR = fabs(eventdiffZ->GetDiMuonEta());}
 
     }
 
@@ -2796,10 +2825,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetPatDiElectronEta()>0.) ZKinP = true;
       if (eventdiffZ->GetPatDiElectronEta()<0.) ZKinN = true;
 
-      if (diffselp && ZKinP){ etasigned = fabs(eventdiffZ->GetPatDiElectronEta());}
-      if (diffselp && ZKinN){ etasigned = -1*fabs(eventdiffZ->GetPatDiElectronEta());}
-      if (diffseln && ZKinN){ etasigned = fabs(eventdiffZ->GetPatDiElectronEta());}
-      if (diffseln && ZKinP){ etasigned = -1*fabs(eventdiffZ->GetPatDiElectronEta());}
+      if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffZ->GetPatDiElectronEta()); }
+      else{ etasignedHF = fabs(eventdiffZ->GetPatDiElectronEta()); }
+
+      if (castorgap){ etasignedCASTOR = -1*fabs(eventdiffZ->GetPatDiElectronEta());}
+      else {etasignedCASTOR = fabs(eventdiffZ->GetPatDiElectronEta());}
 
     }
 
@@ -2817,10 +2847,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetPatDiMuonEta()>0.) ZKinP = true;
       if (eventdiffZ->GetPatDiMuonEta()<0.) ZKinN = true;
 
-      if (diffselp && ZKinP){ etasigned = fabs(eventdiffZ->GetPatDiMuonEta());}
-      if (diffselp && ZKinN){ etasigned = -1*fabs(eventdiffZ->GetPatDiMuonEta());}
-      if (diffseln && ZKinN){ etasigned = fabs(eventdiffZ->GetPatDiMuonEta());}
-      if (diffseln && ZKinP){ etasigned = -1*fabs(eventdiffZ->GetPatDiMuonEta());}
+      if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffZ->GetPatDiMuonEta()); }
+      else{ etasignedHF = fabs(eventdiffZ->GetPatDiMuonEta()); }
+
+      if (castorgap){ etasignedCASTOR = -1*fabs(eventdiffZ->GetPatDiMuonEta());}
+      else {etasignedCASTOR = fabs(eventdiffZ->GetPatDiMuonEta());}
 
     }
 
@@ -2868,9 +2899,14 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bPTMinGapMaxPF = eventdiffZ->GetPTMinGapMaxPF();
     bXiPlusFromPFCands = eventdiff->GetXiPlusFromPFCands();
     bXiMinusFromPFCands = eventdiff->GetXiMinusFromPFCands();
-    betasigned = etasigned;
+    betasignedHF = etasignedHF;
+    betasignedCASTOR = etasignedCASTOR;
     bAEcastor = AEcastor;
     bdeltaetapf = deltaetapf;
+    betamax = eventdiff->GetEtaMaxFromPFCands();
+    betamin = etamin_;
+    betalimmin = eventdiffZ->GetLimMinusGapPF();
+    betalimmax = eventdiffZ->GetLimPlusGapPF();
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
 

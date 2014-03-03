@@ -84,7 +84,8 @@ class DiffractiveZ {
   bool castoractivity;
   bool castorgap;
   double AEcastor;
-  double etasigned;
+  double etasignedHF;
+  double etasignedCASTOR;
   int counterHit;
 
   int bRunNumber;
@@ -94,7 +95,7 @@ class DiffractiveZ {
   double bDiBosonEta;
   double bDiBosonPhi;
   double bDiBosonMass;
-  double bMultiplicityTracks;
+  int bMultiplicityTracks;
   double bSumEEEMinus;
   double bSumEEEPlus;
   double bSumEnergyHFMinus;
@@ -103,12 +104,17 @@ class DiffractiveZ {
   double bSectorCastorHit;
   double bdeltaetapf;
   double bAEcastor;
-  double betasigned;
+  double betasignedHF;
+  double betasignedCASTOR;
   double bMaxGapPF;
   double bPTMinGapMaxPF;
   double bPTMaxGapMaxPF;
   double bXiPlusFromPFCands;
   double bXiMinusFromPFCands;
+  double betamax;
+  double betamin;
+  double betalimmin;
+  double betalimmax;
 
   std::string filein;
   std::string processname;
@@ -378,7 +384,8 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_XiMinusPF;
   std::vector<std::vector<TH1F*> > m_hVector_XiPF;
   std::vector<std::vector<TH1F*> > m_hVector_AEcastor;
-  std::vector<std::vector<TH1F*> > m_hVector_etasigned;
+  std::vector<std::vector<TH1F*> > m_hVector_etasignedHF;
+  std::vector<std::vector<TH1F*> > m_hVector_etasignedCASTOR;
 
   std::vector<std::vector<TH1F*> > m_hVector_sumEEEplus;
   std::vector<std::vector<TH1F*> > m_hVector_sumEEEminus;
