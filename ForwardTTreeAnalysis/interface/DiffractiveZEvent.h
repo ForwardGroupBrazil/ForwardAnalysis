@@ -179,6 +179,9 @@ class DiffractiveZEvent {
     void SetVertex(int fVertex)    { Vertex_ = fVertex;}
     void SetXi_PF_minus(double fXi_PF_minus)    { Xi_PF_minus_ = fXi_PF_minus;}
     void SetXi_PF_plus(double fXi_PF_plus)    { Xi_PF_plus_ = fXi_PF_plus;}
+    void SetXiMass(double fXi_mass)    { Xi_mass_ = fXi_mass;}
+    void SetXiMassNoZ(double fXi_massnoz)    { Xi_massnoz_ = fXi_massnoz;}
+
     void SetEpz_PF_minus(double fEpz_PF_minus)    { Epz_PF_minus_= fEpz_PF_minus;}
     void SetEpz_PF_plus(double fEpz_PF_plus)    { Epz_PF_plus_ = fEpz_PF_plus;}
     void SetMultiplicityPF(int fMultiplicityPF)    { MultiplicityPF_ = fMultiplicityPF;}
@@ -496,6 +499,9 @@ class DiffractiveZEvent {
     int GetVertex()    const {return Vertex_;}
     double GetXi_PF_minus()    const {return Xi_PF_minus_;}
     double GetXi_PF_plus()    const {return Xi_PF_plus_;}
+    double GetXiMass()    const {return Xi_mass_;}
+    double GetXiMassNoZ()    const {return Xi_massnoz_;}
+
     double GetEpz_PF_minus()    const {return Epz_PF_minus_;}
     double GetEpz_PF_plus()    const {return Epz_PF_plus_;}
     int GetMultiplicityPF()    const {return MultiplicityPF_;}
@@ -751,7 +757,7 @@ class DiffractiveZEvent {
     std::vector<double> CastorModule4Energy_;
     std::vector<double> CastorModule5Energy_;
     std::vector<int> CastorBadChannels_;
-   
+
     int CastorNumberBadChannels_;
     int EachTowerCounter_;
 
@@ -826,6 +832,8 @@ class DiffractiveZEvent {
     int Vertex_;
     double Xi_PF_minus_;
     double Xi_PF_plus_;
+    double Xi_mass_;
+    double Xi_massnoz_;
     double Epz_PF_minus_;
     double Epz_PF_plus_;
     int MultiplicityPF_;
