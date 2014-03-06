@@ -132,8 +132,8 @@ pfCandidatesShiftedDown.shiftBy = cms.double(-1)
 #------------------------------
 # Particle flow
 Forward = cms.PSet(
-        hadronHF = cms.PSet( energy = cms.double(7.0) ),
-        emHF = cms.PSet( energy = cms.double(7.0) )
+        hadronHF = cms.PSet( energy = cms.double(4.0) ),
+        emHF = cms.PSet( energy = cms.double(4.0) )
     )
 # Add EtaMax
 from ForwardAnalysis.Utilities.pfCandidateSelector_cfi import pfCandidateSelector as pfCandidateNoiseThresholds
@@ -216,7 +216,7 @@ caloVetoHFPlus = caloActivityFilter.clone(NTowersMaxHFPlus=0)
 caloVetoHFMinus = caloActivityFilter.clone(NTowersMaxHFMinus=0)
 caloActivityFilter.EnergyThresholdHB = 1.5
 caloActivityFilter.EnergyThresholdHE = 2.0
-caloActivityFilter.EnergyThresholdHF = 7.0
+caloActivityFilter.EnergyThresholdHF = 4.0
 '''
 from ForwardAnalysis.Utilities.castorActivityFilter_cfi import castorActivityFilter
 castorActivityFilter.CastorRecHitTag = "castorRecHitCorrector"
