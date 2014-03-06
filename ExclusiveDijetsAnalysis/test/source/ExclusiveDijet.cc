@@ -1084,15 +1084,15 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(trigger && presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta4){
 	  FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
-	  fOutAll->cd();
-	  troutAll->Fill();
+	  if (switchcastor == "no_castor") fOutAll->cd();
+	  if (switchcastor == "no_castor") troutAll->Fill();
 	}
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta2){
 	  FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
 	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-	  fOut->cd();
-	  trout->Fill();
+	  if (switchcastor == "no_castor") fOut->cd();
+	  if (switchcastor == "no_castor") trout->Fill();
 	}
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
 
@@ -1120,14 +1120,14 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
 	if(presel && vertex && dijetpt && dijeteta && d_eta4){
 	  FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
-	  fOutAll->cd();
-	  troutAll->Fill();
+	  if (switchcastor == "no_castor") fOutAll->cd();
+	  if (switchcastor == "no_castor") troutAll->Fill();
 	}
 	if(presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
 	if(presel && vertex && dijetpt && dijeteta && d_eta2){
 	  FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
-	  fOut->cd();
-	  trout->Fill();
+	  if (switchcastor == "no_castor") fOut->cd();
+	  if (switchcastor == "no_castor") trout->Fill();
 	}
 	if(presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
 	if (switchcastor == "castor_correction" || switchcastor == "castor_no_correction") {
