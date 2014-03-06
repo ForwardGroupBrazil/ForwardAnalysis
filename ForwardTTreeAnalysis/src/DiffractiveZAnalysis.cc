@@ -366,11 +366,15 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
       std::cout << "Electron Isolation: " << relIsoFirstElectronDr03 << " | " << relIsoFirstElectronDr04 << std::endl;
       std::cout << "NElectron: " << ElectronN << std::endl;
       std::cout << "NSize: " << electrons->size() << std::endl;
-      std::cout << "Electron1: " << electron1->pt() << std::endl;
-      std::cout << "Electron2: " << electron2->pt() << std::endl;
+      std::cout << "Electron, pT 1: " << electron1->pt() << std::endl;
+      std::cout << "Electron, pT 2: " << electron2->pt() << std::endl;
+      std::cout << "Electron, eta 1: " << electron1->eta() << std::endl;
+      std::cout << "Electron, eta 2: " << electron2->eta() << std::endl;
       std::cout << "Eta Z: " << DielectronSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DielectronSystem.phi() << std::endl;
       std::cout << "pT Z: " << DielectronSystem.pt() << std::endl;
+      std::cout << "energy Z: " << DielectronSystem.energy() << std::endl;
+      std::cout << "pz Z: " << DielectronSystem.pz() << std::endl;
       std::cout << "DeltaPhiTkClu, electron1: " << electron1->deltaPhiSuperClusterTrackAtVtx() << std::endl;
       std::cout << "DeltaEtaTkClu, electron1: " << electron1->deltaEtaSuperClusterTrackAtVtx() << std::endl;
       std::cout << "SigmaIeIe, electron1: " << electron1->sigmaIetaIeta() << std::endl;
@@ -594,11 +598,15 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     if (debug){
       std::cout << "NMuons: " << MuonsN << std::endl;
       std::cout << "NSize: " << muons->size() << std::endl;
-      std::cout << "Muon1: " << muon1->pt() << std::endl;
-      std::cout << "Muon2: " << muon2->pt() << std::endl;
+      std::cout << "Muon, pT 1: " << muon1->pt() << std::endl;
+      std::cout << "Muon, pT 2: " << muon2->pt() << std::endl;
+      std::cout << "Muon, eta 1: " << muon1->eta() << std::endl;
+      std::cout << "Muon, eta 2: " << muon2->eta() << std::endl;
       std::cout << "Eta Z: " << DimuonSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DimuonSystem.phi() << std::endl;
       std::cout << "pT Z: " << DimuonSystem.pt() << std::endl;
+      std::cout << "energy Z: " << DimuonSystem.energy() << std::endl;
+      std::cout << "pz Z: " << DimuonSystem.pz() << std::endl;
     }
 
   }
@@ -1315,6 +1323,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   bool debug=false;
+  bool debugxi=false;
   bool debugOrder=false;
 
   std::vector<double> etas;
@@ -1671,14 +1680,82 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   delete [] sorted4;
   delete [] v4;
 
-  /// Loop to compute Mx2 a destra e a sinistra del GAP
-  TLorentzVector dataMass_plus(0.,0.,0.,0.);
-  TLorentzVector dataMass_minus(0.,0.,0.,0.);
+  double MXsumPxPF = 0.;
+  double MXsumPyPF = 0.;
+  double MXsumPzPF = 0.;
+  double MXsumEPF = 0.;
+  double MYsumPxPF = 0.;
+  double MYsumPyPF = 0.;
+  double MYsumPzPF = 0.;
+  double MYsumEPF = 0.;
+  double xiMass = -999.;
+
+  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
+
+    const reco::PFCandidate *particle = &(*iter);
+    double energy=particle->energy();
+    double pt=particle->pt();
+    double eta=particle->eta();
+    double charge=particle->charge();
+
+    //eta cut - excluding ring 12 13 HF  
+    if (fabs(eta)>4.7) continue;
+
+    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
+	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
+				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
+				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+    {        
+
+      if ( particle->eta() >= eta_gap_limplus ){
+	MXsumPxPF += particle->px();
+	MXsumPyPF += particle->py();
+	MXsumPzPF += particle->pz();
+	MXsumEPF += particle->energy();
+      }
+      else {
+	MYsumPxPF += particle->px();
+	MYsumPyPF += particle->py();
+	MYsumPzPF += particle->pz();
+	MYsumEPF += particle->energy();
+      }
+
+    } 
+
+  }
+
+  TLorentzVector M_x(MXsumPxPF,MXsumPyPF,MXsumPzPF,MXsumEPF);
+  TLorentzVector M_y(MYsumPxPF,MYsumPyPF,MYsumPzPF,MYsumEPF);
+
+  double massX2 = pow(M_x.M(),2);
+  double massY2 = pow(M_y.M(),2);
+
+  if (massX2 > massY2 && massX2 > 0.) xiMass = massX2/(7000.*7000.);
+  else if (massY2 > massX2 && massY2 > 0.) xiMass = massY2/(7000.*7000.);
+
+  if (debugxi) {
+    std::cout << "Xi Computation" << std::endl;
+    std::cout << ">>>>> Xi, including Z: " << xiMass << std::endl;
+  }
+
+  eventData.SetXiMass(xiMass);
+
+  //TLorentzVector dataMass_plus(0.,0.,0.,0.);
+  //TLorentzVector dataMass_minus(0.,0.,0.,0.);
   int nplus =0;
   int nminus =0;
 
   double sumPTPFm = 0.;
   double sumPTPFp = 0.;
+  double MXsumPxPFNoZ = 0.;
+  double MXsumPyPFNoZ = 0.;
+  double MXsumPzPFNoZ = 0.;
+  double MXsumEPFNoZ = 0.;
+  double MYsumPxPFNoZ = 0.;
+  double MYsumPyPFNoZ = 0.;
+  double MYsumPzPFNoZ = 0.;
+  double MYsumEPFNoZ = 0.;
+  double xiMassNoZ = -999.;
 
   for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
     const reco::PFCandidate *particle = &(*iter);
@@ -1720,14 +1797,22 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       }
 
       if ( eta >= eta_gap_limplus ){
-	dataMass_plus+=tmp;
+	//dataMass_plus+=tmp;
 	nplus++;
 	sumPTPFp += pt;
+	MXsumPxPFNoZ += particle->px();
+	MXsumPyPFNoZ += particle->py();
+	MXsumPzPFNoZ += particle->pz();
+	MXsumEPFNoZ += particle->energy();
       }
       else {
-	dataMass_minus+=tmp;
+	//dataMass_minus+=tmp;
 	nminus++;
 	sumPTPFm += pt;
+	MYsumPxPFNoZ += particle->px();
+	MYsumPyPFNoZ += particle->py();
+	MYsumPzPFNoZ += particle->pz();
+	MYsumEPFNoZ += particle->energy();
       }
 
       if (debugOrder) std::cout << "SUM, pT: Compute LRG, eta: " << eta << ", pT: "<< pt << " GeV" << std::endl;
@@ -1742,11 +1827,27 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     eventData.SetPTMaxGapMaxPF(sumPTPFm);
     eventData.SetPTMinGapMaxPF(sumPTPFp);
   }
-  
+
   eventData.SetElectronEnergyPF(-999.); // First Electron, Fill Second Electron also. Eta, phi, pT and ISO from PF.
   eventData.SetMuEnergyPF(-999.); // First Muon, Fill Second Muon also. Eta, phi, pT and ISO from PF.
   eventData.SetMultiplicityGapPlusPF(nplus);
   eventData.SetMultiplicityGapMinusPF(nminus);
+
+  TLorentzVector M_xNoz(MXsumPxPFNoZ,MXsumPyPFNoZ,MXsumPzPFNoZ,MXsumEPFNoZ);
+  TLorentzVector M_yNoz(MYsumPxPFNoZ,MYsumPyPFNoZ,MYsumPzPFNoZ,MYsumEPFNoZ);
+
+  double massX2NoZ = pow(M_xNoz.M(),2);
+  double massY2NoZ = pow(M_yNoz.M(),2);
+
+  if (massX2NoZ > massY2NoZ && massX2NoZ > 0.) xiMassNoZ = massX2NoZ/(7000.*7000.);
+  else if (massY2NoZ > massX2NoZ && massY2NoZ > 0.) xiMassNoZ = massY2NoZ/(7000.*7000.);
+
+  if (debugxi) {
+    std::cout << "Xi Computation" << std::endl;
+    std::cout << ">>>>> Xi, no Z: " << xiMassNoZ << std::endl;
+  }
+
+  eventData.SetXiMassNoZ(xiMassNoZ);
 
 }
 
@@ -1921,14 +2022,18 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout<<"Muon2 -> 0.5 Radion Rel Iso: "<<relIsoSecondMuonDr05<<" sumPt "<<muon2SumPtR05<<" emEt "<<muon2EmEtR05<<" hadEt "<<muon2HadEtR05<<std::endl;
       std::cout << "Muon2 -> trackIso(): " << muon2->trackIso() << " | muon2 -> ecalIso(): " << muon2->ecalIso() << " | muon2 -> hcalIso(): " << muon2->hcalIso() << " | muon2->Iso(): " << relIsoSecondMuon << std::endl;  
       std::cout << "NSize: " << muons->size() << std::endl;
-      std::cout << "Muon1: " << muon1->pt() << std::endl;
-      std::cout << "Muon2: " << muon2->pt() << std::endl;
+      std::cout << "Muon, pT 1: " << muon1->pt() << std::endl;
+      std::cout << "Muon, pT 2: " << muon2->pt() << std::endl;
+      std::cout << "Muon, eta 1: " << muon1->eta() << std::endl;
+      std::cout << "Muon, eta 2: " << muon2->eta() << std::endl;
       std::cout << "Muon1, p4(): " << muon1->p4() << std::endl;
       std::cout << "Muon2, p4(): " << muon2->p4() << std::endl;
       std::cout << "DiMuon, M(): " << DipatMuonSystem.M() << std::endl;
       std::cout << "Eta Z: " << DipatMuonSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DipatMuonSystem.phi() << std::endl;
       std::cout << "pT Z: " << DipatMuonSystem.pt() << std::endl;
+      std::cout << "energy Z: " << DipatMuonSystem.energy() << std::endl;
+      std::cout << "pz Z: " << DipatMuonSystem.pz() << std::endl;
       std::cout << "" << std::endl;
     }
 
@@ -2117,14 +2222,18 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "electron2 -> dr04 TK: " << electron2->dr04TkSumPt() << "| dr04 Ecal: " << electron2->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron2->dr04HcalTowerSumEt() <<  std::endl;
       std::cout << "NElectron: " << ElectronsN << std::endl;
       std::cout << "NSize: " << electrons->size() << std::endl;
-      std::cout << "Electron1: "<< electron1->pt() << std::endl;
-      std::cout << "Electron2: " << electron2->pt() << std::endl;
+      std::cout << "Electron, pT 1: " << electron1->pt() << std::endl;
+      std::cout << "Electron, pT 2: " << electron2->pt() << std::endl;
+      std::cout << "Electron, eta 1: " << electron1->eta() << std::endl;
+      std::cout << "Electron, eta 2: " << electron2->eta() << std::endl;
       std::cout << "Electron1, p4(): " << electron1->p4() << std::endl;
       std::cout << "Electron2, p4(): " << electron2->p4() << std::endl;
       std::cout << "DiElectron, M(): " << DipatElectronSystem.M() << std::endl;
       std::cout << "Eta Z: " << DipatElectronSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DipatElectronSystem.phi() << std::endl;
       std::cout << "pT Z: " << DipatElectronSystem.pt() << std::endl;
+      std::cout << "energy Z: " << DipatElectronSystem.energy() << std::endl;
+      std::cout << "pz Z: " << DipatElectronSystem.pz() << std::endl;
       std::cout << "DeltaPhiTkClu, electron1: " << electron1->deltaPhiSuperClusterTrackAtVtx() << std::endl;
       std::cout << "DeltaEtaTkClu, electron1: " << electron1->deltaEtaSuperClusterTrackAtVtx() << std::endl;
       std::cout << "SigmaIeIe, electron1: " << electron1->sigmaIetaIeta() << std::endl;

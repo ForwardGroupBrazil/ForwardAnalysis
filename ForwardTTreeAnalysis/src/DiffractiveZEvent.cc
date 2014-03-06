@@ -124,6 +124,9 @@ void DiffractiveZEvent::reset(){
   Vertex_ = -999;
   Xi_PF_minus_ = -999.;
   Xi_PF_plus_ = -999.;
+  Xi_mass_ = -999.;
+  Xi_massnoz_ = -999.;
+
   Epz_PF_minus_ = -999.;
   Epz_PF_plus_ = -999.;
   MultiplicityPF_ = -999;
