@@ -1490,7 +1490,7 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 	}
       }
 
-      // Excluding Z from LRG calculation
+      // Excluding W from LRG calculation
       if (debugOrder) std::cout << "Compute LRG, eta: " << eta << ", pT: "<< pt << " GeV" << std::endl;
       etas.push_back(eta);
 
