@@ -318,6 +318,7 @@ void DiffractiveWAnalysis::fillMETInfo(DiffractiveWEvent& eventData, const edm::
   }
 
   // Fill pat::MET
+  // Apply Correction because Thresholds
   edm::Handle<std::vector<pat::MET> > patmet;
   event.getByLabel(patmetTag_,patmet);
 
@@ -1284,11 +1285,6 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
   double sumpzModule=0.;
   double sumEnergyPF=0.;
 
-  double PtThPFCharged = 0.1;  // it was 0.15
-  double EnThPFBar = 1.5;
-  double EnThPFEnd = 3.5; // 4.;
-  double EnThPFFw  = 6.0; // 6; 
-
   double MT_W_enu = 0.;
   double MT_W_munu = 0.;
   double MT_W_pfenu = 0.;
@@ -1454,10 +1450,10 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 
     TLorentzVector tmp(px,py,pz,energy);
 
-    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
-				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
+	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
+				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
+				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
     {        
 
       nPart_PF++;
@@ -1629,10 +1625,10 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
     //eta cut - excluding ring 12 13 HF  
     if (fabs(eta)>4.7) continue;
 
-    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
-				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
+	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
+				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
+				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
     {        
 
       if ( particle->eta() >= eta_gap_limplus ){
@@ -1700,10 +1696,10 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 
     TLorentzVector tmp(px,py,pz,energy); 
 
-    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
-				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
+	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
+				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
+				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
     {
 
       if(particle->particleId()==reco::PFCandidate::mu){
