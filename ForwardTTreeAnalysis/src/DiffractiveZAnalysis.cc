@@ -1340,11 +1340,6 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   double sumpzModule=0.;
   double sumEnergyPF=0.;
 
-  double PtThPFCharged = 0.1;  // it was 0.15
-  double EnThPFBar = 1.5;
-  double EnThPFEnd = 3.5; // 4.;
-  double EnThPFFw  = 6.0; // 6; 
-
   int nPart_PF=0;
 
   std::vector<double> electronEnergy;
@@ -1526,10 +1521,10 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 
     TLorentzVector tmp(px,py,pz,energy);
 
-    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
-				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
+	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
+				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
+				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
     {        
 
       nPart_PF++;
@@ -1701,10 +1696,10 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     //eta cut - excluding ring 12 13 HF  
     if (fabs(eta)>4.7) continue;
 
-    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
-				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
+	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
+				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
+				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
     {        
 
       if ( particle->eta() >= eta_gap_limplus ){
@@ -1772,10 +1767,10 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 
     TLorentzVector tmp(px,py,pz,energy); 
 
-    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
-				 (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
+	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
+				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
+				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
     {
 
       if(particle->particleId()==reco::PFCandidate::mu){
