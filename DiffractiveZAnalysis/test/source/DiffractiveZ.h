@@ -124,6 +124,9 @@ class DiffractiveZ {
   std::string typesel;
   std::string switchlumiweight;
   std::string castorcorrfile;
+  std::string pumfile;
+  std::string pudfile;
+
   double mcweight;
   int nVertex;
   int optTrigger;
@@ -413,7 +416,7 @@ class DiffractiveZ {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double, double, std::string, std::string);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double, double, std::string, std::string, std::string, std::string);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);

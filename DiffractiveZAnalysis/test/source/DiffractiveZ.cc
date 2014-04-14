@@ -2242,7 +2242,7 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
 
 }
 
-void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_, double castorthreshold_, double channelsthreshold_, std::string castorcorrfile_, std::string gapseltype_){
+void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_, double castorthreshold_, double channelsthreshold_, std::string castorcorrfile_, std::string gapseltype_, std::string pumfile_, std::string pudfile_){
 
   bool debug = false;
 
@@ -2265,6 +2265,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   channelsthreshold = channelsthreshold_;
   castorcorrfile = castorcorrfile_;
   gapseltype = gapseltype_;
+  pumfile = pumfile_;
+  pudfile = pudfile_;
 
   std::string selStatus;
   std::string TriggerStatus;
@@ -2384,6 +2386,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     }
   }
 
+  // Lumiweight PU
+  edm::LumiReWeighting LumiWeights_(pumfile.c_str(),pudfile.c_str(),"pileUpBx0_complete_without_cuts","pileup");
+
   for(int i=0;i<NEVENTS;i++){
 
     tr->GetEntry(i);
@@ -2430,15 +2435,21 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     deltapTelectrons = eventdiffZ->GetLeadingElectronPt() - eventdiffZ->GetSecondElectronPt();
     deltapTmuons = eventdiffZ->GetLeadingMuonPt() - eventdiffZ->GetSecondMuonPt();
 
-    double totalcommon = 1.;
-    double mclumiweight = 1.;
+    double puweight;
+    double totalcommon;
 
     if (switchlumiweight == "mc_lumi_weight"){
-      mclumiweight = mcweight;
+      totalcommon = mcweight;
+    }else if (switchlumiweight == "mc_lumi_pu_weight"){
+      puweight = LumiWeights_.weight(eventinfo->GetNPileUpBx0());
+      totalcommon = mcweight*puweight;
+    }else if (switchlumiweight == "no_weight"){
+      totalcommon = 1.;
     }
-
-    totalcommon = mclumiweight;
-
+    else{
+      std::cout << "\nPlease, re-run with a correct event weight option.\n" << std::endl;
+      return;
+    }
     if (!debug){
       if (i==0) {
 	std::cout << "" << std::endl;
@@ -2463,7 +2474,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	std::cout << "\nEvent " << i << std::endl;
 	std::cout << "Nr. events Bx 0: " << eventinfo->GetNPileUpBx0() << std::endl;
 	std::cout << "Lumi per Bunch: " << eventinfo->GetInstLumiBunch() << std::endl;
-	std::cout << "Luminosity weight (a): " << mclumiweight <<std::endl;
+	std::cout << "Event Weight: " << totalcommon <<std::endl;
       }
     }
 
@@ -2616,11 +2627,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     // CMS and CASTOR acceptance
     etamin_=0.;
     if (castoractivity) {
-      etamin_ = -6.;
+    etamin_ = -6.;
     }else{
-      etamin_ = eventdiff->GetEtaMinFromPFCands();
+    etamin_ = eventdiff->GetEtaMinFromPFCands();
     }
-    */
+     */
 
     // Only CMS
     etamin_= eventdiff->GetEtaMinFromPFCands();
@@ -2749,7 +2760,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
       if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffZ->GetDiMuonEta()); }
       else{ etasignedHF = fabs(eventdiffZ->GetDiMuonEta()); }
-      
+
       if (castorgap){ etasignedCASTOR = -1*fabs(eventdiffZ->GetDiMuonEta());}
       else {etasignedCASTOR = fabs(eventdiffZ->GetDiMuonEta());}
 
@@ -3010,7 +3021,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   outstring << " " << std::endl;
   outstring << ">> Trigger: " << TriggerStatus << std::endl;
   outstring << ">> # Vertex: " << nVertex << std::endl;
-  outstring << ">> Lumi. Weight: " << switchlumiweight << " | Weight: " << mcweight << std::endl;
+  outstring << ">> Event Weight: " << switchlumiweight << " | MC Weight:" << mcweight << std::endl;
   outstring << ">> Lepton1(pT) > " << lepton1pt <<std::endl;
   outstring << ">> Lepton2(pT) > " << lepton2pt <<std::endl;
   outstring << ">> Type of Selection: " << selStatus << std::endl;
@@ -3054,6 +3065,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   SaveHistos(type,typesel);
   outf->Close();
   std::cout << "\n" << std::endl;
+
   fOut->cd();
   trout->Write();
   fOut->Close();
@@ -3089,6 +3101,8 @@ int main(int argc, char **argv)
   std::string switchlumiweight_;
   std::string type_;
   std::string typesel_;
+  std::string pumfile_;
+  std::string pudfile_;
   double castorthreshold_;
   double channelsthreshold_;
   std::string castorcorrfile_;
@@ -3110,6 +3124,8 @@ int main(int argc, char **argv)
   if (argc > 14 && strcmp(s1,argv[14]) != 0) channelsthreshold_ = atof(argv[14]);
   if (argc > 15 && strcmp(s1,argv[15]) != 0) castorcorrfile_ = argv[15];
   if (argc > 16 && strcmp(s1,argv[16]) != 0) gapseltype_ = argv[16];
+  if (argc > 17 && strcmp(s1,argv[17]) != 0) pumfile_ = argv[17];
+  if (argc > 18 && strcmp(s1,argv[18]) != 0) pudfile_ = argv[18];
 
   std::cout << " " << std::endl;
   std::cout << ">>>>> Run with the Options <<<<< " << std::endl;
@@ -3139,6 +3155,34 @@ int main(int argc, char **argv)
       std::cout << "2) trigger_all_electron: all trigger electron path will be accepted. Do not require optTrigger." << std::endl;
       std::cout << "3) no_trigger: run without trigger." << std::endl;
       return 0;
+    }
+
+    if (switchlumiweight_=="mc_lumi_weight" || switchlumiweight_ == "mc_lumi_pu_weight" || switchlumiweight_ == "no_weight") {}
+    else{
+      std::cout << "Please Insert type of Event Weight (swithlumiweight): " << std::endl;
+      std::cout << "1) no_weight: for data. Event weight = 1." << std::endl;
+      std::cout << "2) mc_lumi_weight: Luminosity weight calculated by cross section. For Monte Carlo." << std::endl;
+      std::cout << "3) mc_lumi_pu_weight: Luminosity weight and PU Reweight by Monte Carlo." << std::endl;
+      return 0;
+    }
+
+    if(switchlumiweight_=="mc_lumi_pu_weight"){
+      TFile pudatafile(pudfile_.c_str());
+      TFile pumcfile(pumfile_.c_str());
+      if (pudatafile.IsZombie()){
+	std::cout << "-------------------------------------------" << std::endl;
+	std::cout << " There is no file " << pudfile_ << " to be used for the" << std::endl;
+	std::cout << " MC pile up correction." << std::endl;
+	std::cout << "-------------------------------------------" << std::endl;
+	return 0;
+      }
+      if (pumcfile.IsZombie()){
+	std::cout << "-------------------------------------------" << std::endl;
+	std::cout << " There is no file " << pumfile_ <<" to be used for the" << std::endl;
+	std::cout << " MC pile up correction." << std::endl;
+	std::cout << "-------------------------------------------" << std::endl;
+	return 0;
+      }
     }
 
     if (typesel_=="RecoMuon" || typesel_=="RecoElectron" || typesel_=="PatElectron" || typesel_=="PatMuon" ) {}
@@ -3193,7 +3237,7 @@ int main(int argc, char **argv)
 
     DiffractiveZ* diffZRun = new DiffractiveZ();
     diffZRun->CreateHistos(type_);
-    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_, castorthreshold_, channelsthreshold_, castorcorrfile_, gapseltype_);
+    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_, castorthreshold_, channelsthreshold_, castorcorrfile_, gapseltype_, pumfile_, pudfile_);
     return 0;
   }
 
