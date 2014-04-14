@@ -402,7 +402,9 @@ from ForwardAnalysis.ForwardTTreeAnalysis.PFCandInfo_cfi import PFCandInfo
 process.diffractiveWFilter = cms.EDFilter("diffractiveWFilter",
                              nLeptons = cms.untracked.int32(1),
                              muonTag = cms.untracked.InputTag("muons"),
-                             electronTag = cms.untracked.InputTag("gsfElectrons")
+                             electronTag = cms.untracked.InputTag("gsfElectrons"),
+                             metTag = cms.untracked.InputTag("pfMet"),
+                             patmetTag = cms.untracked.InputTag("patpfMet")
                              )
 
 
