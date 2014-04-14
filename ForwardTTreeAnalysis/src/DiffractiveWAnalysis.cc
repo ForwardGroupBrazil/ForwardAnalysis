@@ -726,7 +726,6 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
     double py_gen  = p.py();
     double pz_gen  = p.pz();
     double mass_gen= p.mass();
-    bool electronFromZ=false;
     int motherId=0;
 
     if (  p.mother() ) motherId =  p.mother()->pdgId();
@@ -735,7 +734,6 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
 
     if (fabs(pdg)==11 || fabs(pdg)==22){ 	    
       if (motherId==23) {
-	electronFromZ=true;
 	partZ+=tmp;
       }
     }
@@ -1024,6 +1022,15 @@ void DiffractiveWAnalysis::fillDetectorVariables(DiffractiveWEvent& eventData, c
   double xi_Calo_minus =0;
   double xi_Calo_plus =0;
 
+  //bool hasHCAL;
+  bool hasHF;
+  bool hasHE;
+  bool hasHB;
+  //bool hasHO;
+  //bool hasECAL;
+  bool hasEE;
+  bool hasEB;
+
   edm::Handle<CaloTowerCollection> towerCollectionH;
   event.getByLabel(caloTowerTag_,towerCollectionH);
   const CaloTowerCollection& towerCollection = *towerCollectionH;
@@ -1036,27 +1043,27 @@ void DiffractiveWAnalysis::fillDetectorVariables(DiffractiveWEvent& eventData, c
 
     if (fabs(calotower->eta())> 4.7) continue;   /// excluding ring12 and ring13 of HF
 
-    bool hasHCAL = false;
-    bool hasHF = false;
-    bool hasHE = false;
-    bool hasHB = false;
-    bool hasHO = false;
-    bool hasECAL = false;
-    bool hasEE = false;
-    bool hasEB = false;     
+    //hasHCAL = false;
+    hasHF = false;
+    hasHE = false;
+    hasHB = false;
+    //hasHO = false;
+    //hasECAL = false;
+    hasEE = false;
+    hasEB = false;     
 
     for(size_t iconst = 0; iconst < calotower->constituentsSize(); iconst++){
       DetId adetId = calotower->constituent(iconst);
       if(adetId.det()==DetId::Hcal){
-	hasHCAL = true;
+	//hasHCAL = true;
 	HcalDetId hcalDetId(adetId);
 	if(hcalDetId.subdet()==HcalForward) hasHF = true;
 	else if(hcalDetId.subdet()==HcalEndcap) hasHE = true;
 	else if(hcalDetId.subdet()==HcalBarrel) hasHB = true;
-	else if(hcalDetId.subdet()==HcalOuter) hasHO = true;  
+	//else if(hcalDetId.subdet()==HcalOuter) hasHO = true;  
       } 
       else if(adetId.det()==DetId::Ecal){
-	hasECAL = true;
+	//hasECAL = true;
 	EcalSubdetector ecalSubDet = (EcalSubdetector)adetId.subdetId();
 	if(ecalSubDet == EcalEndcap) hasEE = true;
 	else if(ecalSubDet == EcalBarrel) hasEB = true;
@@ -1991,6 +1998,8 @@ void DiffractiveWAnalysis::fillCastorDebug(DiffractiveWEvent& eventData, const e
 
 void DiffractiveWAnalysis::fillZDC(DiffractiveWEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
+  /*
+
   // ZDC have two sections: section 1 = EM, section 2 = HAD. EM has 5 modules. Had has 4 modules. 
 
   std::vector<std::vector<double> > digiAllPMT;
@@ -2024,107 +2033,109 @@ void DiffractiveWAnalysis::fillZDC(DiffractiveWEvent& eventData, const edm::Even
   setup.get<HcalDbRecord>().get(conditions);
 
   if (zdc_recHits) {
-    for (ZDCRecHitCollection::const_iterator zhit = zdc_recHits->begin(); zhit != zdc_recHits->end(); zhit++){		
+  for (ZDCRecHitCollection::const_iterator zhit = zdc_recHits->begin(); zhit != zdc_recHits->end(); zhit++){		
 
-      // Some Variables
-      int ZDCSide      = (zhit->id()).zside();
-      int ZDCSection   = (zhit->id()).section();
-      //Float_t ZDCEnergy = zhit->energy();
-      //Float_t ZDCRecHitTime = zhit->time();
-      //int ZDCChannel   = (zhit->id()).channel();
+  // Some Variables
+  int ZDCSide      = (zhit->id()).zside();
+  int ZDCSection   = (zhit->id()).section();
+  //Float_t ZDCEnergy = zhit->energy();
+  //Float_t ZDCRecHitTime = zhit->time();
+  //int ZDCChannel   = (zhit->id()).channel();
 
-      if (zhit->energy() >= 0.){
+  if (zhit->energy() >= 0.){
 
-	if (ZDCSide == -1){
+  if (ZDCSide == -1){
 
-	  if (ZDCSection == 1 ){
-	    ZDCNSumEMEnergy += zhit->energy();
-	    ZDCNSumEMTime += zhit->time();
-	  }
+  if (ZDCSection == 1 ){
+  ZDCNSumEMEnergy += zhit->energy();
+  ZDCNSumEMTime += zhit->time();
+  }
 
-	  if (ZDCSection == 2 ){
-	    ZDCNSumHADEnergy += zhit->energy();
-	    ZDCNSumHADTime += zhit->time();
-	  }
+  if (ZDCSection == 2 ){
+  ZDCNSumHADEnergy += zhit->energy();
+  ZDCNSumHADTime += zhit->time();
+  }
 
-	}
+  }
 
-	if (ZDCSide == 1){
+  if (ZDCSide == 1){
 
-	  if (ZDCSection == 1 ){
-	    ZDCPSumEMEnergy += zhit->energy();
-	    ZDCPSumEMTime += zhit->time();
-	  }
+  if (ZDCSection == 1 ){
+  ZDCPSumEMEnergy += zhit->energy();
+  ZDCPSumEMTime += zhit->time();
+  }
 
-	  if (ZDCSection == 2 ){
-	    ZDCPSumHADEnergy += zhit->energy();
-	    ZDCPSumHADTime += zhit->time();
-	  }
+  if (ZDCSection == 2 ){
+  ZDCPSumHADEnergy += zhit->energy();
+  ZDCPSumHADTime += zhit->time();
+  }
 
-	}
+}
 
+}
+
+}
+
+if (debug){
+  std::cout << "ZDC + | Total EM Energy: " << ZDCPSumEMEnergy << std::endl;
+  std::cout << "ZDC + | Total HAD Energy: " << ZDCPSumHADEnergy << std::endl;
+  std::cout << "ZDC + | EM <Time>: " << ZDCPSumEMTime/5. << std::endl;
+  std::cout << "ZDC + | HAD <Time>: " << ZDCPSumHADTime/4. << std::endl;
+  std::cout << "ZDC - | Total EM Energy: " << ZDCNSumEMEnergy << std::endl;
+  std::cout << "ZDC - | Total HAD Energy: " << ZDCNSumHADEnergy << std::endl;
+  std::cout << "ZDC - | EM <Time>: " << ZDCNSumEMTime/5. << std::endl;
+  std::cout << "ZDC - | HAD <Time>: " << ZDCNSumHADTime/4. << std::endl;
+}
+
+}
+
+if (zdc_digi){
+
+  for(int i=0; i<180; i++){DigiDatafC[i]=0;DigiDataADC[i]=0;}
+
+  for (ZDCDigiCollection::const_iterator j=zdc_digi->begin();j!=zdc_digi->end();j++){
+    const ZDCDataFrame digi = (const ZDCDataFrame)(*j);		
+    int iSide      = digi.id().zside();
+    int iSection   = digi.id().section();
+    int iChannel   = digi.id().channel();
+    int chid = (iSection-1)*5+(iSide+1)/2*9+(iChannel-1);
+
+    const HcalQIEShape* qieshape=conditions->getHcalShape();
+    const HcalQIECoder* qiecoder=conditions->getHcalCoder(digi.id());
+    CaloSamples caldigi;
+    HcalCoderDb coder(*qiecoder,*qieshape);
+
+    coder.adc2fC(digi,caldigi);
+
+    int fTS = digi.size();
+
+    for (int i = 0; i < fTS; ++i) {
+      DigiDatafC[i+chid*10] = caldigi[i];
+      DigiDataADC[i+chid*10] = digi[i].adc();
+      digiPMT.push_back(DigiDatafC[i+chid*10]);
+      if (debug_deep){
+	std::cout << "Digi Size: " << fTS << std::endl;
+	std::cout << "DigiDataADC["<<i+chid*10<<"]: " << DigiDataADC[i+chid*10] << std::endl;
+	std::cout << "DigiDatafC["<<i+chid*10<<"]: " << DigiDatafC[i+chid*10] << std::endl;
       }
-
     }
 
     if (debug){
-      std::cout << "ZDC + | Total EM Energy: " << ZDCPSumEMEnergy << std::endl;
-      std::cout << "ZDC + | Total HAD Energy: " << ZDCPSumHADEnergy << std::endl;
-      std::cout << "ZDC + | EM <Time>: " << ZDCPSumEMTime/5. << std::endl;
-      std::cout << "ZDC + | HAD <Time>: " << ZDCPSumHADTime/4. << std::endl;
-      std::cout << "ZDC - | Total EM Energy: " << ZDCNSumEMEnergy << std::endl;
-      std::cout << "ZDC - | Total HAD Energy: " << ZDCNSumHADEnergy << std::endl;
-      std::cout << "ZDC - | EM <Time>: " << ZDCNSumEMTime/5. << std::endl;
-      std::cout << "ZDC - | HAD <Time>: " << ZDCNSumHADTime/4. << std::endl;
+      std::cout << "iSide: " << iSide << std::endl;
+      std::cout << "iSection: " << iSection << std::endl;
+      std::cout << "iChannel: " << iChannel << std::endl;
+      std::cout << "chid: " << chid << std::endl;
     }
+
+    digiAllPMT.push_back(digiPMT);
 
   }
 
-  if (zdc_digi){
+  eventData.SetZDCdigifC(digiAllPMT);
 
-    for(int i=0; i<180; i++){DigiDatafC[i]=0;DigiDataADC[i]=0;}
+}
 
-    for (ZDCDigiCollection::const_iterator j=zdc_digi->begin();j!=zdc_digi->end();j++){
-      const ZDCDataFrame digi = (const ZDCDataFrame)(*j);		
-      int iSide      = digi.id().zside();
-      int iSection   = digi.id().section();
-      int iChannel   = digi.id().channel();
-      int chid = (iSection-1)*5+(iSide+1)/2*9+(iChannel-1);
-
-      const HcalQIEShape* qieshape=conditions->getHcalShape();
-      const HcalQIECoder* qiecoder=conditions->getHcalCoder(digi.id());
-      CaloSamples caldigi;
-      HcalCoderDb coder(*qiecoder,*qieshape);
-
-      coder.adc2fC(digi,caldigi);
-
-      int fTS = digi.size();
-
-      for (int i = 0; i < fTS; ++i) {
-	DigiDatafC[i+chid*10] = caldigi[i];
-	DigiDataADC[i+chid*10] = digi[i].adc();
-	digiPMT.push_back(DigiDatafC[i+chid*10]);
-	if (debug_deep){
-	  std::cout << "Digi Size: " << fTS << std::endl;
-	  std::cout << "DigiDataADC["<<i+chid*10<<"]: " << DigiDataADC[i+chid*10] << std::endl;
-	  std::cout << "DigiDatafC["<<i+chid*10<<"]: " << DigiDatafC[i+chid*10] << std::endl;
-	}
-      }
-
-      if (debug){
-	std::cout << "iSide: " << iSide << std::endl;
-	std::cout << "iSection: " << iSection << std::endl;
-	std::cout << "iChannel: " << iChannel << std::endl;
-	std::cout << "chid: " << chid << std::endl;
-      }
-
-      digiAllPMT.push_back(digiPMT);
-
-    }
-
-    eventData.SetZDCdigifC(digiAllPMT);
-
-  }
+*/
 
 }
 
@@ -2136,6 +2147,15 @@ void DiffractiveWAnalysis::fillDetectorEnergyEtaInfo(DiffractiveWEvent& eventDat
 
   bool debug = false;
   bool debug_deep = false;
+
+  //bool hasHCAL;
+  bool hasHF;
+  bool hasHE;
+  bool hasHB;
+  //bool hasHO;
+  //bool hasECAL;
+  bool hasEE;
+  bool hasEB;
 
   std::vector<double> energy_tower;
   std::vector<double> eta_tower; 
@@ -2154,20 +2174,20 @@ void DiffractiveWAnalysis::fillDetectorEnergyEtaInfo(DiffractiveWEvent& eventDat
 
     if (fabs(calotower->eta())> 4.7) continue;   /// excluding ring12 and ring13 of HF
 
-    bool hasHCAL = false;
-    bool hasHF = false;
-    bool hasHE = false;
-    bool hasHB = false;
-    bool hasHO = false;
-    bool hasECAL = false;
-    bool hasEE = false;
-    bool hasEB = false;  
+    //hasHCAL = false;
+    hasHF = false;
+    hasHE = false;
+    hasHB = false;
+    //hasHO = false;
+    //hasECAL = false;
+    hasEE = false;
+    hasEB = false;  
 
     for(size_t iconst = 0; iconst < calotower->constituentsSize(); iconst++){
 
       DetId adetId = calotower->constituent(iconst);
       if(adetId.det()==DetId::Hcal){
-	hasHCAL = true;
+	//hasHCAL = true;
 	if (debug_deep) std::cout << "HCAL is true." << std::endl;
 	HcalDetId hcalDetId(adetId);
 	if(hcalDetId.subdet()==HcalForward) {
@@ -2183,12 +2203,12 @@ void DiffractiveWAnalysis::fillDetectorEnergyEtaInfo(DiffractiveWEvent& eventDat
 	  if (debug_deep) std::cout << "HB is true." << std::endl;
 	} 
 	else if(hcalDetId.subdet()==HcalOuter) {
-	  hasHO = true;  
+	  //hasHO = true;  
 	  if (debug_deep) std::cout << "HO is true." << std::endl;
 	}
       } 
       else if(adetId.det()==DetId::Ecal){
-	hasECAL = true;
+	//hasECAL = true;
 	if (debug_deep) std::cout << "ECAL is true." << std::endl;
 	EcalSubdetector ecalSubDet = (EcalSubdetector)adetId.subdetId();
 	if(ecalSubDet == EcalEndcap) {

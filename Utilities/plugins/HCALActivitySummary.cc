@@ -198,6 +198,15 @@ void HCALActivitySummary::produce(edm::Event& event, edm::EventSetup const& setu
   std::map<int,std::vector<double> > iEtaEEEnergySum;
   std::map<int,std::vector<double> > iEtaEEETSum;
 
+     //bool hasHCAL = false;
+     bool hasHF = false;
+     bool hasHE = false;
+     bool hasHB = false;
+     //bool hasHO = false;
+     //bool hasECAL = false;
+     bool hasEB = false;
+     bool hasEE = false;
+
   CaloTowerCollection::const_iterator calotower = towerCollection.begin();
   CaloTowerCollection::const_iterator calotowers_end = towerCollection.end(); 
   for(; calotower != calotowers_end; ++calotower) {	
@@ -205,26 +214,26 @@ void HCALActivitySummary::produce(edm::Event& event, edm::EventSetup const& setu
      // General calo tower selector
      if( !acceptCaloTower_(*calotower) ) continue;
  
-     bool hasHCAL = false;		
-     bool hasHF = false;
-     bool hasHE = false;
-     bool hasHB = false;
-     bool hasHO = false;
-     bool hasECAL = false; 
-     bool hasEB = false;
-     bool hasEE = false;
+     //hasHCAL = false;		
+     hasHF = false;
+     hasHE = false;
+     hasHB = false;
+     //hasHO = false;
+     //hasECAL = false; 
+     hasEB = false;
+     hasEE = false;
 
      for(size_t iconst = 0; iconst < calotower->constituentsSize(); iconst++){
         DetId detId = calotower->constituent(iconst);
         if( detId.det() == DetId::Hcal ){
-           hasHCAL = true;
+           //hasHCAL = true;
            HcalDetId hcalDetId(detId);
            if( hcalDetId.subdet() == HcalForward ) hasHF = true;
            else if( hcalDetId.subdet() == HcalEndcap ) hasHE = true;
            else if( hcalDetId.subdet() == HcalBarrel ) hasHB = true;
-           else if( hcalDetId.subdet() == HcalOuter ) hasHO = true;
+           //else if( hcalDetId.subdet() == HcalOuter ) hasHO = true;
         } else if( detId.det() == DetId::Ecal ){
-           hasECAL = true;
+           //hasECAL = true;
            EcalSubdetector ecalSubDet = (EcalSubdetector)detId.subdetId();
            if(ecalSubDet == EcalBarrel) hasEB = true;
            else if(ecalSubDet == EcalEndcap) hasEE = true;

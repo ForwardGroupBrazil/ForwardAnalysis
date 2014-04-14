@@ -80,7 +80,6 @@ bool PileUpInfoFilter::filter(edm::Event& event, const edm::EventSetup& setup){
    std::vector<PileupSummaryInfo>::const_iterator PVI;
 
    int nm1 = -1; int n0 = -1; int np1 = -1;
-   float nTrueInt = -1;
    for(PVI = PupInfo->begin(); PVI != PupInfo->end(); ++PVI) {
 
       int BX = PVI->getBunchCrossing();
@@ -90,7 +89,6 @@ bool PileUpInfoFilter::filter(edm::Event& event, const edm::EventSetup& setup){
       }
       if(BX == 0) { 
 	 n0 = PVI->getPU_NumInteractions();
-	 nTrueInt = PVI->getTrueNumInteractions(); 
       }
       if(BX == 1) { 
 	 np1 = PVI->getPU_NumInteractions();

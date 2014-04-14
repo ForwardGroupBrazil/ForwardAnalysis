@@ -57,7 +57,7 @@ bool CastorActivityFilter::filter(edm::Event& event, edm::EventSetup const& setu
      int sectorId  = recHit.id().sector();
      int moduleId  = recHit.id().module();
      double energy = recHit.energy();
-     double time   = recHit.time();
+     //double time   = recHit.time();
 
      if( !isRealData ) energy *= 62.5;
 

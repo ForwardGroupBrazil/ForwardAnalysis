@@ -27,7 +27,7 @@ import atexit
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-options.register('Run','data_Multijet',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('Run','PPS_MC_none',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
 options.register('condition','Full',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Channels CASTOR conditions.")
 options.parseArguments()
 
@@ -168,6 +168,21 @@ elif options.Run == "MC_none":
   config.runGen = False
   config.sys = False
 
+elif options.Run == "PPS_MC_none":
+  print("")
+  print("###########")
+  print("PPS MC None")
+  print("###########")
+  print("")
+  config.globalTagNameMC = 'POSTLS162_V5::All'
+  config.TriggerOn = False
+  triggerlist = 'no_trigger','no_trigger'
+  l1list = 'no_trigger','no_trigger'
+  config.runOnMC = True
+  config.runPUMC = False
+  config.runGen = False
+  config.sys = False
+
 else:
   print("")
   print("") 
@@ -197,7 +212,9 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO2010/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1RECO.root'
+    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/MultiJets2010/Multijet2010.root'
+    #config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO2010/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1RECO.root'
+    #config.inputFileName = '/afs/cern.ch/work/p/polme/public/PPS/CMSSW_6_2_0/src/test_GG_exhume.root'
 
 else:
     config.l1Paths = (l1list)

@@ -817,6 +817,8 @@ void DiffractiveAnalysis::fillCastorDebug(DiffractiveEvent& eventData, const edm
 
 void DiffractiveAnalysis::fillZDCInfo(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
+/*
+
   // ZDC have two sections: section 1 = EM, section 2 = HAD. EM has 5 modules. Had has 4 modules. 
 
   bool debug = false;
@@ -834,12 +836,12 @@ void DiffractiveAnalysis::fillZDCInfo(DiffractiveEvent& eventData, const edm::Ev
 
   int DigiDataADC[180];
   float DigiDatafC[180];
-
+  
   edm::Handle <ZDCDigiCollection> zdc_digi_h;
-  event.getByType(zdc_digi_h);
+  event.getByLabel(zdc_digi_h);
   edm::ESHandle<HcalDbService> conditions;
   const ZDCDigiCollection *zdc_digi = zdc_digi_h.failedToGet()? 0 : &*zdc_digi_h;
-
+  
   edm::Handle <ZDCRecHitCollection> zdc_recHits_h;
   event.getByLabel(zdcHitsTag_, zdc_recHits_h);
   const ZDCRecHitCollection *zdc_recHits = zdc_recHits_h.failedToGet()? 0 : &*zdc_recHits_h;
@@ -940,6 +942,8 @@ void DiffractiveAnalysis::fillZDCInfo(DiffractiveEvent& eventData, const edm::Ev
     }
 
   }
+
+*/
 
 }
 

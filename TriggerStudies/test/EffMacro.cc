@@ -183,7 +183,6 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
     bool trigger = false;
     bool presel = false;
     bool castorgap = false;
-    bool castoractivity = false;
     bool vertex = false;
     bool eta4 = false;
     bool eta3 = false;
@@ -212,9 +211,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
       sumCastorEnergy+=CastorEnergySector[l];
     }
 
-    if (sumCastorEnergy > 0.){
-      castoractivity = true;
-    }else{
+    if (sumCastorEnergy < 1.){
       castorgap = true;
     }
 

@@ -190,7 +190,6 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 
     deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
     bool castorgap = false;
-    bool castoractivity = false;
     double sumCastorEnergy = 0.;
 
     for (int i=0; i < 16; i++){
@@ -213,9 +212,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
       sumCastorEnergy+=CastorEnergySector[l];
     }
 
-    if (sumCastorEnergy > 0.){
-      castoractivity = true;
-    }else{
+    if (sumCastorEnergy < 1.){
       castorgap = true;
     }
 

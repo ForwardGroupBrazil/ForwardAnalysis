@@ -1,13 +1,4 @@
 <flags CXXFLAGS="-g -O0"/>
-<bin   file="source/ExclDijetsComp.cc" name="ExclDijetsComp">
-  <use   name="root"/>
-  <use   name="rootcore"/>
-  <use   name="FWCore/FWLite"/>
-  <use   name="PhysicsTools/Utilities"/>
-  <use   name="ForwardAnalysis/Utilities"/>
-  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
-  <use   name="KKousour/QCDAnalysis"/>
-</bin>
 
 <bin   file="source/MC_PU_Distributions.cc" name="MC_PU_DistributionsComp">
   <use   name="root"/>
@@ -16,7 +7,6 @@
   <use   name="PhysicsTools/Utilities"/>
   <use   name="ForwardAnalysis/Utilities"/>
   <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
-  <use   name="KKousour/QCDAnalysis"/>
 </bin>
 
 <bin   file="source/ExclusiveDijet.cc" name="ExclusiveDijet">
@@ -26,6 +16,5 @@
   <use   name="PhysicsTools/Utilities"/>
   <use   name="ForwardAnalysis/Utilities"/>
   <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
-  <use   name="KKousour/QCDAnalysis"/>
 </bin>
 
