@@ -15,7 +15,7 @@ Example:
     cmsRun DijetsScaleMultiple.py Run=data_MuonA condition=B
 
 Optional arguments:
-    Run = data_exclusiveB, data_inclusiveB, MC_none, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU 
+    Run = data_exclusiveB, data_inclusiveB, MC_none, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU, PPS_MC_none 
     condition = A or B for Castor remove channels depending of Run. If any, no conditions.
 
 Authors: D. Figueiredo, E. Melo, A. Vilela and S. Fonseca
@@ -212,9 +212,7 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/MultiJets2010/Multijet2010.root'
-    #config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO2010/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1RECO.root'
-    #config.inputFileName = '/afs/cern.ch/work/p/polme/public/PPS/CMSSW_6_2_0/src/test_GG_exhume.root'
+    config.inputFileName = '/afs/cern.ch/work/p/polme/public/PPS/CMSSW_6_2_0/src/test_GG_exhume.root'
 
 else:
     config.l1Paths = (l1list)
