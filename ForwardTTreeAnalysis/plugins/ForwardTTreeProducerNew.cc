@@ -4,6 +4,7 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfo.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZAnalysis.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveWAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/HeavyFlavorAnalysis.h"
@@ -13,6 +14,7 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveWEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/HeavyFlavorEvent.h"
@@ -81,6 +83,18 @@ typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
                                                    diffractiveZAnalysis::DiffractiveZAnalysis> EventInfoPFCandInfoDiffractiveDiffractiveZAnalysisTTree;
 DEFINE_FWK_MODULE(EventInfoPFCandInfoDiffractiveDiffractiveZAnalysisTTree);
 
+
+
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
+                                                   diffractiveAnalysis::DiffractiveAnalysis,
+                                                   diffractiveWAnalysis::DiffractiveWAnalysis> EventInfoDiffractiveDiffractiveWAnalysisTTree;
+DEFINE_FWK_MODULE(EventInfoDiffractiveDiffractiveWAnalysisTTree);
+
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
+                                                   pfCandInfo::PFCandInfo,
+                                                   diffractiveAnalysis::DiffractiveAnalysis,
+                                                   diffractiveWAnalysis::DiffractiveWAnalysis> EventInfoPFCandInfoDiffractiveDiffractiveWAnalysisTTree;
+DEFINE_FWK_MODULE(EventInfoPFCandInfoDiffractiveDiffractiveWAnalysisTTree);
 
 typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveAnalysis::DiffractiveAnalysis,
                                                    exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis,
