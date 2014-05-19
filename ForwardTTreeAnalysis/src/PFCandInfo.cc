@@ -77,7 +77,7 @@ void PFCandInfo::fillPFFlowInfo(PFCandInfoEvent& eventData, const edm::Event& ev
       pfCand.SetPFCandP4( p4 );
       pfCand.SetCharge( iPFCand->charge() );
       pfCand.SetParticleId( static_cast<PFCand::ParticleType>(iPFCand->particleId()) );
-      PFCand::LorentzVector const& pfP4 = pfCand.GetPFCandP4();
+      //PFCand::LorentzVector const& pfP4 = pfCand.GetPFCandP4();
       //std::cout << "i: " << i 
       //   << "SetPxPyPzE: "<< pfP4.Px() << ", " 
       //                    << pfP4.Py() << ", " << pfP4.Pz() << ", " << pfP4.E() << std::endl;
