@@ -42,6 +42,7 @@
 #include "mcPU_Distributions.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
+#include "statusbar.h"
 
 using namespace eventInfo;
 
@@ -142,6 +143,12 @@ void mcPU_Distributions::Run(std::string filein_, std::string savehistofile_, st
   for(int i=0;i<NEVENTS;i++) {
 
     tr->GetEntry(i);
+
+    std::cout << "" << std::endl;
+    std::cout<< "Status Bar" << std::endl;
+    std::cout << "" << std::endl;
+    loadBar(i,NEVENTS,100,100);
+    std::cout << "" << std::endl;
 
     // Without Cuts          
     ////////////////////////////////////////////////
