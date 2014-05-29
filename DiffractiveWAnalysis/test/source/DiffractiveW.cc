@@ -29,6 +29,8 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
+#define isfinite(x) !std::isinf(x)
+
 using namespace diffractiveAnalysis;
 using namespace diffractiveWAnalysis;
 using namespace eventInfo;
@@ -65,14 +67,14 @@ void DiffractiveW::CreateHistos(std::string type){
   std::string step7 = "PGapCMS";
   std::string step8 = "NGapCMSAndCASTOR";
   std::string step9 = "PGapCMSAndCastorActivity";
-  std::string step10 = "NGapCMSAndZKinP";
-  std::string step11 = "PGapCMSAndZKinN";
-  std::string step12 = "NGapCMSAndCASTORAndZKinP";
-  std::string step13 = "PGapCMSAndCastorActivityAndZKinN";
+  std::string step10 = "NGapCMSAndWKinP";
+  std::string step11 = "PGapCMSAndWKinN";
+  std::string step12 = "NGapCMSAndCASTORAndWKinP";
+  std::string step13 = "PGapCMSAndCastorActivityAndWKinN";
   std::string step14 = "NGapCASTOR";
-  std::string step15 = "NGapCASTORAndZKinP";
+  std::string step15 = "NGapCASTORAndWKinP";
   std::string step16 = "PGapCMSAndCASTOR";
-  std::string step17 = "PGapCMSAndCASTORAndZKinP";
+  std::string step17 = "PGapCMSAndCASTORAndWKinP";
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -129,7 +131,7 @@ void DiffractiveW::CreateHistos(std::string type){
 
       char name1[300];
       sprintf(name1,"WMuonMass_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_WMuonMass = new TH1F(name1,"Boson W Invariant Mass Distribution; M_{#mu#nu} [GeV]; N events",500,0,500);
+      TH1F *histo_WMuonMass = new TH1F(name1,"Boson W Transverse Mass Distribution; M_{T}(#mu#nu) [GeV]; N events",500,0,500);
       m_hVector_WMuonMass[j].push_back(histo_WMuonMass);
 
       char name2[300];
@@ -149,7 +151,7 @@ void DiffractiveW::CreateHistos(std::string type){
 
       char name5[300];
       sprintf(name5,"WElectronMass_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_WElectronMass = new TH1F(name5,"Boson W Invariant Mass Distribution; M_{#mu#nu} [GeV]; N events",500,0,500);
+      TH1F *histo_WElectronMass = new TH1F(name5,"Boson W Transverse Mass Distribution; M_{T}(e#nu) [GeV]; N events",500,0,500);
       m_hVector_WElectronMass[j].push_back(histo_WElectronMass);
 
       char name6[300];
@@ -173,11 +175,11 @@ void DiffractiveW::CreateHistos(std::string type){
 
 void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
 
-  m_hVector_WMuonMass[index].at(pileup)->Fill(bosonWMass,totalweight);
+  m_hVector_WMuonMass[index].at(pileup)->Fill(bosonWMassMuon,totalweight);
   m_hVector_WMuonEta[index].at(pileup)->Fill(eventdiffW->GetLeadingMuonEta(),totalweight);
   m_hVector_WMuonPt[index].at(pileup)->Fill(eventdiffW->GetLeadingMuonPt(),totalweight);
   m_hVector_WMuonPhi[index].at(pileup)->Fill(eventdiffW->GetLeadingMuonPhi(),totalweight);
-  m_hVector_WElectronMass[index].at(pileup)->Fill(bosonWMass,totalweight);
+  m_hVector_WElectronMass[index].at(pileup)->Fill(bosonWMassElectron,totalweight);
   m_hVector_WElectronEta[index].at(pileup)->Fill(eventdiffW->GetLeadingElectronEta(),totalweight);
   m_hVector_WElectronPt[index].at(pileup)->Fill(eventdiffW->GetLeadingElectronPt(),totalweight);
   m_hVector_WElectronPhi[index].at(pileup)->Fill(eventdiffW->GetLeadingElectronPhi(),totalweight);
@@ -245,8 +247,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
   char selCastor[300];
 
   // Adding TTree Golden Events
-  TString TTreeoutput, TTreeAllZ, TTreeCASTOR;
-  TTreeoutput = "TTreeGoldenDiffZ_" + savehistofile;
+  TString TTreeoutput, TTreeAllW, TTreeCASTOR;
+  TTreeoutput = "TTreeGoldenDiffW_" + savehistofile;
   fOut = new TFile(TTreeoutput, "RECREATE");
   fOut->cd();
 
@@ -278,14 +280,14 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("EtaLimMinus",&betalimmin,"betalimmin/D");
   trout->Branch("EtaLimPlus",&betalimmax,"betalimmax/D");
 
-  TTreeCASTOR = "TTreeCASTOR_" + savehistofile;
+  TTreeCASTOR = "TTreeCASTORW_" + savehistofile;
   fOutCASTOR = new TFile(TTreeCASTOR, "RECREATE");
   fOutCASTOR->cd();
   troutCASTOR = trout->CloneTree(0);
 
-  TTreeAllZ = "TTreeAllZ_" + savehistofile;
-  fOutZ = new TFile(TTreeAllZ, "RECREATE");
-  fOutZ->cd();
+  TTreeAllW = "TTreeAllW_" + savehistofile;
+  fOutW = new TFile(TTreeAllW, "RECREATE");
+  fOutW->cd();
   troutZ = trout->CloneTree(0);
 
   TFile check1(filein.c_str());
@@ -462,21 +464,31 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     bool isoBarrel1 = false;
     bool isoEndCap1 = false;
     bool isolation = false;
-    bool ZKinN = false;
-    bool ZKinP = false;
+    bool WKinN = false;
+    bool WKinP = false;
 
-    double bosonWMass = -999.;
+    bosonWMassMuon = -999.;
+    bosonWMassElectron = -999.;
+
     if (typesel == "RecoMuon"){
-      bosonWMass = TMath::Sqrt(2.*(eventdiffW->GetLeadingMuonPt()*eventdiffW->GetMETPt() - (eventdiffW->GetLeadingMuonPt()*TMath::Cos(eventdiffW->GetLeadingMuonPhi())*eventdiffW->GetMETPt()*TMath::Cos(eventdiffW->GetMETPhi()) + eventdiffW->GetLeadingMuonPt()*TMath::Sin(eventdiffW->GetLeadingMuonPhi())*eventdiffW->GetMETPt()*TMath::Sin(eventdiffW->GetMETPhi()) ) ) );
+      bosonWMassMuon = TMath::Sqrt(2.*eventdiffW->GetMETPt()*eventdiffW->GetLeadingMuonPt()*(1.-TMath::Cos(eventdiffW->GetLeadingMuonPhi() - eventdiffW->GetMETPhi())));
     }
     if (typesel == "PatMuon"){
-      bosonWMass = TMath::Sqrt(2.*(eventdiffW->GetPatMuon1Pt()*eventdiffW->GetPatMETPt() - (eventdiffW->GetPatMuon1Pt()*TMath::Cos(eventdiffW->GetPatMuon1Phi())*eventdiffW->GetPatMETPt()*TMath::Cos(eventdiffW->GetPatMETPhi()) + eventdiffW->GetPatMuon1Pt()*TMath::Sin(eventdiffW->GetPatMuon1Phi())*eventdiffW->GetPatMETPt()*TMath::Sin(eventdiffW->GetPatMETPhi()) ) ) );
+      bosonWMassMuon = TMath::Sqrt(2.*eventdiffW->GetPatMETPt()*eventdiffW->GetPatMuon1Pt()*(1.-TMath::Cos(eventdiffW->GetPatMuon1Phi() - eventdiffW->GetPatMETPhi())));
     }
     if (typesel == "RecoElectron"){
-      bosonWMass = TMath::Sqrt(2.*(eventdiffW->GetLeadingElectronPt()*eventdiffW->GetMETPt() - (eventdiffW->GetLeadingElectronPt()*TMath::Cos(eventdiffW->GetLeadingElectronPhi())*eventdiffW->GetMETPt()*TMath::Cos(eventdiffW->GetMETPhi()) + eventdiffW->GetLeadingElectronPt()*TMath::Sin(eventdiffW->GetLeadingElectronPhi())*eventdiffW->GetMETPt()*TMath::Sin(eventdiffW->GetMETPhi()) ) ) );
+      bosonWMassElectron = TMath::Sqrt(2.*eventdiffW->GetMETPt()*eventdiffW->GetLeadingElectronPt()*(1.-TMath::Cos(eventdiffW->GetLeadingElectronPhi() - eventdiffW->GetMETPhi())));
     }
     if (typesel == "PatElectron"){
-      bosonWMass = TMath::Sqrt(2.*(eventdiffW->GetPatElectron1Pt()*eventdiffW->GetPatMETPt() - (eventdiffW->GetPatElectron1Pt()*TMath::Cos(eventdiffW->GetPatElectron1Phi())*eventdiffW->GetPatMETPt()*TMath::Cos(eventdiffW->GetPatMETPhi()) + eventdiffW->GetPatElectron1Pt()*TMath::Sin(eventdiffW->GetPatElectron1Phi())*eventdiffW->GetPatMETPt()*TMath::Sin(eventdiffW->GetPatMETPhi()) ) ) );
+      bosonWMassElectron = TMath::Sqrt(2.*eventdiffW->GetPatMETPt()*eventdiffW->GetPatElectron1Pt()*(1.-TMath::Cos(eventdiffW->GetPatElectron1Phi() - eventdiffW->GetPatMETPhi())));
+    }
+
+    if (!isfinite(bosonWMassMuon)) {
+      bosonWMassMuon = -999.;
+    }
+
+    if (!isfinite(bosonWMassElectron)) {
+      bosonWMassElectron = -999.;
     }
 
     if (switchtrigger == "trigger_all_electron"){
@@ -650,7 +662,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       }
 
       if (eventdiffW->GetLeadingElectronPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt) presel = true;
-      if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
+      if (bosonWMassElectron > 60. && bosonWMassElectron < 110.) dimass = true;
 
       //Isolation Electron
       if ((fabs (eventdiffW->GetLeadingElectronEta()) <= 1.4442) ){
@@ -674,8 +686,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
       if ((eleEndCap1 || eleBarrel1)) candSel = true;
 
-      if (eventdiffW->GetLeadingElectronEta()>0.) ZKinP = true;
-      if (eventdiffW->GetLeadingElectronEta()<0.) ZKinN = true;
+      if (eventdiffW->GetLeadingElectronEta()>0.) WKinP = true;
+      if (eventdiffW->GetLeadingElectronEta()<0.) WKinN = true;
 
       if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffW->GetLeadingElectronEta()); }
       else{ etasignedHF = fabs(eventdiffW->GetLeadingElectronEta()); }
@@ -688,14 +700,14 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if (typesel == "RecoMuon"){
       selStatus = "Reco::Muon";
       if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt) presel = true;
-      if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
+      if (bosonWMassMuon > 60. && bosonWMassMuon < 110.) dimass = true;
       if (eventdiffW->GetLeadingMuonSumPtR03() < 3) { 
 	isolation = true;
 	candSel = true;
       }
 
-      if (eventdiffW->GetLeadingMuonEta()>0.) ZKinP = true;
-      if (eventdiffW->GetLeadingMuonEta()<0.) ZKinN = true;
+      if (eventdiffW->GetLeadingMuonEta()>0.) WKinP = true;
+      if (eventdiffW->GetLeadingMuonEta()<0.) WKinN = true;
 
       if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffW->GetLeadingMuonEta()); }
       else{ etasignedHF = fabs(eventdiffW->GetLeadingMuonEta()); }
@@ -719,7 +731,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       HE1 = eventdiffW->GetPatElectron1HE();
 
       if (eventdiffW->GetPatElectron1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt) presel = true;
-      if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
+      if (bosonWMassElectron > 60. && bosonWMassElectron < 110.) dimass = true;
 
       //Isolation Electron
       if ((fabs (eventdiffW->GetPatElectron1Eta()) <= 1.4442) ){
@@ -743,8 +755,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
       if ((eleEndCap1 || eleBarrel1)) candSel = true;
 
-      if (eventdiffW->GetPatElectron1Eta()>0.) ZKinP = true;
-      if (eventdiffW->GetPatElectron1Eta()<0.) ZKinN = true;
+      if (eventdiffW->GetPatElectron1Eta()>0.) WKinP = true;
+      if (eventdiffW->GetPatElectron1Eta()<0.) WKinN = true;
 
       if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffW->GetPatElectron1Eta()); }
       else{ etasignedHF = fabs(eventdiffW->GetPatElectron1Eta()); }
@@ -757,14 +769,14 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if(typesel == "PatMuon"){
       selStatus = "Pat::Muon";
       if (eventdiffW->GetPatMuon1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt) presel = true;
-      if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
+      if (bosonWMassMuon > 60. && bosonWMassMuon < 110.) dimass = true;
       if (eventdiffW->GetPatMuon1SumPtR03() < 3) {
 	candSel = true;
 	isolation = true;
       }
 
-      if (eventdiffW->GetPatMuon1Eta()>0.) ZKinP = true;
-      if (eventdiffW->GetPatMuon1Eta()<0.) ZKinN = true;
+      if (eventdiffW->GetPatMuon1Eta()>0.) WKinP = true;
+      if (eventdiffW->GetPatMuon1Eta()<0.) WKinN = true;
 
       if (diffselp || diffseln){ etasignedHF = -1*fabs(eventdiffW->GetPatMuon1Eta()); }
       else{ etasignedHF = fabs(eventdiffW->GetPatMuon1Eta()); }
@@ -785,25 +797,25 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       bDiBosonPt = eventdiffW->GetLeadingMuonPt();
       bDiBosonEta = eventdiffW->GetLeadingMuonEta();
       bDiBosonPhi = eventdiffW->GetLeadingMuonPhi();
-      bDiBosonMass = bosonWMass;
+      bDiBosonMass = bosonWMassMuon;
     }
     if (typesel == "PatMuon"){
       bDiBosonPt = eventdiffW->GetPatMuon1Pt();
       bDiBosonEta = eventdiffW->GetPatMuon1Eta();
       bDiBosonPhi = eventdiffW->GetPatMuon1Phi();
-      bDiBosonMass = bosonWMass;
+      bDiBosonMass = bosonWMassMuon;
     }
     if (typesel == "RecoElectron"){
       bDiBosonPt = eventdiffW->GetLeadingElectronPt();
       bDiBosonEta = eventdiffW->GetLeadingElectronEta();
       bDiBosonPhi = eventdiffW->GetLeadingElectronPhi();
-      bDiBosonMass = bosonWMass;
+      bDiBosonMass = bosonWMassElectron;
     }
     if (typesel == "PatElectron"){
       bDiBosonPt = eventdiffW->GetPatElectron1Pt();
       bDiBosonEta = eventdiffW->GetPatElectron1Eta();
       bDiBosonPhi = eventdiffW->GetPatElectron1Phi();
-      bDiBosonMass = bosonWMass;
+      bDiBosonMass = bosonWMassElectron;
     }
     bMultiplicityTracks = eventdiff->GetMultiplicityTracks();
     bSumEEEMinus = eventdiffW->GetSumEEEMinus();
@@ -838,29 +850,29 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && dimass && isolation) FillHistos(4,pileup,totalcommon);
 	if(trigger && vertex && presel && dimass && isolation && candSel) {
 	  FillHistos(5,pileup,totalcommon);
-	  fOutZ->cd();
+	  fOutW->cd();
 	  troutZ->Fill();
 	}
 	if(trigger && vertex && presel && dimass && isolation && candSel && diffseln) FillHistos(6,pileup,totalcommon);
 	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp) FillHistos(7,pileup,totalcommon);
 	if(trigger && vertex && presel && dimass && isolation && candSel && diffseln && castorgap) FillHistos(8,pileup,totalcommon);
 	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp && castoractivity) FillHistos(9,pileup,totalcommon);
-	if(trigger && vertex && presel && dimass && isolation && candSel && diffseln && ZKinP){
+	if(trigger && vertex && presel && dimass && isolation && candSel && diffseln && WKinP){
 	  outstring << "HF- Gap, W Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(10,pileup,totalcommon);
 	}
-	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp && ZKinN){
+	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp && WKinN){
 	  outstring << "HF+ Gap, W Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(11,pileup,totalcommon);
 	}
-	if(trigger && vertex && presel && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(12,pileup,totalcommon);
-	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(13,pileup,totalcommon);
+	if(trigger && vertex && presel && dimass && isolation && candSel && diffseln && castorgap && WKinP) FillHistos(12,pileup,totalcommon);
+	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp && castoractivity && WKinN) FillHistos(13,pileup,totalcommon);
 	if(trigger && vertex && presel && dimass && isolation && candSel && castorgap){
 	  FillHistos(14,pileup,totalcommon);
 	  fOutCASTOR->cd();
 	  troutCASTOR->Fill();
 	}
-	if(trigger && vertex && presel && dimass && isolation && candSel && castorgap && ZKinP){
+	if(trigger && vertex && presel && dimass && isolation && candSel && castorgap && WKinP){
 	  outstring << "CASTOR Gap, W Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(15,pileup,totalcommon);
 	  fOut->cd();
@@ -868,7 +880,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	}
 
 	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp && castorgap) FillHistos(16,pileup,totalcommon);
-	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp && castorgap && ZKinP) FillHistos(17,pileup,totalcommon);
+	if(trigger && vertex && presel && dimass && isolation && candSel && diffselp && castorgap && WKinP) FillHistos(17,pileup,totalcommon);
 
       }
 
@@ -880,29 +892,29 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && dimass && isolation) FillHistos(4,pileup,totalcommon);
 	if(vertex && presel && dimass && isolation && candSel) {
 	  FillHistos(5,pileup,totalcommon);
-	  fOutZ->cd();
+	  fOutW->cd();
 	  troutZ->Fill();
 	}
 	if(vertex && presel && dimass && isolation && candSel && diffseln) FillHistos(6,pileup,totalcommon);
 	if(vertex && presel && dimass && isolation && candSel && diffselp) FillHistos(7,pileup,totalcommon);
 	if(vertex && presel && dimass && isolation && candSel && diffseln && castorgap) FillHistos(8,pileup,totalcommon);
 	if(vertex && presel && dimass && isolation && candSel && diffselp && castoractivity) FillHistos(9,pileup,totalcommon);
-	if(vertex && presel && dimass && isolation && candSel && diffseln && ZKinP) FillHistos(10,pileup,totalcommon);
-	if(vertex && presel && dimass && isolation && candSel && diffselp && ZKinN) FillHistos(11,pileup,totalcommon);
-	if(vertex && presel && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(12,pileup,totalcommon);
-	if(vertex && presel && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(13,pileup,totalcommon);
+	if(vertex && presel && dimass && isolation && candSel && diffseln && WKinP) FillHistos(10,pileup,totalcommon);
+	if(vertex && presel && dimass && isolation && candSel && diffselp && WKinN) FillHistos(11,pileup,totalcommon);
+	if(vertex && presel && dimass && isolation && candSel && diffseln && castorgap && WKinP) FillHistos(12,pileup,totalcommon);
+	if(vertex && presel && dimass && isolation && candSel && diffselp && castoractivity && WKinN) FillHistos(13,pileup,totalcommon);
 	if(vertex && presel && dimass && isolation && candSel && castorgap){ 
 	  FillHistos(14,pileup,totalcommon);
 	  fOutCASTOR->cd();
 	  troutCASTOR->Fill();
 	}
-	if(vertex && presel && dimass && isolation && candSel && castorgap && ZKinP){
+	if(vertex && presel && dimass && isolation && candSel && castorgap && WKinP){
 	  FillHistos(15,pileup,totalcommon);
 	  fOut->cd();
 	  trout->Fill();
 	}
 	if(vertex && presel && dimass && isolation && candSel && diffselp && castorgap) FillHistos(16,pileup,totalcommon);
-	if(vertex && presel && dimass && isolation && candSel && diffselp && castorgap && ZKinP) FillHistos(17,pileup,totalcommon);
+	if(vertex && presel && dimass && isolation && candSel && diffselp && castorgap && WKinP) FillHistos(17,pileup,totalcommon);
       }
 
       else{
@@ -969,9 +981,9 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
   trout->Write();
   fOut->Close();
 
-  fOutZ->cd();
+  fOutW->cd();
   troutZ->Write();
-  fOutZ->Close();
+  fOutW->Close();
 
   fOutCASTOR->cd();
   troutCASTOR->Write();
