@@ -30,7 +30,7 @@ class DiffractiveW {
   TBranch *diffW;
   TBranch *info;
   TTree* trout;
-  TTree* troutZ;
+  TTree* troutW;
   TTree* troutCASTOR;
 
   TH1* h_castor_channel;
@@ -47,13 +47,17 @@ class DiffractiveW {
   double aSumE;
   int l, k;
 
-  double bosonWMassMuon;
-  double bosonWMassElectron;
-  double sumCastorEnergy;
+  double bosonWMass;
+  double bosonWEta;
+  double bosonWPhi;
+  double bosonWPt;
+  int bosonWCharge;
+  int NElectrons;
+  int NMuons;
   double isoTk1;
-  double isoTk2;
   double isoEcal1;
   double isoHcal1;
+  double isoRec;
   int innerHits1;
   double Dcot1;
   double Dist1;
@@ -61,6 +65,7 @@ class DiffractiveW {
   double DeltaPhiTkClu1;
   double sigmaIeIe1;
   double HE1;
+
   double sumCastorAndHFMinusEnergy;
   int SectorCastorHit;
   double castorthreshold;
@@ -72,6 +77,7 @@ class DiffractiveW {
   double etasignedHF;
   double etasignedCASTOR;
   int counterHit;
+  double sumCastorEnergy;
 
   int bRunNumber;
   int bLumiSection;
@@ -119,18 +125,89 @@ class DiffractiveW {
   int SectorZeroCastorCounter;
   double CastorEnergySector[16];
 
-  std::vector<std::vector<TH1F*> >    m_hVector_WMuonMass;
-  std::vector<std::vector<TH1F*> >    m_hVector_WMuonEta;
-  std::vector<std::vector<TH1F*> >    m_hVector_WMuonPt;
-  std::vector<std::vector<TH1F*> >    m_hVector_WMuonPhi;
-  std::vector<std::vector<TH1F*> >    m_hVector_WElectronMass;
-  std::vector<std::vector<TH1F*> >    m_hVector_WElectronEta;
-  std::vector<std::vector<TH1F*> >    m_hVector_WElectronPt;
-  std::vector<std::vector<TH1F*> >    m_hVector_WElectronPhi;
+  // Kinematics
+  std::vector<std::vector<TH1F*> > m_hVector_WMass;
+  std::vector<std::vector<TH1F*> > m_hVector_WEta;
+  std::vector<std::vector<TH1F*> > m_hVector_WPt;
+  std::vector<std::vector<TH1F*> > m_hVector_WPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_WCharge;
+  std::vector<std::vector<TH1F*> > m_hVector_NElectrons;
+  std::vector<std::vector<TH1F*> > m_hVector_NMuons;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonTkDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonEcalDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonHcalDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonIsolation;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonInnerHits;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDCot;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDist;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDeltaEtaTkClu;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDeltaPhiTkClu;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonSigmaIeIe;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonHE;
+
+  // Detector
+  std::vector<std::vector<TH1F*> > m_hVector_sumEHFplus;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEHFminus;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEHEplus;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEHEminus;
+  std::vector<std::vector<TH1F*> > m_hVector_SumEHFplus_S;
+  std::vector<std::vector<TH1F*> > m_hVector_SumEHFminus_S;
+  std::vector<std::vector<TH1F*> > m_hVector_SumEHFplus_L;
+  std::vector<std::vector<TH1F*> > m_hVector_SumEHFminus_L;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEEEplus;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEEEminus;
+  std::vector<std::vector<TH2F*> > m_hVector_EnergyHFPlusVsEnergyHFMinus;
+  std::vector<std::vector<TH2F*> > m_hVector_EnergyEEPlusVsEnergyEEMinus;
+  std::vector<std::vector<TH1F*> > m_hVector_SumEHFMax;
+  std::vector<std::vector<TH1F*> > m_hVector_SumEHFMin;
+  std::vector<std::vector<TH2F*> > m_hVector_etcalos_p;
+  std::vector<std::vector<TH2F*> > m_hVector_etcalos_n;
+  std::vector<std::vector<TH2F*> > m_hVector_ECaloVsEta;
+  std::vector<std::vector<TProfile*> > m_hVector_ECaloVsEtaTProf;
+  std::vector<std::vector<TH1F*> > m_hVector_EnergyVsEtaBin1D;
+  std::vector<std::vector<TH1F*> > m_hVector_sumECastorMinus;
+  std::vector<std::vector<TH2F*> > m_hVector_ECastorSector;
+  std::vector<std::vector<TProfile*> > m_hVector_ECastorSectorTProf;
+  std::vector<std::vector<TH1F*> > m_hVector_ECastorSectorBin1D;
+  std::vector<std::vector<TProfile*> > m_hVector_EnergyHFMinusVsCastorTProf;
+  std::vector<std::vector<TProfile*> > m_hVector_EnergyHFPlusVsCastorTProf;
+  std::vector<std::vector<TH1F*> > m_hVector_sumECastorAndHFMinus;
+  std::vector<std::vector<TH1F*> > m_hVector_CastorMultiplicity;
+  std::vector<std::vector<TH2F*> > m_hVector_CastorMultiplicityVsLumi;
+  std::vector<std::vector<TH2F*> > m_hVector_SectorVsTotalCastorEnergy;
+  std::vector<std::vector<TProfile*> > m_hVector_SectorVsTotalCastorEnergyTProf;
+
+  /*
+  //Event Info
+  std::vector<std::vector<TH1F*> > m_hVector_lumi;
+  std::vector<std::vector<TH1F*> > m_hVector_tracks;
+  std::vector<std::vector<TH1F*> > m_hVector_tracksLow;
+  std::vector<std::vector<TH1F*> > m_hVector_vertex;
+
+  // Diffraction
+  std::vector<std::vector<TH1F*> > m_hVector_asumE;
+  std::vector<std::vector<TH2F*> > m_hVector_multhf;
+  std::vector<std::vector<TH1F*> > m_hVector_pfetamax;
+  std::vector<std::vector<TH1F*> > m_hVector_pfetamin;
+  std::vector<std::vector<TH1F*> > m_hVector_pfetamincastor;
+  std::vector<std::vector<TH1F*> > m_hVector_maxetagap;
+  std::vector<std::vector<TH1F*> > m_hVector_LimPlusgap;
+  std::vector<std::vector<TH1F*> > m_hVector_LimMinusgap;
+  std::vector<std::vector<TH1F*> > m_hVector_SumPTLimPlusgap;
+  std::vector<std::vector<TH1F*> > m_hVector_SumPTLimMinusgap;
+  std::vector<std::vector<TH1F*> > m_hVector_absdeltaEtaPF;
+  std::vector<std::vector<TH1F*> > m_hVector_deltaEtaPF;
+  std::vector<std::vector<TH1F*> > m_hVector_XiPlusPF;
+  std::vector<std::vector<TH1F*> > m_hVector_XiMinusPF;
+  std::vector<std::vector<TH1F*> > m_hVector_XiPF;
+  std::vector<std::vector<TH1F*> > m_hVector_AEcastor;
+  std::vector<std::vector<TH1F*> > m_hVector_etasignedHF;
+  std::vector<std::vector<TH1F*> > m_hVector_etasignedCASTOR;
+   */
 
   std::vector <std::string> Folders;
 
-  TDirectory *foldersFile[1];
+  TDirectory *foldersFile[4];
 
   public :
   DiffractiveW() {}
@@ -141,6 +218,7 @@ class DiffractiveW {
   void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double, double, std::string, std::string, std::string, std::string);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
+  void CleanVariables();
   void FillHistos(int, int, double);
   void SaveHistos(std::string, std::string);
 
