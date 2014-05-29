@@ -23,7 +23,7 @@ class DiffractiveW {
   TFile* pudata;
   TFile* pumc;
   TFile* fOut;
-  TFile* fOutZ;
+  TFile* fOutW;
   TFile* fOutCASTOR;
   TTree* tr;
   TBranch *diff;
@@ -47,7 +47,8 @@ class DiffractiveW {
   double aSumE;
   int l, k;
 
-  double bosonWMass;
+  double bosonWMassMuon;
+  double bosonWMassElectron;
   double sumCastorEnergy;
   double isoTk1;
   double isoTk2;
