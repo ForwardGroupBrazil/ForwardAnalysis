@@ -125,17 +125,17 @@ void mcPU_Distributions::Run(std::string filein_, std::string savehistofile_, st
 
     char name1[300];
     sprintf(name1,"pileUpBx0_complete_%s",Folders.at(j).c_str());
-    TH1D *histo_pumcbx0 = new TH1D(name1,"PileUp Monte Carlo; # Pile Up; N events",nbins,-0.5,nbins);
+    TH1D *histo_pumcbx0 = new TH1D(name1,"PileUp Monte Carlo; # Pile Up; N events",nbins,-0.5,nbins-0.5);
     m_hVector_pumcbx0.push_back(histo_pumcbx0);
 
     char name2[300];
     sprintf(name2,"pileUpBxm1_complete_%s",Folders.at(j).c_str());
-    TH1D *histo_pumcbxm1 = new TH1D(name2,"PileUp Monte Carlo; # Pile Up; N events",nbins,-0.5,nbins);
+    TH1D *histo_pumcbxm1 = new TH1D(name2,"PileUp Monte Carlo; # Pile Up; N events",nbins,-0.5,nbins-0.5);
     m_hVector_pumcbxm1.push_back(histo_pumcbxm1);
 
     char name3[300];
     sprintf(name3,"pileUpBxp1_complete_%s",Folders.at(j).c_str());
-    TH1D *histo_pumcbxp1 = new TH1D(name3,"PileUp Monte Carlo; # Pile Up; N events",nbins,-0.5,nbins);
+    TH1D *histo_pumcbxp1 = new TH1D(name3,"PileUp Monte Carlo; # Pile Up; N events",nbins,-0.5,nbins-0.5);
     m_hVector_pumcbxp1.push_back(histo_pumcbxp1);
 
   }
