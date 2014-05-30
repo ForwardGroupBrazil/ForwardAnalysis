@@ -44,8 +44,6 @@ class DiffractiveW {
   int index;
   int pileup;
   int totalweight;
-  double aSumE;
-  int l, k;
 
   double bosonWMass;
   double bosonWEta;
@@ -65,6 +63,9 @@ class DiffractiveW {
   double DeltaPhiTkClu1;
   double sigmaIeIe1;
   double HE1;
+  double aSumE;
+  double deltaetapf;
+  double deltaetapfcastor;
 
   double sumCastorAndHFMinusEnergy;
   int SectorCastorHit;
@@ -103,6 +104,7 @@ class DiffractiveW {
   double bXiMinusFromPFCands;
   double betamax;
   double betamin;
+  double betamincastor;
   double betalimmin;
   double betalimmax;
 
@@ -177,11 +179,9 @@ class DiffractiveW {
   std::vector<std::vector<TH2F*> > m_hVector_SectorVsTotalCastorEnergy;
   std::vector<std::vector<TProfile*> > m_hVector_SectorVsTotalCastorEnergyTProf;
 
-  /*
   //Event Info
   std::vector<std::vector<TH1F*> > m_hVector_lumi;
   std::vector<std::vector<TH1F*> > m_hVector_tracks;
-  std::vector<std::vector<TH1F*> > m_hVector_tracksLow;
   std::vector<std::vector<TH1F*> > m_hVector_vertex;
 
   // Diffraction
@@ -197,16 +197,16 @@ class DiffractiveW {
   std::vector<std::vector<TH1F*> > m_hVector_SumPTLimMinusgap;
   std::vector<std::vector<TH1F*> > m_hVector_absdeltaEtaPF;
   std::vector<std::vector<TH1F*> > m_hVector_deltaEtaPF;
+  std::vector<std::vector<TH1F*> > m_hVector_absdeltaEtaPFCastor;
+  std::vector<std::vector<TH1F*> > m_hVector_deltaEtaPFCastor;
   std::vector<std::vector<TH1F*> > m_hVector_XiPlusPF;
   std::vector<std::vector<TH1F*> > m_hVector_XiMinusPF;
   std::vector<std::vector<TH1F*> > m_hVector_XiPF;
   std::vector<std::vector<TH1F*> > m_hVector_AEcastor;
   std::vector<std::vector<TH1F*> > m_hVector_etasignedHF;
   std::vector<std::vector<TH1F*> > m_hVector_etasignedCASTOR;
-   */
-
+ 
   std::vector <std::string> Folders;
-
   TDirectory *foldersFile[4];
 
   public :
