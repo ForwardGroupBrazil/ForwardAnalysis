@@ -53,6 +53,57 @@ void DiffractiveZ::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
+void DiffractiveZ::CleanVariables(){
+
+  nMuons = -999;
+  nElectrons = -999;
+  dileptonMass = -999.;
+  dileptonEta = -999.;
+  dileptonPhi = -999.;
+  dileptonPt = -999.;
+  lepton1Pt = -999.;
+  lepton1Eta = -999.;
+  lepton1Phi = -999.;
+  lepton2Pt = -999.;
+  lepton2Eta = -999.;
+  lepton2Phi = -999.;
+  isoTk1 = -999.;
+  isoEcal1 = -999.;
+  isoHcal1 = -999.;
+  innerHits1 = -999.;
+  Dcot1 = -999.;
+  Dist1 = -999.;
+  DeltaEtaTkClu1 = -999.;
+  DeltaPhiTkClu1 = -999.;
+  sigmaIeIe1 = -999.;
+  HE1 = -999.;
+  isoTk2 = -999.;
+  isoEcal2 = -999.;
+  isoHcal2 = -999.;
+  innerHits2 = -999.;
+  Dcot2 = -999.;
+  Dist2 = -999.;
+  DeltaEtaTkClu2 = -999.;
+  DeltaPhiTkClu2 = -999.;
+  sigmaIeIe2 = -999.;
+  HE2 = -999.;
+  deltaetaleptons = -999.;
+  deltaphileptons = -999.;
+  deltaptleptons = -999.;
+  cone03tracks = -999.;
+  cone04tracks = -999.;
+  cone05tracks = -999.;
+  isoRec1 = -999.;
+  isoRec2 = -999.;
+  etasignedHF = -999.;
+  etasignedCASTOR = -999;
+  aSumE = -999.;
+  AEcastor = -999.;
+  deltaetapf = -999.;
+  deltaetapfcastor = -999.;  
+
+}
+
 void DiffractiveZ::CreateHistos(std::string type){
 
   double binarrayplus[19] = {0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.,2.25,2.5,2.75,3.,3.25,3.5,3.75,4.,5.2,6.2};
@@ -118,20 +169,13 @@ void DiffractiveZ::CreateHistos(std::string type){
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
     // Kinematics 
-    m_hVector_DiLeptonMass.push_back( std::vector<TH1F*>() );
-    m_hVector_DiLeptonEta.push_back( std::vector<TH1F*>() );
-    m_hVector_DiLeptonPt.push_back( std::vector<TH1F*>() );
-    m_hVector_DiLeptonPhi.push_back( std::vector<TH1F*>() );
-
     m_hVector_BosonZPt.push_back( std::vector<TH1F*>() );
     m_hVector_BosonZEta.push_back( std::vector<TH1F*>() );
     m_hVector_BosonZPhi.push_back( std::vector<TH1F*>() );
     m_hVector_BosonZMass.push_back( std::vector<TH1F*>() );
-
     m_hVector_LeptonsPt.push_back( std::vector<TH1F*>() );
     m_hVector_LeptonsEta.push_back( std::vector<TH1F*>() );
     m_hVector_LeptonsPhi.push_back( std::vector<TH1F*>() );
-
     m_hVector_LeadingLeptonPt.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonEta.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonPhi.push_back( std::vector<TH1F*>() );
@@ -179,7 +223,6 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_lumi.push_back( std::vector<TH1F*>() );
     m_hVector_vertexvslumi.push_back( std::vector<TH2F*>() );
     m_hVector_tracks.push_back( std::vector<TH1F*>() );
-    m_hVector_tracksLow.push_back( std::vector<TH1F*>() );
 
     // Detector
     m_hVector_ECaloVsEta.push_back( std::vector<TH2F*>() );
@@ -224,6 +267,8 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_pfetamincastor.push_back( std::vector<TH1F*>() );
     m_hVector_absdeltaEtaPF.push_back( std::vector<TH1F*>() );
     m_hVector_deltaEtaPF.push_back( std::vector<TH1F*>() );
+    m_hVector_absdeltaEtaPFCastor.push_back( std::vector<TH1F*>() );
+    m_hVector_deltaEtaPFCastor.push_back( std::vector<TH1F*>() );
     m_hVector_maxetagap.push_back( std::vector<TH1F*>() );
     m_hVector_LimPlusgap.push_back( std::vector<TH1F*>() );
     m_hVector_LimMinusgap.push_back( std::vector<TH1F*>() );
@@ -232,13 +277,14 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_pfetamax.push_back( std::vector<TH1F*>() );
     m_hVector_pfetamin.push_back( std::vector<TH1F*>() );
     m_hVector_asumE.push_back( std::vector<TH1F*>() );
+    m_hVector_EnergyHFPlusVsCastorTProf.push_back( std::vector<TProfile*>() );
+    m_hVector_EnergyHFMinusVsCastorTProf.push_back( std::vector<TProfile*>() );
 
     for (int k=0;k<nloop;k++){
 
       if (type=="multiple_pileup"){
 	sprintf(tag,"multiple_pileup_%i",k);
-      }
-      else{
+      }else{
 	sprintf(tag,"single");
       }
 
@@ -252,22 +298,6 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name,"MuonsN_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_MuonsN = new TH1F(name,"Muons per Event Distribution; Number of Muons; N events",100,0,100);
       m_hVector_MuonsN[j].push_back(histo_MuonsN);
-
-      sprintf(name,"DiLeptonMass_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DiLeptonMass = new TH1F(name,"DiLepton Invariant Mass Distribution; M_{ll} [GeV]; N events",500,0,500);
-      m_hVector_DiLeptonMass[j].push_back(histo_DiLeptonMass);
-
-      sprintf(name,"DiLeptonPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DiLeptonPt = new TH1F(name,"DiLepton Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
-      m_hVector_DiLeptonPt[j].push_back(histo_DiLeptonPt);
-
-      sprintf(name,"DiLeptonEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DiLeptonEta = new TH1F(name,"DiLepton #eta Distribution; #eta; N events",50,-5.2,5.2);
-      m_hVector_DiLeptonEta[j].push_back(histo_DiLeptonEta);
-
-      sprintf(name,"DiLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DiLeptonPhi = new TH1F(name,"DiLepton #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
-      m_hVector_DiLeptonPhi[j].push_back(histo_DiLeptonPhi);
 
       sprintf(name,"BosonZPt_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_BosonZPt = new TH1F(name,"Boson Z Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
@@ -296,10 +326,6 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name,"LeptonsPhi_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_LeptonsPhi = new TH1F(name,"Leptons - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_LeptonsPhi[j].push_back(histo_LeptonsPhi);
-
-
-
-
 
       sprintf(name,"LeadingLeptonPt_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_LeadingLeptonPt = new TH1F(name,"Leading Lepton - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
@@ -467,10 +493,6 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_Tracks = new TH1F(name,"Tracks Multiplicity; n Tracks; N events",150,0,150);
       m_hVector_tracks[j].push_back(histo_Tracks);
 
-      sprintf(name,"TracksLow_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_TracksLow = new TH1F(name,"Tracks Multiplicity; n Tracks; N events",40,0,80);
-      m_hVector_tracksLow[j].push_back(histo_TracksLow);
-
 
       // Detector
       sprintf(name,"ECaloVsEta_%s_%s",tag,Folders.at(j).c_str());
@@ -627,6 +649,14 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_absdeltaEtaPF = new TH1F(name,"|#Delta#eta_{PF}| Distribution; |#eta_{max}-#eta_{min}|; N events",14,binarraydelta);
       m_hVector_absdeltaEtaPF[j].push_back(histo_absdeltaEtaPF);
 
+      sprintf(name,"deltaEtamaxminPFCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_deltaEtaPFCastor = new TH1F(name,"#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",14,binarraydelta);
+      m_hVector_deltaEtaPFCastor[j].push_back(histo_deltaEtaPFCastor);
+
+      sprintf(name,"absdeltaEtamaxminPFCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_absdeltaEtaPFCastor = new TH1F(name,"|#Delta#eta_{PF}| Distribution; |#eta_{max}-#eta_{min}|; N events",14,binarraydelta);
+      m_hVector_absdeltaEtaPFCastor[j].push_back(histo_absdeltaEtaPFCastor);
+
       sprintf(name,"xiPlusPF_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_XiPlusPF = new TH1F(name,"#xi_{plus} Particle Flow; #xi_{plus}; N Event",17,xi_bin);
       m_hVector_XiPlusPF[j].push_back(histo_XiPlusPF);
@@ -677,177 +707,98 @@ void DiffractiveZ::CreateHistos(std::string type){
 
 void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
 
-  m_hVector_DiElectronMass[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
-  m_hVector_DiElectronEta[index].at(pileup)->Fill(eventdiffZ->GetDiElectronEta(),totalweight);
-  m_hVector_DiElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPhi(),totalweight);
-  m_hVector_DiElectronPt[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPt(),totalweight);
-  m_hVector_LeadingElectronPt[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPt(),totalweight);
-  m_hVector_LeadingElectronEta[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEta(),totalweight);
-  m_hVector_LeadingElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPhi(),totalweight);
-  m_hVector_LeadingElectronCharge[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronCharge(),totalweight);
-  m_hVector_SecondElectronPt[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronPt(),totalweight);
-  m_hVector_SecondElectronEta[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronEta(),totalweight);
-  m_hVector_SecondElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronPhi(),totalweight);
-  m_hVector_SecondElectronCharge[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronCharge(),totalweight);
-  m_hVector_ElectronsN[index].at(pileup)->Fill(eventdiffZ->GetElectronsN(),totalweight);
-  m_hVector_DiMuonMass[index].at(pileup)->Fill(eventdiffZ->GetDiMuonMass(),totalweight);
-  m_hVector_DiMuonEta[index].at(pileup)->Fill(eventdiffZ->GetDiMuonEta(),totalweight);
-  m_hVector_DiMuonPhi[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPhi(),totalweight);
-  m_hVector_DiMuonPt[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPt(),totalweight);
-  m_hVector_LeadingMuonPt[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonPt(),totalweight);
-  m_hVector_LeadingMuonEta[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonEta(),totalweight);
-  m_hVector_LeadingMuonPhi[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonPhi(),totalweight);
-  m_hVector_LeadingMuonCharge[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonCharge(),totalweight);
-  m_hVector_SecondMuonPt[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPt(),totalweight);
-  m_hVector_SecondMuonEta[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonEta(),totalweight);
-  m_hVector_SecondMuonPhi[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPhi(),totalweight);
-  m_hVector_SecondMuonCharge[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonCharge(),totalweight);
-  m_hVector_MuonsN[index].at(pileup)->Fill(eventdiffZ->GetMuonsN(),totalweight);
+  // Kinematics
+  m_hVector_ElectronsN[index].at(pileup)->Fill(nElectrons,totalweight);
+  m_hVector_MuonsN[index].at(pileup)->Fill(nMuons,totalweight);
+  m_hVector_BosonZMass[index].at(pileup)->Fill(dileptonMass,totalweight);
+  m_hVector_BosonZEta[index].at(pileup)->Fill(dileptonEta,totalweight);
+  m_hVector_BosonZPhi[index].at(pileup)->Fill(dileptonPhi,totalweight);
+  m_hVector_BosonZPt[index].at(pileup)->Fill(dileptonPt,totalweight);
+  m_hVector_LeptonsPt[index].at(pileup)->Fill(lepton1Pt,totalweight);
+  m_hVector_LeptonsEta[index].at(pileup)->Fill(lepton1Eta,totalweight);
+  m_hVector_LeptonsPhi[index].at(pileup)->Fill(lepton1Phi,totalweight);
+  m_hVector_LeptonsPt[index].at(pileup)->Fill(lepton2Pt,totalweight);
+  m_hVector_LeptonsEta[index].at(pileup)->Fill(lepton2Eta,totalweight);
+  m_hVector_LeptonsPhi[index].at(pileup)->Fill(lepton2Phi,totalweight);
+  m_hVector_LeadingLeptonPt[index].at(pileup)->Fill(lepton1Pt,totalweight);
+  m_hVector_LeadingLeptonEta[index].at(pileup)->Fill(lepton1Eta,totalweight);
+  m_hVector_LeadingLeptonPhi[index].at(pileup)->Fill(lepton1Phi,totalweight);
+  m_hVector_LeadingLeptonTkDr03[index].at(pileup)->Fill(isoTk1,totalweight);
+  m_hVector_LeadingLeptonEcalDr03[index].at(pileup)->Fill(isoEcal1,totalweight);
+  m_hVector_LeadingLeptonHcalDr03[index].at(pileup)->Fill(isoHcal1,totalweight);
+  m_hVector_LeadingLeptonIsolation[index].at(pileup)->Fill(isoRec1,totalweight);
+  m_hVector_LeadingLeptonInnerHits[index].at(pileup)->Fill(innerHits1,totalweight);
+  m_hVector_LeadingLeptonDCot[index].at(pileup)->Fill(Dcot1,totalweight);
+  m_hVector_LeadingLeptonDist[index].at(pileup)->Fill(Dist1,totalweight);
+  m_hVector_LeadingLeptonDeltaEtaTkClu[index].at(pileup)->Fill(DeltaEtaTkClu1,totalweight);
+  m_hVector_LeadingLeptonDeltaPhiTkClu[index].at(pileup)->Fill(DeltaPhiTkClu1,totalweight);
+  m_hVector_LeadingLeptonSigmaIeIe[index].at(pileup)->Fill(sigmaIeIe1,totalweight);
+  m_hVector_LeadingLeptonHE[index].at(pileup)->Fill(HE1,totalweight);
+  m_hVector_SecondLeptonPt[index].at(pileup)->Fill(lepton2Pt,totalweight);
+  m_hVector_SecondLeptonEta[index].at(pileup)->Fill(lepton2Eta,totalweight);
+  m_hVector_SecondLeptonPhi[index].at(pileup)->Fill(lepton2Phi,totalweight);
+  m_hVector_SecondLeptonTkDr03[index].at(pileup)->Fill(isoTk2,totalweight);
+  m_hVector_SecondLeptonEcalDr03[index].at(pileup)->Fill(isoEcal2,totalweight);
+  m_hVector_SecondLeptonHcalDr03[index].at(pileup)->Fill(isoHcal2,totalweight);
+  m_hVector_SecondLeptonIsolation[index].at(pileup)->Fill(isoRec2,totalweight);
+  m_hVector_SecondLeptonInnerHits[index].at(pileup)->Fill(innerHits2,totalweight);
+  m_hVector_SecondLeptonDCot[index].at(pileup)->Fill(Dcot2,totalweight);
+  m_hVector_SecondLeptonDist[index].at(pileup)->Fill(Dist2,totalweight);
+  m_hVector_SecondLeptonDeltaEtaTkClu[index].at(pileup)->Fill(DeltaEtaTkClu2,totalweight);
+  m_hVector_SecondLeptonDeltaPhiTkClu[index].at(pileup)->Fill(DeltaPhiTkClu2,totalweight);
+  m_hVector_SecondLeptonSigmaIeIe[index].at(pileup)->Fill(sigmaIeIe2,totalweight);
+  m_hVector_SecondLeptonHE[index].at(pileup)->Fill(HE2,totalweight);
+  m_hVector_deltaphiLeptons[index].at(pileup)->Fill(deltaphileptons,totalweight);
+  m_hVector_deltapTLeptons[index].at(pileup)->Fill(deltaptleptons,totalweight);
+  m_hVector_deltaetaLeptons[index].at(pileup)->Fill(deltaetaleptons,totalweight); 
+  m_hVector_tracksOutLeptonsCone03[index].at(pileup)->Fill(cone03tracks,totalweight); 
+  m_hVector_tracksOutLeptonsCone04[index].at(pileup)->Fill(cone04tracks,totalweight); 
+  m_hVector_tracksOutLeptonsCone05[index].at(pileup)->Fill(cone05tracks,totalweight); 
+
+
+  // Event Info
+  m_hVector_RunNumber[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+  if (SectorCastorHit < 1) m_hVector_RunNumberZeroCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+  if (SectorCastorHit > 15) m_hVector_RunNumberHighCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+  m_hVector_vertex[index].at(pileup)->Fill(eventdiff->GetNVertex(),totalweight);
+  m_hVector_lumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),totalweight);
+  m_hVector_vertexvslumi[index].at(pileup)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),totalweight);
+  m_hVector_tracks[index].at(pileup)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
+
+
+  // Detector
   m_hVector_sumEHFplus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
   m_hVector_sumEHFminus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
   m_hVector_sumEHEplus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
   m_hVector_sumEHEminus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-  m_hVector_lumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),totalweight);
-  m_hVector_asumE[index].at(pileup)->Fill(aSumE,totalweight);
-  m_hVector_multhf[index].at(pileup)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-  m_hVector_tracks[index].at(pileup)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-  m_hVector_tracksLow[index].at(pileup)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-  m_hVector_vertex[index].at(pileup)->Fill(eventdiff->GetNVertex(),totalweight);
-  m_hVector_deltaphielectrons[index].at(pileup)->Fill(deltaphielectrons,totalweight);
-  m_hVector_deltaphimuons[index].at(pileup)->Fill(deltaphimuons,totalweight);
-  m_hVector_deltaetaelectrons[index].at(pileup)->Fill(deltaetaelectrons,totalweight);
-  m_hVector_deltaetamuons[index].at(pileup)->Fill(deltaetamuons,totalweight);
-  m_hVector_deltapTelectrons[index].at(pileup)->Fill(deltapTelectrons,totalweight);
-  m_hVector_deltapTmuons[index].at(pileup)->Fill(deltapTmuons,totalweight);
-  m_hVector_vertexvslumi[index].at(pileup)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),totalweight);
-  m_hVector_patNElectron[index].at(pileup)->Fill(eventdiffZ->GetPatNElectron(),totalweight);
-  m_hVector_patElectron1Pt[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Pt(),totalweight);
-  m_hVector_patElectron1Eta[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Eta(),totalweight);
-  m_hVector_patElectron1Phi[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Phi(),totalweight);
-  m_hVector_patElectron1Charge[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Charge(),totalweight);
-  m_hVector_patElectron1Et[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Et(),totalweight);
-  m_hVector_patNMuon[index].at(pileup)->Fill(eventdiffZ->GetPatNMuon(),totalweight);
-  m_hVector_patMuon1Pt[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Pt(),totalweight);
-  m_hVector_patMuon1Eta[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Eta(),totalweight);
-  m_hVector_patMuon1Phi[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Phi(),totalweight);
-  m_hVector_patMuon1Charge[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Charge(),totalweight);
-  m_hVector_patMuon1Et[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Et(),totalweight);
-  m_hVector_patElectron2Pt[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Pt(),totalweight);
-  m_hVector_patElectron2Eta[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Eta(),totalweight);
-  m_hVector_patElectron2Phi[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Phi(),totalweight);
-  m_hVector_patElectron2Charge[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Charge(),totalweight);
-  m_hVector_patElectron2Et[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Et(),totalweight);
-  m_hVector_patMuon2Pt[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Pt(),totalweight);
-  m_hVector_patMuon2Eta[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Eta(),totalweight);
-  m_hVector_patMuon2Phi[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Phi(),totalweight);
-  m_hVector_patMuon2Charge[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Charge(),totalweight);
-  m_hVector_patMuon2Et[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Et(),totalweight);
-  m_hVector_patDiElectronMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronMass(),totalweight);
-  m_hVector_patDiMuonMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonMass(),totalweight);
-  m_hVector_patDiElectronEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronEta(),totalweight);
-  m_hVector_patDiMuonEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonEta(),totalweight);
-  m_hVector_patDiElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPhi(),totalweight);
-  m_hVector_patDiMuonPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPhi(),totalweight);
-  m_hVector_patDiElectronPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPt(),totalweight);
-  m_hVector_patDiMuonPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPt(),totalweight);
-  m_hVector_patElectron1TkDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1TkDr03(),totalweight);
-  m_hVector_patElectron1TkDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1TkDr04(),totalweight);
-  m_hVector_patElectron1EcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1EcalDr03(),totalweight);
-  m_hVector_patElectron1EcalDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1EcalDr04(),totalweight);
-  m_hVector_patElectron1HcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1HcalDr03(),totalweight);
-  m_hVector_patElectron1HcalDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1HcalDr04(),totalweight);
-  m_hVector_patElectron2TkDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2TkDr03(),totalweight);
-  m_hVector_patElectron2TkDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2TkDr04(),totalweight);
-  m_hVector_patElectron2EcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2EcalDr03(),totalweight);
-  m_hVector_patElectron2EcalDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2EcalDr04(),totalweight);
-  m_hVector_patElectron2HcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2HcalDr03(),totalweight);
-  m_hVector_patElectron2HcalDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1HcalDr04(),totalweight);
-  m_hVector_patElectron1relIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1relIsoDr03(),totalweight);
-  m_hVector_patElectron1relIsoDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1relIsoDr04(),totalweight);
-  m_hVector_patElectron2relIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2relIsoDr03(),totalweight);
-  m_hVector_patElectron2relIsoDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2relIsoDr04(),totalweight);
-  m_hVector_patMuon1SumPtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1SumPtR03(),totalweight);
-  m_hVector_patMuon1SumPtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1SumPtR05(),totalweight);
-  m_hVector_patMuon1EmEtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1EmEtR03(),totalweight);
-  m_hVector_patMuon1EmEtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1EmEtR05(),totalweight);
-  m_hVector_patMuon1HadEtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1HadEtR03(),totalweight);
-  m_hVector_patMuon1HadEtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1HadEtR05(),totalweight);
-  m_hVector_patMuon2SumPtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2SumPtR03(),totalweight);
-  m_hVector_patMuon2SumPtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2SumPtR05(),totalweight);
-  m_hVector_patMuon2EmEtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2EmEtR03(),totalweight);
-  m_hVector_patMuon2EmEtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2EmEtR05(),totalweight);
-  m_hVector_patMuon2HadEtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2HadEtR03(),totalweight);
-  m_hVector_patMuon2HadEtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2HadEtR05(),totalweight);
-  m_hVector_patMuon1relIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1relIsoDr03(),totalweight);
-  m_hVector_patMuon1relIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1relIsoDr05(),totalweight);
-  m_hVector_patMuon2relIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2relIsoDr03(),totalweight);
-  m_hVector_patMuon2relIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2relIsoDr05(),totalweight);
-  m_hVector_patMuon1relIso[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1relIso(),totalweight);
-  m_hVector_patMuon2relIso[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2relIso(),totalweight);
-  m_hVector_LeadingElectronTkDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronTkDr03(),totalweight);
-  m_hVector_LeadingElectronTkDr04[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronTkDr04(),totalweight);
-  m_hVector_LeadingElectronEcalDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEcalDr03(),totalweight);
-  m_hVector_LeadingElectronEcalDr04[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEcalDr04(),totalweight);
-  m_hVector_LeadingElectronHcalDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronHcalDr03(),totalweight);
-  m_hVector_LeadingElectronHcalDr04[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronHcalDr04(),totalweight);
-  m_hVector_SecondElectronTkDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronTkDr03(),totalweight);
-  m_hVector_SecondElectronTkDr04[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronTkDr04(),totalweight);
-  m_hVector_SecondElectronEcalDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronEcalDr03(),totalweight);
-  m_hVector_SecondElectronEcalDr04[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronEcalDr04(),totalweight);
-  m_hVector_SecondElectronHcalDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronHcalDr03(),totalweight);
-  m_hVector_SecondElectronHcalDr04[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronHcalDr04(),totalweight);
-  m_hVector_LeadingElectronrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronrelIsoDr03(),totalweight);
-  m_hVector_LeadingElectronrelIsoDr04[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronrelIsoDr04(),totalweight);
-  m_hVector_SecondElectronrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronrelIsoDr03(),totalweight);
-  m_hVector_SecondElectronrelIsoDr04[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronrelIsoDr04(),totalweight);
-  m_hVector_LeadingMuonSumPtR03[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonSumPtR03(),totalweight);
-  m_hVector_LeadingMuonSumPtR05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonSumPtR05(),totalweight);
-  m_hVector_LeadingMuonEmEtR03[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonEmEtR03(),totalweight);
-  m_hVector_LeadingMuonEmEtR05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonEmEtR05(),totalweight);
-  m_hVector_LeadingMuonHadEtR03[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonHadEtR03(),totalweight);
-  m_hVector_LeadingMuonHadEtR05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonHadEtR05(),totalweight);
-  m_hVector_SecondMuonSumPtR03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonSumPtR03(),totalweight);
-  m_hVector_SecondMuonSumPtR05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonSumPtR05(),totalweight);
-  m_hVector_SecondMuonEmEtR03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonEmEtR03(),totalweight);
-  m_hVector_SecondMuonEmEtR05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonEmEtR05(),totalweight);
-  m_hVector_SecondMuonHadEtR03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonHadEtR03(),totalweight);
-  m_hVector_SecondMuonHadEtR05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonHadEtR05(),totalweight);
-  m_hVector_LeadingMuonrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonrelIsoDr03(),totalweight);
-  m_hVector_LeadingMuonrelIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonrelIsoDr05(),totalweight);
-  m_hVector_SecondMuonrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr03(),totalweight);
-  m_hVector_SecondMuonrelIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr05(),totalweight);
 
-  m_hVector_correlationElectron1Pt[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPt(),eventdiffZ->GetPatElectron1Pt());
-  m_hVector_correlationElectron1Eta[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEta(),eventdiffZ->GetPatElectron1Eta());
-  m_hVector_correlationElectron1Phi[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPhi(),eventdiffZ->GetPatElectron1Phi());
-  m_hVector_correlationElectron1Iso[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronrelIsoDr03(),eventdiffZ->GetPatElectron1relIsoDr03());
-  m_hVector_correlationMuon1Pt[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonPt(),eventdiffZ->GetPatMuon1Pt());
-  m_hVector_correlationMuon1Eta[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonEta(),eventdiffZ->GetPatMuon1Eta());
-  m_hVector_correlationMuon1Phi[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonPhi(),eventdiffZ->GetPatMuon1Phi());
-  m_hVector_correlationMuon1Iso[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonrelIsoDr03(),eventdiffZ->GetPatMuon1relIsoDr03());
-  m_hVector_correlationElectron2Pt[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronPt(),eventdiffZ->GetPatElectron2Pt());
-  m_hVector_correlationElectron2Eta[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronEta(),eventdiffZ->GetPatElectron2Eta());
-  m_hVector_correlationElectron2Phi[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronPhi(),eventdiffZ->GetPatElectron2Phi());
-  m_hVector_correlationElectron2Iso[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronrelIsoDr03(),eventdiffZ->GetPatElectron2relIsoDr03());
-  m_hVector_correlationMuon2Pt[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPt(),eventdiffZ->GetPatMuon2Pt());
-  m_hVector_correlationMuon2Eta[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonEta(),eventdiffZ->GetPatMuon2Eta());
-  m_hVector_correlationMuon2Phi[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPhi(),eventdiffZ->GetPatMuon2Phi());
-  m_hVector_correlationMuon2Iso[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr03(),eventdiffZ->GetPatMuon2relIsoDr03());
-
-  for (l=0; l<16;l++){
-    if (CastorEnergySector[l] >=1.){
-      m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
-      m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
-      m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(l+1,CastorEnergySector[l]);
-    }
-    else{
-      m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,0);
-    }
+  if (eventdiff->GetSumEnergyHFPlus() > eventdiff->GetSumEnergyHFMinus()){
+    m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
+    m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
+  }else{
+    m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
+    m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
   }
 
-  m_hVector_pfetamin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-  m_hVector_pfetamincastor[index].at(pileup)->Fill(etamin_,totalweight);
-  m_hVector_pfetamax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
+  m_hVector_SumEHFplus_S[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_SPlus(),totalweight);
+  m_hVector_SumEHFminus_S[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_SMinus(),totalweight);
+  m_hVector_SumEHFplus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LPlus(),totalweight);
+  m_hVector_SumEHFminus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LMinus(),totalweight);
+  m_hVector_sumEEEminus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEMinus(),totalweight);
+  m_hVector_sumEEEplus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEPlus(),totalweight);
+  m_hVector_multhf[index].at(pileup)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
+  m_hVector_EnergyHFPlusVsEnergyHFMinus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),eventdiff->GetSumEnergyHFMinus(),totalweight);
+  m_hVector_EnergyEEPlusVsEnergyEEMinus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEPlus(),eventdiffZ->GetSumEEEMinus(),totalweight);
+
+  for (int k=0; k<16;k++){
+    if (CastorEnergySector[k] >=1.){
+      m_hVector_ECastorSector[index].at(pileup)->Fill(k+1,CastorEnergySector[k]);
+      m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(k+1,CastorEnergySector[k]);
+      m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(k+1,CastorEnergySector[k]);
+    }else{
+      m_hVector_ECastorSector[index].at(pileup)->Fill(k+1,0);
+    }
+  }
 
   m_hVector_SectorVsTotalCastorEnergy[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
   m_hVector_SectorVsTotalCastorEnergyTProf[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
@@ -862,12 +813,7 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_CastorMultiplicity[index].at(pileup)->Fill(counterHit,totalweight);
   m_hVector_CastorMultiplicityVsLumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),counterHit,totalweight);
 
-  if (SectorCastorHit < 1) m_hVector_RunNumberZeroCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
-  if (SectorCastorHit > 15) m_hVector_RunNumberHighCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
-
-  m_hVector_RunNumber[index].at(pileup)->Fill(eventdiff->GetRunNumber());
-
-  for (k=0; k<eventdiffZ->GetEachTowerCounter();k++){
+  for (int k=0; k<eventdiffZ->GetEachTowerCounter();k++){
     m_hVector_ECaloVsEta[index].at(pileup)->Fill(eventdiffZ->GetEachTowerEta(k),eventdiffZ->GetEachTowerEnergy(k),totalweight);
     m_hVector_ECaloVsEtaTProf[index].at(pileup)->Fill(eventdiffZ->GetEachTowerEta(k),eventdiffZ->GetEachTowerEnergy(k),totalweight);
     m_hVector_EnergyVsEtaBin1D[index].at(pileup)->Fill(eventdiffZ->GetEachTowerEta(k),eventdiffZ->GetEachTowerEnergy(k)*totalweight);
@@ -877,130 +823,34 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_ECaloVsEtaTProf[index].at(pileup)->Fill(-6.,sumCastorEnergy,totalweight);
   m_hVector_EnergyVsEtaBin1D[index].at(pileup)->Fill(-6.,sumCastorEnergy*totalweight);
 
-  if (eventdiff->GetSumEnergyHFPlus() > eventdiff->GetSumEnergyHFMinus()){
-    m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-    m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-  }
 
-  else{
-    m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-    m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-  }
-
-  m_hVector_tracksOutMuonsCone03[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeMuon03(),totalweight);  
-  m_hVector_tracksOutElectronsCone03[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeElectron03(),totalweight);   
-  m_hVector_tracksOutpatMuonsCone03[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatMuon03(),totalweight);
-  m_hVector_tracksOutpatElectronsCone03[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatElectron03(),totalweight);
-
-  m_hVector_tracksOutMuonsCone04[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeMuon04(),totalweight);
-  m_hVector_tracksOutElectronsCone04[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeElectron04(),totalweight);
-  m_hVector_tracksOutpatMuonsCone04[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatMuon04(),totalweight);
-  m_hVector_tracksOutpatElectronsCone04[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatElectron04(),totalweight);
-
-  m_hVector_tracksOutMuonsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeMuon05(),totalweight);
-  m_hVector_tracksOutElectronsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeElectron05(),totalweight);
-  m_hVector_tracksOutpatMuonsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatMuon05(),totalweight);
-  m_hVector_tracksOutpatElectronsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatElectron05(),totalweight);
-
-  m_hVector_LeadingElectronInnerHits[index].at(pileup)->Fill(innerHits1,totalweight);
-  m_hVector_LeadingElectronDCot[index].at(pileup)->Fill(Dcot1,totalweight);
-  m_hVector_LeadingElectronDist[index].at(pileup)->Fill(Dist1,totalweight);
-  m_hVector_LeadingElectronDeltaEtaTkClu[index].at(pileup)->Fill(DeltaEtaTkClu1,totalweight);
-  m_hVector_LeadingElectronDeltaPhiTkClu[index].at(pileup)->Fill(DeltaPhiTkClu1,totalweight);
-  m_hVector_LeadingElectronSigmaIeIe[index].at(pileup)->Fill(sigmaIeIe1,totalweight);
-  m_hVector_LeadingElectronHE[index].at(pileup)->Fill(HE1,totalweight);
-  m_hVector_SecondElectronInnerHits[index].at(pileup)->Fill(innerHits2,totalweight);
-  m_hVector_SecondElectronDCot[index].at(pileup)->Fill(Dcot2,totalweight);
-  m_hVector_SecondElectronDist[index].at(pileup)->Fill(Dist2,totalweight);
-  m_hVector_SecondElectronDeltaEtaTkClu[index].at(pileup)->Fill(DeltaEtaTkClu2,totalweight);
-  m_hVector_SecondElectronDeltaPhiTkClu[index].at(pileup)->Fill(DeltaPhiTkClu2,totalweight);
-  m_hVector_SecondElectronSigmaIeIe[index].at(pileup)->Fill(sigmaIeIe2,totalweight);
-  m_hVector_SecondElectronHE[index].at(pileup)->Fill(HE2,totalweight);
-  m_hVector_SumEHFplus_S[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_SPlus(),totalweight);
-  m_hVector_SumEHFminus_S[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_SMinus(),totalweight);
-  m_hVector_SumEHFplus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LPlus(),totalweight);
-  m_hVector_SumEHFminus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LMinus(),totalweight);
+  // Diffration
+  m_hVector_asumE[index].at(pileup)->Fill(aSumE,totalweight);
+  m_hVector_AEcastor[index].at(pileup)->Fill(AEcastor,totalweight);
+  m_hVector_pfetamin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
+  m_hVector_pfetamincastor[index].at(pileup)->Fill(etamin_,totalweight);
+  m_hVector_pfetamax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
   m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffZ->GetMaxGapPF()),totalweight);
   m_hVector_LimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetLimPlusGapPF(),totalweight);
   m_hVector_LimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetLimMinusGapPF(),totalweight);
   m_hVector_SumPTLimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMaxGapMaxPF(),totalweight);
   m_hVector_SumPTLimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMinGapMaxPF(),totalweight);
-
-  m_hVector_ElectronsPt[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPt(),totalweight);
-  m_hVector_ElectronsEta[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEta(),totalweight);
-  m_hVector_ElectronsPhi[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPhi(),totalweight);
-  m_hVector_MuonsPt[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonPt(),totalweight);
-  m_hVector_MuonsEta[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonEta(),totalweight);
-  m_hVector_MuonsPhi[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonPhi(),totalweight);
-  m_hVector_patElectronsPt[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Pt(),totalweight);
-  m_hVector_patElectronsEta[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Eta(),totalweight);
-  m_hVector_patElectronsPhi[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Phi(),totalweight);
-  m_hVector_patMuonsPt[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Pt(),totalweight);
-  m_hVector_patMuonsEta[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Eta(),totalweight);
-  m_hVector_patMuonsPhi[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Phi(),totalweight);
-  m_hVector_ElectronsPt[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronPt(),totalweight);
-  m_hVector_ElectronsEta[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronEta(),totalweight);
-  m_hVector_ElectronsPhi[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronPhi(),totalweight);
-  m_hVector_MuonsPt[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPt(),totalweight);
-  m_hVector_MuonsEta[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonEta(),totalweight);
-  m_hVector_MuonsPhi[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPhi(),totalweight);
-  m_hVector_patElectronsPt[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Pt(),totalweight);
-  m_hVector_patElectronsEta[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Eta(),totalweight);
-  m_hVector_patElectronsPhi[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Phi(),totalweight);
-  m_hVector_patMuonsPt[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Pt(),totalweight);
-  m_hVector_patMuonsEta[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Eta(),totalweight);
-  m_hVector_patMuonsPhi[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Phi(),totalweight);
-
-  m_hVector_absdeltaEtaPF[index].at(pileup)->Fill(absdeltaetapf,totalweight);
+  m_hVector_absdeltaEtaPF[index].at(pileup)->Fill(fabs(deltaetapf),totalweight);
   m_hVector_deltaEtaPF[index].at(pileup)->Fill(deltaetapf,totalweight);
-
+  m_hVector_absdeltaEtaPFCastor[index].at(pileup)->Fill(fabs(deltaetapfcastor),totalweight);
+  m_hVector_deltaEtaPFCastor[index].at(pileup)->Fill(deltaetapfcastor,totalweight);
   m_hVector_XiPlusPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
   m_hVector_XiMinusPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
   m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
   m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
-
-  m_hVector_AEcastor[index].at(pileup)->Fill(AEcastor,totalweight);
   m_hVector_etasignedHF[index].at(pileup)->Fill(etasignedHF,totalweight);
   m_hVector_etasignedCASTOR[index].at(pileup)->Fill(etasignedCASTOR,totalweight);
-
-  m_hVector_sumEEEminus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEMinus(),totalweight);
-  m_hVector_sumEEEplus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEPlus(),totalweight);
-
-  m_hVector_EnergyHFPlusVsEnergyHFMinus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),eventdiff->GetSumEnergyHFMinus(),totalweight);
-  m_hVector_EnergyEEPlusVsEnergyEEMinus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEPlus(),eventdiffZ->GetSumEEEMinus(),totalweight);
-
-  if (typesel == "RecoMuon"){
-    m_hVector_BosonZPt[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPt(),totalweight);
-    m_hVector_BosonZEta[index].at(pileup)->Fill(eventdiffZ->GetDiMuonEta(),totalweight);
-    m_hVector_BosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPhi(),totalweight);
-    m_hVector_BosonZMass[index].at(pileup)->Fill(eventdiffZ->GetDiMuonMass(),totalweight);
-  }
-  if (typesel == "PatMuon"){
-    m_hVector_patBosonZPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPt(),totalweight);
-    m_hVector_patBosonZEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonEta(),totalweight);
-    m_hVector_patBosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPhi(),totalweight);
-    m_hVector_patBosonZMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonMass(),totalweight);
-  }
-  if (typesel == "RecoElectron"){
-    m_hVector_BosonZPt[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPt(),totalweight);
-    m_hVector_BosonZEta[index].at(pileup)->Fill(eventdiffZ->GetDiElectronEta(),totalweight);
-    m_hVector_BosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPhi(),totalweight);
-    m_hVector_BosonZMass[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
-  }
-  if (typesel == "PatElectron"){
-    m_hVector_patBosonZPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPt(),totalweight);
-    m_hVector_patBosonZEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronEta(),totalweight);
-    m_hVector_patBosonZPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPhi(),totalweight);
-    m_hVector_patBosonZMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronMass(),totalweight);
-  }
 
 }
 
 void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
 
   // Creating Correlation Histograms
-  bool correlation = false;
-
   int ipileup;
 
   if (type=="multiple_pileup") ipileup=21;
@@ -1009,276 +859,126 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
   for (int i = 0; i < ipileup; i++){
     for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
-      if(typesel=="RecoMuon" || typesel=="RecoElectron"){
-	// Lepton Kinematics Folder
-	foldersFile[0]->cd();
-	m_hVector_DiElectronMass[j].at(i)->Write();
-	m_hVector_LeadingElectronPt[j].at(i)->Write();
-	m_hVector_LeadingElectronEta[j].at(i)->Write();
-	m_hVector_LeadingElectronPhi[j].at(i)->Write();
-	m_hVector_LeadingElectronCharge[j].at(i)->Write();
-	m_hVector_SecondElectronPt[j].at(i)->Write();
-	m_hVector_SecondElectronEta[j].at(i)->Write();
-	m_hVector_SecondElectronPhi[j].at(i)->Write();
-	m_hVector_SecondElectronCharge[j].at(i)->Write();
-	m_hVector_ElectronsN[j].at(i)->Write();
-	m_hVector_DiMuonMass[j].at(i)->Write();
-	m_hVector_LeadingMuonPt[j].at(i)->Write();
-	m_hVector_LeadingMuonEta[j].at(i)->Write();
-	m_hVector_LeadingMuonPhi[j].at(i)->Write();
-	m_hVector_LeadingMuonCharge[j].at(i)->Write();
-	m_hVector_SecondMuonPt[j].at(i)->Write();
-	m_hVector_SecondMuonEta[j].at(i)->Write();
-	m_hVector_SecondMuonPhi[j].at(i)->Write();
-	m_hVector_SecondMuonCharge[j].at(i)->Write();
-	m_hVector_MuonsN[j].at(i)->Write();
-	m_hVector_LeadingElectronTkDr03[j].at(i)->Write();
-	m_hVector_LeadingElectronTkDr04[j].at(i)->Write();
-	m_hVector_LeadingElectronEcalDr03[j].at(i)->Write();
-	m_hVector_LeadingElectronEcalDr04[j].at(i)->Write();
-	m_hVector_LeadingElectronHcalDr03[j].at(i)->Write();
-	m_hVector_LeadingElectronHcalDr04[j].at(i)->Write();
-	m_hVector_SecondElectronTkDr03[j].at(i)->Write();
-	m_hVector_SecondElectronTkDr04[j].at(i)->Write();
-	m_hVector_SecondElectronEcalDr03[j].at(i)->Write();
-	m_hVector_SecondElectronEcalDr04[j].at(i)->Write();
-	m_hVector_SecondElectronHcalDr03[j].at(i)->Write();
-	m_hVector_SecondElectronHcalDr04[j].at(i)->Write();
-	m_hVector_LeadingElectronrelIsoDr03[j].at(i)->Write();
-	m_hVector_LeadingElectronrelIsoDr04[j].at(i)->Write();
-	m_hVector_SecondElectronrelIsoDr03[j].at(i)->Write();
-	m_hVector_SecondElectronrelIsoDr04[j].at(i)->Write();
-	m_hVector_LeadingMuonSumPtR03[j].at(i)->Write();
-	m_hVector_LeadingMuonSumPtR05[j].at(i)->Write();
-	m_hVector_LeadingMuonEmEtR03[j].at(i)->Write();
-	m_hVector_LeadingMuonEmEtR05[j].at(i)->Write();
-	m_hVector_LeadingMuonHadEtR03[j].at(i)->Write();
-	m_hVector_LeadingMuonHadEtR05[j].at(i)->Write();
-	m_hVector_SecondMuonSumPtR03[j].at(i)->Write();
-	m_hVector_SecondMuonSumPtR05[j].at(i)->Write();
-	m_hVector_SecondMuonEmEtR03[j].at(i)->Write();
-	m_hVector_SecondMuonEmEtR05[j].at(i)->Write();
-	m_hVector_SecondMuonHadEtR03[j].at(i)->Write();
-	m_hVector_SecondMuonHadEtR05[j].at(i)->Write();
-	m_hVector_LeadingMuonrelIsoDr03[j].at(i)->Write();
-	m_hVector_LeadingMuonrelIsoDr05[j].at(i)->Write();
-	m_hVector_SecondMuonrelIsoDr03[j].at(i)->Write();
-	m_hVector_SecondMuonrelIsoDr05[j].at(i)->Write();
-	m_hVector_LeadingElectronInnerHits[j].at(i)->Write();
-	m_hVector_LeadingElectronDCot[j].at(i)->Write();
-	m_hVector_LeadingElectronDist[j].at(i)->Write();
-	m_hVector_LeadingElectronDeltaEtaTkClu[j].at(i)->Write();
-	m_hVector_LeadingElectronDeltaPhiTkClu[j].at(i)->Write();
-	m_hVector_LeadingElectronSigmaIeIe[j].at(i)->Write();
-	m_hVector_LeadingElectronHE[j].at(i)->Write();
-	m_hVector_SecondElectronInnerHits[j].at(i)->Write();
-	m_hVector_SecondElectronDCot[j].at(i)->Write();
-	m_hVector_SecondElectronDist[j].at(i)->Write();
-	m_hVector_SecondElectronDeltaEtaTkClu[j].at(i)->Write();
-	m_hVector_SecondElectronDeltaPhiTkClu[j].at(i)->Write();
-	m_hVector_SecondElectronSigmaIeIe[j].at(i)->Write();
-	m_hVector_SecondElectronHE[j].at(i)->Write();
-	m_hVector_DiElectronEta[j].at(i)->Write();
-	m_hVector_DiElectronPhi[j].at(i)->Write();
-	m_hVector_DiElectronPt[j].at(i)->Write();
-	m_hVector_DiMuonEta[j].at(i)->Write();
-	m_hVector_DiMuonPhi[j].at(i)->Write();
-	m_hVector_DiMuonPt[j].at(i)->Write();
-	m_hVector_ElectronsPt[j].at(i)->Write();
-	m_hVector_ElectronsEta[j].at(i)->Write();
-	m_hVector_ElectronsPhi[j].at(i)->Write();
-	m_hVector_MuonsPt[j].at(i)->Write();
-	m_hVector_MuonsEta[j].at(i)->Write();
-	m_hVector_MuonsPhi[j].at(i)->Write();
-	m_hVector_BosonZPt[j].at(i)->Write();
-	m_hVector_BosonZEta[j].at(i)->Write();
-	m_hVector_BosonZPhi[j].at(i)->Write();
-	m_hVector_BosonZMass[j].at(i)->Write();
-	m_hVector_tracksOutMuonsCone03[j].at(i)->Write();
-	m_hVector_tracksOutElectronsCone03[j].at(i)->Write();
-	m_hVector_tracksOutMuonsCone04[j].at(i)->Write();
-	m_hVector_tracksOutElectronsCone04[j].at(i)->Write();
-	m_hVector_tracksOutMuonsCone05[j].at(i)->Write();
-	m_hVector_tracksOutElectronsCone05[j].at(i)->Write();
-	m_hVector_deltaphielectrons[j].at(i)->Write();
-	m_hVector_deltaphimuons[j].at(i)->Write();
-	m_hVector_deltaetaelectrons[j].at(i)->Write();
-	m_hVector_deltaetamuons[j].at(i)->Write();
-	m_hVector_deltapTelectrons[j].at(i)->Write();
-	m_hVector_deltapTmuons[j].at(i)->Write();
-      }
+      // Kinematics
+      foldersFile[0]->cd();
+      m_hVector_ElectronsN[j].at(i)->Write();
+      m_hVector_MuonsN[j].at(i)->Write();
+      m_hVector_BosonZPt[j].at(i)->Write();
+      m_hVector_BosonZEta[j].at(i)->Write();
+      m_hVector_BosonZPhi[j].at(i)->Write();
+      m_hVector_BosonZMass[j].at(i)->Write();
+      m_hVector_LeptonsPt[j].at(i)->Write();
+      m_hVector_LeptonsEta[j].at(i)->Write();
+      m_hVector_LeptonsPhi[j].at(i)->Write();
+      m_hVector_LeadingLeptonPt[j].at(i)->Write();
+      m_hVector_LeadingLeptonEta[j].at(i)->Write();
+      m_hVector_LeadingLeptonPhi[j].at(i)->Write();
+      m_hVector_LeadingLeptonCharge[j].at(i)->Write();
+      m_hVector_LeadingLeptonTkDr03[j].at(i)->Write();
+      m_hVector_LeadingLeptonEcalDr03[j].at(i)->Write();
+      m_hVector_LeadingLeptonHcalDr03[j].at(i)->Write();
+      m_hVector_LeadingLeptonIsolation[j].at(i)->Write();
+      m_hVector_LeadingLeptonInnerHits[j].at(i)->Write();
+      m_hVector_LeadingLeptonDCot[j].at(i)->Write();
+      m_hVector_LeadingLeptonDist[j].at(i)->Write();
+      m_hVector_LeadingLeptonDeltaEtaTkClu[j].at(i)->Write();
+      m_hVector_LeadingLeptonDeltaPhiTkClu[j].at(i)->Write();
+      m_hVector_LeadingLeptonSigmaIeIe[j].at(i)->Write();
+      m_hVector_LeadingLeptonHE[j].at(i)->Write();
+      m_hVector_SecondLeptonPt[j].at(i)->Write();
+      m_hVector_SecondLeptonEta[j].at(i)->Write();
+      m_hVector_SecondLeptonPhi[j].at(i)->Write();
+      m_hVector_SecondLeptonCharge[j].at(i)->Write();
+      m_hVector_SecondLeptonTkDr03[j].at(i)->Write();
+      m_hVector_SecondLeptonEcalDr03[j].at(i)->Write();
+      m_hVector_SecondLeptonHcalDr03[j].at(i)->Write();
+      m_hVector_SecondLeptonIsolation[j].at(i)->Write();
+      m_hVector_SecondLeptonInnerHits[j].at(i)->Write();
+      m_hVector_SecondLeptonDCot[j].at(i)->Write();
+      m_hVector_SecondLeptonDist[j].at(i)->Write();
+      m_hVector_SecondLeptonDeltaEtaTkClu[j].at(i)->Write();
+      m_hVector_SecondLeptonDeltaPhiTkClu[j].at(i)->Write();
+      m_hVector_SecondLeptonSigmaIeIe[j].at(i)->Write();
+      m_hVector_SecondLeptonHE[j].at(i)->Write();
+      m_hVector_deltaphiLeptons[j].at(i)->Write();
+      m_hVector_deltapTLeptons[j].at(i)->Write();
+      m_hVector_deltaetaLeptons[j].at(i)->Write();
+      m_hVector_tracksOutLeptonsCone03[j].at(i)->Write();
+      m_hVector_tracksOutLeptonsCone04[j].at(i)->Write();
+      m_hVector_tracksOutLeptonsCone05[j].at(i)->Write();
 
-      if(typesel=="PatElectron" || typesel=="PatMuon"){
-	// Lepton Kinematics Folder
-	foldersFile[0]->cd();
-	m_hVector_patNElectron[j].at(i)->Write();
-	m_hVector_patElectron1Pt[j].at(i)->Write();
-	m_hVector_patElectron1Eta[j].at(i)->Write();
-	m_hVector_patElectron1Phi[j].at(i)->Write();
-	m_hVector_patElectron1Charge[j].at(i)->Write();
-	m_hVector_patElectron1Et[j].at(i)->Write();
-	m_hVector_patNMuon[j].at(i)->Write();
-	m_hVector_patMuon1Pt[j].at(i)->Write();
-	m_hVector_patMuon1Eta[j].at(i)->Write();
-	m_hVector_patMuon1Phi[j].at(i)->Write();
-	m_hVector_patMuon1Charge[j].at(i)->Write();
-	m_hVector_patMuon1Et[j].at(i)->Write();
-	m_hVector_patElectron2Pt[j].at(i)->Write();
-	m_hVector_patElectron2Eta[j].at(i)->Write();
-	m_hVector_patElectron2Phi[j].at(i)->Write();
-	m_hVector_patElectron2Charge[j].at(i)->Write();
-	m_hVector_patElectron2Et[j].at(i)->Write();
-	m_hVector_patMuon2Pt[j].at(i)->Write();
-	m_hVector_patMuon2Eta[j].at(i)->Write();
-	m_hVector_patMuon2Phi[j].at(i)->Write();
-	m_hVector_patMuon2Charge[j].at(i)->Write();
-	m_hVector_patMuon2Et[j].at(i)->Write();
-	m_hVector_patDiElectronMass[j].at(i)->Write();
-	m_hVector_patDiMuonMass[j].at(i)->Write();
-	m_hVector_patElectron1TkDr03[j].at(i)->Write();
-	m_hVector_patElectron1TkDr04[j].at(i)->Write();
-	m_hVector_patElectron1EcalDr03[j].at(i)->Write();
-	m_hVector_patElectron1EcalDr04[j].at(i)->Write();
-	m_hVector_patElectron1HcalDr03[j].at(i)->Write();
-	m_hVector_patElectron1HcalDr04[j].at(i)->Write();
-	m_hVector_patElectron2TkDr03[j].at(i)->Write();
-	m_hVector_patElectron2TkDr04[j].at(i)->Write();
-	m_hVector_patElectron2EcalDr03[j].at(i)->Write();
-	m_hVector_patElectron2EcalDr04[j].at(i)->Write();
-	m_hVector_patElectron2HcalDr03[j].at(i)->Write();
-	m_hVector_patElectron2HcalDr04[j].at(i)->Write();
-	m_hVector_patElectron1relIsoDr03[j].at(i)->Write();
-	m_hVector_patElectron1relIsoDr04[j].at(i)->Write();
-	m_hVector_patElectron2relIsoDr03[j].at(i)->Write();
-	m_hVector_patElectron2relIsoDr04[j].at(i)->Write();
-	m_hVector_patMuon1SumPtR03[j].at(i)->Write();
-	m_hVector_patMuon1SumPtR05[j].at(i)->Write();
-	m_hVector_patMuon1EmEtR03[j].at(i)->Write();
-	m_hVector_patMuon1EmEtR05[j].at(i)->Write();
-	m_hVector_patMuon1HadEtR03[j].at(i)->Write();
-	m_hVector_patMuon1HadEtR05[j].at(i)->Write();
-	m_hVector_patMuon2SumPtR03[j].at(i)->Write();
-	m_hVector_patMuon2SumPtR05[j].at(i)->Write();
-	m_hVector_patMuon2EmEtR03[j].at(i)->Write();
-	m_hVector_patMuon2EmEtR05[j].at(i)->Write();
-	m_hVector_patMuon2HadEtR03[j].at(i)->Write();
-	m_hVector_patMuon2HadEtR05[j].at(i)->Write();
-	m_hVector_patMuon1relIsoDr03[j].at(i)->Write();
-	m_hVector_patMuon1relIsoDr05[j].at(i)->Write();
-	m_hVector_patMuon2relIsoDr03[j].at(i)->Write();
-	m_hVector_patMuon2relIsoDr05[j].at(i)->Write();
-	m_hVector_patMuon1relIso[j].at(i)->Write();
-	m_hVector_patMuon2relIso[j].at(i)->Write();
-	m_hVector_patDiElectronEta[j].at(i)->Write();
-	m_hVector_patDiMuonEta[j].at(i)->Write();
-	m_hVector_patDiElectronPhi[j].at(i)->Write();
-	m_hVector_patDiMuonPhi[j].at(i)->Write();
-	m_hVector_patDiElectronPt[j].at(i)->Write();
-	m_hVector_patDiMuonPt[j].at(i)->Write();
-	m_hVector_patBosonZPt[j].at(i)->Write();
-	m_hVector_patBosonZEta[j].at(i)->Write();
-	m_hVector_patBosonZPhi[j].at(i)->Write();
-	m_hVector_patBosonZMass[j].at(i)->Write();
-	m_hVector_patElectronsPt[j].at(i)->Write();
-	m_hVector_patElectronsEta[j].at(i)->Write();
-	m_hVector_patElectronsPhi[j].at(i)->Write();
-	m_hVector_patMuonsPt[j].at(i)->Write();
-	m_hVector_patMuonsEta[j].at(i)->Write();
-	m_hVector_patMuonsPhi[j].at(i)->Write();
-	m_hVector_tracksOutpatMuonsCone03[j].at(i)->Write();
-	m_hVector_tracksOutpatElectronsCone03[j].at(i)->Write();
-	m_hVector_tracksOutpatMuonsCone04[j].at(i)->Write();
-	m_hVector_tracksOutpatElectronsCone04[j].at(i)->Write();
-	m_hVector_tracksOutpatMuonsCone05[j].at(i)->Write();
-	m_hVector_tracksOutpatElectronsCone05[j].at(i)->Write();
-      }
-
-      if(correlation){
-	// Detector Folder
-	foldersFile[1]->cd();
-	m_hVector_correlationElectron1Pt[j].at(i)->Write();
-	m_hVector_correlationElectron1Eta[j].at(i)->Write();
-	m_hVector_correlationElectron1Phi[j].at(i)->Write();
-	m_hVector_correlationElectron1Iso[j].at(i)->Write();
-	m_hVector_correlationMuon1Pt[j].at(i)->Write();
-	m_hVector_correlationMuon1Eta[j].at(i)->Write();
-	m_hVector_correlationMuon1Phi[j].at(i)->Write();
-	m_hVector_correlationMuon1Iso[j].at(i)->Write();
-	m_hVector_correlationElectron2Pt[j].at(i)->Write();
-	m_hVector_correlationElectron2Eta[j].at(i)->Write();
-	m_hVector_correlationElectron2Phi[j].at(i)->Write();
-	m_hVector_correlationElectron2Iso[j].at(i)->Write();
-	m_hVector_correlationMuon2Pt[j].at(i)->Write();
-	m_hVector_correlationMuon2Eta[j].at(i)->Write();
-	m_hVector_correlationMuon2Phi[j].at(i)->Write();
-	m_hVector_correlationMuon2Iso[j].at(i)->Write();
-      }
-
-      // Detector Folder
+      // Event Info
       foldersFile[1]->cd();
+      m_hVector_RunNumber[j].at(i)->Write();
+      m_hVector_RunNumberZeroCastor[j].at(i)->Write();
+      m_hVector_RunNumberHighCastor[j].at(i)->Write();
+      m_hVector_vertex[j].at(i)->Write();
+      m_hVector_lumi[j].at(i)->Write();
+      m_hVector_vertexvslumi[j].at(i)->Write();
+      m_hVector_tracks[j].at(i)->Write();
+      m_hVector_tracksLow[j].at(i)->Write();
+
+      // Detector
+      foldersFile[2]->cd();
+      m_hVector_ECaloVsEta[j].at(i)->Write();
+      m_hVector_ECaloVsEtaTProf[j].at(i)->Write();
+      m_hVector_EnergyVsEtaBin1D[j].at(i)->Write();
       m_hVector_sumEHFplus[j].at(i)->Write();
       m_hVector_sumEHFminus[j].at(i)->Write();
       m_hVector_sumEHEplus[j].at(i)->Write();
       m_hVector_sumEHEminus[j].at(i)->Write();
-      m_hVector_multhf[j].at(i)->Write();
-      m_hVector_etcalos_p[j].at(i)->Write();
-      m_hVector_etcalos_n[j].at(i)->Write();
-      m_hVector_tracks[j].at(i)->Write();
-      m_hVector_tracksLow[j].at(i)->Write();
-      m_hVector_vertex[j].at(i)->Write();
-      m_hVector_ECaloVsEta[j].at(i)->Write();
-      m_hVector_ECaloVsEtaTProf[j].at(i)->Write();
-      m_hVector_sumECastorMinus[j].at(i)->Write();
-      m_hVector_sumECastorMinusLow[j].at(i)->Write();
-      m_hVector_ECastorSector[j].at(i)->Write();
-      m_hVector_ECastorSectorTProf[j].at(i)->Write();
       m_hVector_SumEHFplus_S[j].at(i)->Write();
       m_hVector_SumEHFminus_S[j].at(i)->Write();
       m_hVector_SumEHFplus_L[j].at(i)->Write();
       m_hVector_SumEHFminus_L[j].at(i)->Write();
       m_hVector_SumEHFMax[j].at(i)->Write();
       m_hVector_SumEHFMin[j].at(i)->Write();
-      m_hVector_EnergyVsEtaBin1D[j].at(i)->Write();
-      m_hVector_ECastorSectorBin1D[j].at(i)->Write();
-      m_hVector_sumECastorAndHFMinus[j].at(i)->Write();
+      m_hVector_EnergyHFPlusVsEnergyHFMinus[j].at(i)->Write();
+      m_hVector_EnergyEEPlusVsEnergyEEMinus[j].at(i)->Write();
+      m_hVector_sumEEEminus[j].at(i)->Write();
+      m_hVector_sumEEEplus[j].at(i)->Write();
+      m_hVector_multhf[j].at(i)->Write();
+      m_hVector_etcalos_p[j].at(i)->Write();
+      m_hVector_etcalos_n[j].at(i)->Write();
+      m_hVector_ECastorSector[j].at(i)->Write();
+      m_hVector_ECastorSectorTProf[j].at(i)->Write();
       m_hVector_CastorMultiplicity[j].at(i)->Write();
       m_hVector_CastorMultiplicityVsLumi[j].at(i)->Write();
       m_hVector_SectorVsTotalCastorEnergy[j].at(i)->Write();
       m_hVector_SectorVsTotalCastorEnergyTProf[j].at(i)->Write();
-      m_hVector_sumEEEminus[j].at(i)->Write();
-      m_hVector_sumEEEplus[j].at(i)->Write();
-      m_hVector_EnergyHFPlusVsEnergyHFMinus[j].at(i)->Write();
-      m_hVector_EnergyEEPlusVsEnergyEEMinus[j].at(i)->Write();
+      m_hVector_ECastorSectorBin1D[j].at(i)->Write();
+      m_hVector_sumECastorMinus[j].at(i)->Write();
+      m_hVector_sumECastorMinusLow[j].at(i)->Write();
+      m_hVector_sumECastorAndHFMinus[j].at(i)->Write();
+      m_hVector_EnergyHFPlusVsCastorTProf[j].at(i)->Write();
+      m_hVector_EnergyHFMinusVsCastorTProf[j].at(i)->Write();
 
-      // EventInfo Folder
-      foldersFile[2]->cd();
-      m_hVector_lumi[j].at(i)->Write();
-      m_hVector_vertexvslumi[j].at(i)->Write();
-      m_hVector_RunNumberHighCastor[j].at(i)->Write();
-      m_hVector_RunNumberZeroCastor[j].at(i)->Write();
-      m_hVector_RunNumber[j].at(i)->Write();
-
-      // Diffractive Variables Folder
+      // Diffraction
       foldersFile[3]->cd();
-      m_hVector_pfetamax[j].at(i)->Write();
-      m_hVector_pfetamin[j].at(i)->Write();
       m_hVector_asumE[j].at(i)->Write();
+      m_hVector_AEcastor[j].at(i)->Write();
+      m_hVector_etasignedHF[j].at(i)->Write();
+      m_hVector_etasignedCASTOR[j].at(i)->Write();
+      m_hVector_XiPlusPF[j].at(i)->Write();
+      m_hVector_XiMinusPF[j].at(i)->Write();
+      m_hVector_XiPF[j].at(i)->Write();
+      m_hVector_pfetamincastor[j].at(i)->Write();
+      m_hVector_absdeltaEtaPF[j].at(i)->Write();
+      m_hVector_deltaEtaPF[j].at(i)->Write();
+      m_hVector_absdeltaEtaPF[j].at(i)->Write();
+      m_hVector_deltaEtaPF[j].at(i)->Write();
       m_hVector_maxetagap[j].at(i)->Write();
       m_hVector_LimPlusgap[j].at(i)->Write();
       m_hVector_LimMinusgap[j].at(i)->Write();
       m_hVector_SumPTLimPlusgap[j].at(i)->Write();
       m_hVector_SumPTLimMinusgap[j].at(i)->Write();
-      m_hVector_absdeltaEtaPF[j].at(i)->Write();
-      m_hVector_deltaEtaPF[j].at(i)->Write();
-      m_hVector_XiMinusPF[j].at(i)->Write();
-      m_hVector_XiPlusPF[j].at(i)->Write();
-      m_hVector_XiPF[j].at(i)->Write();
-      m_hVector_pfetamincastor[j].at(i)->Write();
-      m_hVector_AEcastor[j].at(i)->Write();
-      m_hVector_etasignedHF[j].at(i)->Write();
-      m_hVector_etasignedCASTOR[j].at(i)->Write();
+      m_hVector_pfetamax[j].at(i)->Write();
+      m_hVector_pfetamin[j].at(i)->Write();
+      m_hVector_asumE[j].at(i)->Write();
+
     }
   }
+
 
 }
 
@@ -1344,6 +1044,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("XiMinusFromPFCands",&bXiMinusFromPFCands,"bXiMinusFromPFCands/D");
   trout->Branch("EtaMaxPF",&betamax,"betamax/D");
   trout->Branch("EtaMinPF",&betamin,"betamin/D");
+  trout->Branch("EtaMinPFCastor",&betamincastor,"betamincastor/D");
   trout->Branch("EtaLimMinus",&betalimmin,"betalimmin/D");
   trout->Branch("EtaLimPlus",&betalimmax,"betalimmax/D");
 
@@ -1433,6 +1134,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     tr->GetEntry(i);
 
+    CleanVariables();
+
     if ( type=="multiple_pileup" && (eventinfo->GetNPileUpBx0()==-1 && eventinfo->GetNPileUpBxm1()==-1 && eventinfo->GetNPileUpBxp1()==-1 )){
       std::cout << " " << std::endl; 
       std::cout << "--------------------------------------------------------------" << std::endl;
@@ -1456,24 +1159,10 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       }
     }
 
-    etasignedHF = -999.;
-    etasignedCASTOR = -999;
-    aSumE = -999.;
-    AEcastor = -999.;
-
     double totalASum = eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus();
     if (totalASum > 0.){
       aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
-    }else{
-      aSumE = 999.;
     }
-
-    deltaphielectrons = fabs(eventdiffZ->GetLeadingElectronPhi() - eventdiffZ->GetSecondElectronPhi());
-    deltaphimuons = fabs(eventdiffZ->GetLeadingMuonPhi() - eventdiffZ->GetSecondMuonPhi());
-    deltaetaelectrons = eventdiffZ->GetLeadingElectronEta() - eventdiffZ->GetSecondElectronEta();
-    deltaetamuons = eventdiffZ->GetLeadingMuonEta() - eventdiffZ->GetSecondMuonEta();
-    deltapTelectrons = eventdiffZ->GetLeadingElectronPt() - eventdiffZ->GetSecondElectronPt();
-    deltapTmuons = eventdiffZ->GetLeadingMuonPt() - eventdiffZ->GetSecondMuonPt();
 
     double puweight;
     double totalcommon;
@@ -1609,14 +1298,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	}
       }
 
-      for (l=0; l<16;l++){
+      for (int l=0; l<16;l++){
 	sumCastorEnergy+=CastorEnergySector[l];
       }
 
       if (sumCastorEnergy>0.){
 	++SectorCastorHit;
-      }
-      else{
+      }else{
 	++SectorZeroCastorCounter;
       }
 
@@ -1640,13 +1328,12 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	  CastorEnergySector[i]+=eventdiffZ->GetCastorModule5Energy(i)*energycorr[4][i];
 	}
       }
-      for (l=0; l<16;l++){
+      for (int l=0; l<16;l++){
 	if (CastorEnergySector[l] >= castorthreshold){
 	  ++SectorCastorHit;
 	  ++counterHit;
 	  sumCastorEnergy+=CastorEnergySector[l];
-	}
-	else{
+	}else{
 	  ++SectorZeroCastorCounter;
 	}
       }
@@ -1658,25 +1345,21 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       castorgap = true;
     }
 
+    sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiff->GetSumEnergyHFMinus();
+
     // Redefinition of etamin_
     //------------------------
 
-    // It is possible to include CASTOR as the min. eta with activity.
-
-    /*
     // CMS and CASTOR acceptance
-    etamin_=0.;
     if (castoractivity) {
-    etamin_ = -6.;
+      etamin_ = -6.;
     }else{
-    etamin_ = eventdiff->GetEtaMinFromPFCands();
+      etamin_ = eventdiff->GetEtaMinFromPFCands();
     }
-     */
-
-    // Only CMS
-    etamin_= eventdiff->GetEtaMinFromPFCands();
-
     //----->
+
+    deltaetapf = eventdiff->GetEtaMaxFromPFCands() - eventdiff->GetEtaMinFromPFCands();
+    deltaetapfcastor = eventdiff->GetEtaMaxFromPFCands() - etamin_;
 
     if (eventdiff->GetNVertex() == nVertex) vertex = true;
 
@@ -1696,17 +1379,23 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       exit(EXIT_FAILURE);
     }
 
-    deltaetapf = eventdiff->GetEtaMaxFromPFCands() - etamin_;
-    absdeltaetapf = fabs(eventdiff->GetEtaMaxFromPFCands() - etamin_);
-
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
+      nMuons = eventdiffZ->GetMuonsN();
+      nElectrons = eventdiffZ->GetElectronsN();
+      dileptonMass = eventdiffZ->GetDiElectronMass();
+      dileptonEta = eventdiffZ->GetDiElectronEta();
+      dileptonPhi = eventdiffZ->GetDiElectronPhi();
+      dileptonPt = eventdiffZ->GetDiElectronPt();
+      lepton1Pt = eventdiffZ->GetLeadingElectronPt();
+      lepton1Eta = eventdiffZ->GetLeadingElectronEta();
+      lepton1Phi = eventdiffZ->GetLeadingElectronPhi();
+      lepton2Pt = eventdiffZ->GetSecondElectronPt();
+      lepton2Eta = eventdiffZ->GetSecondElectronEta();
+      lepton2Phi = eventdiffZ->GetSecondElectronPhi();
       isoTk1 = eventdiffZ->GetLeadingElectronTkDr03()/eventdiffZ->GetLeadingElectronPt();
       isoEcal1 = eventdiffZ->GetLeadingElectronEcalDr03()/eventdiffZ->GetLeadingElectronPt();
       isoHcal1 = eventdiffZ->GetLeadingElectronHcalDr03()/eventdiffZ->GetLeadingElectronPt();
-      isoTk2 = eventdiffZ->GetSecondElectronTkDr03()/eventdiffZ->GetSecondElectronPt();
-      isoEcal2 = eventdiffZ->GetSecondElectronEcalDr03()/eventdiffZ->GetSecondElectronPt();
-      isoHcal2 = eventdiffZ->GetSecondElectronHcalDr03()/eventdiffZ->GetSecondElectronPt();
       innerHits1 = eventdiffZ->GetLeadingElectronInnerHits();
       Dcot1 = eventdiffZ->GetLeadingElectronDCot();
       Dist1 = eventdiffZ->GetLeadingElectronDist();
@@ -1714,6 +1403,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       DeltaPhiTkClu1 = eventdiffZ->GetLeadingElectronDeltaPhiTkClu();
       sigmaIeIe1 = eventdiffZ->GetLeadingElectronSigmaIeIe();
       HE1 = eventdiffZ->GetLeadingElectronHE();
+      isoTk2 = eventdiffZ->GetSecondElectronTkDr03()/eventdiffZ->GetSecondElectronPt();
+      isoEcal2 = eventdiffZ->GetSecondElectronEcalDr03()/eventdiffZ->GetSecondElectronPt();
+      isoHcal2 = eventdiffZ->GetSecondElectronHcalDr03()/eventdiffZ->GetSecondElectronPt();
       innerHits2 = eventdiffZ->GetSecondElectronInnerHits();
       Dcot2 = eventdiffZ->GetSecondElectronDCot();
       Dist2 = eventdiffZ->GetSecondElectronDist();
@@ -1721,13 +1413,16 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       DeltaPhiTkClu2 = eventdiffZ->GetSecondElectronDeltaPhiTkClu();
       sigmaIeIe2 = eventdiffZ->GetSecondElectronSigmaIeIe();
       HE2 = eventdiffZ->GetSecondElectronHE();
+      deltaetaleptons = fabs(eventdiffZ->GetLeadingElectronEta() - eventdiffZ->GetSecondElectronEta());
+      deltaphileptons = fabs(eventdiffZ->GetLeadingElectronPhi() - eventdiffZ->GetSecondElectronPhi());
+      deltaptleptons = fabs(eventdiffZ->GetLeadingElectronPt() - eventdiffZ->GetSecondElectronPt());
+      cone03tracks = eventdiffZ->GetTracksNonConeElectron03();
+      cone04tracks = eventdiffZ->GetTracksNonConeElectron04();
+      cone05tracks = eventdiffZ->GetTracksNonConeElectron05();
 
       double totalASumCastor = eventdiff->GetSumEnergyHFMinus() + sumCastorEnergy;
       if(totalASumCastor > 0.){
 	AEcastor = (eventdiff->GetSumEnergyHFMinus() - sumCastorEnergy)/(eventdiff->GetSumEnergyHFMinus() + sumCastorEnergy);
-      }
-      else{
-	AEcastor = 999.;
       }
 
       if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel = true;
@@ -1786,11 +1481,32 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     else if (typesel == "RecoMuon"){
       selStatus = "Reco::Muon";
+      nMuons = eventdiffZ->GetMuonsN();
+      nElectrons = eventdiffZ->GetElectronsN();
+      dileptonMass = eventdiffZ->GetDiMuonMass();
+      dileptonEta = eventdiffZ->GetDiMuonEta();
+      dileptonPhi = eventdiffZ->GetDiMuonPhi();
+      dileptonPt = eventdiffZ->GetDiMuonPt();
+      lepton1Pt = eventdiffZ->GetLeadingMuonPt();
+      lepton1Eta = eventdiffZ->GetLeadingMuonEta();
+      lepton1Phi = eventdiffZ->GetLeadingMuonPhi();
+      lepton2Pt = eventdiffZ->GetSecondMuonPt();
+      lepton2Eta = eventdiffZ->GetSecondMuonEta();
+      lepton2Phi = eventdiffZ->GetSecondMuonPhi();
+      isoRec1 = eventdiffZ->GetLeadingMuonSumPtR03();
+      isoRec2 = eventdiffZ->GetSecondMuonSumPtR03();
+      deltaetaleptons = fabs(eventdiffZ->GetLeadingMuonEta() - eventdiffZ->GetSecondMuonEta());
+      deltaphileptons = fabs(eventdiffZ->GetLeadingMuonPhi() - eventdiffZ->GetSecondMuonPhi());
+      deltaptleptons = fabs(eventdiffZ->GetLeadingMuonPt() - eventdiffZ->GetSecondMuonPt());
+      cone03tracks = eventdiffZ->GetTracksNonConeMuon03();
+      cone04tracks = eventdiffZ->GetTracksNonConeMuon04();
+      cone05tracks = eventdiffZ->GetTracksNonConeMuon05();
+
       if (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
       if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass = true;
       if (eventdiffZ->GetMuonsN() > 1) nSel = true;
-      if (eventdiffZ->GetLeadingMuonSumPtR03() < 3 && eventdiffZ->GetSecondMuonSumPtR03() < 3 ) { 
+      if (isoRec1 < 3 && isoRec2 < 3 ) { 
 	isolation = true;
 	candSel = true;
       }
@@ -1808,12 +1524,21 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     else if (typesel == "PatElectron"){
       selStatus = "Pat::Electron";
+      nMuons = eventdiffZ->GetPatNMuon();
+      nElectrons = eventdiffZ->GetPatNElectron();
+      dileptonMass = eventdiffZ->GetPatDiElectronMass();
+      dileptonEta = eventdiffZ->GetPatDiElectronEta();
+      dileptonPhi = eventdiffZ->GetPatDiElectronPhi();
+      dileptonPt = eventdiffZ->GetPatDiElectronPt();
+      lepton1Pt = eventdiffZ->GetPatElectron1Pt();
+      lepton1Eta = eventdiffZ->GetPatElectron1Eta();
+      lepton1Phi = eventdiffZ->GetPatElectron1Phi();
+      lepton2Pt = eventdiffZ->GetPatElectron2Pt();
+      lepton2Eta = eventdiffZ->GetPatElectron2Eta();
+      lepton2Phi = eventdiffZ->GetPatElectron2Phi();
       isoTk1 = eventdiffZ->GetPatElectron1TkDr03()/eventdiffZ->GetPatElectron1Pt();
       isoEcal1 = eventdiffZ->GetPatElectron1EcalDr03()/eventdiffZ->GetPatElectron1Pt();
       isoHcal1 = eventdiffZ->GetPatElectron1HcalDr03()/eventdiffZ->GetPatElectron1Pt();
-      isoTk2 = eventdiffZ->GetPatElectron2TkDr03()/eventdiffZ->GetPatElectron2Pt();
-      isoEcal2 = eventdiffZ->GetPatElectron2EcalDr03()/eventdiffZ->GetPatElectron2Pt();
-      isoHcal2 = eventdiffZ->GetPatElectron2HcalDr03()/eventdiffZ->GetPatElectron2Pt();
       innerHits1 = eventdiffZ->GetPatElectron1InnerHits();
       Dcot1 = eventdiffZ->GetPatElectron1DCot();
       Dist1 = eventdiffZ->GetPatElectron1Dist();
@@ -1821,6 +1546,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       DeltaPhiTkClu1 = eventdiffZ->GetPatElectron1DeltaPhiTkClu();
       sigmaIeIe1 = eventdiffZ->GetPatElectron1SigmaIeIe();
       HE1 = eventdiffZ->GetPatElectron1HE();
+      isoTk2 = eventdiffZ->GetPatElectron2TkDr03()/eventdiffZ->GetPatElectron2Pt();
+      isoEcal2 = eventdiffZ->GetPatElectron2EcalDr03()/eventdiffZ->GetPatElectron2Pt();
+      isoHcal2 = eventdiffZ->GetPatElectron2HcalDr03()/eventdiffZ->GetPatElectron2Pt();
       innerHits2 = eventdiffZ->GetPatElectron2InnerHits();
       Dcot2 = eventdiffZ->GetPatElectron2DCot();
       Dist2 = eventdiffZ->GetPatElectron2Dist();
@@ -1828,12 +1556,17 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       DeltaPhiTkClu2 = eventdiffZ->GetPatElectron2DeltaPhiTkClu();
       sigmaIeIe2 = eventdiffZ->GetPatElectron2SigmaIeIe();
       HE2 = eventdiffZ->GetPatElectron2HE();
+      deltaetaleptons = fabs(eventdiffZ->GetPatElectron1Eta() - eventdiffZ->GetPatElectron2Eta());
+      deltaphileptons = fabs(eventdiffZ->GetPatElectron1Phi() - eventdiffZ->GetPatElectron2Phi());
+      deltaptleptons = fabs(eventdiffZ->GetPatElectron1Pt() - eventdiffZ->GetPatElectron2Pt());
+      cone03tracks = eventdiffZ->GetTracksNonConepatElectron03();
+      cone04tracks = eventdiffZ->GetTracksNonConepatElectron04();
+      cone05tracks = eventdiffZ->GetTracksNonConepatElectron05();
 
       if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiElectronMass() > 60. && eventdiffZ->GetPatDiElectronMass() < 110.) dimass = true;
       if (eventdiffZ->GetPatNElectron() > 1) nSel = true;
-
 
       //Isolation Electron
       if ((fabs (eventdiffZ->GetPatElectron1Eta()) <= 1.4442) ){
@@ -1886,11 +1619,32 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     else if(typesel == "PatMuon"){
       selStatus = "Pat::Muon";
+      nMuons = eventdiffZ->GetPatNMuon();
+      nElectrons = eventdiffZ->GetPatNElectron();
+      dileptonMass = eventdiffZ->GetPatDiMuonMass();
+      dileptonEta = eventdiffZ->GetPatDiMuonEta();
+      dileptonPhi = eventdiffZ->GetPatDiMuonPhi();
+      dileptonPt = eventdiffZ->GetPatDiMuonPt();
+      lepton1Pt = eventdiffZ->GetPatMuon1Pt();
+      lepton1Eta = eventdiffZ->GetPatMuon1Eta();
+      lepton1Phi = eventdiffZ->GetPatMuon1Phi();
+      lepton2Pt = eventdiffZ->GetPatMuon2Pt();
+      lepton2Eta = eventdiffZ->GetPatMuon2Eta();
+      lepton2Phi = eventdiffZ->GetPatMuon2Phi();
+      isoRec1 = eventdiffZ->GetPatMuon1SumPtR03();
+      isoRec2 = eventdiffZ->GetPatMuon2SumPtR03();
+      deltaetaleptons = fabs(eventdiffZ->GetPatMuon1Eta() - eventdiffZ->GetPatMuon2Eta());
+      deltaphileptons = fabs(eventdiffZ->GetPatMuon1Phi() - eventdiffZ->GetPatMuon2Phi());
+      deltaptleptons = fabs(eventdiffZ->GetPatMuon1Pt() - eventdiffZ->GetPatMuon2Pt());
+      cone03tracks = eventdiffZ->GetTracksNonConepatMuon03();
+      cone04tracks = eventdiffZ->GetTracksNonConepatMuon04();
+      cone05tracks = eventdiffZ->GetTracksNonConepatMuon05();
+
       if (eventdiffZ->GetPatMuon1Pt() > lepton1pt && eventdiffZ->GetPatMuon2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiMuonMass() > 60. && eventdiffZ->GetPatDiMuonMass() < 110.) dimass = true;
       if (eventdiffZ->GetPatNMuon() > 1) nSel = true; 
-      if (eventdiffZ->GetPatMuon1SumPtR03() < 3 && eventdiffZ->GetPatMuon2SumPtR03() < 3 ) {
+      if (isoRec1 < 3 && isoRec2 < 3 ) {
 	candSel = true;
 	isolation = true;
       }
@@ -1914,30 +1668,10 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bRunNumber = eventdiff->GetRunNumber();
     bLumiSection = eventdiff->GetLumiSection();
     bEventNumber = eventdiff->GetEventNumber();
-    if (typesel == "RecoMuon"){ 
-      bDiBosonPt = eventdiffZ->GetDiMuonPt();
-      bDiBosonEta = eventdiffZ->GetDiMuonEta();
-      bDiBosonPhi = eventdiffZ->GetDiMuonPhi();
-      bDiBosonMass = eventdiffZ->GetDiMuonMass();
-    }
-    if (typesel == "PatMuon"){
-      bDiBosonPt = eventdiffZ->GetPatDiMuonPt();
-      bDiBosonEta = eventdiffZ->GetPatDiMuonEta();
-      bDiBosonPhi = eventdiffZ->GetPatDiMuonPhi();
-      bDiBosonMass = eventdiffZ->GetPatDiMuonMass();
-    }
-    if (typesel == "RecoElectron"){
-      bDiBosonPt = eventdiffZ->GetDiElectronPt();
-      bDiBosonEta = eventdiffZ->GetDiElectronEta();
-      bDiBosonPhi = eventdiffZ->GetDiElectronPhi();
-      bDiBosonMass = eventdiffZ->GetDiElectronMass();
-    }
-    if (typesel == "PatElectron"){
-      bDiBosonPt = eventdiffZ->GetPatDiElectronPt();
-      bDiBosonEta = eventdiffZ->GetPatDiElectronEta();
-      bDiBosonPhi = eventdiffZ->GetPatDiElectronPhi();
-      bDiBosonMass = eventdiffZ->GetPatDiElectronMass();
-    }
+    bDiBosonPt = dileptonPt;
+    bDiBosonEta = dileptonEta;
+    bDiBosonPhi = dileptonPhi;
+    bDiBosonMass = dileptonMass;
     bMultiplicityTracks = eventdiff->GetMultiplicityTracks();
     bSumEEEMinus = eventdiffZ->GetSumEEEMinus();
     bSumEEEPlus = eventdiffZ->GetSumEEEPlus();
@@ -1955,7 +1689,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bAEcastor = AEcastor;
     bdeltaetapf = deltaetapf;
     betamax = eventdiff->GetEtaMaxFromPFCands();
-    betamin = etamin_;
+    betamin = eventdiff->GetEtaMinFromPFCands();
+    betamincastor = etamin_;
     betalimmin = eventdiffZ->GetLimMinusGapPF();
     betalimmax = eventdiffZ->GetLimPlusGapPF();
 
@@ -2099,8 +1834,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
   outf->cd();
   foldersFile[0] = outf->mkdir("LeptonsKinematics");
-  foldersFile[1] = outf->mkdir("Detector");
-  foldersFile[2] = outf->mkdir("Run");
+  foldersFile[1] = outf->mkdir("Run");
+  foldersFile[2] = outf->mkdir("Detector");
   foldersFile[3] = outf->mkdir("Diffraction");
   SaveHistos(type,typesel);
   outf->Close();
@@ -2276,8 +2011,10 @@ int main(int argc, char **argv)
     }
 
     DiffractiveZ* diffZRun = new DiffractiveZ();
+    clock_t tStart = clock();
     diffZRun->CreateHistos(type_);
     diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_, castorthreshold_, channelsthreshold_, castorcorrfile_, gapseltype_, pumfile_, pudfile_);
+    std::cout<< "Time taken: " << (double)(clock() - tStart)/(60*CLOCKS_PER_SEC) << " min" << std::endl;
     return 0;
   }
 
