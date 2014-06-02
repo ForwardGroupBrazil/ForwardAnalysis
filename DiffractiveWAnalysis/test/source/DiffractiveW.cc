@@ -146,13 +146,13 @@ void DiffractiveW::CreateHistos(std::string type){
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
     // Kinematics
+    m_hVector_NElectrons.push_back( std::vector<TH1F*>() );
+    m_hVector_NMuons.push_back( std::vector<TH1F*>() );
     m_hVector_WMass.push_back( std::vector<TH1F*>() );
     m_hVector_WEta.push_back( std::vector<TH1F*>() );
     m_hVector_WPt.push_back( std::vector<TH1F*>() );
     m_hVector_WPhi.push_back( std::vector<TH1F*>() );
     m_hVector_WCharge.push_back( std::vector<TH1F*>() );
-    m_hVector_NElectrons.push_back( std::vector<TH1F*>() );
-    m_hVector_NMuons.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonTkDr03.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonEcalDr03.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonHcalDr03.push_back( std::vector<TH1F*>() );
@@ -238,6 +238,14 @@ void DiffractiveW::CreateHistos(std::string type){
       char name[300];
 
       // Kinematics
+      sprintf(name,"NMuons_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_NMuons = new TH1F(name,"Number of Muons per Event; # Muons; Multiplicity", 100, 0., 100.);
+      m_hVector_NMuons[j].push_back(histo_NMuons);
+
+      sprintf(name,"NElectrons_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_NElectrons = new TH1F(name,"Number of Electrons per Event; # Electrons; Multiplicity", 100, 0., 100.);
+      m_hVector_NElectrons[j].push_back(histo_NElectrons);
+
       sprintf(name,"WBosonMass_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_WMass = new TH1F(name,"Boson W Transverse Mass Distribution; M_{T}(#l#nu) [GeV]; N events",500,0,500);
       m_hVector_WMass[j].push_back(histo_WMass);
@@ -257,14 +265,6 @@ void DiffractiveW::CreateHistos(std::string type){
       sprintf(name,"WBosonCharge_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_WCharge = new TH1F(name,"Boson W Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_WCharge[j].push_back(histo_WCharge);
-
-      sprintf(name,"NMuons_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_NMuons = new TH1F(name,"Number of Muons per Event; # Muons; Multiplicity", 100, 0., 100.);
-      m_hVector_NMuons[j].push_back(histo_NMuons);
-
-      sprintf(name,"NElectrons_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_NElectrons = new TH1F(name,"Number of Electrons per Event; # Electrons; Multiplicity", 100, 0., 100.);
-      m_hVector_NElectrons[j].push_back(histo_NElectrons);
 
       sprintf(name,"LeadingLeptonTkDr03_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_LeadingLeptonTkDr03 = new TH1F(name,"Leading Lepton: Tracker Isolation DR03; # Isolation; [u]", 100, 0., 1.);
