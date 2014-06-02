@@ -266,22 +266,6 @@ void DiffractiveW::CreateHistos(std::string type){
       TH1F *histo_NElectrons = new TH1F(name,"Number of Electrons per Event; # Electrons; Multiplicity", 100, 0., 100.);
       m_hVector_NElectrons[j].push_back(histo_NElectrons);
 
-      sprintf(name,"sumEHFplus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumEHFplus = new TH1F(name,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
-      m_hVector_sumEHFplus[j].push_back(histo_sumEHFplus);
-
-      sprintf(name,"sumEHFminus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumEHFminus = new TH1F(name,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",2000,0,2000);
-      m_hVector_sumEHFminus[j].push_back(histo_sumEHFminus);
-
-      sprintf(name,"sumEHEplus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumEHEplus = new TH1F(name,"HE^{+} - Sum of Energy; #sum E_{HE^{+}} [GeV]; N events",2000,0,2000);
-      m_hVector_sumEHEplus[j].push_back(histo_sumEHEplus);
-
-      sprintf(name,"sumEHEminus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumEHEminus = new TH1F(name,"HE^{-} - Sum of Energy; #sum E_{HE^{-}} [GeV]; N events",2000,0,2000);
-      m_hVector_sumEHEminus[j].push_back(histo_sumEHEminus);
-
       sprintf(name,"LeadingLeptonTkDr03_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_LeadingLeptonTkDr03 = new TH1F(name,"Leading Lepton: Tracker Isolation DR03; # Isolation; [u]", 100, 0., 1.);
       m_hVector_LeadingLeptonTkDr03[j].push_back(histo_LeadingLeptonTkDr03);
@@ -328,6 +312,23 @@ void DiffractiveW::CreateHistos(std::string type){
 
 
       // Detector
+
+      sprintf(name,"sumEHFplus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFplus = new TH1F(name,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFplus[j].push_back(histo_sumEHFplus);
+
+      sprintf(name,"sumEHFminus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFminus = new TH1F(name,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFminus[j].push_back(histo_sumEHFminus);
+
+      sprintf(name,"sumEHEplus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHEplus = new TH1F(name,"HE^{+} - Sum of Energy; #sum E_{HE^{+}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHEplus[j].push_back(histo_sumEHEplus);
+
+      sprintf(name,"sumEHEminus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHEminus = new TH1F(name,"HE^{-} - Sum of Energy; #sum E_{HE^{-}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHEminus[j].push_back(histo_sumEHEminus);
+
       sprintf(name,"sumEHFplus_S_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_SumEHFplus_S = new TH1F(name,"HF^{+} - Sum of Energy, Short Fibers; #sum E_{HF^{+},Short} [GeV]; N events",2000,0,2000);
       m_hVector_SumEHFplus_S[j].push_back(histo_SumEHFplus_S);
