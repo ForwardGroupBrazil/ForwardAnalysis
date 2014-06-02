@@ -117,154 +117,121 @@ void DiffractiveZ::CreateHistos(std::string type){
 
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
-    m_hVector_DiElectronMass.push_back( std::vector<TH1F*>() );
-    m_hVector_DiElectronEta.push_back( std::vector<TH1F*>() );
-    m_hVector_DiElectronPt.push_back( std::vector<TH1F*>() );
-    m_hVector_DiElectronPhi.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronPt.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronEta.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronPhi.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronCharge.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronPt.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronEta.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronPhi.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronCharge.push_back( std::vector<TH1F*>() );
+    // Kinematics 
+    m_hVector_DiLeptonMass.push_back( std::vector<TH1F*>() );
+    m_hVector_DiLeptonEta.push_back( std::vector<TH1F*>() );
+    m_hVector_DiLeptonPt.push_back( std::vector<TH1F*>() );
+    m_hVector_DiLeptonPhi.push_back( std::vector<TH1F*>() );
+
+    m_hVector_BosonZPt.push_back( std::vector<TH1F*>() );
+    m_hVector_BosonZEta.push_back( std::vector<TH1F*>() );
+    m_hVector_BosonZPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_BosonZMass.push_back( std::vector<TH1F*>() );
+
+    m_hVector_LeptonsPt.push_back( std::vector<TH1F*>() );
+    m_hVector_LeptonsEta.push_back( std::vector<TH1F*>() );
+    m_hVector_LeptonsPhi.push_back( std::vector<TH1F*>() );
+
+    m_hVector_LeadingLeptonPt.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonEta.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonCharge.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonTkDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonEcalDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonHcalDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonIsolation.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonInnerHits.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonDCot.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonDist.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonDeltaEtaTkClu.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonDeltaPhiTkClu.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonSigmaIeIe.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonHE.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonPt.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonEta.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonCharge.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonTkDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonEcalDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonHcalDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonIsolation.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonInnerHits.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonDCot.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonDist.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonDeltaEtaTkClu.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonDeltaPhiTkClu.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonSigmaIeIe.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonHE.push_back( std::vector<TH1F*>() );
+    m_hVector_deltaphiLeptons.push_back( std::vector<TH1F*>() );
+    m_hVector_deltapTLeptons.push_back( std::vector<TH1F*>() );
+    m_hVector_deltaetaLeptons.push_back( std::vector<TH1F*>() );
+    m_hVector_tracksOutLeptonsCone03.push_back( std::vector<TH1F*>() );
+    m_hVector_tracksOutLeptonsCone04.push_back( std::vector<TH1F*>() );
+    m_hVector_tracksOutLeptonsCone05.push_back( std::vector<TH1F*>() );    
     m_hVector_ElectronsN.push_back( std::vector<TH1F*>() );
     m_hVector_MuonsN.push_back( std::vector<TH1F*>() );
+
+    // Event Info
+    m_hVector_RunNumber.push_back( std::vector<TH1F*>() );
+    m_hVector_RunNumberZeroCastor.push_back( std::vector<TH1F*>() );
+    m_hVector_RunNumberHighCastor.push_back( std::vector<TH1F*>() );
+    m_hVector_vertex.push_back( std::vector<TH1F*>() );
+    m_hVector_lumi.push_back( std::vector<TH1F*>() );
+    m_hVector_vertexvslumi.push_back( std::vector<TH2F*>() );
+    m_hVector_tracks.push_back( std::vector<TH1F*>() );
+    m_hVector_tracksLow.push_back( std::vector<TH1F*>() );
+
+    // Detector
+    m_hVector_ECaloVsEta.push_back( std::vector<TH2F*>() );
+    m_hVector_ECaloVsEtaTProf.push_back( std::vector<TProfile*>() );
+    m_hVector_EnergyVsEtaBin1D.push_back( std::vector<TH1F*>() );
     m_hVector_sumEHFplus.push_back( std::vector<TH1F*>() );
     m_hVector_sumEHFminus.push_back( std::vector<TH1F*>() );
     m_hVector_sumEHEplus.push_back( std::vector<TH1F*>() );
     m_hVector_sumEHEminus.push_back( std::vector<TH1F*>() );
-    m_hVector_lumi.push_back( std::vector<TH1F*>() );
-    m_hVector_asumE.push_back( std::vector<TH1F*>() );
-    m_hVector_multhf.push_back( std::vector<TH2F*>() );
-    m_hVector_etcalos_p.push_back( std::vector<TH2F*>() );
-    m_hVector_etcalos_n.push_back( std::vector<TH2F*>() );
-    m_hVector_tracks.push_back( std::vector<TH1F*>() );
-    m_hVector_tracksLow.push_back( std::vector<TH1F*>() );
-    m_hVector_pfetamax.push_back( std::vector<TH1F*>() );
-    m_hVector_pfetamin.push_back( std::vector<TH1F*>() );
-    m_hVector_asumE.push_back( std::vector<TH1F*>() );
-    m_hVector_vertex.push_back( std::vector<TH1F*>() );
-    m_hVector_deltaphielectrons.push_back( std::vector<TH1F*>() );
-    m_hVector_deltapTelectrons.push_back( std::vector<TH1F*>() );
-    m_hVector_deltaetaelectrons.push_back( std::vector<TH1F*>() );
-    m_hVector_vertexvslumi.push_back( std::vector<TH2F*>() );
-    m_hVector_LeadingElectronTkDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronTkDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronEcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronEcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronHcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronHcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronTkDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronTkDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronEcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronEcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronHcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronHcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronrelIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronrelIsoDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronrelIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronrelIsoDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonSumPtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonSumPtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonEmEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonEmEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonHadEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonHadEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonSumPtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonSumPtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonEmEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonEmEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonHadEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonHadEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonrelIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonrelIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
-
-    m_hVector_sumECastorMinusLow.push_back( std::vector<TH1F*>() );
-    m_hVector_sumECastorMinus.push_back( std::vector<TH1F*>() );
-    m_hVector_ECastorSector.push_back( std::vector<TH2F*>() );
-    m_hVector_ECaloVsEta.push_back( std::vector<TH2F*>() );
-    m_hVector_ECastorSectorTProf.push_back( std::vector<TProfile*>() );
-    m_hVector_ECaloVsEtaTProf.push_back( std::vector<TProfile*>() );
-
-    m_hVector_tracksOutElectronsCone03.push_back( std::vector<TH1F*>() );
-    m_hVector_tracksOutElectronsCone04.push_back( std::vector<TH1F*>() );
-    m_hVector_tracksOutElectronsCone05.push_back( std::vector<TH1F*>() );
-
-    m_hVector_LeadingElectronInnerHits.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronDCot.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronDist.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronDeltaEtaTkClu.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronDeltaPhiTkClu.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronSigmaIeIe.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronHE.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronInnerHits.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronDCot.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronDist.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronDeltaEtaTkClu.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronDeltaPhiTkClu.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronSigmaIeIe.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronHE.push_back( std::vector<TH1F*>() );
-
     m_hVector_SumEHFplus_S.push_back( std::vector<TH1F*>() );
     m_hVector_SumEHFminus_S.push_back( std::vector<TH1F*>() );
     m_hVector_SumEHFplus_L.push_back( std::vector<TH1F*>() );
     m_hVector_SumEHFminus_L.push_back( std::vector<TH1F*>() );
+    m_hVector_SumEHFMax.push_back( std::vector<TH1F*>() );
+    m_hVector_SumEHFMin.push_back( std::vector<TH1F*>() );
+    m_hVector_EnergyHFPlusVsEnergyHFMinus.push_back( std::vector<TH2F*>() );
+    m_hVector_EnergyEEPlusVsEnergyEEMinus.push_back( std::vector<TH2F*>() );
+    m_hVector_sumEEEminus.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEEEplus.push_back( std::vector<TH1F*>() );
+    m_hVector_multhf.push_back( std::vector<TH2F*>() );
+    m_hVector_etcalos_p.push_back( std::vector<TH2F*>() );
+    m_hVector_etcalos_n.push_back( std::vector<TH2F*>() );
+    m_hVector_ECastorSector.push_back( std::vector<TH2F*>() );
+    m_hVector_ECastorSectorTProf.push_back( std::vector<TProfile*>() );
+    m_hVector_CastorMultiplicity.push_back( std::vector<TH1F*>() );
+    m_hVector_CastorMultiplicityVsLumi.push_back( std::vector<TH2F*>() );
+    m_hVector_SectorVsTotalCastorEnergy.push_back( std::vector<TH2F*>() );
+    m_hVector_SectorVsTotalCastorEnergyTProf.push_back( std::vector<TProfile*>() );
+    m_hVector_ECastorSectorBin1D.push_back( std::vector<TH1F*>() );
+    m_hVector_sumECastorMinus.push_back( std::vector<TH1F*>() );
+    m_hVector_sumECastorMinusLow.push_back( std::vector<TH1F*>() );
+    m_hVector_sumECastorAndHFMinus.push_back( std::vector<TH1F*>() );
 
+    // Diffraction
+    m_hVector_asumE.push_back( std::vector<TH1F*>() );
+    m_hVector_AEcastor.push_back( std::vector<TH1F*>() );
+    m_hVector_etasignedHF.push_back( std::vector<TH1F*>() );
+    m_hVector_etasignedCASTOR.push_back( std::vector<TH1F*>() );
+    m_hVector_XiPlusPF.push_back( std::vector<TH1F*>() );
+    m_hVector_XiMinusPF.push_back( std::vector<TH1F*>() );
+    m_hVector_XiPF.push_back( std::vector<TH1F*>() );
+    m_hVector_pfetamincastor.push_back( std::vector<TH1F*>() );
+    m_hVector_absdeltaEtaPF.push_back( std::vector<TH1F*>() );
+    m_hVector_deltaEtaPF.push_back( std::vector<TH1F*>() );
     m_hVector_maxetagap.push_back( std::vector<TH1F*>() );
     m_hVector_LimPlusgap.push_back( std::vector<TH1F*>() );
     m_hVector_LimMinusgap.push_back( std::vector<TH1F*>() );
     m_hVector_SumPTLimPlusgap.push_back( std::vector<TH1F*>() );
     m_hVector_SumPTLimMinusgap.push_back( std::vector<TH1F*>() );
-
-    m_hVector_ElectronsPt.push_back( std::vector<TH1F*>() );
-    m_hVector_ElectronsEta.push_back( std::vector<TH1F*>() );
-    m_hVector_ElectronsPhi.push_back( std::vector<TH1F*>() );
-
-    m_hVector_SumEHFMax.push_back( std::vector<TH1F*>() );
-    m_hVector_SumEHFMin.push_back( std::vector<TH1F*>() );
-
-    m_hVector_EnergyVsEtaBin1D.push_back( std::vector<TH1F*>() );
-
-    m_hVector_absdeltaEtaPF.push_back( std::vector<TH1F*>() );
-    m_hVector_deltaEtaPF.push_back( std::vector<TH1F*>() );
-
-    m_hVector_ECastorSectorBin1D.push_back( std::vector<TH1F*>() );
-
-    m_hVector_RunNumber.push_back( std::vector<TH1F*>() );
-    m_hVector_RunNumberZeroCastor.push_back( std::vector<TH1F*>() );
-    m_hVector_RunNumberHighCastor.push_back( std::vector<TH1F*>() );
-
-    m_hVector_EnergyHFMinusVsCastorTProf.push_back( std::vector<TProfile*>() );
-    m_hVector_EnergyHFPlusVsCastorTProf.push_back( std::vector<TProfile*>() );
-
-    m_hVector_sumECastorAndHFMinus.push_back( std::vector<TH1F*>() );
-    m_hVector_CastorMultiplicity.push_back( std::vector<TH1F*>() );
-    m_hVector_CastorMultiplicityVsLumi.push_back( std::vector<TH2F*>() );
-    m_hVector_SectorVsTotalCastorEnergy.push_back( std::vector<TH2F*>() );
-    m_hVector_SectorVsTotalCastorEnergyTProf.push_back( std::vector<TProfile*>() );
-
-    m_hVector_XiPlusPF.push_back( std::vector<TH1F*>() );
-    m_hVector_XiMinusPF.push_back( std::vector<TH1F*>() );
-    m_hVector_XiPF.push_back( std::vector<TH1F*>() );
-    m_hVector_pfetamincastor.push_back( std::vector<TH1F*>() );
-
-    m_hVector_AEcastor.push_back( std::vector<TH1F*>() );
-    m_hVector_etasignedHF.push_back( std::vector<TH1F*>() );
-    m_hVector_etasignedCASTOR.push_back( std::vector<TH1F*>() );
-
-    m_hVector_sumEEEminus.push_back( std::vector<TH1F*>() );
-    m_hVector_sumEEEplus.push_back( std::vector<TH1F*>() );
-
-    m_hVector_EnergyHFPlusVsEnergyHFMinus.push_back( std::vector<TH2F*>() );
-    m_hVector_EnergyEEPlusVsEnergyEEMinus.push_back( std::vector<TH2F*>() );
-    m_hVector_BosonZPt.push_back( std::vector<TH1F*>() );
-    m_hVector_BosonZEta.push_back( std::vector<TH1F*>() );
-    m_hVector_BosonZPhi.push_back( std::vector<TH1F*>() );
-    m_hVector_BosonZMass.push_back( std::vector<TH1F*>() );
+    m_hVector_pfetamax.push_back( std::vector<TH1F*>() );
+    m_hVector_pfetamin.push_back( std::vector<TH1F*>() );
+    m_hVector_asumE.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -276,42 +243,8 @@ void DiffractiveZ::CreateHistos(std::string type){
       }
 
       char name[300];
-      sprintf(name,"DiElectronMass_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DiElectronMass = new TH1F(name,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",500,0,500);
-      m_hVector_DiElectronMass[j].push_back(histo_DiElectronMass);
 
-      sprintf(name,"LeadingElectronPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronPt = new TH1F(name,"Leading Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
-      m_hVector_LeadingElectronPt[j].push_back(histo_LeadingElectronPt);
-
-      sprintf(name,"LeadingElectronEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronEta = new TH1F(name,"Leading Electron - #eta Distribution; #eta; N events",60,-6,6);
-      m_hVector_LeadingElectronEta[j].push_back(histo_LeadingElectronEta);
-
-      sprintf(name,"LeadingElectronPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronPhi = new TH1F(name,"Leading Electron - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
-      m_hVector_LeadingElectronPhi[j].push_back(histo_LeadingElectronPhi);
-
-      sprintf(name,"LeadingElectronCharge_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronCharge = new TH1F(name,"Leading Electron - Charge Distribution; Charge; N events",6,-3,3);
-      m_hVector_LeadingElectronCharge[j].push_back(histo_LeadingElectronCharge);
-
-      sprintf(name,"SecondElectronPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronPt = new TH1F(name,"Second Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
-      m_hVector_SecondElectronPt[j].push_back(histo_SecondElectronPt);
-
-      sprintf(name,"SecondElectronEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronEta = new TH1F(name,"Second Electron - #eta Distribution; #eta; N events",60,-6,6);
-      m_hVector_SecondElectronEta[j].push_back(histo_SecondElectronEta);
-
-      sprintf(name,"SecondElectronPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronPhi = new TH1F(name,"Second Electron - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
-      m_hVector_SecondElectronPhi[j].push_back(histo_SecondElectronPhi);
-
-      sprintf(name,"SecondElectronCharge_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronCharge = new TH1F(name,"Second Electron - Charge Distribution; Charge; N events",6,-3,3);
-      m_hVector_SecondElectronCharge[j].push_back(histo_SecondElectronCharge);
-
+      // Kinematics
       sprintf(name,"ElectronsN_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_ElectronsN = new TH1F(name,"Electrons per Event Distribution; Number of Electrons; N events",100,0,100);
       m_hVector_ElectronsN[j].push_back(histo_ElectronsN);
@@ -319,6 +252,238 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name,"MuonsN_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_MuonsN = new TH1F(name,"Muons per Event Distribution; Number of Muons; N events",100,0,100);
       m_hVector_MuonsN[j].push_back(histo_MuonsN);
+
+      sprintf(name,"DiLeptonMass_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DiLeptonMass = new TH1F(name,"DiLepton Invariant Mass Distribution; M_{ll} [GeV]; N events",500,0,500);
+      m_hVector_DiLeptonMass[j].push_back(histo_DiLeptonMass);
+
+      sprintf(name,"DiLeptonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DiLeptonPt = new TH1F(name,"DiLepton Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_DiLeptonPt[j].push_back(histo_DiLeptonPt);
+
+      sprintf(name,"DiLeptonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DiLeptonEta = new TH1F(name,"DiLepton #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_DiLeptonEta[j].push_back(histo_DiLeptonEta);
+
+      sprintf(name,"DiLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DiLeptonPhi = new TH1F(name,"DiLepton #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_DiLeptonPhi[j].push_back(histo_DiLeptonPhi);
+
+      sprintf(name,"BosonZPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_BosonZPt = new TH1F(name,"Boson Z Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_BosonZPt[j].push_back(histo_BosonZPt);
+
+      sprintf(name,"BosonZEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_BosonZEta = new TH1F(name,"Boson Z #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_BosonZEta[j].push_back(histo_BosonZEta);
+
+      sprintf(name,"BosonZPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_BosonZPhi = new TH1F(name,"Boson Z #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_BosonZPhi[j].push_back(histo_BosonZPhi);
+
+      sprintf(name,"BosonZMass_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_BosonZMass = new TH1F(name,"Boson Z Mass Distribution; M_{Z} [GeV]; N events",500,0,500);
+      m_hVector_BosonZMass[j].push_back(histo_BosonZMass);
+
+      sprintf(name,"LeptonsPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeptonsPt = new TH1F(name,"Leptons - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
+      m_hVector_LeptonsPt[j].push_back(histo_LeptonsPt);
+
+      sprintf(name,"LeptonsEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeptonsEta = new TH1F(name,"Leptons - #eta Distribution; #eta; N events",60,-6,6);
+      m_hVector_LeptonsEta[j].push_back(histo_LeptonsEta);
+
+      sprintf(name,"LeptonsPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeptonsPhi = new TH1F(name,"Leptons - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
+      m_hVector_LeptonsPhi[j].push_back(histo_LeptonsPhi);
+
+
+
+
+
+      sprintf(name,"LeadingLeptonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonPt = new TH1F(name,"Leading Lepton - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
+      m_hVector_LeadingLeptonPt[j].push_back(histo_LeadingLeptonPt);
+
+      sprintf(name,"LeadingLeptonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonEta = new TH1F(name,"Leading Lepton - #eta Distribution; #eta; N events",60,-6,6);
+      m_hVector_LeadingLeptonEta[j].push_back(histo_LeadingLeptonEta);
+
+      sprintf(name,"LeadingLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonPhi = new TH1F(name,"Leading Lepton - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
+      m_hVector_LeadingLeptonPhi[j].push_back(histo_LeadingLeptonPhi);
+
+      sprintf(name,"LeadingLeptonTkDr03_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonTkDr03 = new TH1F(name,"Leading Lepton: Tracker Isolation DR03; # Isolation; [u]", 100, 0., 1.);
+      m_hVector_LeadingLeptonTkDr03[j].push_back(histo_LeadingLeptonTkDr03);
+
+      sprintf(name,"LeadingLeptonEcalDr03_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonEcalDr03 = new TH1F(name,"Leading Lepton: ECAL Isolation DR03; # Isolation; [u]", 100, 0., 1.);
+      m_hVector_LeadingLeptonEcalDr03[j].push_back(histo_LeadingLeptonEcalDr03);
+
+      sprintf(name,"LeadingLeptonHcalDr03_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonHcalDr03 = new TH1F(name,"Leading Lepton: HCAL Isolation DR03; # Isolation; [u]", 100, 0., 1.);
+      m_hVector_LeadingLeptonHcalDr03[j].push_back(histo_LeadingLeptonHcalDr03);
+
+      sprintf(name,"LeadingLeptonIsolation_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonIsolation = new TH1F(name,"Leading Lepton: Isolation; # Isolation; [u]", 100, 0., 1.);
+      m_hVector_LeadingLeptonIsolation[j].push_back(histo_LeadingLeptonIsolation);
+
+      sprintf(name,"LeadingLeptonInnerHits_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonInnerHits = new TH1F(name,"Leading Lepton; Number Of Expected Inner Hits; N events",500,0,50);
+      m_hVector_LeadingLeptonInnerHits[j].push_back(histo_LeadingLeptonInnerHits);
+
+      sprintf(name,"LeadingLeptonDCot_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonDCot = new TH1F(name,"Leading Lepton; DCot [a.u.]; N events",100,0,1);
+      m_hVector_LeadingLeptonDCot[j].push_back(histo_LeadingLeptonDCot);
+
+      sprintf(name,"LeadingLeptonDist_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonDist = new TH1F(name,"Leading Lepton; Dist [a.u.]; N events",100,0,1);
+      m_hVector_LeadingLeptonDist[j].push_back(histo_LeadingLeptonDist);
+
+      sprintf(name,"LeadingLeptonDeltaEtaTkClu_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonDeltaEtaTkClu = new TH1F(name,"Leading Lepton; #Delta#eta_{TK, Cluster} [a.u.]; N events",100,0,1);
+      m_hVector_LeadingLeptonDeltaEtaTkClu[j].push_back(histo_LeadingLeptonDeltaEtaTkClu);
+
+      sprintf(name,"LeadingLeptonDeltaPhiTkClu_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonDeltaPhiTkClu = new TH1F(name,"Leading Lepton; #Delta#phi_{TK, Cluster} [a.u.]; N events",100,0,1);
+      m_hVector_LeadingLeptonDeltaPhiTkClu[j].push_back(histo_LeadingLeptonDeltaPhiTkClu);
+
+      sprintf(name,"LeadingLeptonSigmaIeIe_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonSigmaIeIe = new TH1F(name,"Leading Lepton; #sigma_{i#etai#eta} [a.u.]; N events",100,0,1);
+      m_hVector_LeadingLeptonSigmaIeIe[j].push_back(histo_LeadingLeptonSigmaIeIe);
+
+      sprintf(name,"LeadingLeptonHE_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonHE = new TH1F(name,"Leading Lepton; HE; N events",100,0,1);
+      m_hVector_LeadingLeptonHE[j].push_back(histo_LeadingLeptonHE);
+
+      sprintf(name,"SecondLeptonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonPt = new TH1F(name,"Second Lepton - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
+      m_hVector_SecondLeptonPt[j].push_back(histo_SecondLeptonPt);
+
+      sprintf(name,"SecondLeptonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonEta = new TH1F(name,"Second Lepton - #eta Distribution; #eta; N events",60,-6,6);
+      m_hVector_SecondLeptonEta[j].push_back(histo_SecondLeptonEta);
+
+      sprintf(name,"SecondLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonPhi = new TH1F(name,"Second Lepton - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
+      m_hVector_SecondLeptonPhi[j].push_back(histo_SecondLeptonPhi);
+
+      sprintf(name,"SecondLeptonTkDr03_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonTkDr03 = new TH1F(name,"Second Lepton: Tracker Isolation DR03; # Isolation; [u]", 100, 0., 1.);
+      m_hVector_SecondLeptonTkDr03[j].push_back(histo_SecondLeptonTkDr03);
+
+      sprintf(name,"SecondLeptonEcalDr03_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonEcalDr03 = new TH1F(name,"Second Lepton: ECAL Isolation DR03; # Isolation; [u]", 100, 0., 1.);
+      m_hVector_SecondLeptonEcalDr03[j].push_back(histo_SecondLeptonEcalDr03);
+
+      sprintf(name,"SecondLeptonHcalDr03_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonHcalDr03 = new TH1F(name,"Second Lepton: HCAL Isolation DR03; # Isolation; [u]", 100, 0., 1.);
+      m_hVector_SecondLeptonHcalDr03[j].push_back(histo_SecondLeptonHcalDr03);
+
+      sprintf(name,"SecondLeptonIsolation_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonIsolation = new TH1F(name,"Second Lepton: Isolation; # Isolation; [u]", 100, 0., 1.);
+      m_hVector_SecondLeptonIsolation[j].push_back(histo_SecondLeptonIsolation);
+
+      sprintf(name,"SecondLeptonInnerHits_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonInnerHits = new TH1F(name,"Second Lepton; Number Of Expected Inner Hits; N events",500,0,50);
+      m_hVector_SecondLeptonInnerHits[j].push_back(histo_SecondLeptonInnerHits);
+
+      sprintf(name,"SecondLeptonDCot_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonDCot = new TH1F(name,"Second Lepton; DCot [a.u.]; N events",100,0,1);
+      m_hVector_SecondLeptonDCot[j].push_back(histo_SecondLeptonDCot);
+
+      sprintf(name,"SecondLeptonDist_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonDist = new TH1F(name,"Second Lepton; Dist [a.u.]; N events",100,0,1);
+      m_hVector_SecondLeptonDist[j].push_back(histo_SecondLeptonDist);
+
+      sprintf(name,"SecondLeptonDeltaEtaTkClu_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonDeltaEtaTkClu = new TH1F(name,"Second Lepton; #Delta#eta_{TK, Cluster} [a.u.]; N events",100,0,1);
+      m_hVector_SecondLeptonDeltaEtaTkClu[j].push_back(histo_SecondLeptonDeltaEtaTkClu);
+
+      sprintf(name,"SecondLeptonDeltaPhiTkClu_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonDeltaPhiTkClu = new TH1F(name,"Second Lepton; #Delta#phi_{TK, Cluster} [a.u.]; N events",100,0,1);
+      m_hVector_SecondLeptonDeltaPhiTkClu[j].push_back(histo_SecondLeptonDeltaPhiTkClu);
+
+      sprintf(name,"SecondLeptonSigmaIeIe_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonSigmaIeIe = new TH1F(name,"Second Lepton; #sigma_{i#etai#eta} [a.u.]; N events",100,0,1);
+      m_hVector_SecondLeptonSigmaIeIe[j].push_back(histo_SecondLeptonSigmaIeIe);
+
+      sprintf(name,"SecondLeptonHE_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonHE = new TH1F(name,"Second Lepton; HE; N events",100,0,1);
+      m_hVector_SecondLeptonHE[j].push_back(histo_SecondLeptonHE);
+
+      sprintf(name,"deltaphiLeptons_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_deltaphiLeptons = new TH1F(name,"#Delta#phi_{ee} Distribution; #Delta#phi_{ee}; N events",20,0.0,3.2);
+      m_hVector_deltaphiLeptons[j].push_back(histo_deltaphiLeptons);
+
+      sprintf(name,"deltapTLeptons_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_deltapTLeptons = new TH1F(name,"#Delta pT_{ee} Distribution; #Delta pT_{ee} [GeV.c^{-1}]; N events",50,0.0,150);
+      m_hVector_deltapTLeptons[j].push_back(histo_deltapTLeptons);
+
+      sprintf(name,"deltaetaLeptons_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_deltaetaLeptons = new TH1F(name,"#Delta#eta_{ee} Distribution; #Delta#eta_{ee}; N events",50,-11,11);
+      m_hVector_deltaetaLeptons[j].push_back(histo_deltaetaLeptons);
+
+      sprintf(name,"tracksOutLeptonsCone03_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_tracksOutLeptonsCone03 = new TH1F(name,"Tracks Outside Leading and Second Lepton Cone; Number of Tracks, #DeltaR>0.3; N events",500,0,500);
+      m_hVector_tracksOutLeptonsCone03[j].push_back(histo_tracksOutLeptonsCone03);
+
+      sprintf(name,"tracksOutLeptonsCone04_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_tracksOutLeptonsCone04 = new TH1F(name,"Tracks Outside Leading and Second Lepton Cone; Number of Tracks, #DeltaR>0.4; N events",500,0,500);
+      m_hVector_tracksOutLeptonsCone04[j].push_back(histo_tracksOutLeptonsCone04);
+
+      sprintf(name,"tracksOutLeptonsCone05_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_tracksOutLeptonsCone05 = new TH1F(name,"Tracks Outside Leading and Second Lepton Cone; Number of Tracks, #DeltaR>0.5; N events",500,0,500);
+      m_hVector_tracksOutLeptonsCone05[j].push_back(histo_tracksOutLeptonsCone05);
+
+
+      // Event Info
+      sprintf(name,"RunNumber_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumber = new TH1F(name,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumber[j].push_back(histo_RunNumber);
+
+      sprintf(name,"RunNumberZeroCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberZeroCastor = new TH1F(name,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberZeroCastor[j].push_back(histo_RunNumberZeroCastor);
+
+      sprintf(name,"RunNumberHighCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberHighCastor = new TH1F(name,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberHighCastor[j].push_back(histo_RunNumberHighCastor);
+
+      sprintf(name,"vertex_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_vertex = new TH1F(name,"Number of Vertex; # Vertex; N events",25,0,25);
+      m_hVector_vertex[j].push_back(histo_vertex);
+
+      sprintf(name,"lumi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_lumi = new TH1F(name,"Luminosity per Bunch; L_{Bunch} [#mub^{-1}s^{-1}]; N events",25,0,2);
+      m_hVector_lumi[j].push_back(histo_lumi);
+
+      sprintf(name,"VertexVsLuminosity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_vertexvslumi = new TH2F(name,"Vertex vs Luminosity; # Vertex; Luminosity per Bunch [#mub^{-1}s^{-1}]", 25., 0., 25., 25, 0., 2.);
+      m_hVector_vertexvslumi[j].push_back(histo_vertexvslumi);
+
+      sprintf(name,"Tracks_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_Tracks = new TH1F(name,"Tracks Multiplicity; n Tracks; N events",150,0,150);
+      m_hVector_tracks[j].push_back(histo_Tracks);
+
+      sprintf(name,"TracksLow_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TracksLow = new TH1F(name,"Tracks Multiplicity; n Tracks; N events",40,0,80);
+      m_hVector_tracksLow[j].push_back(histo_TracksLow);
+
+
+      // Detector
+      sprintf(name,"ECaloVsEta_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_ECaloVsEta = new TH2F(name,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 500, -8, 8, 100, 0., 1000.);
+      m_hVector_ECaloVsEta[j].push_back(histo_ECaloVsEta);
+
+      sprintf(name,"ECaloVsEtaTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_ECaloVsEtaTProf = new TProfile(name,"Calorimeter Energy X #eta; #eta; <Energy> [GeV]", 100, -8, 8, 0., 1000.);
+      m_hVector_ECaloVsEtaTProf[j].push_back(histo_ECaloVsEtaTProf);
+
+      sprintf(name,"EnergyVsEtaBin1D_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_EnergyVsEtaBin1D = new TH1F(name,"Calorimeter Energy X #eta; #eta; #sum Energy_{calotower} [GeV]", 500, -8, 8);
+      m_hVector_EnergyVsEtaBin1D[j].push_back(histo_EnergyVsEtaBin1D);
 
       sprintf(name,"sumEHFplus_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_sumEHFplus = new TH1F(name,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
@@ -336,282 +501,6 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_sumEHEminus = new TH1F(name,"HE^{-} - Sum of Energy; #sum E_{HE^{-}} [GeV]; N events",2000,0,2000);
       m_hVector_sumEHEminus[j].push_back(histo_sumEHEminus);
 
-      sprintf(name,"lumi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_lumi = new TH1F(name,"Luminosity per Bunch; L_{Bunch} [#mub^{-1}s^{-1}]; N events",25,0,2);
-      m_hVector_lumi[j].push_back(histo_lumi);      
-
-      sprintf(name,"aEnergy_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_aSumE = new TH1F(name,"Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",100,-2,2);
-      m_hVector_asumE[j].push_back(histo_aSumE);
-
-      sprintf(name,"mHF_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_MultHF = new TH2F(name,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 100,  0., 100., 100,  0., 100. );
-      m_hVector_multhf[j].push_back(histo_MultHF);
-
-      sprintf(name,"EnergyHFPlusVsCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_ET_Calos_p = new TH2F(name,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000,  0., 1000., 6000,  0., 3000. );
-      m_hVector_etcalos_p[j].push_back(histo_ET_Calos_p);
-
-      sprintf(name,"Tracks_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_Tracks = new TH1F(name,"Tracks Multiplicity; n Tracks; N events",150,0,150);
-      m_hVector_tracks[j].push_back(histo_Tracks);
-
-      sprintf(name,"pfetamax_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_PFEtamax = new TH1F(name,"Particle Flow #eta_{max} Distribution; #eta; N events",18,binarrayplus);
-      m_hVector_pfetamax[j].push_back(histo_PFEtamax);
-
-      sprintf(name,"pfetamin_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_PFEtamin = new TH1F(name,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
-      m_hVector_pfetamin[j].push_back(histo_PFEtamin);
-
-      sprintf(name,"vertex_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_vertex = new TH1F(name,"Number of Vertex; # Vertex; N events",25,0,25);
-      m_hVector_vertex[j].push_back(histo_vertex);
-
-      sprintf(name,"deltaphiElectrons_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_deltaphielectrons = new TH1F(name,"#Delta#phi_{ee} Distribution; #Delta#phi_{ee}; N events",20,0.0,3.2);
-      m_hVector_deltaphielectrons[j].push_back(histo_deltaphielectrons);
-
-      sprintf(name,"deltapTElectrons_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_deltapTelectrons = new TH1F(name,"#Delta pT_{ee} Distribution; #Delta pT_{ee} [GeV.c^{-1}]; N events",50,0.0,150);
-      m_hVector_deltapTelectrons[j].push_back(histo_deltapTelectrons);
-
-      sprintf(name,"deltaetaElectrons_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_deltaetaelectrons = new TH1F(name,"#Delta#eta_{ee} Distribution; #Delta#eta_{ee}; N events",50,-11,11);
-      m_hVector_deltaetaelectrons[j].push_back(histo_deltaetaelectrons);
-
-      sprintf(name,"VertexVsLuminosity_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_vertexvslumi = new TH2F(name,"Vertex vs Luminosity; # Vertex; Luminosity per Bunch [#mub^{-1}s^{-1}]", 25.,  0., 25., 25,  0., 2.);
-      m_hVector_vertexvslumi[j].push_back(histo_vertexvslumi);
-
-      sprintf(name,"LeadingElectronTkDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronTkDr03 = new TH1F(name,"Leading Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingElectronTkDr03[j].push_back(histo_LeadingElectronTkDr03);
-
-      sprintf(name,"LeadingElectronTkDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronTkDr04 = new TH1F(name,"Leading Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingElectronTkDr04[j].push_back(histo_LeadingElectronTkDr04);
-
-      sprintf(name,"LeadingElectronEcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronEcalDr03 = new TH1F(name,"Leading Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingElectronEcalDr03[j].push_back(histo_LeadingElectronEcalDr03);
-
-      sprintf(name,"LeadingElectronEcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronEcalDr04 = new TH1F(name,"Leading Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingElectronEcalDr04[j].push_back(histo_LeadingElectronEcalDr04);
-
-      sprintf(name,"LeadingElectronHcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronHcalDr03 = new TH1F(name,"Leading Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingElectronHcalDr03[j].push_back(histo_LeadingElectronHcalDr03);
-
-      sprintf(name,"LeadingElectronHcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronHcalDr04 = new TH1F(name,"Leading Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingElectronHcalDr04[j].push_back(histo_LeadingElectronHcalDr04);
-
-      sprintf(name,"SecondElectronTkDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronTkDr03 = new TH1F(name,"Second Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondElectronTkDr03[j].push_back(histo_SecondElectronTkDr03);
-
-      sprintf(name,"SecondElectronTkDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronTkDr04 = new TH1F(name,"Second Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondElectronTkDr04[j].push_back(histo_SecondElectronTkDr04);
-
-      sprintf(name,"SecondElectronEcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronEcalDr03 = new TH1F(name,"Second Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondElectronEcalDr03[j].push_back(histo_SecondElectronEcalDr03);
-
-      sprintf(name,"SecondElectronEcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronEcalDr04 = new TH1F(name,"Second Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondElectronEcalDr04[j].push_back(histo_SecondElectronEcalDr04);
-
-      sprintf(name,"SecondElectronHcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronHcalDr03 = new TH1F(name,"Second Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondElectronHcalDr03[j].push_back(histo_SecondElectronHcalDr03);
-
-      sprintf(name,"SecondElectronHcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronHcalDr04 = new TH1F(name,"Second Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondElectronHcalDr04[j].push_back(histo_SecondElectronHcalDr04);
-
-      sprintf(name,"LeadingElectronrelIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronrelIsoDr03 = new TH1F(name,"Leading Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingElectronrelIsoDr03[j].push_back(histo_LeadingElectronrelIsoDr03);
-
-      sprintf(name,"LeadingElectronrelIsoDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronrelIsoDr04 = new TH1F(name,"Leading Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingElectronrelIsoDr04[j].push_back(histo_LeadingElectronrelIsoDr04);
-
-      sprintf(name,"SecondElectronrelIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronrelIsoDr03 = new TH1F(name,"Second Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondElectronrelIsoDr03[j].push_back(histo_SecondElectronrelIsoDr03);
-
-      sprintf(name,"SecondElectronrelIsoDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronrelIsoDr04 = new TH1F(name,"Second Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondElectronrelIsoDr04[j].push_back(histo_SecondElectronrelIsoDr04);
-
-      sprintf(name,"LeadingMuonSumPtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonSumPtR03 = new TH1F(name,"Leading Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingMuonSumPtR03[j].push_back(histo_LeadingMuonSumPtR03);
-
-      sprintf(name,"LeadingMuonSumPtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonSumPtR05 = new TH1F(name,"Leading Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingMuonSumPtR05[j].push_back(histo_LeadingMuonSumPtR05);
-
-      sprintf(name,"LeadingMuonEmEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonEmEtR03 = new TH1F(name,"Leading Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingMuonEmEtR03[j].push_back(histo_LeadingMuonEmEtR03);
-
-      sprintf(name,"LeadingMuonEmEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonEmEtR05 = new TH1F(name,"Leading Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingMuonEmEtR05[j].push_back(histo_LeadingMuonEmEtR05);
-
-      sprintf(name,"LeadingMuonHadEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonHadEtR03 = new TH1F(name,"Leading Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingMuonHadEtR03[j].push_back(histo_LeadingMuonHadEtR03);
-
-      sprintf(name,"LeadingMuonHadEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonHadEtR05 = new TH1F(name,"Leading Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingMuonHadEtR05[j].push_back(histo_LeadingMuonHadEtR05);
-
-      sprintf(name,"SecondMuonSumPtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonSumPtR03 = new TH1F(name,"Second Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondMuonSumPtR03[j].push_back(histo_SecondMuonSumPtR03);
-
-      sprintf(name,"SecondMuonSumPtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonSumPtR05 = new TH1F(name,"Second Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondMuonSumPtR05[j].push_back(histo_SecondMuonSumPtR05);
-
-      sprintf(name,"SecondMuonEmEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonEmEtR03 = new TH1F(name,"Second Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondMuonEmEtR03[j].push_back(histo_SecondMuonEmEtR03);
-
-      sprintf(name,"SecondMuonEmEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonEmEtR05 = new TH1F(name,"Second Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondMuonEmEtR05[j].push_back(histo_SecondMuonEmEtR05);
-
-      sprintf(name,"SecondMuonHadEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonHadEtR03 = new TH1F(name,"Second Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondMuonHadEtR03[j].push_back(histo_SecondMuonHadEtR03);
-
-      sprintf(name,"SecondMuonHadEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonHadEtR05 = new TH1F(name,"Second Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondMuonHadEtR05[j].push_back(histo_SecondMuonHadEtR05);
-
-      sprintf(name,"LeadingMuonrelIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonrelIsoDr03 = new TH1F(name,"Leading Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingMuonrelIsoDr03[j].push_back(histo_LeadingMuonrelIsoDr03);
-
-      sprintf(name,"LeadingMuonrelIsoDr05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonrelIsoDr05 = new TH1F(name,"Leading Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_LeadingMuonrelIsoDr05[j].push_back(histo_LeadingMuonrelIsoDr05);
-
-      sprintf(name,"SecondMuonrelIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonrelIsoDr03 = new TH1F(name,"Second Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondMuonrelIsoDr03[j].push_back(histo_SecondMuonrelIsoDr03);
-
-      sprintf(name,"SecondMuonrelIsoDr05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonrelIsoDr05 = new TH1F(name,"Second Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
-      m_hVector_SecondMuonrelIsoDr05[j].push_back(histo_SecondMuonrelIsoDr05);
-
-      sprintf(name,"DiElectronPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DiElectronPt = new TH1F(name,"Dielectron Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
-      m_hVector_DiElectronPt[j].push_back(histo_DiElectronPt);
-
-      sprintf(name,"DiElectronEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DiElectronEta = new TH1F(name,"Dielectron #eta Distribution; #eta; N events",50,-5.2,5.2);
-      m_hVector_DiElectronEta[j].push_back(histo_DiElectronEta);
-
-      sprintf(name,"DiElectronPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DiElectronPhi = new TH1F(name,"Dielectron #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
-      m_hVector_DiElectronPhi[j].push_back(histo_DiElectronPhi);
-
-      sprintf(name,"ECaloVsEta_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_ECaloVsEta = new TH2F(name,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 500,  -8, 8, 100, 0., 1000.);
-      m_hVector_ECaloVsEta[j].push_back(histo_ECaloVsEta);
-
-      sprintf(name,"sumECastorMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumECastorMinus = new TH1F(name,"Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
-      m_hVector_sumECastorMinus[j].push_back(histo_sumECastorMinus);
-
-      sprintf(name,"ECastorSector_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_ECastorSector = new TH2F(name,"Castor Energy X Sector; Sector; Energy [GeV]", 17,  0, 17, 44, 0., 220.);
-      m_hVector_ECastorSector[j].push_back(histo_ECastorSector);
-
-      sprintf(name,"ECaloVsEtaTProf_%s_%s",tag,Folders.at(j).c_str());
-      TProfile *histo_ECaloVsEtaTProf = new TProfile(name,"Calorimeter Energy X #eta; #eta; <Energy> [GeV]", 100,  -8, 8, 0., 1000.);
-      m_hVector_ECaloVsEtaTProf[j].push_back(histo_ECaloVsEtaTProf);
-
-      sprintf(name,"ECastorSectorTProf_%s_%s",tag,Folders.at(j).c_str());
-      TProfile *histo_ECastorSectorTProf = new TProfile(name,"Castor Energy X Sector; Sector; <Energy> [GeV]", 100,  0, 17, 0., 7000.);
-      m_hVector_ECastorSectorTProf[j].push_back(histo_ECastorSectorTProf); 
-
-      sprintf(name,"tracksOutElectronsCone03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_tracksOutElectronsCone03 = new TH1F(name,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.3; N events",500,0,500);
-      m_hVector_tracksOutElectronsCone03[j].push_back(histo_tracksOutElectronsCone03);
-
-      sprintf(name,"tracksOutElectronsCone04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_tracksOutElectronsCone04 = new TH1F(name,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.4; N events",500,0,500);
-      m_hVector_tracksOutElectronsCone04[j].push_back(histo_tracksOutElectronsCone04);
-
-      sprintf(name,"tracksOutElectronsCone05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_tracksOutElectronsCone05 = new TH1F(name,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.5; N events",500,0,500);
-      m_hVector_tracksOutElectronsCone05[j].push_back(histo_tracksOutElectronsCone05);
-
-      sprintf(name,"LeadingElectronInnerHits_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronInnerHits = new TH1F(name,"Leading Electron; Number Of Expected Inner Hits; N events",500,0,500);
-      m_hVector_LeadingElectronInnerHits[j].push_back(histo_LeadingElectronInnerHits);
-
-      sprintf(name,"LeadingElectronDCot_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronDCot = new TH1F(name,"Leading Electron; DCot [a.u.]; N events",500,0,500);
-      m_hVector_LeadingElectronDCot[j].push_back(histo_LeadingElectronDCot);
-
-      sprintf(name,"LeadingElectronDist_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronDist = new TH1F(name,"Leading Electron; Dist [a.u.]; N events",500,0,500);
-      m_hVector_LeadingElectronDist[j].push_back(histo_LeadingElectronDist);
-
-      sprintf(name,"LeadingElectronDeltaEtaTkClu_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronDeltaEtaTkClu = new TH1F(name,"Leading Electron; #Delta#eta_{TK, Cluster} [a.u.]; N events",500,0,500);
-      m_hVector_LeadingElectronDeltaEtaTkClu[j].push_back(histo_LeadingElectronDeltaEtaTkClu);
-
-      sprintf(name,"LeadingElectronDeltaPhiTkClu_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronDeltaPhiTkClu = new TH1F(name,"Leading Electron; #Delta#phi_{TK, Cluster} [a.u.]; N events",500,0,500);
-      m_hVector_LeadingElectronDeltaPhiTkClu[j].push_back(histo_LeadingElectronDeltaPhiTkClu);
-
-      sprintf(name,"LeadingElectronSigmaIeIe_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronSigmaIeIe = new TH1F(name,"Leading Electron; #sigma_{i#etai#eta} [a.u.]; N events",500,0,500);
-      m_hVector_LeadingElectronSigmaIeIe[j].push_back(histo_LeadingElectronSigmaIeIe);
-
-      sprintf(name,"LeadingElectronHE_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronHE = new TH1F(name,"Leading Electron; HE; N events",500,0,500);
-      m_hVector_LeadingElectronHE[j].push_back(histo_LeadingElectronHE);
-
-      sprintf(name,"SecondElectronInnerHits_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronInnerHits = new TH1F(name,"Second Electron; Number Of Expected Inner Hits; N events",500,0,500);
-      m_hVector_SecondElectronInnerHits[j].push_back(histo_SecondElectronInnerHits);
-
-      sprintf(name,"SecondElectronDCot_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronDCot = new TH1F(name,"Second Electron; DCot [a.u.]; N events",500,0,500);
-      m_hVector_SecondElectronDCot[j].push_back(histo_SecondElectronDCot);
-
-      sprintf(name,"SecondElectronDist_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronDist = new TH1F(name,"Second Electron; Dist [a.u.]; N events",500,0,500);
-      m_hVector_SecondElectronDist[j].push_back(histo_SecondElectronDist);
-
-      sprintf(name,"SecondElectronDeltaEtaTkClu_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronDeltaEtaTkClu = new TH1F(name,"Second Electron; #Delta#eta_{TK, Cluster} [a.u.]; N events",500,0,500);
-      m_hVector_SecondElectronDeltaEtaTkClu[j].push_back(histo_SecondElectronDeltaEtaTkClu);
-
-      sprintf(name,"SecondElectronDeltaPhiTkClu_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronDeltaPhiTkClu = new TH1F(name,"Second Electron; #Delta#phi_{TK, Cluster} [a.u.]; N events",500,0,500);
-      m_hVector_SecondElectronDeltaPhiTkClu[j].push_back(histo_SecondElectronDeltaPhiTkClu);
-
-      sprintf(name,"SecondElectronSigmaIeIe_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronSigmaIeIe = new TH1F(name,"Second Electron; #sigma_{i#etai#eta} [a.u.]; N events",500,0,500);
-      m_hVector_SecondElectronSigmaIeIe[j].push_back(histo_SecondElectronSigmaIeIe);
-
-      sprintf(name,"SecondElectronHE_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronHE = new TH1F(name,"Second Electron; HE; N events",500,0,500);
-      m_hVector_SecondElectronHE[j].push_back(histo_SecondElectronHE);
-
       sprintf(name,"sumEHFplus_S_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_SumEHFplus_S = new TH1F(name,"HF^{+} - Sum of Energy, Short Fibers; #sum E_{HF^{+},Short} [GeV]; N events",2000,0,2000);
       m_hVector_SumEHFplus_S[j].push_back(histo_SumEHFplus_S);
@@ -628,22 +517,6 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_SumEHFminus_L = new TH1F(name,"HF^{-} - Sum of Energy, Long Fibers; #sum E_{HF^{-},Long} [GeV]; N events",2000,0,2000);
       m_hVector_SumEHFminus_L[j].push_back(histo_SumEHFminus_L);
 
-      sprintf(name,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_maxetagap = new TH1F(name,"Particle Flow #Delta#eta_{max} Distribution; #Delta#eta_{max}; N events",40,0.,6.);
-      m_hVector_maxetagap[j].push_back(histo_maxetagap);
-
-      sprintf(name,"ElectronsPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_ElectronsPt = new TH1F(name,"Electrons - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
-      m_hVector_ElectronsPt[j].push_back(histo_ElectronsPt);
-
-      sprintf(name,"ElectronsEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_ElectronsEta = new TH1F(name,"Electrons - #eta Distribution; #eta; N events",60,-6,6);
-      m_hVector_ElectronsEta[j].push_back(histo_ElectronsEta);
-
-      sprintf(name,"ElectronsPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_ElectronsPhi = new TH1F(name,"Electrons - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
-      m_hVector_ElectronsPhi[j].push_back(histo_ElectronsPhi);
-
       sprintf(name,"sumEHFMax_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_SumEHFMax = new TH1F(name,"HF - Sum of Energy; #sum E_{HF,Max} [GeV]; N events",2000,0,2000);
       m_hVector_SumEHFMax[j].push_back(histo_SumEHFMax);
@@ -652,37 +525,49 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_SumEHFMin = new TH1F(name,"HF - Sum of Energy; #sum E_{HF,Min} [GeV]; N events",2000,0,2000);
       m_hVector_SumEHFMin[j].push_back(histo_SumEHFMin);
 
-      sprintf(name,"EnergyVsEtaBin1D_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_EnergyVsEtaBin1D = new TH1F(name,"Calorimeter Energy X #eta; #eta; #sum Energy_{calotower} [GeV]", 500,  -8, 8);
-      m_hVector_EnergyVsEtaBin1D[j].push_back(histo_EnergyVsEtaBin1D);
+      sprintf(name,"EnergyHFPlusVsEnergyHFMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_EnergyHFPlusVsEnergyHFMinus = new TH2F(name,"HF^{+} and HF^{-}; #sum Energy HF^{+} [GeV]; #sum Energy HF^{-} [GeV]; N events",1000,0.,1000.,1000,0.,1000.);
+      m_hVector_EnergyHFPlusVsEnergyHFMinus[j].push_back(histo_EnergyHFPlusVsEnergyHFMinus);
 
-      sprintf(name,"deltaEtamaxminPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_deltaEtaPF = new TH1F(name,"#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",14,binarraydelta);
-      m_hVector_deltaEtaPF[j].push_back(histo_deltaEtaPF);
+      sprintf(name,"EnergyEEPlusVsEnergyEEMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_EnergyEEPlusVsEnergyEEMinus = new TH2F(name,"EE^{+} and EE^{-}; #sum Energy EE^{+} [GeV]; #sum Energy EE^{-} [GeV]; N events",1000,0.,500.,1000,0.,500.);
+      m_hVector_EnergyEEPlusVsEnergyEEMinus[j].push_back(histo_EnergyEEPlusVsEnergyEEMinus);
 
-      sprintf(name,"absdeltaEtamaxminPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_absdeltaEtaPF = new TH1F(name,"|#Delta#eta_{PF}| Distribution; |#eta_{max}-#eta_{min}|; N events",14,binarraydelta);
-      m_hVector_absdeltaEtaPF[j].push_back(histo_absdeltaEtaPF);
+      sprintf(name,"sumEEEplus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEEEplus = new TH1F(name,"EE^{+} - Sum of Energy; #sum E_{EE^{+}} [GeV]; N events",1000,0.,500.);
+      m_hVector_sumEEEplus[j].push_back(histo_sumEEEplus);
 
-      sprintf(name,"ECastorSectorBin1D_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_ECastorSectorBin1D = new TH1F(name,"Castor Energy X Sector; Sector; Energy [GeV]", 17,  0, 17);
-      m_hVector_ECastorSectorBin1D[j].push_back(histo_ECastorSectorBin1D);
+      sprintf(name,"sumEEEminus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEEEminus = new TH1F(name,"EE^{-} - Sum of Energy; #sum E_{EE^{-}} [GeV]; N events",1000,0.,500.);
+      m_hVector_sumEEEminus[j].push_back(histo_sumEEEminus);
+
+      sprintf(name,"mHF_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_MultHF = new TH2F(name,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 100, 0., 100., 100, 0., 100. );
+      m_hVector_multhf[j].push_back(histo_MultHF);
 
       sprintf(name,"EnergyHFMinusVsCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_ET_Calos_n = new TH2F(name,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000,  0., 1000., 6000,  0., 3000. );
+      TH2F *histo_ET_Calos_n = new TH2F(name,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 6000, 0., 3000. );
       m_hVector_etcalos_n[j].push_back(histo_ET_Calos_n);
 
-      sprintf(name,"EnergyHFPlusVsCastorTProf_%s_%s",tag,Folders.at(j).c_str());
-      TProfile *histo_EnergyHFPlusVsCastorTProf = new TProfile(name,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000,  0., 1000., 0., 3000. );
-      m_hVector_EnergyHFPlusVsCastorTProf[j].push_back(histo_EnergyHFPlusVsCastorTProf);
+      sprintf(name,"EnergyHFPlusVsCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_ET_Calos_p = new TH2F(name,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 6000, 0., 3000. );
+      m_hVector_etcalos_p[j].push_back(histo_ET_Calos_p);
 
-      sprintf(name,"EnergyHFMinusVsCastorTProf_%s_%s",tag,Folders.at(j).c_str());
-      TProfile *histo_EnergyHFMinusVsCastorTProf = new TProfile(name,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000,  0., 1000., 0., 3000. );
-      m_hVector_EnergyHFMinusVsCastorTProf[j].push_back(histo_EnergyHFMinusVsCastorTProf);
+      sprintf(name,"sumECastorMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumECastorMinus = new TH1F(name,"Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
+      m_hVector_sumECastorMinus[j].push_back(histo_sumECastorMinus);
 
-      sprintf(name,"sumECastorAndSumHFMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumECastorAndHFMinus = new TH1F(name,"HF^{-} and Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
-      m_hVector_sumECastorAndHFMinus[j].push_back(histo_sumECastorAndHFMinus);
+      sprintf(name,"ECastorSector_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_ECastorSector = new TH2F(name,"Castor Energy X Sector; Sector; Energy [GeV]", 17, 0, 17, 44, 0., 220.);
+      m_hVector_ECastorSector[j].push_back(histo_ECastorSector);
+
+      sprintf(name,"ECastorSectorTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_ECastorSectorTProf = new TProfile(name,"Castor Energy X Sector; Sector; <Energy> [GeV]", 100, 0, 17, 0., 7000.);
+      m_hVector_ECastorSectorTProf[j].push_back(histo_ECastorSectorTProf);
+
+      sprintf(name,"ECastorSectorBin1D_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ECastorSectorBin1D = new TH1F(name,"Castor Energy X Sector; Sector; Energy [GeV]", 17, 0, 17);
+      m_hVector_ECastorSectorBin1D[j].push_back(histo_ECastorSectorBin1D);
 
       sprintf(name,"CastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_CastorMultiplicity = new TH1F(name,"Castor: number of sectors with activity; #Sectors; N events",81,0,81);
@@ -692,17 +577,17 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH2F *histo_CastorMultiplicityVsLumi = new TH2F(name,"CastorMultiplicity Vs Luminosity; Luminosity per Bunch [#mub^{-1}s^{-1}]; Castor Multiplicity",5000,0,2,81,0,81);
       m_hVector_CastorMultiplicityVsLumi[j].push_back(histo_CastorMultiplicityVsLumi);
 
-      sprintf(name,"RunNumber_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_RunNumber = new TH1F(name,"Run Number; Run Number; N Event",16000,134000,150000);
-      m_hVector_RunNumber[j].push_back(histo_RunNumber);
+      sprintf(name,"EnergyHFPlusVsCastorTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_EnergyHFPlusVsCastorTProf = new TProfile(name,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 0., 3000. );
+      m_hVector_EnergyHFPlusVsCastorTProf[j].push_back(histo_EnergyHFPlusVsCastorTProf);
 
-      sprintf(name,"RunNumberZeroCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_RunNumberZeroCastor = new TH1F(name,"Run Number; Run Number; N Event",16000,134000,150000);
-      m_hVector_RunNumberZeroCastor[j].push_back(histo_RunNumberZeroCastor);
+      sprintf(name,"EnergyHFMinusVsCastorTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_EnergyHFMinusVsCastorTProf = new TProfile(name,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 0., 3000. );
+      m_hVector_EnergyHFMinusVsCastorTProf[j].push_back(histo_EnergyHFMinusVsCastorTProf);
 
-      sprintf(name,"RunNumberHighCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_RunNumberHighCastor = new TH1F(name,"Run Number; Run Number; N Event",16000,134000,150000);
-      m_hVector_RunNumberHighCastor[j].push_back(histo_RunNumberHighCastor);
+      sprintf(name,"sumECastorAndSumHFMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumECastorAndHFMinus = new TH1F(name,"HF^{-} and Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
+      m_hVector_sumECastorAndHFMinus[j].push_back(histo_sumECastorAndHFMinus);
 
       sprintf(name,"SectorVsTotalCastorEnergy_%s_%s",tag,Folders.at(j).c_str());
       TH2F *histo_SectorVsTotalCastorEnergy = new TH2F(name,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,1500,0,1500);
@@ -711,6 +596,36 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name,"SectorVsTotalCastorEnergyTProf_%s_%s",tag,Folders.at(j).c_str());
       TProfile *histo_SectorVsTotalCastorEnergyTProf = new TProfile(name,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,0,1500);
       m_hVector_SectorVsTotalCastorEnergyTProf[j].push_back(histo_SectorVsTotalCastorEnergyTProf);
+
+      sprintf(name,"sumECastorMinusLowEnergy_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumECastorMinusLow = new TH1F(name,"Castor Sum of Energy; Energy [GeV]; N events",1000,0.,500.);
+      m_hVector_sumECastorMinusLow[j].push_back(histo_sumECastorMinusLow);
+
+
+      // Diffraction
+      sprintf(name,"aEnergy_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_aSumE = new TH1F(name,"Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",100,-2,2);
+      m_hVector_asumE[j].push_back(histo_aSumE);
+
+      sprintf(name,"pfetamax_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_PFEtamax = new TH1F(name,"Particle Flow #eta_{max} Distribution; #eta; N events",18,binarrayplus);
+      m_hVector_pfetamax[j].push_back(histo_PFEtamax);
+
+      sprintf(name,"pfetamin_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_PFEtamin = new TH1F(name,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
+      m_hVector_pfetamin[j].push_back(histo_PFEtamin);
+
+      sprintf(name,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_maxetagap = new TH1F(name,"Particle Flow #Delta#eta_{max} Distribution; #Delta#eta_{max}; N events",40,0.,6.);
+      m_hVector_maxetagap[j].push_back(histo_maxetagap);
+
+      sprintf(name,"deltaEtamaxminPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_deltaEtaPF = new TH1F(name,"#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",14,binarraydelta);
+      m_hVector_deltaEtaPF[j].push_back(histo_deltaEtaPF);
+
+      sprintf(name,"absdeltaEtamaxminPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_absdeltaEtaPF = new TH1F(name,"|#Delta#eta_{PF}| Distribution; |#eta_{max}-#eta_{min}|; N events",14,binarraydelta);
+      m_hVector_absdeltaEtaPF[j].push_back(histo_absdeltaEtaPF);
 
       sprintf(name,"xiPlusPF_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_XiPlusPF = new TH1F(name,"#xi_{plus} Particle Flow; #xi_{plus}; N Event",17,xi_bin);
@@ -751,46 +666,6 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name,"etasignedHF_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_etasignedHF = new TH1F(name,"Signed #eta_{l} Distribution; #tilde{#eta_{l}}; N events",100,-10.,10.);
       m_hVector_etasignedHF[j].push_back(histo_etasignedHF);
-
-      sprintf(name,"sumECastorMinusLowEnergy_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumECastorMinusLow = new TH1F(name,"Castor Sum of Energy; Energy [GeV]; N events",1000,0.,500.);
-      m_hVector_sumECastorMinusLow[j].push_back(histo_sumECastorMinusLow);
-
-      sprintf(name,"sumEEEplus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumEEEplus = new TH1F(name,"EE^{+} - Sum of Energy; #sum E_{EE^{+}} [GeV]; N events",1000,0.,500.);
-      m_hVector_sumEEEplus[j].push_back(histo_sumEEEplus);
-
-      sprintf(name,"sumEEEminus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumEEEminus = new TH1F(name,"EE^{-} - Sum of Energy; #sum E_{EE^{-}} [GeV]; N events",1000,0.,500.);
-      m_hVector_sumEEEminus[j].push_back(histo_sumEEEminus);
-
-      sprintf(name,"TracksLow_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_TracksLow = new TH1F(name,"Tracks Multiplicity; n Tracks; N events",40,0,80);
-      m_hVector_tracksLow[j].push_back(histo_TracksLow);
-
-      sprintf(name,"BosonZPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_BosonZPt = new TH1F(name,"Boson Z Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
-      m_hVector_BosonZPt[j].push_back(histo_BosonZPt);
-
-      sprintf(name,"BosonZEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_BosonZEta = new TH1F(name,"Boson Z #eta Distribution; #eta; N events",50,-5.2,5.2);
-      m_hVector_BosonZEta[j].push_back(histo_BosonZEta);
-
-      sprintf(name,"BosonZPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_BosonZPhi = new TH1F(name,"Boson Z #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
-      m_hVector_BosonZPhi[j].push_back(histo_BosonZPhi);
-
-      sprintf(name,"BosonZMass_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_BosonZMass = new TH1F(name,"Boson Z Mass Distribution; M_{Z} [GeV]; N events",500,0,500);
-      m_hVector_BosonZMass[j].push_back(histo_BosonZMass);
-
-      sprintf(name,"EnergyHFPlusVsEnergyHFMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_EnergyHFPlusVsEnergyHFMinus = new TH2F(name,"HF^{+} and HF^{-}; #sum Energy HF^{+} [GeV]; #sum Energy HF^{-} [GeV]; N events",1000,0.,1000.,1000,0.,1000.);
-      m_hVector_EnergyHFPlusVsEnergyHFMinus[j].push_back(histo_EnergyHFPlusVsEnergyHFMinus);
-
-      sprintf(name,"EnergyEEPlusVsEnergyEEMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_EnergyEEPlusVsEnergyEEMinus = new TH2F(name,"EE^{+} and EE^{-}; #sum Energy EE^{+} [GeV]; #sum Energy EE^{-} [GeV]; N events",1000,0.,500.,1000,0.,500.);
-      m_hVector_EnergyEEPlusVsEnergyEEMinus[j].push_back(histo_EnergyEEPlusVsEnergyEEMinus);
 
       sprintf(name,"etasignedCASTOR_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_etasignedCASTOR = new TH1F(name,"Signed #eta_{l} Distribution; #tilde{#eta_{l}}; N events",100,-10.,10.);
