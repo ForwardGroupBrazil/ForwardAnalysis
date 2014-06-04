@@ -14,6 +14,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TMath.h"
+#include "math.h"
 #include "FWCore/Utilities/interface/RegexMatch.h"
 #include "FWCore/Framework/interface/TriggerNamesService.h"
 #include "DataFormats/Common/interface/TriggerResults.h"
@@ -66,6 +67,8 @@
 #include "CalibFormats/HcalObjects/interface/HcalCoderDb.h"
 #include "CalibFormats/HcalObjects/interface/HcalDbService.h"
 #include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
+
+#define isfinite(x) !std::isinf(x)
 
 using diffractiveWAnalysis::DiffractiveWAnalysis;
 
@@ -319,6 +322,7 @@ void DiffractiveWAnalysis::fillMETInfo(DiffractiveWEvent& eventData, const edm::
 
   // Fill pat::MET
   // Apply Correction because Thresholds
+
   edm::Handle<std::vector<pat::MET> > patmet;
   event.getByLabel(patmetTag_,patmet);
 
@@ -361,6 +365,8 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
       if (debug) std::cout << "ORDERED reco::Muon[" << sortMuonVector[i] << "]\t\t---> pT [GeV]: " << MuonVector[sortMuonVector[i]]->pt() << " | eT [GeV]: " << MuonVector[sortMuonVector[i]]->et() << " | eta: " << MuonVector[sortMuonVector[i]]->eta() << " | phi: " << MuonVector[sortMuonVector[i]]->phi() << " | px [GeV]: " << MuonVector[sortMuonVector[i]]->px() << " | py [GeV]: " << MuonVector[sortMuonVector[i]]->py() << std::endl;
     }
 
+    indexM = sortMuonVector[0];
+
     double muon1SumPtR03 = MuonVector[sortMuonVector[0]]->isolationR03().sumPt;
     double muon1EmEtR03 = MuonVector[sortMuonVector[0]]->isolationR03().emEt;
     double muon1HadEtR03 = MuonVector[sortMuonVector[0]]->isolationR03().hadEt;
@@ -376,6 +382,7 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     eventData.SetLeadingMuonEta(MuonVector[sortMuonVector[0]]->eta());
     eventData.SetLeadingMuonPhi(MuonVector[sortMuonVector[0]]->phi());
     eventData.SetLeadingMuonCharge(MuonVector[sortMuonVector[0]]->charge());
+    eventData.SetLeadingMuonEt(MuonVector[sortMuonVector[0]]->et());
     eventData.SetLeadingMuonP4(MuonVector[sortMuonVector[0]]->p4());
     eventData.SetLeadingMuonSumPtR03(muon1SumPtR03);
     eventData.SetLeadingMuonEmEtR03(muon1EmEtR03);
@@ -386,6 +393,8 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     eventData.SetLeadingMuonrelIsoDr03(relIsoFirstMuonDr03);
     eventData.SetLeadingMuonrelIsoDr05(relIsoFirstMuonDr05);
 
+  }else{
+    indexM = -999;
   }
 
 
@@ -406,12 +415,15 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
       if (debug) std::cout << "ORDERED pat::Muon[" << sortPatMuonVector[i] << "]\t\t---> pT [GeV]: " << PatMuonVector[sortPatMuonVector[i]]->pt() << " | eT [GeV]: " << PatMuonVector[sortPatMuonVector[i]]->et() << " | eta: " << PatMuonVector[sortPatMuonVector[i]]->eta() << " | phi: " << PatMuonVector[sortPatMuonVector[i]]->phi() << " | px [GeV]: " << PatMuonVector[sortPatMuonVector[i]]->px() << " | py [GeV]: " << PatMuonVector[sortPatMuonVector[i]]->py() << std::endl;
     }
 
+    indexpM = sortPatMuonVector[0];
+
     eventData.SetPatNMuon(PatMuonVectorSize);
     eventData.SetPatMuon1Pt(PatMuonVector[sortPatMuonVector[0]]->pt());
     eventData.SetPatMuon1Charge(PatMuonVector[sortPatMuonVector[0]]->charge());
     eventData.SetPatMuon1Phi(PatMuonVector[sortPatMuonVector[0]]->phi());
     eventData.SetPatMuon1Eta(PatMuonVector[sortPatMuonVector[0]]->eta());
     eventData.SetPatMuon1Et(PatMuonVector[sortPatMuonVector[0]]->et());
+    eventData.SetPatMuon1P4(PatMuonVector[sortPatMuonVector[0]]->p4());
 
     double Patmuon1SumPtR03 = PatMuonVector[sortPatMuonVector[0]]->isolationR03().sumPt;
     double Patmuon1EmEtR03 = PatMuonVector[sortPatMuonVector[0]]->isolationR03().emEt;
@@ -435,6 +447,8 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     eventData.SetPatMuon1relIsoDr05(PatrelIsoFirstMuonDr05);
     eventData.SetPatMuon1relIso(PatrelIsoFirstMuon);
 
+  }else{
+    indexpM = -999;
   }
 
   if(ElectronVector.size()>0){
@@ -454,12 +468,15 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
       if (debug) std::cout << "ORDERED reco::Electron[" << sortElectronVector[i] << "]\t---> pT [GeV]: " << ElectronVector[sortElectronVector[i]]->pt() << " | eT [GeV]: " << ElectronVector[sortElectronVector[i]]->et() << " | eta: " << ElectronVector[sortElectronVector[i]]->eta() << " | phi: " << ElectronVector[sortElectronVector[i]]->phi() << " | px [GeV]: " << ElectronVector[sortElectronVector[i]]->px() << " | py [GeV]: " << ElectronVector[sortElectronVector[i]]->py() << std::endl;
     }
 
+    indexE = sortElectronVector[0];
+
     // Fill Methods
     eventData.SetElectronsN(ElectronVectorSize);
     eventData.SetLeadingElectronPt(ElectronVector[sortElectronVector[0]]->pt());
     eventData.SetLeadingElectronEta(ElectronVector[sortElectronVector[0]]->eta());
     eventData.SetLeadingElectronPhi(ElectronVector[sortElectronVector[0]]->phi());
     eventData.SetLeadingElectronCharge(ElectronVector[sortElectronVector[0]]->charge());
+    eventData.SetLeadingElectronEt(ElectronVector[sortElectronVector[0]]->et());
     eventData.SetLeadingElectronP4(ElectronVector[sortElectronVector[0]]->p4());
     eventData.SetLeadingElectronTkDr03(ElectronVector[sortElectronVector[0]]->dr03TkSumPt());
     eventData.SetLeadingElectronEcalDr03(ElectronVector[sortElectronVector[0]]->dr03EcalRecHitSumEt());
@@ -482,6 +499,8 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     eventData.SetLeadingElectronInnerHits(ElectronVector[sortElectronVector[0]]->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
     eventData.SetLeadingElectronHE(ElectronVector[sortElectronVector[0]]->hadronicOverEm());
 
+  }else{
+    indexE = -999;
   }
 
 
@@ -502,6 +521,7 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
       if (debug) std::cout << "ORDERED pat::Electron[" << sortPatElectronVector[i] << "]\t---> pT [GeV]: " << PatElectronVector[sortPatElectronVector[i]]->pt() << " | eT [GeV]: " << PatElectronVector[sortPatElectronVector[i]]->et() << " | eta: " << PatElectronVector[sortPatElectronVector[i]]->eta() << " | phi: " << PatElectronVector[sortPatElectronVector[i]]->phi() << " | px [GeV]: " << PatElectronVector[sortPatElectronVector[i]]->px() << " | py [GeV]: " << PatElectronVector[sortPatElectronVector[i]]->py() << std::endl;
     }
 
+    indexpE = sortPatElectronVector[0];
 
     // Fill Methods
     eventData.SetPatNElectron(PatElectronVectorSize);
@@ -510,6 +530,7 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     eventData.SetPatElectron1Phi(PatElectronVector[sortPatElectronVector[0]]->phi());
     eventData.SetPatElectron1Eta(PatElectronVector[sortPatElectronVector[0]]->eta());
     eventData.SetPatElectron1Et(PatElectronVector[sortPatElectronVector[0]]->et());
+    eventData.SetPatElectron1P4(PatElectronVector[sortPatElectronVector[0]]->p4());
     eventData.SetPatElectron1TkDr03(PatElectronVector[sortPatElectronVector[0]]->dr03TkSumPt());
     eventData.SetPatElectron1EcalDr03(PatElectronVector[sortPatElectronVector[0]]->dr03EcalRecHitSumEt());
     eventData.SetPatElectron1HcalDr03(PatElectronVector[sortPatElectronVector[0]]->dr03HcalTowerSumEt());
@@ -531,6 +552,8 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     eventData.SetPatElectron1InnerHits(PatElectronVector[sortPatElectronVector[0]]->gsfTrack()->trackerExpectedHitsInner().numberOfHits());
     eventData.SetPatElectron1HE(PatElectronVector[sortPatElectronVector[0]]->hadronicOverEm());
 
+  }else{
+    indexpE = -999.;
   }
 
 
@@ -548,7 +571,7 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     TMath::Sort(NeutrinoVectorSize, vneutrino, sortNeutrinoVector, true);
 
     for (unsigned int i=0;i<NeutrinoVector.size();i++){
-      if (debug) std::cout << "ORDERED reco::pfMET[" << sortNeutrinoVector[i] << "]\t\t---> pT [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->pt() << " | eT [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->et() << " | sum eT [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->sumEt() << " | eta: " << NeutrinoVector[sortNeutrinoVector[i]]->eta() << " | phi: " << NeutrinoVector[sortNeutrinoVector[i]]->phi() << " | px [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->px() << " | py [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->py() << std::endl;
+      if (debug) std::cout << "ORDERED reco::pfMET[" << sortNeutrinoVector[i] << "]\t\t---> pT [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->pt() << " | eT [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->et() << " | sum eT [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->sumEt() << " | eta: " << NeutrinoVector[sortNeutrinoVector[i]]->eta() << " | phi: " << NeutrinoVector[sortNeutrinoVector[i]]->phi() << " | px [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->px() << " | py [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->py() << " | P4() [GeV]: " << NeutrinoVector[sortNeutrinoVector[i]]->p4()  << std::endl;
     }
 
     eventData.SetMETPt(NeutrinoVector[sortNeutrinoVector[0]]->pt());
@@ -557,6 +580,7 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     eventData.SetMETSumEt(NeutrinoVector[sortNeutrinoVector[0]]->sumEt());
     eventData.SetMETpx(NeutrinoVector[sortNeutrinoVector[0]]->px());
     eventData.SetMETpy(NeutrinoVector[sortNeutrinoVector[0]]->py());
+    eventData.SetMETP4(NeutrinoVector[sortNeutrinoVector[0]]->p4());
 
   }
 
@@ -575,7 +599,7 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     TMath::Sort(PatNeutrinoVectorSize, vpatneutrino, sortPatNeutrinoVector, true);
 
     for (unsigned int i=0;i<PatNeutrinoVector.size();i++){
-      if (debug) std::cout << "ORDERED pat::MET[" << sortPatNeutrinoVector[i] << "]\t\t---> pT [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->pt() << " | eT [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->et() << " | sum eT [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->sumEt() << " | eta: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->eta() << " | phi: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->phi() << " | px [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->px() << " | py [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->py() << std::endl;
+      if (debug) std::cout << "ORDERED pat::MET[" << sortPatNeutrinoVector[i] << "]\t\t---> pT [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->pt() << " | eT [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->et() << " | sum eT [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->sumEt() << " | eta: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->eta() << " | phi: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->phi() << " | px [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->px() << " | py [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->py() << " | P4() [GeV]: " << PatNeutrinoVector[sortPatNeutrinoVector[i]]->p4()  << std::endl;
     }
 
     eventData.SetPatMETPt(PatNeutrinoVector[sortPatNeutrinoVector[0]]->pt());
@@ -584,6 +608,7 @@ void DiffractiveWAnalysis::fillCollections(DiffractiveWEvent& eventData, const e
     eventData.SetPatMETSumEt(PatNeutrinoVector[sortPatNeutrinoVector[0]]->sumEt());
     eventData.SetPatMETpx(PatNeutrinoVector[sortPatNeutrinoVector[0]]->px());
     eventData.SetPatMETpy(PatNeutrinoVector[sortPatNeutrinoVector[0]]->py());
+    eventData.SetPatMETP4(PatNeutrinoVector[sortPatNeutrinoVector[0]]->p4());
 
   }
 
@@ -1289,6 +1314,8 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
   double MT_W_munu = 0.;
   double MT_W_pfenu = 0.;
   double MT_W_pfmunu = 0.;
+  double MT_W_patepatnu = 0.;
+  double MT_W_patmupatnu = 0.;
 
   int nPart_PF=0;
 
@@ -1358,8 +1385,10 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
       if (debugOrder) std::cout << "ORDERED reco::Electron[" << PFsortElectronVector[i] << "]\t---> pT [GeV]: " << PFElectronVector[PFsortElectronVector[i]]->pt() << " | eT [GeV]: " << PFElectronVector[PFsortElectronVector[i]]->et() << " | eta: " << PFElectronVector[PFsortElectronVector[i]]->eta() << " | phi: " << PFElectronVector[PFsortElectronVector[i]]->phi() << " | px [GeV]: " << PFElectronVector[PFsortElectronVector[i]]->px() << " | py [GeV]: " << PFElectronVector[PFsortElectronVector[i]]->py() << std::endl;
     }
 
-    MT_W_pfenu = TMath::Sqrt(2.*(PFElectronVector[0]->et()*NeutrinoVector[0]->et() - (PFElectronVector[0]->et()*TMath::Cos(PFElectronVector[0]->phi())*NeutrinoVector[0]->et()*TMath::Cos(NeutrinoVector[0]->phi()) + PFElectronVector[0]->et()*TMath::Sin(PFElectronVector[0]->phi())*NeutrinoVector[0]->et()*TMath::Sin(NeutrinoVector[0]->phi()) ) ) );
+    MT_W_pfenu = WBoson(PFElectronVector[PFsortElectronVector[0]], NeutrinoVector[0]);
 
+  }else{
+    MT_W_pfenu = -999.;
   }
 
 
@@ -1380,22 +1409,49 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
       if (debugOrder) std::cout << "ORDERED reco::Muon[" << PFsortMuonVector[i] << "]\t---> pT [GeV]: " << PFMuonVector[PFsortMuonVector[i]]->pt() << " | eT [GeV]: " << PFMuonVector[PFsortMuonVector[i]]->et() << " | eta: " << PFMuonVector[PFsortMuonVector[i]]->eta() << " | phi: " << PFMuonVector[PFsortMuonVector[i]]->phi() << " | px [GeV]: " << PFMuonVector[PFsortMuonVector[i]]->px() << " | py [GeV]: " << PFMuonVector[PFsortMuonVector[i]]->py() << std::endl;
     }
 
-    MT_W_pfmunu = TMath::Sqrt(2.*(PFMuonVector[0]->et()*NeutrinoVector[0]->et() - (PFMuonVector[0]->et()*TMath::Cos(PFMuonVector[0]->phi())*NeutrinoVector[0]->et()*TMath::Cos(NeutrinoVector[0]->phi()) + PFMuonVector[0]->et()*TMath::Sin(PFMuonVector[0]->phi())*NeutrinoVector[0]->et()*TMath::Sin(NeutrinoVector[0]->phi()) ) ) );
+    MT_W_pfmunu = WBoson(PFMuonVector[PFsortMuonVector[0]], NeutrinoVector[0]);
 
+  }else{
+    MT_W_pfmunu = -999.;
   }
 
-  if(ElectronVector.size()>0){
-    MT_W_enu = TMath::Sqrt(2.*(ElectronVector[0]->et()*NeutrinoVector[0]->et() - (ElectronVector[0]->et()*TMath::Cos(ElectronVector[0]->phi())*NeutrinoVector[0]->et()*TMath::Cos(NeutrinoVector[0]->phi()) + ElectronVector[0]->et()*TMath::Sin(ElectronVector[0]->phi())*NeutrinoVector[0]->et()*TMath::Sin(NeutrinoVector[0]->phi()) ) ) );
+  if(indexE != -999){
+    MT_W_enu = WBoson(ElectronVector[indexE], NeutrinoVector[0]);
+  }else{
+    MT_W_enu = -999.;
   }
 
-  if(MuonVector.size()>0){
-    MT_W_munu = TMath::Sqrt(2.*(MuonVector[0]->et()*NeutrinoVector[0]->et() - (MuonVector[0]->et()*TMath::Cos(MuonVector[0]->phi())*NeutrinoVector[0]->et()*TMath::Cos(NeutrinoVector[0]->phi()) + MuonVector[0]->et()*TMath::Sin(MuonVector[0]->phi())*NeutrinoVector[0]->et()*TMath::Sin(NeutrinoVector[0]->phi()) ) ) );
+  if(indexM != -999){
+    MT_W_munu = WBoson(MuonVector[indexM], NeutrinoVector[0]);
+  }else{
+    MT_W_munu = -999.;
   }
+
+  if(indexpE != -999){
+    MT_W_patepatnu = WBoson(PatElectronVector[indexpE], PatNeutrinoVector[0]);
+  }else{
+    MT_W_patepatnu = -999.;
+  }
+
+  if(indexM != -999){
+    MT_W_patmupatnu = WBoson(PatMuonVector[indexpM], PatNeutrinoVector[0]);
+  }else{
+    MT_W_patmupatnu = -999.;
+  }
+
+  // Fill W Mass
+  eventData.SetMassWenu(MT_W_enu);
+  eventData.SetMassWMunu(MT_W_munu);
+  eventData.SetMassPatWenu(MT_W_patepatnu);
+  eventData.SetMassPatWmunu(MT_W_patmupatnu);
+
 
   bool w1 = false;
   bool w2 = false;
   bool w3 = false;
   bool w4 = false;
+  bool w5 = false;
+  bool w6 = false;
 
   if(PFMuonVector.size()>0){
     if (MT_W_pfmunu > 60. && MT_W_pfmunu < 110.){
@@ -1425,6 +1481,19 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
     }
   }
 
+  if(PatMuonVector.size()>0){
+    if (MT_W_patmupatnu > 60. && MT_W_patmupatnu < 110.) {
+      if(debugOrder)std::cout << " Mass Transverse W, pat muon: " << MT_W_patmupatnu << std::endl;
+      w5=true;
+    }
+  }
+
+  if(PatElectronVector.size()>0){
+    if (MT_W_patepatnu > 60. && MT_W_patepatnu < 110.){
+      if(debugOrder)std::cout << " Mass Transverse W, pat electron: " << MT_W_patepatnu << std::endl;
+      w6=true;
+    }
+  }
 
   // Compute Gap Size Excluding W Candidates
   for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
@@ -1479,6 +1548,9 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 	if(MuonVector.size()>0){
 	  if(w3 && (MuonVector[0]->pt()==pt)) continue;
 	}
+	if(PatMuonVector.size()>0){
+	  if(w5 && (PatMuonVector[0]->pt()==pt)) continue;
+	}
       }  
 
       if(particle->particleId()==reco::PFCandidate::e){ 
@@ -1487,6 +1559,9 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 	}
 	if(ElectronVector.size()>0){
 	  if(w4 && (ElectronVector[0]->pt()==pt)) continue;
+	}
+	if(PatElectronVector.size()>0){
+	  if(w6 && (PatElectronVector[0]->pt()==pt)) continue;
 	}
       }
 
@@ -1709,6 +1784,9 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 	if(MuonVector.size()>0){
 	  if(w3 && (MuonVector[0]->pt()==pt)) continue;
 	}
+	if(PatMuonVector.size()>0){
+	  if(w5 && (PatMuonVector[0]->pt()==pt)) continue;
+	}
       }
 
       if(particle->particleId()==reco::PFCandidate::e){
@@ -1717,6 +1795,9 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 	}
 	if(ElectronVector.size()>0){
 	  if(w4 && (ElectronVector[0]->pt()==pt)) continue;
+	}
+	if(PatElectronVector.size()>0){
+	  if(w6 && (PatElectronVector[0]->pt()==pt)) continue;
 	}
       }
 
@@ -1757,11 +1838,11 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
   eventData.SetMultiplicityGapPlusPF(nplus);
   eventData.SetMultiplicityGapMinusPF(nminus);
 
-  TLorentzVector M_xNoz(MXsumPxPFNoW,MXsumPyPFNoW,MXsumPzPFNoW,MXsumEPFNoW);
-  TLorentzVector M_yNoz(MYsumPxPFNoW,MYsumPyPFNoW,MYsumPzPFNoW,MYsumEPFNoW);
+  TLorentzVector M_xNoW(MXsumPxPFNoW,MXsumPyPFNoW,MXsumPzPFNoW,MXsumEPFNoW);
+  TLorentzVector M_yNoW(MYsumPxPFNoW,MYsumPyPFNoW,MYsumPzPFNoW,MYsumEPFNoW);
 
-  double massX2NoW = pow(M_xNoz.M(),2);
-  double massY2NoW = pow(M_yNoz.M(),2);
+  double massX2NoW = pow(M_xNoW.M(),2);
+  double massY2NoW = pow(M_yNoW.M(),2);
 
   if (massX2NoW > massY2NoW && massX2NoW > 0.) xiMassNoW = massX2NoW/(7000.*7000.);
   else if (massY2NoW > massX2NoW && massY2NoW > 0.) xiMassNoW = massY2NoW/(7000.*7000.);
@@ -2293,3 +2374,20 @@ void DiffractiveWAnalysis::fillDetectorEnergyEtaInfo(DiffractiveWEvent& eventDat
   eventData.SetEachTowerEnergy(energy_tower);
 
 }
+
+template <class T, class W>
+double DiffractiveWAnalysis::WBoson(T lepton, W met){
+
+  double tmassWBoson_=-999.;
+  double metT = sqrt(pow(met->px(),2) + pow(met->py(),2));
+  double lepT = sqrt(pow(lepton->px(),2) + pow(lepton->py(),2));
+  reco::Particle::LorentzVector WT = lepton->p4() + met->p4();
+  tmassWBoson_ = sqrt(pow(metT+lepT,2) - (WT.px()*WT.px()) - (WT.py()*WT.py()));
+  // Defense
+  if (!isfinite(tmassWBoson_)) {
+    tmassWBoson_ = -999.;
+  }
+  return tmassWBoson_;
+}
+
+
