@@ -16,12 +16,14 @@ void DiffractiveWEvent::reset(){
   LeadingElectronEta_=-999.;
   LeadingElectronPhi_=-999.;
   LeadingElectronCharge_=-999.;
+  LeadingElectronEt_=-999.;
   ElectronsN_= -1;
 
   LeadingMuonPt_=-999.;
   LeadingMuonEta_=-999.;
   LeadingMuonPhi_=-999.;
   LeadingMuonCharge_=-999.;
+  LeadingMuonEt_=-999.;
   MuonsN_= -1;
 
   VertexMultiplicity_.clear();
@@ -218,6 +220,11 @@ void DiffractiveWEvent::reset(){
   fpatmetSumEt_ = -999.;
   fpatmetpx_ = -999.;
   fpatmetpy_ = -999.;
+
+  Mwenu_ = -999.;
+  Mwmunu_ = -999.;
+  Mpatwenu_ = -999.;
+  Mpatmunu_ = -999.;
 
   //ZDCdigifC_.clear();
 
