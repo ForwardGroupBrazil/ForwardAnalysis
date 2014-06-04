@@ -1185,7 +1185,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	std::cout<< "Status Bar" << std::endl;
 	std::cout << "" << std::endl;
       }
-      loadBar(i,NEVENTS,100,100);
+      if (NEVENTS>100) loadBar(i,NEVENTS,100,100);
     }
 
     if (debug){
