@@ -1,6 +1,6 @@
 /*
    >>-------------------------<<
-   Diffractive Z Filter
+   Diffractive W Filter
    >>-------------------------<<
 
 Goal:
@@ -95,7 +95,7 @@ void diffractiveWFilter::beginJob(){
 
 bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup){
 
-  bool debug = true;
+  bool debug = false;
 
   // Fill reco::Muon
   edm::Handle<reco::MuonCollection> muons;
@@ -210,7 +210,7 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
 
     if ( MuonVector[sortMuonVector[0]]->pt() > 20.) pTSel = true;
     if (MuonVector.size() > 1){
-      if (MuonVector[sortMuonVector[1]]->pt() > 20.) NotSecondPt = false;
+      if (MuonVector[sortMuonVector[1]]->pt() > 10.) NotSecondPt = false;
     }
 
   }
@@ -230,7 +230,7 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
 
     if ( PatMuonVector[sortPatMuonVector[0]]->pt() > 20.) pTSel = true;
     if (PatMuonVector.size() > 1){
-      if (PatMuonVector[sortPatMuonVector[1]]->pt() > 20.) NotSecondPt = false;
+      if (PatMuonVector[sortPatMuonVector[1]]->pt() > 10.) NotSecondPt = false;
     }
 
   }
@@ -251,7 +251,7 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
 
     if ( ElectronVector[sortElectronVector[0]]->pt() > 20.) pTSel = true;
     if (ElectronVector.size() > 1){
-      if (ElectronVector[sortElectronVector[1]]->pt() > 20.) NotSecondPt = false;
+      if (ElectronVector[sortElectronVector[1]]->pt() > 10.) NotSecondPt = false;
     }
 
   }
@@ -272,7 +272,7 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
 
     if ( PatElectronVector[sortPatElectronVector[0]]->pt() > 20.) pTSel = true;
     if (PatElectronVector.size() > 1){
-      if (PatElectronVector[sortPatElectronVector[1]]->pt() > 20.) NotSecondPt = false;
+      if (PatElectronVector[sortPatElectronVector[1]]->pt() > 10.) NotSecondPt = false;
     }
 
   }
@@ -295,7 +295,7 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
     if (NeutrinoVector[0]->pt()>15. || PatNeutrinoVector[0]->pt()>15.) METpTSel = true;
   }
 
-  AllSelection = NLepton & pTSel & NotSecondPt & METpTSel;
+  AllSelection = NLepton and pTSel and NotSecondPt and METpTSel;
 
   if(debug){
     if (AllSelection) std::cout << "\n\n< Event Selected >\n\n" << std::endl;
