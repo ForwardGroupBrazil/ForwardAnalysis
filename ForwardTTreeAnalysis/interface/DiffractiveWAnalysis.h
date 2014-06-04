@@ -32,7 +32,6 @@
 #include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
 #include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
 
-
 #include <vector>
 #include <string>
 #include <map>
@@ -72,6 +71,9 @@ namespace diffractiveWAnalysis {
       void fillMuonsInfo(DiffractiveWEvent&, const edm::Event&, const edm::EventSetup&);
       void fillMETInfo(DiffractiveWEvent&, const edm::Event&, const edm::EventSetup&);
       void fillCollections(DiffractiveWEvent&, const edm::Event&, const edm::EventSetup&);
+      
+      template <class T, class W>
+      double WBoson(T lepton, W met);
 
       edm::InputTag triggerResultsTag_;
       std::vector<std::string> hltPathNames_;
@@ -119,6 +121,7 @@ namespace diffractiveWAnalysis {
       TH1F *CastorChannelHisto_;
       TH1F *histo_castor_channels;
       std::vector<TH1F*> m_hVector_histo_castor_channels;
+      int indexE, indexM, indexpE, indexpM;
   };
 
 } // namespace
