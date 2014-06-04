@@ -1209,13 +1209,6 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       NElectrons = eventdiffW->GetElectronsN();
       isoRec = eventdiffW->GetLeadingMuonSumPtR03();
 
-      std::cout << "Muon (reco) Et, p4: " << eventdiffW->GetLeadingMuonEt() << " " << eventdiffW->GetLeadingMuonP4() << std::endl;
-      std::cout << "Muon (pat) Et, p4: " << eventdiffW->GetPatMuon1Et() << " " << eventdiffW->GetPatMuon1P4() << std::endl;
-      std::cout << "Electron (reco) Et, p4: " << eventdiffW->GetLeadingElectronEt() << " " << eventdiffW->GetLeadingElectronP4() << std::endl;
-      std::cout << "Electron (pat) Et, p4: " << eventdiffW->GetPatElectron1Et() << " " << eventdiffW->GetPatElectron1P4() << std::endl;
-      std::cout << "MET (reco) Et, p4: " << eventdiffW->GetMETEt() << " " << eventdiffW->GetMETP4() << std::endl;
-      std::cout << "MET (pat) Et, p4: " << eventdiffW->GetPatMETEt() << " " << eventdiffW->GetPatMETP4() << std::endl;
-
       if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
       if (isoRec < 3) { 
