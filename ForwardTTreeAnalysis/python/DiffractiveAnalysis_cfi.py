@@ -24,7 +24,7 @@ DiffractiveAnalysis = cms.PSet(
     # Misc
     energyThresholdHB = cms.double(1.5),
     energyThresholdHE = cms.double(2.0),
-    energyThresholdHF = cms.double(7.0),
+    energyThresholdHF = cms.double(4.0),
     # Options
     comEnergy = cms.double(7000.),
     applyEnergyScaleHCAL = cms.bool(False),
