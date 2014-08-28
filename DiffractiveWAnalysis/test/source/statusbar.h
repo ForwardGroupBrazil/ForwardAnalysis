@@ -2,29 +2,32 @@
 // Modified
 // http://www.rosshemsley.co.uk/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/
 
-static inline void loadBar(int x, int n, int r, int w)
+#include <iomanip>
+
+static inline void loadBar(unsigned int x, unsigned int n, unsigned int w = 50)
 {
-  // Only update r times.
-  if ( x % (n/r) != 0 ) return;
 
-  // Calculuate the correlation of complete-to-incomplete.
-  double correlation = x/(double)n;
-  int c = correlation * w;
+  //Make sure that load bar is displayed on next line and don’t delete current console line during first run
+  static bool firstCall = true;
+  if (firstCall)
+  {
+    std::cout << std::endl;
+    firstCall = false;
+  }
 
-  // Show the percentage complete.
-  printf("%3d%%[", (int)(correlation*100) );
+  if ((x != n) && (x % (n / 100 + 1) != 0)) return;
 
-  // Show the load bar.
-  for (int x=0; x<c; x++)
-    printf("=");
+  float ratio_ = x / (float)n;
+  int c = int(ratio_ * w);
 
-  for (int x=c; x<w; x++)
-    printf(" ");
-
-  // ANSI Control codes to go back to the
-  // previous line and clear it.
-  // printf("]\n33[F33[J");
-
-  printf("\r"); // Move to the first column
-  fflush(stdout);
+  std::cout << std::setw(3) << (int)(ratio_ * 100) << "% [";
+  for (int x = 0; x < c; x++)
+  {
+    std::cout << "|";
+  }
+  for (unsigned int x = c; x < w; x++)
+  {
+    std::cout << " ";
+  }
+  std::cout << "]\r" << std::flush;
 }

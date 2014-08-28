@@ -4,6 +4,7 @@
 //
 // Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/FwdPhysicsDiffractiveWsAnalysis#Macro_Analysis
 //
+//
 
 //#if !defined(__CINT__) || defined(__MAKECINT__)
 
@@ -246,23 +247,23 @@ void DiffractiveW::CreateHistos(std::string type){
       TH1F *histo_NElectrons = new TH1F(name,"Number of Electrons per Event; # Electrons; Multiplicity", 100, 0., 100.);
       m_hVector_NElectrons[j].push_back(histo_NElectrons);
 
-      sprintf(name,"WBosonMass_%s_%s",tag,Folders.at(j).c_str());
+      sprintf(name,"BosonWMass_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_WMass = new TH1F(name,"Boson W Transverse Mass Distribution; M_{T}(l#nu) [GeV]; N events",500,0,500);
       m_hVector_WMass[j].push_back(histo_WMass);
 
-      sprintf(name,"WBosonPt_%s_%s",tag,Folders.at(j).c_str());
+      sprintf(name,"BosonWPt_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_WPt = new TH1F(name,"Boson W Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
       m_hVector_WPt[j].push_back(histo_WPt);
 
-      sprintf(name,"WBosonEta_%s_%s",tag,Folders.at(j).c_str());
+      sprintf(name,"BosonWEta_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_WEta = new TH1F(name,"Boson W #eta Distribution; #eta; N events",50,-5.2,5.2);
       m_hVector_WEta[j].push_back(histo_WEta);
 
-      sprintf(name,"WBosonPhi_%s_%s",tag,Folders.at(j).c_str());
+      sprintf(name,"BosonWPhi_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_WPhi = new TH1F(name,"Boson W #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
       m_hVector_WPhi[j].push_back(histo_WPhi);
 
-      sprintf(name,"WBosonCharge_%s_%s",tag,Folders.at(j).c_str());
+      sprintf(name,"BosonWCharge_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_WCharge = new TH1F(name,"Boson W Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_WCharge[j].push_back(histo_WCharge);
 
@@ -943,7 +944,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	std::cout<< "Status Bar" << std::endl;
 	std::cout << "" << std::endl;
       }
-      if(NEVENTS > 100) loadBar(i,NEVENTS,100,100);
+      loadBar(i,NEVENTS);
     }
 
     if (debug){
