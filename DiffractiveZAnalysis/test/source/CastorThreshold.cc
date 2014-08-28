@@ -228,7 +228,7 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
 	std::cout<< "Status Bar" << std::endl;
 	std::cout << "" << std::endl;
       }
-      loadBar(i,NEVENTS,100,100);
+      loadBar(i,NEVENTS);
     }
 
     for (int nt=0;nt<20;nt++){

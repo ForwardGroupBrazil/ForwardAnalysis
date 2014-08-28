@@ -997,7 +997,7 @@ void CastorAnalysis::Run(std::string filein_, std::string processname_, std::str
 	std::cout<< "Status Bar" << std::endl;
 	std::cout << "" << std::endl;
       }
-      loadBar(i,NEntries,100,100);
+      loadBar(i,NEntries);
     }
 
     if (debug){

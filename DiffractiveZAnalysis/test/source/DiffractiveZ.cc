@@ -179,7 +179,6 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_LeadingLeptonPt.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonEta.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonPhi.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingLeptonCharge.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonTkDr03.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonEcalDr03.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonHcalDr03.push_back( std::vector<TH1F*>() );
@@ -194,7 +193,6 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_SecondLeptonPt.push_back( std::vector<TH1F*>() );
     m_hVector_SecondLeptonEta.push_back( std::vector<TH1F*>() );
     m_hVector_SecondLeptonPhi.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondLeptonCharge.push_back( std::vector<TH1F*>() );
     m_hVector_SecondLeptonTkDr03.push_back( std::vector<TH1F*>() );
     m_hVector_SecondLeptonEcalDr03.push_back( std::vector<TH1F*>() );
     m_hVector_SecondLeptonHcalDr03.push_back( std::vector<TH1F*>() );
@@ -873,7 +871,6 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
       m_hVector_LeadingLeptonPt[j].at(i)->Write();
       m_hVector_LeadingLeptonEta[j].at(i)->Write();
       m_hVector_LeadingLeptonPhi[j].at(i)->Write();
-      m_hVector_LeadingLeptonCharge[j].at(i)->Write();
       m_hVector_LeadingLeptonTkDr03[j].at(i)->Write();
       m_hVector_LeadingLeptonEcalDr03[j].at(i)->Write();
       m_hVector_LeadingLeptonHcalDr03[j].at(i)->Write();
@@ -888,7 +885,6 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
       m_hVector_SecondLeptonPt[j].at(i)->Write();
       m_hVector_SecondLeptonEta[j].at(i)->Write();
       m_hVector_SecondLeptonPhi[j].at(i)->Write();
-      m_hVector_SecondLeptonCharge[j].at(i)->Write();
       m_hVector_SecondLeptonTkDr03[j].at(i)->Write();
       m_hVector_SecondLeptonEcalDr03[j].at(i)->Write();
       m_hVector_SecondLeptonHcalDr03[j].at(i)->Write();
@@ -916,7 +912,6 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
       m_hVector_lumi[j].at(i)->Write();
       m_hVector_vertexvslumi[j].at(i)->Write();
       m_hVector_tracks[j].at(i)->Write();
-      m_hVector_tracksLow[j].at(i)->Write();
 
       // Detector
       foldersFile[2]->cd();
@@ -1185,7 +1180,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	std::cout<< "Status Bar" << std::endl;
 	std::cout << "" << std::endl;
       }
-      if (NEVENTS>100) loadBar(i,NEVENTS,100,100);
+      loadBar(i,NEVENTS);
     }
 
     if (debug){
@@ -1844,7 +1839,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   fOut->cd();
   trout->Write();
   fOut->Close();
-
   fOutZ->cd();
   troutZ->Write();
   fOutZ->Close();
@@ -1852,7 +1846,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   fOutCASTOR->cd();
   troutCASTOR->Write();
   fOutCASTOR->Close();
-
 }
 
 #if !defined(__CINT__) || defined(__MAKECINT__)
