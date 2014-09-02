@@ -21,6 +21,10 @@ Authors: D. Figueiredo, R. Arciadiacono and N. Cartiglia
 #include "FWCore/Framework/interface/EDFilter.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Utilities/interface/InputTag.h"
+#include "TDirectory.h"
+#include "TGraph.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
 
 //--> RecoMuon and RecoElectron
 #include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
@@ -44,19 +48,21 @@ class diffractiveZFilter : public edm::EDFilter{
     ~diffractiveZFilter();
 
   private:
+    void setTFileService();
     virtual void beginJob() ;
     virtual bool filter(edm::Event&, const edm::EventSetup&);
     virtual void endJob() ;
 
-    int nLeptons_;
     edm::InputTag muonTag_;
     edm::InputTag electronTag_;
+
+    TH1F *run_selected;
+    TH1F *run_total;
 
 };
 
 
 diffractiveZFilter::diffractiveZFilter(const edm::ParameterSet& iConfig):
-  nLeptons_(iConfig.getUntrackedParameter<int>("nLeptons",2)),
   muonTag_(iConfig.getUntrackedParameter<edm::InputTag>("muonTag")),
   electronTag_(iConfig.getUntrackedParameter<edm::InputTag>("electronTag"))
 {
@@ -67,7 +73,20 @@ diffractiveZFilter::diffractiveZFilter(const edm::ParameterSet& iConfig):
 diffractiveZFilter::~diffractiveZFilter(){
 }
 
+
+void diffractiveZFilter::setTFileService(){
+
+  edm::Service<TFileService> fs;
+  TFileDirectory runinfoDir = fs->mkdir("RunInfo");
+  run_total = runinfoDir.make<TH1F>("RunTotal","; Run Id(); # Events per Run",1,0,1);
+  run_total->SetBit(TH1::kCanRebin);
+  run_selected = runinfoDir.make<TH1F>("RunSelected","Events per Run After Filter; Run Id(); # Events per Run",1,0,1);
+  run_selected->SetBit(TH1::kCanRebin);
+
+}
+
 void diffractiveZFilter::beginJob(){
+  setTFileService();
 }
 
 bool diffractiveZFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup){
@@ -91,18 +110,22 @@ bool diffractiveZFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
   int muonsize = muons->size();
   int pelectronsize = pelectrons->size();
   int pmuonsize = pmuons->size();
+  int runNumber = iEvent.id().run();
 
-  if (electronsize >= nLeptons_ || muonsize >= nLeptons_ || pelectronsize >= nLeptons_ || pmuonsize >= nLeptons_) {
+
+  run_total->Fill(runNumber);
+
+  if (electronsize >= 2 || muonsize >= 2 || pelectronsize >= 2 || pmuonsize >= 2) {
     Filter_diffractiveZ = true;
     if (debug) std::cout << "Event Selected." << std::endl;
+    run_selected->Fill(runNumber);
   }
 
   return Filter_diffractiveZ;
-}
 
+}
 
 void diffractiveZFilter::endJob(){
 }
-
 
 DEFINE_FWK_MODULE(diffractiveZFilter);
