@@ -21,6 +21,9 @@ Authors: D. Figueiredo, R. Arciadiacono and N. Cartiglia
 #include "FWCore/Framework/interface/EDFilter.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Utilities/interface/InputTag.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "TH1.h"
 
 //--> RecoMuon and RecoElectron
 #include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
@@ -55,11 +58,12 @@ class diffractiveWFilter : public edm::EDFilter{
     ~diffractiveWFilter();
 
   private:
-    virtual void beginJob() ;
+    void setTFileService();
+    void PrintOrder();
+    virtual void beginJob();
     virtual bool filter(edm::Event&, const edm::EventSetup&);
-    virtual void endJob() ;
+    virtual void endJob();
 
-    int nLeptons_;
     edm::InputTag muonTag_;
     edm::InputTag electronTag_;
     edm::InputTag metTag_;
@@ -74,11 +78,40 @@ class diffractiveWFilter : public edm::EDFilter{
     std::vector<const reco::PFCandidate*> PFMuonVector;
     std::vector<const reco::PFCandidate*> PFElectronVector;
 
+    TH1F *run_selected;
+    TH1F *run_total;
+
+    struct orderPT
+    {
+      template <class T, class W>
+	inline bool operator() (T vec1, W vec2)
+	{
+	  return (vec1->pt() > vec2->pt());
+	}
+    };
+
+    struct orderETA
+    {
+      template <class T, class W>
+	inline bool operator() (T vec1, W vec2)
+	{
+	  return (vec1->eta() > vec2->eta());
+	}
+    };
+
+    struct orderAbsolutPZ
+    {
+      template <class T, class W>
+	inline bool operator() (T vec1, W vec2)
+	{
+	  return (fabs(vec1->pz()) > fabs(vec2->pz()));
+	}
+    };
+
 };
 
 
 diffractiveWFilter::diffractiveWFilter(const edm::ParameterSet& iConfig):
-  nLeptons_(iConfig.getUntrackedParameter<int>("nLeptons",1)),
   muonTag_(iConfig.getUntrackedParameter<edm::InputTag>("muonTag")),
   electronTag_(iConfig.getUntrackedParameter<edm::InputTag>("electronTag")),
   metTag_(iConfig.getUntrackedParameter<edm::InputTag>("metTag")),
@@ -91,6 +124,7 @@ diffractiveWFilter::~diffractiveWFilter(){
 }
 
 void diffractiveWFilter::beginJob(){
+  setTFileService();
 }
 
 bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup){
@@ -116,12 +150,12 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
   edm::Handle<std::vector<pat::Muon> > patMuons;
   iEvent.getByLabel("patMuons", patMuons);
 
-  int patMuonsize = patMuons->size();
+  int patmuonsize = patMuons->size();
   int itpatMuon;
   PatMuonVector.clear();
 
   if(patMuons->size()>0){
-    for(itpatMuon=0; itpatMuon < patMuonsize; ++itpatMuon){
+    for(itpatMuon=0; itpatMuon < patmuonsize; ++itpatMuon){
       const pat::Muon* patMuonAll = &((*patMuons)[itpatMuon]);
       PatMuonVector.push_back(patMuonAll);
     }
@@ -146,12 +180,12 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
   edm::Handle<std::vector<pat::Electron> > patElectrons;
   iEvent.getByLabel("patElectrons", patElectrons);
 
-  int patElectronsize = patElectrons->size();
+  int patelectronsize = patElectrons->size();
   int itpatElectron;
   PatElectronVector.clear();
 
   if(patElectrons->size()>0){
-    for(itpatElectron=0; itpatElectron < patElectronsize; ++itpatElectron){
+    for(itpatElectron=0; itpatElectron < patelectronsize; ++itpatElectron){
       const pat::Electron* patElectronAll = &((*patElectrons)[itpatElectron]);
       PatElectronVector.push_back(patElectronAll);
     }
@@ -188,126 +222,170 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
     }
   }
 
-
   // S O R T I N G   V E C T O R S
   ////////////////////////////////
 
-  bool pTSel = false;
-  bool NotSecondPt = true;
+  std::sort(ElectronVector.begin(), ElectronVector.end(), orderPT());
+  std::sort(PatElectronVector.begin(), PatElectronVector.end(), orderPT());
+  std::sort(MuonVector.begin(), MuonVector.end(), orderPT());
+  std::sort(PatMuonVector.begin(), PatMuonVector.end(), orderPT());
+  std::sort(NeutrinoVector.begin(), NeutrinoVector.end(), orderPT());
+  std::sort(PFMuonVector.begin(), PFMuonVector.end(), orderPT());
+  std::sort(PFElectronVector.begin(), PFElectronVector.end(), orderPT());
 
-  if(MuonVector.size()>0){
+  bool acceptmet = false;
 
-    // Sorting Vector by pT
-    const int MuonVectorSize = (int) MuonVector.size();
-    int *sortMuonVector= new int[MuonVectorSize];
-    double *vmuon = new double[MuonVectorSize];
-
-    for (int i=0; i<MuonVectorSize; i++) {
-      vmuon[i] = MuonVector[i]->pt();
-    }
-
-    TMath::Sort(MuonVectorSize, vmuon, sortMuonVector, true);
-
-    if ( MuonVector[sortMuonVector[0]]->pt() > 20.) pTSel = true;
-    if (MuonVector.size() > 1){
-      if (MuonVector[sortMuonVector[1]]->pt() > 10.) NotSecondPt = false;
-    }
-
+  if (neutrinosize > 0 || patneutrinosize > 0){
+    if (NeutrinoVector[0]->pt()>15. || PatNeutrinoVector[0]->pt()>15.) acceptmet = true;
   }
 
-  if(PatMuonVector.size()>0){
+  bool accept = false;
 
-    // Sorting Vector by pT
-    const int PatMuonVectorSize = (int) PatMuonVector.size();
-    int *sortPatMuonVector= new int[PatMuonVectorSize];
-    double *vpatmuon = new double[PatMuonVectorSize];
-
-    for (int i=0; i<PatMuonVectorSize; i++) {
-      vpatmuon[i] = PatMuonVector[i]->pt();
+  // R E C O   O B J E C T S
+  if(muonsize>0 && electronsize==0){
+    if(MuonVector.size()==1){
+      if(MuonVector[0]->pt()>20.) accept = true;
     }
-
-    TMath::Sort(PatMuonVectorSize, vpatmuon, sortPatMuonVector, true);
-
-    if ( PatMuonVector[sortPatMuonVector[0]]->pt() > 20.) pTSel = true;
-    if (PatMuonVector.size() > 1){
-      if (PatMuonVector[sortPatMuonVector[1]]->pt() > 10.) NotSecondPt = false;
+    if(MuonVector.size()>1){
+      if(MuonVector[0]->pt()>20. && MuonVector[1]->pt()<10.) accept = true;
     }
-
   }
 
-
-  if(ElectronVector.size()>0){
-
-    // Sorting Vector by pT
-    const int ElectronVectorSize = (int) ElectronVector.size();
-    int *sortElectronVector= new int[ElectronVectorSize];
-    double *velectron = new double[ElectronVectorSize];
-
-    for (int i=0; i<ElectronVectorSize; i++) {
-      velectron[i] = ElectronVector[i]->pt();
+  if(electronsize>0 && muonsize==0){
+    if(ElectronVector.size()==1){
+      if(ElectronVector[0]->pt()>20.) accept = true;
     }
-
-    TMath::Sort(ElectronVectorSize, velectron, sortElectronVector, true);
-
-    if ( ElectronVector[sortElectronVector[0]]->pt() > 20.) pTSel = true;
-    if (ElectronVector.size() > 1){
-      if (ElectronVector[sortElectronVector[1]]->pt() > 10.) NotSecondPt = false;
+    if(ElectronVector.size()>1){
+      if(ElectronVector[0]->pt()>20. && ElectronVector[1]->pt()<10.) accept = true;
     }
+  }
 
+  if(MuonVector.size()>0 && ElectronVector.size()>0){
+    if(MuonVector[0]->pt()>ElectronVector[0]->pt()){
+      if(MuonVector.size()==1){
+	if(MuonVector[0]->pt()>20. && ElectronVector[0]->pt()<10.) accept = true;
+      }
+      if(MuonVector.size()>1){
+	if(MuonVector[0]->pt()>20. && MuonVector[1]->pt()<10. && ElectronVector[0]->pt()<10.) accept = true;
+      }
+    }else{
+      if(ElectronVector.size()==1){
+	if(ElectronVector[0]->pt()>20. && MuonVector[0]->pt()<10.) accept = true;
+      }
+      if(ElectronVector.size()>1){
+	if(ElectronVector[0]->pt()>20. && ElectronVector[1]->pt()<10. && MuonVector[0]->pt()<10.) accept = true;
+      }
+    }
   }
 
 
-  if(PatElectronVector.size()>0){
-
-    // Sorting Vector by pT
-    const int PatElectronVectorSize = (int) PatElectronVector.size();
-    int *sortPatElectronVector= new int[PatElectronVectorSize];
-    double *vpatelectron = new double[PatElectronVectorSize];
-
-    for (int i=0; i<PatElectronVectorSize; i++) {
-      vpatelectron[i] = PatElectronVector[i]->pt();
+  // P A T   O B J E C T S
+  if(patmuonsize>0 && patelectronsize==0){
+    if(PatMuonVector.size()==1){
+      if(PatMuonVector[0]->pt()>20.) accept = true;
     }
-
-    TMath::Sort(PatElectronVectorSize, vpatelectron, sortPatElectronVector, true);
-
-    if ( PatElectronVector[sortPatElectronVector[0]]->pt() > 20.) pTSel = true;
-    if (PatElectronVector.size() > 1){
-      if (PatElectronVector[sortPatElectronVector[1]]->pt() > 10.) NotSecondPt = false;
+    if(PatMuonVector.size()>1){
+      if(PatMuonVector[0]->pt()>20. && PatMuonVector[1]->pt()<10.) accept = true;
     }
-
   }
 
-  bool NLepton = false;
-  bool METpTSel = false;
-
-  bool AllSelection = false;
-
-  int ElectronSize = ElectronVector.size();
-  int MuonSize = MuonVector.size();
-  int PatElectronSize = PatElectronVector.size();
-  int PatMuonSize = PatMuonVector.size();
-  int NeutrinoSize = NeutrinoVector.size();
-  int PatNeutrinoSize = PatNeutrinoVector.size();
-
-  if (ElectronSize >= nLeptons_ || MuonSize >= nLeptons_ || PatElectronSize >= nLeptons_ || PatMuonSize >= nLeptons_) NLepton = true;
-
-  if (NeutrinoSize > 0 || PatNeutrinoSize > 0){
-    if (NeutrinoVector[0]->pt()>15. || PatNeutrinoVector[0]->pt()>15.) METpTSel = true;
+  if(patelectronsize>0 && patmuonsize==0){
+    if(PatElectronVector.size()==1){
+      if(PatElectronVector[0]->pt()>20.) accept = true;
+    }
+    if(PatElectronVector.size()>1){
+      if(PatElectronVector[0]->pt()>20. && PatElectronVector[1]->pt()<10.) accept = true;
+    }
   }
 
-  AllSelection = NLepton and pTSel and NotSecondPt and METpTSel;
+  if(PatMuonVector.size()>0 && PatElectronVector.size()>0){
+    if(PatMuonVector[0]->pt()>PatElectronVector[0]->pt()){
+      if(PatMuonVector.size()==1){
+	if(PatMuonVector[0]->pt()>20. && PatElectronVector[0]->pt()<10.) accept = true;
+      }
+      if(PatMuonVector.size()>1){
+	if(PatMuonVector[0]->pt()>20. && PatMuonVector[1]->pt()<10. && PatElectronVector[0]->pt()<10.) accept = true;
+      }
+    }else{
+      if(PatElectronVector.size()==1){
+	if(PatElectronVector[0]->pt()>20. && PatMuonVector[0]->pt()<10.) accept = true;
+      }
+      if(PatElectronVector.size()>1){
+	if(PatElectronVector[0]->pt()>20. && PatElectronVector[1]->pt()<10. && PatMuonVector[0]->pt()<10.) accept = true;
+      }
+    }
+  }
+
+  bool acceptevent = false;
+  acceptevent = accept && acceptmet;
+
+  int runNumber = iEvent.id().run();  
+  run_total->Fill(runNumber);
+  if(acceptevent){
+    run_selected->Fill(runNumber);
+  }
 
   if(debug){
-    if (AllSelection) std::cout << "\n\n< Event Selected >\n\n" << std::endl;
+    PrintOrder();
+    std::cout << "Event Accepted!" << std::endl;
   }
 
-  return AllSelection;
+  return accept;
 
 }
-
 
 void diffractiveWFilter::endJob(){
 }
 
+void diffractiveWFilter::setTFileService(){
+
+  edm::Service<TFileService> fs;
+  TFileDirectory runinfoDir = fs->mkdir("RunInfo");
+  run_total = runinfoDir.make<TH1F>("RunTotal","; Run Id(); # Events per Run",1,0,1);
+  run_total->SetBit(TH1::kCanRebin);
+  run_selected = runinfoDir.make<TH1F>("RunSelected","Events per Run After Filter; Run Id(); # Events per Run",1,0,1);
+  run_selected->SetBit(TH1::kCanRebin);
+
+}
+
+void diffractiveWFilter::PrintOrder(){
+
+  if(ElectronVector.size()>0){
+    for (unsigned int i=0;i<ElectronVector.size();i++){
+      cout << "reco::Electron[" << i << "]\t---> pT [GeV]: " << ElectronVector[i]->pt() << " | eT [GeV]: " << ElectronVector[i]->et() << " | eta: " << ElectronVector[i]->eta() << " | phi: " << ElectronVector[i]->phi() << endl;
+    }
+  }
+
+  if(MuonVector.size()>0){
+    for (unsigned int i=0;i<MuonVector.size();i++){
+      cout << "reco::Muon[" << i << "]\t---> pT [GeV]: " << MuonVector[i]->pt() << " | eT [GeV]: " << MuonVector[i]->et() << " | eta: " << MuonVector[i]->eta() << " | phi: " << MuonVector[i]->phi() << endl;
+    }
+  }
+
+  if(PFElectronVector.size()>0){
+    for (unsigned int i=0;i<PFElectronVector.size();i++){
+      cout << "reco::PFElectron[" << i << "]\t---> pT [GeV]: " << PFElectronVector[i]->pt() << " | eT [GeV]: " << PFElectronVector[i]->et() << " | eta: " << PFElectronVector[i]->eta() << " | phi: " << PFElectronVector[i]->phi() << endl;
+    }
+  }
+
+  if(PFMuonVector.size()>0){
+    for (unsigned int i=0;i<PFMuonVector.size();i++){
+      cout << "reco::PFMuon[" << i << "]\t---> pT [GeV]: " << PFMuonVector[i]->pt() << " | eT [GeV]: " << PFMuonVector[i]->et() << " | eta: " << PFMuonVector[i]->eta() << " | phi: " << PFMuonVector[i]->phi() << endl;
+    }
+  }
+
+  if(PatElectronVector.size()>0){
+    for (unsigned int i=0;i<PatElectronVector.size();i++){
+      cout << "pat::Electron[" << i << "]\t---> pT [GeV]: " << PatElectronVector[i]->pt() << " | eT [GeV]: " << PatElectronVector[i]->et() << " | eta: " << PatElectronVector[i]->eta() << " | phi: " << PatElectronVector[i]->phi() << endl;
+    }
+  }
+
+  if(PatMuonVector.size()>0){
+    for (unsigned int i=0;i<PatMuonVector.size();i++){
+      cout << "pat::Muon[" << i << "]\t---> pT [GeV]: " << PatMuonVector[i]->pt() << " | eT [GeV]: " << PatMuonVector[i]->et() << " | eta: " << PatMuonVector[i]->eta() << " | phi: " << PatMuonVector[i]->phi() << endl;
+    }
+  }
+
+}
 
 DEFINE_FWK_MODULE(diffractiveWFilter);
