@@ -907,9 +907,9 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       triggereff2 = vfactortrigger[2];
       triggereff1 = vfactortrigger[3];
       triggereff4_castorgap = vfactortrigger[4];
-      triggereff3_castorgap = vfactortrigger[3];
-      triggereff2_castorgap = vfactortrigger[2];
-      triggereff1_castorgap = vfactortrigger[1];
+      triggereff3_castorgap = vfactortrigger[5];
+      triggereff2_castorgap = vfactortrigger[6];
+      triggereff1_castorgap = vfactortrigger[7];
     }
 
     if (switchcutcorr == "cut_correction"){
