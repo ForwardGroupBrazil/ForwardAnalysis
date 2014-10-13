@@ -20,8 +20,7 @@ def addPATSequences(process,runMC):
     else:
 	jetCorrections = ('AK5PFchs', ['L1FastJet','L2Relative','L3Absolute','L2L3Residual'])
 
-    usePF2PAT(process,runPF2PAT=True,
-                      jetAlgo=jetAlgo, runOnMC=runMC, postfix=postfix,jetCorrections=jetCorrections)
+    usePF2PAT(process,runPF2PAT=True,jetAlgo=jetAlgo, runOnMC=runMC, postfix=postfix,jetCorrections=jetCorrections)
 
     #from PhysicsTools.PatAlgos.tools.coreTools import removeMCMatching
     #if not runMC:

@@ -40,7 +40,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = -1
+config.NumberOfEvents = 5000
 
 #
 # Define Options to Run
@@ -55,7 +55,7 @@ if options.Run == "data_MuonP1":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu9','HLT_DoubleMu3'
+  triggerlist = 'HLT_Mu9','HLT_Mu9_v*','HLT_DoubleMu3'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
@@ -70,7 +70,7 @@ elif options.Run == "data_MuonP2":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu15','HLT_DoubleMu5_v*'
+  triggerlist = 'HLT_Mu15','HLT_Mu15_v*','HLT_DoubleMu5_v*'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
@@ -419,9 +419,14 @@ else:
 if config.runOnMC:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = True
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.9375
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.castorHitsTag = "castorreco"
+     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.castorRecHitTag ="castorreco"
+
 else:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.castorHitsTag = "castorRecHitCorrector"
+     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.castorRecHitTag = "castorRecHitCorrector"
 
 #
 # Define MC Access

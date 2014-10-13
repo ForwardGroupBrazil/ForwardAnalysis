@@ -93,7 +93,8 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   castorThreshold_(pset.getParameter<double>("castorThreshold")),
   fCGeVCastor_(pset.getParameter<double>("fCGeVCastor")),
   caloTowerTag_(pset.getParameter<edm::InputTag>("CaloTowerTag")),
-  trackTag_(pset.getParameter<edm::InputTag>("TrackTag"))
+  trackTag_(pset.getParameter<edm::InputTag>("TrackTag")),
+  beamEnergy_(pset.getParameter<double>("beamEnergy"))  //one beam energy, IP = 2*beamEnergy_
 {
 }
 
@@ -218,109 +219,91 @@ void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const e
 
 void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  int ElectronN=0;
   bool debug = false;
+  ElectronVector.clear();
 
   edm::Handle<reco::GsfElectronCollection> electrons;
   event.getByLabel(electronTag_,electrons);
 
-  const reco::GsfElectron* electron1=NULL;
-  const reco::GsfElectron* electron2=NULL;
-
   int electronsize = electrons->size();
   int itElectron;
-
-  ElectronVector.clear();
-
-  if(electrons->size()>1){
-
+  if(electrons->size()>0){
     for(itElectron=0; itElectron < electronsize; ++itElectron){
-
-      ++ElectronN;
-
       const reco::GsfElectron* electronAll = &((*electrons)[itElectron]);
-
-      if (electronAll==NULL) continue;
-      if (electron1==NULL) {electron1=electronAll; continue;}
-      if (electronAll->pt()>electron1->pt()) {
-	electron2=electron1;
-	electron1=electronAll;
-	continue;
-      }
-
-      if (electron2==NULL) {electron2=electronAll; continue;}
-      if (electronAll->pt()>electron2->pt()) electron2 = electronAll;
-
+      ElectronVector.push_back(electronAll);
     }
+  }
 
-    ElectronVector.push_back(electron1);
-    ElectronVector.push_back(electron2);
+  // Sorting Vector
+  std::sort(ElectronVector.begin(), ElectronVector.end(), orderPT());
 
-    double relIsoFirstElectronDr03 = (electron1->dr03TkSumPt()+electron1->dr03EcalRecHitSumEt()+electron1->dr03HcalTowerSumEt())/electron1->et();
-    double relIsoFirstElectronDr04 = (electron1->dr04TkSumPt()+electron1->dr04EcalRecHitSumEt()+electron1->dr04HcalTowerSumEt())/electron1->et();
-    double relIsoSecondElectronDr03 = (electron2->dr03TkSumPt()+electron2->dr03EcalRecHitSumEt()+electron2->dr03HcalTowerSumEt())/electron2->et();
-    double relIsoSecondElectronDr04 = (electron2->dr04TkSumPt()+electron2->dr04EcalRecHitSumEt()+electron2->dr04HcalTowerSumEt())/electron2->et();
-    double InnerHits1 = electron1->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
-    double InnerHits2 = electron2->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+  if(ElectronVector.size()>1){
+
+    double relIsoFirstElectronDr03 = (ElectronVector[0]->dr03TkSumPt()+ElectronVector[0]->dr03EcalRecHitSumEt()+ElectronVector[0]->dr03HcalTowerSumEt())/ElectronVector[0]->et();
+    double relIsoFirstElectronDr04 = (ElectronVector[0]->dr04TkSumPt()+ElectronVector[0]->dr04EcalRecHitSumEt()+ElectronVector[0]->dr04HcalTowerSumEt())/ElectronVector[0]->et();
+    double relIsoSecondElectronDr03 = (ElectronVector[1]->dr03TkSumPt()+ElectronVector[1]->dr03EcalRecHitSumEt()+ElectronVector[1]->dr03HcalTowerSumEt())/ElectronVector[1]->et();
+    double relIsoSecondElectronDr04 = (ElectronVector[1]->dr04TkSumPt()+ElectronVector[1]->dr04EcalRecHitSumEt()+ElectronVector[1]->dr04HcalTowerSumEt())/ElectronVector[1]->et();
+    double InnerHits1 = ElectronVector[0]->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+    double InnerHits2 = ElectronVector[1]->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
 
     // Dielectron Mass
     math::XYZTLorentzVector DielectronSystem(0.,0.,0.,0.);
-    DielectronSystem += electron1->p4();
-    DielectronSystem += electron2->p4();
+    DielectronSystem += ElectronVector[0]->p4();
+    DielectronSystem += ElectronVector[1]->p4();
+
     eventData.SetDiElectronMass(DielectronSystem.M());
     eventData.SetDiElectronPt(DielectronSystem.pt());
     eventData.SetDiElectronEta(DielectronSystem.eta());
     eventData.SetDiElectronPhi(DielectronSystem.phi());
 
-    eventData.SetElectronsN(ElectronN);
-    eventData.SetLeadingElectronPt(electron1->pt());
-    eventData.SetLeadingElectronEta(electron1->eta());
-    eventData.SetLeadingElectronPhi(electron1->phi());
-    eventData.SetLeadingElectronCharge(electron1->charge());
-    eventData.SetLeadingElectronP4(electron1->p4());
-    eventData.SetSecondElectronPt(electron2->pt());
-    eventData.SetSecondElectronEta(electron2->eta());
-    eventData.SetSecondElectronPhi(electron2->phi());
-    eventData.SetSecondElectronCharge(electron2->charge());
-    eventData.SetSecondElectronP4(electron2->p4());
+    eventData.SetElectronsN(ElectronVector.size());
+    eventData.SetLeadingElectronPt(ElectronVector[0]->pt());
+    eventData.SetLeadingElectronEta(ElectronVector[0]->eta());
+    eventData.SetLeadingElectronPhi(ElectronVector[0]->phi());
+    eventData.SetLeadingElectronCharge(ElectronVector[0]->charge());
+    eventData.SetLeadingElectronP4(ElectronVector[0]->p4());
+    eventData.SetSecondElectronPt(ElectronVector[1]->pt());
+    eventData.SetSecondElectronEta(ElectronVector[1]->eta());
+    eventData.SetSecondElectronPhi(ElectronVector[1]->phi());
+    eventData.SetSecondElectronCharge(ElectronVector[1]->charge());
+    eventData.SetSecondElectronP4(ElectronVector[1]->p4());
 
-    eventData.SetLeadingElectronTkDr03(electron1->dr03TkSumPt());
-    eventData.SetLeadingElectronEcalDr03(electron1->dr03EcalRecHitSumEt());
-    eventData.SetLeadingElectronHcalDr03(electron1->dr03HcalTowerSumEt());
+    eventData.SetLeadingElectronTkDr03(ElectronVector[0]->dr03TkSumPt());
+    eventData.SetLeadingElectronEcalDr03(ElectronVector[0]->dr03EcalRecHitSumEt());
+    eventData.SetLeadingElectronHcalDr03(ElectronVector[0]->dr03HcalTowerSumEt());
 
-    eventData.SetSecondElectronTkDr03(electron2->dr03TkSumPt());
-    eventData.SetSecondElectronEcalDr03(electron2->dr03EcalRecHitSumEt());
-    eventData.SetSecondElectronHcalDr03(electron2->dr03HcalTowerSumEt());
+    eventData.SetSecondElectronTkDr03(ElectronVector[1]->dr03TkSumPt());
+    eventData.SetSecondElectronEcalDr03(ElectronVector[1]->dr03EcalRecHitSumEt());
+    eventData.SetSecondElectronHcalDr03(ElectronVector[1]->dr03HcalTowerSumEt());
 
-    eventData.SetLeadingElectronTkDr04(electron1->dr04TkSumPt());
-    eventData.SetLeadingElectronEcalDr04(electron1->dr04EcalRecHitSumEt());
-    eventData.SetLeadingElectronHcalDr04(electron1->dr04HcalTowerSumEt());
+    eventData.SetLeadingElectronTkDr04(ElectronVector[0]->dr04TkSumPt());
+    eventData.SetLeadingElectronEcalDr04(ElectronVector[0]->dr04EcalRecHitSumEt());
+    eventData.SetLeadingElectronHcalDr04(ElectronVector[0]->dr04HcalTowerSumEt());
 
-    eventData.SetSecondElectronTkDr04(electron2->dr04TkSumPt());
-    eventData.SetSecondElectronEcalDr04(electron2->dr04EcalRecHitSumEt());
-    eventData.SetSecondElectronHcalDr04(electron2->dr04HcalTowerSumEt());
+    eventData.SetSecondElectronTkDr04(ElectronVector[1]->dr04TkSumPt());
+    eventData.SetSecondElectronEcalDr04(ElectronVector[1]->dr04EcalRecHitSumEt());
+    eventData.SetSecondElectronHcalDr04(ElectronVector[1]->dr04HcalTowerSumEt());
 
     eventData.SetLeadingElectronrelIsoDr03(relIsoFirstElectronDr03);
     eventData.SetLeadingElectronrelIsoDr04(relIsoFirstElectronDr04);
     eventData.SetSecondElectronrelIsoDr03(relIsoSecondElectronDr03);
     eventData.SetSecondElectronrelIsoDr04(relIsoSecondElectronDr04);
 
-    eventData.SetLeadingElectronDeltaPhiTkClu(electron1->deltaPhiSuperClusterTrackAtVtx());
-    eventData.SetLeadingElectronDeltaEtaTkClu(electron1->deltaEtaSuperClusterTrackAtVtx());
-    eventData.SetLeadingElectronSigmaIeIe(electron1->sigmaIetaIeta());
-    eventData.SetLeadingElectronDCot(electron1->convDcot());
-    eventData.SetLeadingElectronDist(electron1->convDist());
+    eventData.SetLeadingElectronDeltaPhiTkClu(ElectronVector[0]->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetLeadingElectronDeltaEtaTkClu(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetLeadingElectronSigmaIeIe(ElectronVector[0]->sigmaIetaIeta());
+    eventData.SetLeadingElectronDCot(ElectronVector[0]->convDcot());
+    eventData.SetLeadingElectronDist(ElectronVector[0]->convDist());
     eventData.SetLeadingElectronInnerHits(InnerHits1);
-    eventData.SetLeadingElectronHE(electron1->hadronicOverEm());
+    eventData.SetLeadingElectronHE(ElectronVector[0]->hadronicOverEm());
 
-    eventData.SetSecondElectronDeltaPhiTkClu(electron2->deltaPhiSuperClusterTrackAtVtx());
-    eventData.SetSecondElectronDeltaEtaTkClu(electron2->deltaEtaSuperClusterTrackAtVtx());
-    eventData.SetSecondElectronSigmaIeIe(electron2->sigmaIetaIeta());
-    eventData.SetSecondElectronDCot(electron2->convDcot());
-    eventData.SetSecondElectronDist(electron2->convDist());
+    eventData.SetSecondElectronDeltaPhiTkClu(ElectronVector[1]->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetSecondElectronDeltaEtaTkClu(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetSecondElectronSigmaIeIe(ElectronVector[1]->sigmaIetaIeta());
+    eventData.SetSecondElectronDCot(ElectronVector[1]->convDcot());
+    eventData.SetSecondElectronDist(ElectronVector[1]->convDist());
     eventData.SetSecondElectronInnerHits(InnerHits2);
-    eventData.SetSecondElectronHE(electron2->hadronicOverEm());
-
+    eventData.SetSecondElectronHE(ElectronVector[1]->hadronicOverEm());
 
     edm::Handle<edm::View<reco::Track> > trackHandle;
     event.getByLabel(trackTag_,trackHandle);
@@ -335,17 +318,17 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
-      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.3))
+      if ((deltaR(track->eta(),track->phi(),ElectronVector[0]->eta(),ElectronVector[0]->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),ElectronVector[1]->eta(),ElectronVector[1]->phi()) > 0.3))
       {
 	goodTracksCount03++;
       }
 
-      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.4))
+      if ((deltaR(track->eta(),track->phi(),ElectronVector[0]->eta(),ElectronVector[0]->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),ElectronVector[1]->eta(),ElectronVector[1]->phi()) > 0.4))
       {
 	goodTracksCount04++;
       }
 
-      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.5))
+      if ((deltaR(track->eta(),track->phi(),ElectronVector[0]->eta(),ElectronVector[0]->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),ElectronVector[1]->eta(),ElectronVector[1]->phi()) > 0.5))
       {
 	goodTracksCount05++;
       }
@@ -356,42 +339,39 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetTracksNonConeElectron04(goodTracksCount04);
     eventData.SetTracksNonConeElectron05(goodTracksCount05);
 
-
     if (debug){
       std::cout << ">>> Reco Electron" << std::endl;
-      std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
-      std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
-      std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
-      std::cout << "electron2 -> dr04 TK: " << electron2->dr04TkSumPt() << "| dr04 Ecal: " << electron2->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron2->dr04HcalTowerSumEt() <<  std::endl;
+      std::cout << "electron1 -> dr03 TK: " << ElectronVector[0]->dr03TkSumPt() << "| dr03 Ecal: " << ElectronVector[0]->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << ElectronVector[0]->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron1 -> dr04 TK: " << ElectronVector[0]->dr04TkSumPt() << "| dr04 Ecal: " << ElectronVector[0]->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << ElectronVector[0]->dr04HcalTowerSumEt() <<  std::endl;
+      std::cout << "electron2 -> dr03 TK: " << ElectronVector[1]->dr03TkSumPt() << "| dr03 Ecal: " << ElectronVector[1]->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << ElectronVector[1]->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron2 -> dr04 TK: " << ElectronVector[1]->dr04TkSumPt() << "| dr04 Ecal: " << ElectronVector[1]->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << ElectronVector[1]->dr04HcalTowerSumEt() <<  std::endl;
       std::cout << "Electron Isolation: " << relIsoFirstElectronDr03 << " | " << relIsoFirstElectronDr04 << std::endl;
-      std::cout << "NElectron: " << ElectronN << std::endl;
-      std::cout << "NSize: " << electrons->size() << std::endl;
-      std::cout << "Electron, pT 1: " << electron1->pt() << std::endl;
-      std::cout << "Electron, pT 2: " << electron2->pt() << std::endl;
-      std::cout << "Electron, eta 1: " << electron1->eta() << std::endl;
-      std::cout << "Electron, eta 2: " << electron2->eta() << std::endl;
+      std::cout << "N Electrons: " << ElectronVector.size() << std::endl;
+      std::cout << "Electron, pT 1: " << ElectronVector[0]->pt() << std::endl;
+      std::cout << "Electron, pT 2: " << ElectronVector[1]->pt() << std::endl;
+      std::cout << "Electron, eta 1: " << ElectronVector[0]->eta() << std::endl;
+      std::cout << "Electron, eta 2: " << ElectronVector[1]->eta() << std::endl;
       std::cout << "Eta Z: " << DielectronSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DielectronSystem.phi() << std::endl;
       std::cout << "pT Z: " << DielectronSystem.pt() << std::endl;
       std::cout << "energy Z: " << DielectronSystem.energy() << std::endl;
       std::cout << "pz Z: " << DielectronSystem.pz() << std::endl;
-      std::cout << "DeltaPhiTkClu, electron1: " << electron1->deltaPhiSuperClusterTrackAtVtx() << std::endl;
-      std::cout << "DeltaEtaTkClu, electron1: " << electron1->deltaEtaSuperClusterTrackAtVtx() << std::endl;
-      std::cout << "SigmaIeIe, electron1: " << electron1->sigmaIetaIeta() << std::endl;
-      std::cout << "Dcot, electron1: " << electron1->convDcot() << std::endl;
-      std::cout << "Dist, electron1: " << electron1->convDist() << std::endl;
-      std::cout << "Number Of Expected Inner Hits, electron1: " << electron1->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
-      std::cout << "H/E, electron1: " << electron1->hadronicOverEm() << std::endl;
-      std::cout << "DeltaPhiTkClu, electron2: " << electron2->deltaPhiSuperClusterTrackAtVtx() << std::endl;
-      std::cout << "DeltaEtaTkClu, electron2: " << electron2->deltaEtaSuperClusterTrackAtVtx() << std::endl;
-      std::cout << "SigmaIeIe, electron2: " << electron2->sigmaIetaIeta() << std::endl;
-      std::cout << "Dcot, electron2: " << electron2->convDcot() << std::endl;
-      std::cout << "Dist, electron2: " << electron2->convDist() << std::endl;
-      std::cout << "Number Of Expected Inner Hits, electron2: " << electron2->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
-      std::cout << "H/E, electron2: " << electron2->hadronicOverEm() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron1: " << ElectronVector[0]->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron1: " << ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron1: " << ElectronVector[0]->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron1: " << ElectronVector[0]->convDcot() << std::endl;
+      std::cout << "Dist, electron1: " << ElectronVector[0]->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron1: " << ElectronVector[0]->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron1: " << ElectronVector[0]->hadronicOverEm() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron2: " << ElectronVector[1]->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron2: " << ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron2: " << ElectronVector[1]->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron2: " << ElectronVector[1]->convDcot() << std::endl;
+      std::cout << "Dist, electron2: " << ElectronVector[1]->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron2: " << ElectronVector[1]->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron2: " << ElectronVector[1]->hadronicOverEm() << std::endl;
       std::cout << "" << std::endl;
     }
-
   }
   else {
     eventData.SetDiElectronMass(-999.);
@@ -445,7 +425,6 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetSecondElectronHE(-999.);
 
   }
-
 }
 
 // Fill Reco::Muon
@@ -454,93 +433,63 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
 void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   bool debug = false;
-  int MuonsN=0;
+  MuonVector.clear();
 
   edm::Handle<reco::MuonCollection> muons;
   event.getByLabel(muonTag_,muons);
 
-  const reco::Muon* muon1=NULL;
-  const reco::Muon* muon2=NULL;
-
   int muonsize = muons->size();
   int itMuon;
-
-  MuonVector.clear();
-
-  if(muons->size()>1){
-
+  if(muons->size()>0){
     for(itMuon=0; itMuon < muonsize; ++itMuon){
-
-      ++MuonsN;
-
       const reco::Muon* muonAll = &((*muons)[itMuon]);
-
-      if (muonAll==NULL) continue;
-
-      if (muon1==NULL) {muon1=muonAll; continue;}
-      if (muonAll->pt()>muon1->pt()) {
-	muon2=muon1;
-	muon1=muonAll;
-	continue;
-      }
-
-      if (muon2==NULL) {muon2=muonAll; continue;}
-      if (muonAll->pt()>muon2->pt()) muon2 = muonAll;
-
-      if (debug){
-	std::cout << ">>> Reco Muon" << std::endl;
-	std::cout << "\n----------------------------------------------------" << std::endl;
-	std::cout << "\t energy (ecal, hcal, ho): " << muon1->calEnergy().em << ", " << muon1->calEnergy().had << ", " << muon1->calEnergy().ho << std::endl;
-	std::cout << "\t isolation dR=0.3 (sumPt, emEt, hadEt, hoEt, nTracks, nJets): " << muon1->isolationR03().sumPt << ", " << muon1->isolationR03().emEt << ", " << muon1->isolationR03().hadEt << ", " << muon1->isolationR03().hoEt << ", " << muon1->isolationR03().nTracks << ", " << muon1->isolationR03().nJets << std::endl;
-	std::cout << "\t isolation dR=0.5 (sumPt, emEt, hadEt, hoEt, nTracks, nJets): " << muon1->isolationR05().sumPt << ", " << muon1->isolationR05().emEt << ", " << muon1->isolationR05().hadEt << ", " << muon1->isolationR05().hoEt << ", " << muon1->isolationR05().nTracks << ", " << muon1->isolationR05().nJets << std::endl;
-	std::cout << "\t # matches: " << muon1->numberOfMatches() << std::endl;
-	std::cout << "\t # caloCompatibility: " << muon1->caloCompatibility() << std::endl;  
-	std::cout << "" << std::endl;
-      }
-
+      MuonVector.push_back(muonAll);
     }
+  }
 
-    MuonVector.push_back(muon1);
-    MuonVector.push_back(muon2);
+  // Sorting Vector
+  std::sort(MuonVector.begin(), MuonVector.end(), orderPT());
 
-    double muon1SumPtR03 = muon1->isolationR03().sumPt;
-    double muon1EmEtR03 = muon1->isolationR03().emEt;
-    double muon1HadEtR03 = muon1->isolationR03().hadEt;
-    double muon1SumPtR05 = muon1->isolationR05().sumPt;
-    double muon1EmEtR05 = muon1->isolationR05().emEt;
-    double muon1HadEtR05 = muon1->isolationR05().hadEt;
+  if(MuonVector.size()>1){
 
-    double muon2SumPtR03 = muon2->isolationR03().sumPt;
-    double muon2EmEtR03 = muon2->isolationR03().emEt;
-    double muon2HadEtR03 = muon2->isolationR03().hadEt;
-    double muon2SumPtR05 = muon2->isolationR05().sumPt;
-    double muon2EmEtR05 = muon2->isolationR05().emEt;
-    double muon2HadEtR05 = muon2->isolationR05().hadEt;
+    double muon1SumPtR03 = MuonVector[0]->isolationR03().sumPt;
+    double muon1EmEtR03 = MuonVector[0]->isolationR03().emEt;
+    double muon1HadEtR03 = MuonVector[0]->isolationR03().hadEt;
+    double muon1SumPtR05 = MuonVector[0]->isolationR05().sumPt;
+    double muon1EmEtR05 = MuonVector[0]->isolationR05().emEt;
+    double muon1HadEtR05 = MuonVector[0]->isolationR05().hadEt;
 
-    double relIsoFirstMuonDr03 = (muon1SumPtR03 + muon1EmEtR03 + muon1HadEtR03)/muon1->pt();
-    double relIsoSecondMuonDr03 = (muon2SumPtR03 + muon2EmEtR03 + muon2HadEtR03)/muon2->pt();
-    double relIsoFirstMuonDr05 = (muon1SumPtR05 + muon1EmEtR05 + muon1HadEtR05)/muon1->pt();
-    double relIsoSecondMuonDr05 = (muon2SumPtR05 + muon2EmEtR05 + muon2HadEtR05)/muon2->pt();
+    double muon2SumPtR03 = MuonVector[1]->isolationR03().sumPt;
+    double muon2EmEtR03 = MuonVector[1]->isolationR03().emEt;
+    double muon2HadEtR03 = MuonVector[1]->isolationR03().hadEt;
+    double muon2SumPtR05 = MuonVector[1]->isolationR05().sumPt;
+    double muon2EmEtR05 = MuonVector[1]->isolationR05().emEt;
+    double muon2HadEtR05 = MuonVector[1]->isolationR05().hadEt;
+
+    double relIsoFirstMuonDr03 = (muon1SumPtR03 + muon1EmEtR03 + muon1HadEtR03)/MuonVector[0]->pt();
+    double relIsoSecondMuonDr03 = (muon2SumPtR03 + muon2EmEtR03 + muon2HadEtR03)/MuonVector[1]->pt();
+    double relIsoFirstMuonDr05 = (muon1SumPtR05 + muon1EmEtR05 + muon1HadEtR05)/MuonVector[0]->pt();
+    double relIsoSecondMuonDr05 = (muon2SumPtR05 + muon2EmEtR05 + muon2HadEtR05)/MuonVector[1]->pt();
 
     // Dimuon Mass
     math::XYZTLorentzVector DimuonSystem(0.,0.,0.,0.);
-    DimuonSystem += muon1->p4();
-    DimuonSystem += muon2->p4();
+    DimuonSystem += MuonVector[0]->p4();
+    DimuonSystem += MuonVector[1]->p4();
     eventData.SetDiMuonMass(DimuonSystem.M());
     eventData.SetDiMuonPt(DimuonSystem.pt());
     eventData.SetDiMuonEta(DimuonSystem.eta());
     eventData.SetDiMuonPhi(DimuonSystem.phi());
-    eventData.SetMuonsN(MuonsN);
-    eventData.SetLeadingMuonPt(muon1->pt());
-    eventData.SetLeadingMuonEta(muon1->eta());
-    eventData.SetLeadingMuonPhi(muon1->phi());
-    eventData.SetLeadingMuonCharge(muon1->charge());
-    eventData.SetLeadingMuonP4(muon1->p4());
-    eventData.SetSecondMuonPt(muon2->pt());
-    eventData.SetSecondMuonEta(muon2->eta());
-    eventData.SetSecondMuonPhi(muon2->phi());
-    eventData.SetSecondMuonCharge(muon2->charge());
-    eventData.SetSecondMuonP4(muon2->p4());
+    eventData.SetMuonsN(MuonVector.size());
+    eventData.SetLeadingMuonPt(MuonVector[0]->pt());
+    eventData.SetLeadingMuonEta(MuonVector[0]->eta());
+    eventData.SetLeadingMuonPhi(MuonVector[0]->phi());
+    eventData.SetLeadingMuonCharge(MuonVector[0]->charge());
+    eventData.SetLeadingMuonP4(MuonVector[0]->p4());
+    eventData.SetSecondMuonPt(MuonVector[1]->pt());
+    eventData.SetSecondMuonEta(MuonVector[1]->eta());
+    eventData.SetSecondMuonPhi(MuonVector[1]->phi());
+    eventData.SetSecondMuonCharge(MuonVector[1]->charge());
+    eventData.SetSecondMuonP4(MuonVector[1]->p4());
 
     eventData.SetLeadingMuonSumPtR03(muon1SumPtR03);
     eventData.SetLeadingMuonEmEtR03(muon1EmEtR03);
@@ -574,17 +523,17 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
-      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.3))
+      if ((deltaR(track->eta(),track->phi(),MuonVector[0]->eta(),MuonVector[0]->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),MuonVector[1]->eta(),MuonVector[1]->phi()) > 0.3))
       {
 	goodTracksCount03++;
       }
 
-      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.4))
+      if ((deltaR(track->eta(),track->phi(),MuonVector[0]->eta(),MuonVector[0]->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),MuonVector[1]->eta(),MuonVector[1]->phi()) > 0.4))
       {
 	goodTracksCount04++;
       }
 
-      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.5))
+      if ((deltaR(track->eta(),track->phi(),MuonVector[0]->eta(),MuonVector[0]->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),MuonVector[1]->eta(),MuonVector[1]->phi()) > 0.5))
       {
 	goodTracksCount05++;
       }
@@ -596,12 +545,11 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     eventData.SetTracksNonConeMuon05(goodTracksCount05);
 
     if (debug){
-      std::cout << "NMuons: " << MuonsN << std::endl;
-      std::cout << "NSize: " << muons->size() << std::endl;
-      std::cout << "Muon, pT 1: " << muon1->pt() << std::endl;
-      std::cout << "Muon, pT 2: " << muon2->pt() << std::endl;
-      std::cout << "Muon, eta 1: " << muon1->eta() << std::endl;
-      std::cout << "Muon, eta 2: " << muon2->eta() << std::endl;
+      std::cout << "NMuons: " << MuonVector.size() << std::endl;
+      std::cout << "Muon, pT 1: " << MuonVector[0]->pt() << std::endl;
+      std::cout << "Muon, pT 2: " << MuonVector[1]->pt() << std::endl;
+      std::cout << "Muon, eta 1: " << MuonVector[0]->eta() << std::endl;
+      std::cout << "Muon, eta 2: " << MuonVector[1]->eta() << std::endl;
       std::cout << "Eta Z: " << DimuonSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DimuonSystem.phi() << std::endl;
       std::cout << "pT Z: " << DimuonSystem.pt() << std::endl;
@@ -729,298 +677,367 @@ void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const ed
 
 void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug=false;
+  bool debug = false;
 
-  //Variable declaration
-  int count=0;
-  int Nstable_gen=0;
-  math::XYZTLorentzVector part(0.,0.,0.,0.);
-  math::XYZTLorentzVector partVis(0.,0.,0.,0.);
-  math::XYZTLorentzVector partZ(0.,0.,0.,0.);
-  double sumECastor_minus_gen=0;
-  double sumECastor_plus_gen=0;
-  double sumEZDC_minus_gen=0;
-  double sumEZDC_plus_gen=0;
-  double etaOutcomingProton=0;
-  double energyOutcomingProton=0;
-  double mostEnergeticXL=0;
-  double mostEnergeticXLNum=0;
-  std::vector<double> eta_gen_vec;
-  double xi_Z_gen_minus=0;
-  double xi_Z_gen_plus=0;
-  double etaZ_gen=0;
-  double energyZ_gen=0;
-  double p_diss_mass=0;
-  double p_diss=0;
-  double xL_p_diss=0;
+  double sumECastorGen = 0.;
+  double sumECastorGenCMS = 0.;
 
-  double xL_etaGTP5=0;
-  double xL_etaLTM5=0;
-  int xL_LTM5Num=0;
-  int xL_GTP5Num=0;
+  genVector.clear();
+  genCMSVector.clear();
+  genProtonVector.clear();
 
-  std::vector<double> genpt;
-  std::vector<double> tracks;
-  std::vector<double> eta;
-  std::vector<double> etaPT;
-  std::vector<double> tracksPT;
-
-  edm::Handle<reco::GenParticleCollection> genParticles;     
-  event.getByLabel(genTag_,genParticles);  // standard PYTHIA collection
-
-  for(size_t i = 0; i < genParticles->size(); ++ i) {
-
-    const reco::GenParticle & p = (*genParticles)[i];
-
-    int pdg = p.pdgId();
-    int status = p.status();  	 
-    double eta_gen = p.eta();
-    double part_pt = p.pt();
-    double ener_gen= p.energy();
-    double px_gen  = p.px();
-    double py_gen  = p.py();
-    double pz_gen  = p.pz();
-    double mass_gen= p.mass();
-    bool electronFromZ=false;
-    int motherId=0;
-
-    if (  p.mother() ) motherId =  p.mother()->pdgId();
-
-    math::XYZTLorentzVector tmp( px_gen ,py_gen , pz_gen ,ener_gen );
-
-    if (fabs(pdg)==11 || fabs(pdg)==22){ 	    
-      if (motherId==23) {
-	electronFromZ=true;
-	partZ+=tmp;
-      }
-    }
-
-    if (count==2) {    /// only works for MC Pompyt dissociative
-      p_diss_mass= mass_gen;
-      p_diss= pz_gen;
-      if ( pdg == 2212){
-	etaOutcomingProton= eta_gen;
-	energyOutcomingProton= ener_gen;
-      }
-    }
-
-    if (( pdg == 23)){
-      xi_Z_gen_minus=( ener_gen - pz_gen )/7000;
-      xi_Z_gen_plus=( ener_gen + pz_gen )/7000;
-      etaZ_gen=eta_gen;
-      energyZ_gen= ener_gen;
-    }
-
-    if (status == 1) 
-    {
-      //// vector to find gaps (cut at 1 GeV in energy)
-      if  ( ( fabs(eta_gen) <= 1.5  && ener_gen > energyPFThresholdBar_ )  ||
-	  (fabs(eta_gen) > 1.5 && fabs(eta_gen) <= 3 && ener_gen > energyPFThresholdEnd_) ||
-	  (fabs(eta_gen) > 3 && ener_gen >energyPFThresholdHF_)  ) {
-
-	eta_gen_vec.push_back( eta_gen);
-      }
-
-      if (  count>2) {   
-	part+=tmp;
-      }
-
-      if (  (fabs(eta_gen) < 4.7) && (part_pt > 0.10) ) {   // if particle has a chance to reach the detector ...
-	partVis+=tmp;
-      }
-
-      // new xL_gen definition (after Sasha)
-      if (count>=2 )
-      {
-	if (eta_gen > 4.7)  
-	{
-	  xL_etaGTP5 += pz_gen;
-	  xL_GTP5Num++;
-	}
-	if (eta_gen < -4.7)  
-	{
-	  xL_etaLTM5 += pz_gen;
-	  xL_LTM5Num++;
+  // Fill Gen
+  edm::Handle<reco::GenParticleCollection> genParticle;
+  event.getByLabel(genTag_, genParticle);
+  int gensize = genParticle->size();
+  int itGen;
+  if(genParticle->size()>0){
+    for(itGen=0; itGen < gensize; ++itGen){
+      const reco::GenParticle* genAll = &((*genParticle)[itGen]);
+      if (genAll->status() != 1) continue;
+      if (genAll->pdgId() == 2212 && genAll->pz()>0.7*beamEnergy_) genProtonVector.push_back(genAll);  
+      if (fabs(genAll->pdgId()) == 2212) continue;
+      if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGen+=genAll->energy();
+      genVector.push_back(genAll);
+      if(fabs(genAll->eta())<4.730){
+	if ( ( fabs(genAll->eta()) <= 1.5 && genAll->energy() > energyPFThresholdBar_ ) ||
+	    (fabs(genAll->eta()) > 1.5 && fabs(genAll->eta()) <= 3 && genAll->energy() > energyPFThresholdEnd_) ||
+	    (fabs(genAll->eta()) > 3 && genAll->energy() >energyPFThresholdHF_) ) {
+	  if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGenCMS+=genAll->energy();
+	  genCMSVector.push_back(genAll);      
 	}
       }
+    }
+  }
 
-      if (count>=2 ){
-	if (p_diss>0) {
-	  if ( xL_p_diss < pz_gen ){
-	    xL_p_diss= pz_gen;
-	  }
+  if(debug){
+    std::cout << "\nGen Particles Info:" << std::endl;
+    if(genVector.size()>0){
+      for(unsigned int i=0;i<genVector.size();i++){
+	std::cout << "GenParticle --> pdgId: " << genVector[i]->pdgId() << " | eta: " << genVector[i]->eta() << " | Energy [GeV]: " << genVector[i]->energy() << std::endl; 
+      }
+    }
+
+    if(genCMSVector.size()>0){
+      for(unsigned int i=0;i<genCMSVector.size();i++){
+	std::cout << "GenParticle at CMS --> pdgId: " << genCMSVector[i]->pdgId() << " | eta: " << genCMSVector[i]->eta() << " | Energy [GeV]: " << genCMSVector[i]->energy() << std::endl;
+      }
+    }
+  }
+
+  double xi_p_gen_plus = -999.;
+  double xi_p_gen_minus = -999.;
+
+  // Gen Proton Info
+  if(genProtonVector.size()>0){
+    std::sort(genProtonVector.begin(), genProtonVector.end(), orderAbsolutPZ());
+  }
+
+  if(genProtonVector.size()==1){
+    if(genProtonVector[0]->pz()>0){
+      xi_p_gen_plus = (1. - (genProtonVector[0]->pz()/beamEnergy_));
+      eventData.SetXiGenPlus(xi_p_gen_plus);
+      eventData.SetXiGenMinus(-999.);
+    }else{
+      xi_p_gen_minus = (1. + (genProtonVector[0]->pz()/beamEnergy_));
+      eventData.SetXiGenPlus(-999.);
+      eventData.SetXiGenMinus(xi_p_gen_minus);
+    }
+  }
+
+  if(genProtonVector.size()>1){
+    if(genProtonVector[0]->pz()>0){
+      xi_p_gen_plus = (1. - (genProtonVector[0]->pz()/beamEnergy_));
+    }else{
+      xi_p_gen_minus = (1. + (genProtonVector[0]->pz()/beamEnergy_));
+    }
+    if(genProtonVector[1]->pz()>0){
+      xi_p_gen_plus = (1. - (genProtonVector[1]->pz()/beamEnergy_));
+    }else{
+      xi_p_gen_minus = (1. + (genProtonVector[1]->pz()/beamEnergy_));
+    }
+    eventData.SetXiGenPlus(xi_p_gen_plus);
+    eventData.SetXiGenMinus(xi_p_gen_minus);
+  }
+
+  if(debug){
+    std::cout << "\nProtons Gen Info:" << std::endl;
+    std::cout << "Xi +: " << xi_p_gen_plus << std::endl;
+    std::cout << "Xi -: " << xi_p_gen_minus << std::endl;
+  }
+
+  // Gen Info
+  math::XYZTLorentzVector SPlus(0.,0.,0.,0.);
+  math::XYZTLorentzVector SMinus(0.,0.,0.,0.);
+
+  math::XYZTLorentzVector SPlusCMS(0.,0.,0.,0.);
+  math::XYZTLorentzVector SMinusCMS(0.,0.,0.,0.);
+
+  std::vector<std::pair<double, double> > GapVector;
+  std::vector<std::pair<double, double> > GapCMSVector;
+  GapVector.clear();
+  GapCMSVector.clear();
+
+  double E_pz_plus_gen = 0.;
+  double E_pz_minus_gen = 0.;
+  double et_expo_plus_gen = 0.;
+  double et_expo_minus_gen = 0.;
+
+  double E_pz_plus_gen_CMS = 0.;
+  double E_pz_minus_gen_CMS = 0.;
+  double et_expo_plus_gen_CMS = 0.;
+  double et_expo_minus_gen_CMS = 0.;
+
+  if(genVector.size()>0){
+    std::sort(genVector.begin(), genVector.end(), orderETA());
+
+    for(unsigned int i=0;i<genVector.size();i++){
+      math::XYZTLorentzVector tmp(genVector[i]->px(), genVector[i]->py(), genVector[i]->pz(), genVector[i]->energy());
+      E_pz_plus_gen += genVector[i]->energy()+genVector[i]->pz();
+      et_expo_plus_gen += genVector[i]->et()*pow(2.71,genVector[i]->eta());
+      E_pz_minus_gen += genVector[i]->energy()-genVector[i]->pz();
+      et_expo_minus_gen += genVector[i]->et()*pow(2.71,-genVector[i]->eta());
+      if(genVector[i]->eta()>0.){
+	SPlus+=tmp;
+      }else{
+	SMinus+=tmp;
+      }
+    }
+
+    if(debug){
+      if(genVector.size()>0){
+	std::cout << "\nGen Particles After Sort by Eta Info:" << std::endl;
+	for(unsigned int i=0;i<genVector.size();i++){
+	  std::cout << "Gen. Particles, eta: " << genVector[i]->eta() << std::endl;
 	}
-	if (p_diss<0) {
-	  if ( xL_p_diss > pz_gen ){
-	    xL_p_diss= pz_gen;
-	  }
+      }
+      std::cout << "\nReconstructed Variables Gen Info:" << std::endl;
+      std::cout << "Eta, Max: " << genVector[0]->eta() << std::endl;    
+      std::cout << "Eta, Min: " << genVector[genVector.size()-1]->eta() << std::endl;
+      std::cout << "PF Mass -: " << SMinus.M() << " [GeV]" << std::endl;
+      std::cout << "PF Mass +: " << SPlus.M() << " [GeV]" << std::endl;
+      std::cout << "PF Mass^2 -: " << SMinus.M2() << " [GeV]" << std::endl;
+      std::cout << "PF Mass^2 +: " << SPlus.M2() << " [GeV]" << std::endl;
+      std::cout << "E + pz: " << E_pz_plus_gen << " [GeV]" << std::endl;
+      std::cout << "E - pz: " << E_pz_minus_gen << " [GeV]" << std::endl;
+      std::cout << "Et*exp(+eta): " << et_expo_plus_gen << " [GeV]" << std::endl;
+      std::cout << "Et*exp(-eta): " << et_expo_minus_gen << " [GeV]" << std::endl;
+    }
+
+    eventData.SetEtaMaxGen(genVector[0]->eta());
+    eventData.SetEtaMinGen(genVector[genVector.size()-1]->eta());
+    eventData.SetMxGenMinus(SMinus.M());
+    eventData.SetMxGenPlus(SPlus.M());
+    eventData.SetMx2GenMinus(SMinus.M2());
+    eventData.SetMx2GenPlus(SPlus.M2());
+    eventData.SetEpluspzGen(E_pz_plus_gen);
+    eventData.SetEminuspzGen(E_pz_minus_gen);
+    eventData.SetEtExpoPlusGen(et_expo_plus_gen);
+    eventData.SetEtExpoMinusGen(et_expo_minus_gen);
+
+  }else{
+
+    eventData.SetEtaMaxGen(-999.);
+    eventData.SetEtaMinGen(-999.);
+    eventData.SetMxGenMinus(-999.);
+    eventData.SetMxGenPlus(-999.);
+    eventData.SetMx2GenMinus(-999.);
+    eventData.SetMx2GenPlus(-999.);
+    eventData.SetEpluspzGen(-999.);
+    eventData.SetEminuspzGen(-999.);
+    eventData.SetEtExpoPlusGen(-999.);
+    eventData.SetEtExpoMinusGen(-999.);
+
+  }
+
+  if(genVector.size()>1){
+    std::sort(genVector.begin(), genVector.end(), orderETA());
+    for(unsigned int i=0;i<genVector.size()-1;i++){
+      GapVector.push_back(std::make_pair(fabs(genVector[i+1]->eta()-genVector[i]->eta()),genVector[i]->eta()));
+    }
+  }
+
+  // GEN Find LRG
+  if(GapVector.size()>0){
+    if(debug) std::cout << "\nLooking Gap" << std::endl;
+    std::sort(GapVector.rbegin(), GapVector.rend());
+    for(unsigned int i=0;i<genVector.size()-1;i++){
+      if (debug) std::cout << "GapSize: " << GapVector[i].first << " | eta edge: " << GapVector[i].second << std::endl;
+    }
+    eventData.SetLrgGen(GapVector[0].first);
+  }else{
+    eventData.SetLrgGen(-999.);
+  } 
+
+  math::XYZTLorentzVector systemX(0.,0.,0.,0.);
+  math::XYZTLorentzVector systemY(0.,0.,0.,0.);
+  //double xi_mx = 0;
+
+  if(genVector.size()>0 && GapVector.size()>0){
+    std::sort(genVector.begin(), genVector.end(), orderETA());
+    std::sort(GapVector.rbegin(), GapVector.rend());
+
+    for(unsigned int i=0;i<genVector.size();i++){
+      math::XYZTLorentzVector tmp(genVector[i]->px(), genVector[i]->py(), genVector[i]->pz(), genVector[i]->energy());
+      if(genVector[i]->eta()>GapVector[0].second){
+	systemX += tmp;
+      }else{
+	systemY +=tmp;
+      }
+    }
+
+    //if (systemX.M2() > systemY.M2() && systemX.M2() > 0.) xi_mx = systemX.M2()/(4*beamEnergy_*beamEnergy_);
+    //else if (systemY.M2() > systemX.M2() && systemY.M2() > 0.) xi_mx = systemY.M2()/(4*beamEnergy_*beamEnergy_);
+
+    if(debug){
+      std::cout << "\nLooking Diffractive System" << std::endl;
+      std::cout << "Mx: " << systemX.M() << " [GeV]" << std::endl;
+      std::cout << "My: " << systemY.M() << " [GeV]" << std::endl;
+    }
+
+    eventData.SetMxGenLeft(systemY.M());
+    eventData.SetMxGenRight(systemX.M());
+    eventData.SetMx2GenLeft(systemY.M2());
+    eventData.SetMx2GenRight(systemX.M2());
+
+  }else{
+
+    eventData.SetMxGenLeft(-999.);
+    eventData.SetMxGenRight(-999.);
+    eventData.SetMx2GenLeft(-999.);
+    eventData.SetMx2GenRight(-999.);
+
+  }
+
+  // GEN CMS LRG
+  if(genCMSVector.size()>0){
+    std::sort(genCMSVector.begin(), genCMSVector.end(), orderETA());
+    for(unsigned int i=0;i<genCMSVector.size();i++){
+      math::XYZTLorentzVector tmp(genCMSVector[i]->px(), genCMSVector[i]->py(), genCMSVector[i]->pz(), genCMSVector[i]->energy());
+      E_pz_plus_gen_CMS += genCMSVector[i]->energy()+genCMSVector[i]->pz();
+      et_expo_plus_gen_CMS += genCMSVector[i]->et()*pow(2.71,genCMSVector[i]->eta());
+      E_pz_minus_gen_CMS += genCMSVector[i]->energy()-genCMSVector[i]->pz();
+      et_expo_minus_gen_CMS += genCMSVector[i]->et()*pow(2.71,-genCMSVector[i]->eta());
+      if(genCMSVector[i]->eta()>0.){
+	SPlusCMS+=tmp;
+      }else{
+	SMinusCMS+=tmp;
+      }
+    }
+
+    if(debug){
+      if(genVector.size()>0){
+	std::cout << "\nGen CMS Particles After Sort by Eta Info:" << std::endl;
+	for(unsigned int i=0;i<genCMSVector.size();i++){
+	  std::cout << "Gen. Particles CMS, eta: " << genCMSVector[i]->eta() << std::endl;
 	}
       }
+      std::cout << "\nReconstructed Variables CMS Gen Info:" << std::endl;
+      std::cout << "Eta, CMS Max: " << genCMSVector[0]->eta() << std::endl;
+      std::cout << "Eta, CMS Min: " << genCMSVector[genCMSVector.size()-1]->eta() << std::endl;
+      std::cout << "PF CMS Mass -: " << SMinusCMS.M() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass +: " << SPlusCMS.M() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass^2 -: " << SMinusCMS.M2() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass^2 +: " << SPlusCMS.M2() << " [GeV]" << std::endl;
+      std::cout << "E + pz, CMS: " << E_pz_plus_gen_CMS << " [GeV]" << std::endl;
+      std::cout << "E - pz, CMS: " << E_pz_minus_gen_CMS << " [GeV]" << std::endl;
+      std::cout << "Et*exp(+eta), CMS: " << et_expo_plus_gen_CMS << " [GeV]" << std::endl;
+      std::cout << "Et*exp(-eta), CMS: " << et_expo_minus_gen_CMS << " [GeV]" << std::endl;
+    }
 
-      if ( fabs(eta_gen)>5.2 && fabs(eta_gen)<6.6 ){
-	if (debug) std::cout<<"Particle in Castor, having eta "<<eta_gen<<" and energy "<< ener_gen<<std::endl;
-	if (eta_gen<0) sumECastor_minus_gen += ener_gen;
-	if (eta_gen>0) sumECastor_plus_gen += ener_gen;
-      }
+    eventData.SetEtaMaxGenCMS(genCMSVector[0]->eta());
+    eventData.SetEtaMinGenCMS(genCMSVector[genCMSVector.size()-1]->eta());
+    eventData.SetMxGenMinusCMS(SMinusCMS.M());
+    eventData.SetMxGenPlusCMS(SPlusCMS.M());
+    eventData.SetMx2GenMinusCMS(SMinusCMS.M2());
+    eventData.SetMx2GenPlusCMS(SPlusCMS.M2());
+    eventData.SetEpluspzGenCMS(E_pz_plus_gen_CMS);
+    eventData.SetEminuspzGenCMS(E_pz_minus_gen_CMS);
+    eventData.SetEtExpoPlusGenCMS(et_expo_plus_gen_CMS);
+    eventData.SetEtExpoMinusGenCMS(et_expo_minus_gen_CMS);
 
-      if ( fabs(eta_gen)>8.2  && ( pdg == 2112 || pdg == 22) ){
-	if (debug) std::cout<<"Particle in ZDC, having eta "<<eta_gen<<" and energy "<< ener_gen<<std::endl;
-	if (eta_gen<0) sumEZDC_minus_gen += ener_gen;
-	if (eta_gen>0) sumEZDC_plus_gen += ener_gen;
-      }      
-      Nstable_gen++;
+  }else{
 
-    }  // status =1
-    count++;
+    eventData.SetEtaMaxGenCMS(-999.);
+    eventData.SetEtaMinGenCMS(-999.);
+    eventData.SetMxGenMinusCMS(-999.);
+    eventData.SetMxGenPlusCMS(-999.);
+    eventData.SetMx2GenMinusCMS(-999.);
+    eventData.SetMx2GenPlusCMS(-999.);
+    eventData.SetEpluspzGenCMS(-999.);
+    eventData.SetEminuspzGenCMS(-999.);
+    eventData.SetEtExpoPlusGenCMS(-999.);
+    eventData.SetEtExpoMinusGenCMS(-999.);
 
-  } // loop over particles
-
-  //// Computing GAPs
-  const int  size = (int) eta_gen_vec.size();
-  int *sortedgen=   new int[size];
-  double *vgen = new double[size];
-  double eta_gap_limplus_gen = -10.0;
-  double eta_gap_limminus_gen = -10.0;
-
-  for (int i=0; i<size; i++) {
-    vgen[i] = eta_gen_vec[i];
-    if (debug) std::cout<<vgen[i]<<std::endl;
   }
-  TMath::Sort(size, vgen, sortedgen, true);
 
-  if (size > 1) {
-    double *diff = new double[size-1];
-    int *diffsorted = new int[size-1];
-    for (int i=0; i<(size-1); i++) {
-      diff[i] = fabs(eta_gen_vec[sortedgen[i+1]]-eta_gen_vec[sortedgen[i]]);
-      if (debug) {
-	std::cout<<" eta " << i << " size " << size << " diff "<< diff[i]<< std::endl;
-	std::cout<<" GEN etas "  << " = " << eta_gen_vec[sortedgen[i+1]] << " - " <<  eta_gen_vec[sortedgen[i]] <<  " GAP diff "<< diff[i] << std::endl;
-	std::cout<<" GEN etas "  << " = " << eta_gen_vec[sortedgen[i]] << std::endl;
+  if(genCMSVector.size()>1){
+    std::sort(genCMSVector.begin(), genCMSVector.end(), orderETA());
+    for(unsigned int i=0;i<genCMSVector.size()-1;i++){
+      GapCMSVector.push_back(std::make_pair(fabs(genCMSVector[i+1]->eta()-genCMSVector[i]->eta()),genCMSVector[i]->eta()));
+    }
+  }
+
+  // GEN CMS Find LRG
+  if(GapCMSVector.size()>0){
+    if (debug) std::cout << "\nLooking Gap CMS" << std::endl;
+    std::sort(GapCMSVector.rbegin(), GapCMSVector.rend());
+    for(unsigned int i=0;i<genCMSVector.size()-1;i++){
+      if (debug) std::cout << "GapSize CMS: " << GapCMSVector[i].first << " | eta edge: " << GapCMSVector[i].second << std::endl;
+    }
+    eventData.SetLrgGenCMS(GapCMSVector[0].first);
+  }else{
+    eventData.SetLrgGenCMS(-999.);
+  }
+
+  math::XYZTLorentzVector systemXCMS(0.,0.,0.,0.);
+  math::XYZTLorentzVector systemYCMS(0.,0.,0.,0.);
+  //double xi_mx_CMS = 0;
+
+  if(genCMSVector.size()>0 && GapCMSVector.size()>0){
+    std::sort(genCMSVector.begin(), genCMSVector.end(), orderETA());
+    std::sort(GapCMSVector.rbegin(), GapCMSVector.rend());
+    for(unsigned int i=0;i<genCMSVector.size();i++){
+      math::XYZTLorentzVector tmp(genCMSVector[i]->px(), genCMSVector[i]->py(), genCMSVector[i]->pz(), genCMSVector[i]->energy());
+      if(genCMSVector[i]->eta()>GapCMSVector[0].second){
+	systemXCMS += tmp;
+      }else{
+	systemYCMS +=tmp;
       }
     }
 
-    TMath::Sort(size-1, diff, diffsorted, true);
+    //if (systemXCMS.M2() > systemYCMS.M2() && systemXCMS.M2() > 0.) xi_mx_CMS = systemXCMS.M2()/(4*beamEnergy_*beamEnergy_);
+    //else if (systemYCMS.M2() > systemXCMS.M2() && systemYCMS.M2() > 0.) xi_mx_CMS = systemYCMS.M2()/(4*beamEnergy_*beamEnergy_);
 
-    //checking the max gap
-    double max_eta_gap_gen=diff[diffsorted[0]];
-    eta_gap_limminus_gen = eta_gen_vec[sortedgen[diffsorted[0]+1]] ;
-    eta_gap_limplus_gen = eta_gen_vec[sortedgen[diffsorted[0]]] ;
-
-    if (debug) std::cout << "GEN eta ranges " <<  eta_gap_limplus_gen  << " " <<  eta_gap_limminus_gen  << std::endl;
-    eventData.SetPrimaryGapMaxGen(max_eta_gap_gen);
-
-    if (size>2) {
-      double max_second_eta_gap_gen=diff[diffsorted[1]];
-      eventData.SetSecondGapMaxGen(max_second_eta_gap_gen);
-      if (debug) std::cout<<" diff  " << diff[diffsorted[0]] << " sec " << diff[diffsorted[1]] << " diff size "<< diff[size-2] << std::endl;
+    if(debug){
+      std::cout << "\nLooking CMS Diffractive System" << std::endl;
+      std::cout << "Mx: " << systemXCMS.M() << " [GeV]" << std::endl;
+      std::cout << "My: " << systemYCMS.M() << " [GeV]" << std::endl;
     }
 
-    delete [] diff;
-    delete [] diffsorted;
+    eventData.SetMxGenLeftCMS(systemYCMS.M());
+    eventData.SetMxGenRightCMS(systemXCMS.M());
+    eventData.SetMx2GenLeftCMS(systemYCMS.M2());
+    eventData.SetMx2GenRightCMS(systemXCMS.M2());
+
+  }else{
+
+    eventData.SetMxGenLeftCMS(-999.);
+    eventData.SetMxGenRightCMS(-999.);
+    eventData.SetMx2GenLeftCMS(-999.);
+    eventData.SetMx2GenRightCMS(-999.);
+
   }
 
-  delete [] sortedgen;
-  delete [] vgen;
-
-  math::XYZTLorentzVector dataMassG_plus(0.,0.,0.,0.);
-  math::XYZTLorentzVector dataMassG_minus(0.,0.,0.,0.);
-  int nplusG =0;
-  int nminusG =0;
-  int numseltracks =0;
-
-  for(size_t i = 0; i < genParticles->size(); ++ i) {
-    const reco::GenParticle & p = (*genParticles)[i];
-    int status = p.status();  	 
-    double eta_gen = p.eta();
-    int charge = p.charge();
-    double pt = p.pt();
-
-    if( status == 1 && p.energy() > 1 ) {
-
-      math::XYZTLorentzVector tmp( p.px(),p.py(),p.pz(),p.energy());
-
-      if ( eta_gen >= eta_gap_limplus_gen ) {
-	dataMassG_plus+=tmp;
-	nplusG++;
-      }
-      else {
-	dataMassG_minus+=tmp;
-	nminusG++;
-      }
-    }
-
-    if ( status == 1 ) {
-      if ( charge && fabs(eta_gen)<2.6 &&  pt >= 0.1 ) {  // !!  condition for xsec per 3 charged prompt particles
-	numseltracks++;
-	genpt.push_back(pt);
-	eta.push_back(eta_gen);
-      }
-    }
-  } // end of genparticle loop
-
-  double Mx2_gen=partVis.M2(); /// massaquadro visibile generata
-  math::XYZTLorentzVector NOZ=partVis-partZ;
-  double Mx2_NOZ_gen=NOZ.M2();
-  if (debug) {
-    std::cout << "Mx2_gen is "<< Mx2_gen<<" while eta of the outcoming proton is "<< etaOutcomingProton <<" and the energy "<< energyOutcomingProton << std::endl;
+  if(debug){
+    std::cout << "\nCastor Energy" << std::endl;
+    std::cout << "All particles: " << sumECastorGen << " [GeV]" << std::endl;
+    std::cout << "CMS: " << sumECastorGenCMS << " [GeV]" << std::endl;
+    std::cout << "" << std::endl;
   }
 
-  mostEnergeticXL = xL_etaGTP5/3500.;
-  mostEnergeticXLNum = xL_GTP5Num ;
-  if (fabs(xL_etaGTP5)<fabs(xL_etaLTM5)) 
-  {
-    mostEnergeticXL = xL_etaLTM5/3500.;
-    mostEnergeticXLNum = xL_LTM5Num ;
-  }
-
-  if (debug) std::cout << "* XLgen " << mostEnergeticXL << " num " << mostEnergeticXLNum << " + " << xL_etaGTP5 << " - " << xL_etaLTM5 <<  std::endl;
-
-  const int  size2 = (int) genpt.size();
-  int *sorted = new int[size2];
-  double *vv = new double[size2];
-  for (int i=0; i<size2; i++) {
-    vv[i] = genpt[i];
-  }
-  TMath::Sort(size2, vv, sorted, true);
-  for (int i=0; i<size2; i++) {
-    tracks.push_back(genpt[sorted[i]]);
-    etaPT.push_back(eta[sorted[i]]);
-    if (i>30) break;
-  }  //  comes out size of 32!
-
-  eventData.SetTracksPtGen(tracks);
-  eventData.SetEtaOfTracksPtGen(etaPT);
-  eventData.SetNTracksGen(tracks.size());
-
-  genpt.clear();
-  eta.clear();
-
-  delete [] sorted;
-  delete [] vv;
-
-  eventData.SetMx2PlusGen(dataMassG_plus.M2());
-  eventData.SetMx2MinusGen(dataMassG_minus.M2());
-  eventData.SetMx2Gen(Mx2_NOZ_gen);
-  eventData.SetMx2ZGen(Mx2_gen);
-  eventData.SetNMx2PlusGen(nplusG);
-  eventData.SetNMx2MinusGen(nminusG);
-  eventData.SetEtaGaplimPlusGen(eta_gap_limplus_gen);
-  eventData.SetEtaGaplimMinusGen(eta_gap_limminus_gen);
-  eventData.SetNParticlesGen(Nstable_gen);
-  eventData.SetsumECastorMinusGen(sumECastor_minus_gen);
-  eventData.SetsumECastorPlusGen(sumECastor_plus_gen);
-  eventData.SetsumEZDCMinusGen(sumEZDC_minus_gen);
-  eventData.SetsumEZDCPlusGen(sumEZDC_plus_gen);
-  eventData.SetEtaOutcomingProtonGen(etaOutcomingProton);
-  eventData.SetxLGen(mostEnergeticXL);
-  eventData.SetxLMostEnergeticGen(mostEnergeticXLNum);
-  eventData.SetxiZMinusGen(xi_Z_gen_minus);
-  eventData.SetxiZPlusGen(xi_Z_gen_plus);
-  eventData.SetEtaZGen(etaZ_gen);
-  eventData.SetEnergyZGen(energyZ_gen);
-  eventData.SetpDissMassGen(p_diss_mass);
-  eventData.SetxLpDissMass(xL_p_diss);
+  eventData.SetsumECastorMinusGen(sumECastorGen);
+  eventData.SetsumECastorMinusGenCMS(sumECastorGenCMS);
 
 }
 
@@ -1033,10 +1050,12 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
   bool debug = false;
 
-  double etaMax=-999;
-  double etaMin=999;
-  double Epz_plus=0;  
-  double Epz_minus=0;  
+  towerVector.clear();
+
+  double Epz_plus=0.;  
+  double Epz_minus=0.;  
+  double Et_eta_plus=0.;
+  double Et_eta_minus=0.;
 
   int nTowersHF_plus = 0;
   int nTowersHF_minus = 0;
@@ -1076,20 +1095,18 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
   double sumETEB_minus = 0.;
   double sumETEE_plus = 0.;
   double sumETEE_minus = 0.;
-  double xi_Calo_minus =0;
-  double xi_Calo_plus =0;
 
   edm::Handle<CaloTowerCollection> towerCollectionH;
   event.getByLabel(caloTowerTag_,towerCollectionH);
-  const CaloTowerCollection& towerCollection = *towerCollectionH;
 
-  CaloTowerCollection::const_iterator calotower;
-  calotower = towerCollection.begin();
-  CaloTowerCollection::const_iterator calotowers_end = towerCollection.end();
+  int towersize = towerCollectionH->size();
+  int itTower;
 
-  for(; calotower != calotowers_end; ++calotower) {
+  for(itTower=0; itTower < towersize; ++itTower){
+    const CaloTower* calotower = &((*towerCollectionH)[itTower]);
 
-    if (fabs(calotower->eta())> 4.7) continue;   /// excluding ring12 and ring13 of HF
+    // Excluding HF Calorimeter Rings 12, 13, 29, 30, 40, 41
+    if( ( (fabs(calotower->eta()) >= 2.866) && (fabs(calotower->eta()) < 3.152) ) || (fabs(calotower->eta()) >= 4.730) ) continue;
 
     bool hasHCAL = false;
     bool hasHF = false;
@@ -1117,6 +1134,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 	else if(ecalSubDet == EcalBarrel) hasEB = true;
       }
     }
+
     int zside = calotower->zside();
     double caloTowerEnergy = calotower->energy();
     double caloTowerEmEnergy = calotower->emEnergy();
@@ -1258,15 +1276,35 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
     if(CalAboveTh)
     {
-      if (calotower->eta() >= etaMax) etaMax=calotower->eta();
-      if (calotower->eta() <= etaMin) etaMin=calotower->eta();
-      xi_Calo_minus += caloTowerEt * pow(2.71,-calotower->eta()) / (7000);
-      xi_Calo_plus += caloTowerEt * pow(2.71,calotower->eta()) / (7000);
+      towerVector.push_back(calotower);
+      Et_eta_minus += caloTowerEt * pow(2.71,-calotower->eta());
+      Et_eta_plus += caloTowerEt * pow(2.71,calotower->eta());
       Epz_plus  += caloTowerEnergy + caloTowerPz;
       Epz_minus += caloTowerEnergy - caloTowerPz;
     }
 
   }  ////has to close calotower loop
+
+  // Towers, Calorimeters, ordered
+  std::sort(towerVector.begin(), towerVector.end(), orderETA()); 
+  if(towerVector.size()>0){
+    eventData.SetEtaCaloMax(towerVector[0]->eta());
+    eventData.SetEtaCaloMin(towerVector[towerVector.size()-1]->eta());
+    if(debug){
+      std::cout << "\nTowers Info: " << std::endl;
+      for(unsigned int i=0;i<towerVector.size();i++){
+	std::cout << "Tower Eta: " << towerVector[i]->eta() << " | Phi: " << towerVector[i]->phi() << std::endl;
+      }
+      std::cout << "Calorimeter, Eta Max: " << towerVector[0]->eta() << " | Eta Min: " << towerVector[towerVector.size()-1]->eta() << std::endl;
+      std::cout << "Calorimeter, Et*exp(eta): " << Et_eta_plus << std::endl;
+      std::cout << "Calorimeter, Et*exp(-eta): " << Et_eta_minus << std::endl;
+      std::cout << "Calorimeter, E + pz: " << Epz_plus << std::endl;
+      std::cout << "Calorimeter, E - pz: " << Epz_minus << std::endl;
+    }
+  }else{
+    eventData.SetEtaCaloMax(999.);
+    eventData.SetEtaCaloMin(-999.);
+  }
 
   eventData.SetSumEHFPlus(sumEHF_plus);
   eventData.SetSumEHF_SPlus(sumEHF_S_plus);
@@ -1298,13 +1336,10 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
   eventData.SetSumEEBMinus(sumEEB_minus);
   eventData.SetSumEtEBMinus(sumETEB_minus);
 
-  eventData.SetEPZCaloPlus(Epz_plus);
-  eventData.SetEPZCaloMinus(Epz_minus);
-  eventData.SetXiCaloPlus(xi_Calo_plus);
-  eventData.SetXiCaloMinus(xi_Calo_minus);
-
-  eventData.SetEtaCaloMax(etaMax);
-  eventData.SetEtaCaloMin(etaMin);
+  eventData.SetEpluspzCalo(Epz_plus);
+  eventData.SetEminuspzCalo(Epz_minus);
+  eventData.SetEtExpoPlusCalo(Et_eta_plus);
+  eventData.SetEtExpoMinusCalo(Et_eta_minus);
 
   eventData.SetMultiplicityHFPlus(nTowersHF_plus);
   eventData.SetMultiplicityHEPlus(nTowersHE_plus);
@@ -1322,527 +1357,38 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
 void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug=false;
-  bool debugxi=false;
-  bool debugOrder=false;
+  bool debug=true;
 
-  std::vector<double> etas;
-  double etaTimesEnergy=0.;
-  double Epz_PF_plus=0.;
-  double Epz_PF_minus=0.;
-  double xi_PF_minus=0.;
-  double xi_PF_plus=0.;
-  double sumpx=0.;
-  double sumpy=0.;
-  double sumpz=0.;
-  double sumpxModule=0.;
-  double sumpyModule=0.;
-  double sumpzModule=0.;
-  double sumEnergyPF=0.;
-
-  int nPart_PF=0;
-
-  std::vector<double> electronEnergy;
-  std::vector<double> muEnergy;
+  //PFMuonVector.clear();
+  //PFElectronVector.clear();
+  PFVector.clear();
 
   edm::Handle<reco::VertexCollection> Vertexes;
-  event.getByLabel(PVtxCollectionTag_, Vertexes); 
+  event.getByLabel(PVtxCollectionTag_, Vertexes);
 
   edm::Handle <reco::PFCandidateCollection> PFCandidates;
   event.getByLabel(pfTag_,PFCandidates);
-  reco::PFCandidateCollection::const_iterator iter;
 
-  eventData.SetVertex(Vertexes->size());
-
-  PFMuonVector.clear();
-  PFElectronVector.clear();
-
-  // Fill All Electrons and Muons from Particle Flow Objects
-  int NMuonsPF = 0;
-  int NElectronsPF = 0;
-  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
-
-    const reco::PFCandidate *particle = &(*iter);
-
-    //eta cut - excluding ring 12 13 HF  
-    if (fabs(particle->eta())>4.7) continue;
-    if (particle->particleId()==reco::PFCandidate::e) ++NElectronsPF;
-    if (particle->particleId()==reco::PFCandidate::mu) ++NMuonsPF;
-
-  }
-
-  const reco::PFCandidate* pf1e=NULL;
-  const reco::PFCandidate* pf2e=NULL;
-  const reco::PFCandidate* pf1m=NULL;
-  const reco::PFCandidate* pf2m=NULL;
   int pfsize = PFCandidates->size();
-
-  for(int i=0; i < pfsize; ++i){
-
-    const reco::PFCandidate* pfAll = &((*PFCandidates)[i]);
-
-    if(NElectronsPF > 1){
-
-      if (pfAll->particleId()==reco::PFCandidate::e){
-	const reco::PFCandidate* pfAlle = &((*PFCandidates)[i]);
-	if (pfAlle==NULL) continue;
-	if (pf1e==NULL) {pf1e=pfAlle; continue;}
-	if (pfAlle->pt()>pf1e->pt()) {
-	  pf2e=pf1e;
-	  pf1e=pfAlle;
-	  continue;
-	}
-	if (pf2e==NULL) {pf2e=pfAlle; continue;}
-	if (pfAlle->pt()>pf2e->pt()) pf2e = pfAlle;
-      }  
-    }  
-    if(NMuonsPF > 1){
-      if (pfAll->particleId()==reco::PFCandidate::mu){
-	const reco::PFCandidate* pfAllm = &((*PFCandidates)[i]);
-	if (pfAllm==NULL) continue;
-	if (pf1m==NULL) {pf1m=pfAllm; continue;}
-	if (pfAllm->pt()>pf1m->pt()) {
-	  pf2m=pf1m;
-	  pf1m=pfAllm;
-	  continue;
-	}
-	if (pf2m==NULL) {pf2m=pfAllm; continue;}
-	if (pfAllm->pt()>pf2m->pt()) pf2m = pfAllm;
-      }  
+  int itPF;
+  if(PFCandidates->size()>0){
+    for(itPF=0; itPF < pfsize; ++itPF){
+      const reco::PFCandidate* pfAll = &((*PFCandidates)[itPF]);
+      // Excluding HF Calorimeter Rings 12, 13, 29, 30, 40, 41
+      if( ( (fabs(pfAll->eta()) >= 2.866) && (fabs(pfAll->eta()) < 3.152) ) || (fabs(pfAll->eta()) >= 4.730) ) continue;
+      PFVector.push_back(pfAll);
     }
   }
 
-  if(NMuonsPF > 1) {
-    PFMuonVector.push_back(pf1m);
-    PFMuonVector.push_back(pf2m);
-  }
-  if(NElectronsPF > 1){
-    PFElectronVector.push_back(pf1e);
-    PFElectronVector.push_back(pf2e);
-  }
+  // Sorting Vector
+  std::sort(PFVector.begin(), PFVector.end(), orderETA());
 
-  //Print PF Objects
-  if(debugOrder){
-    if(PFMuonVector.size()>1){
-      for (unsigned int i=0;i<PFMuonVector.size();i++){
-	std::cout << "PF Muon, pT: " << PFMuonVector[i]->pt() << " GeV | eta: " << PFMuonVector[i]->eta() << std::endl;
-      }
-    }
+  if(PFVector.size()>0){
 
-    //Print PF Objects
-    if(MuonVector.size()>1){
-      for (unsigned int i=0;i<MuonVector.size();i++){
-	std::cout << "Muon, pT: " << MuonVector[i]->pt() << " GeV | eta: " << MuonVector[i]->eta() << std::endl;
-      }
-    }
-
-    //Print PF Objects
-    if(PFElectronVector.size()>1){
-      for (unsigned int i=0;i<PFElectronVector.size();i++){
-	std::cout << "PF Electron, pT: " << PFElectronVector[i]->pt() << " GeV | eta: " << PFElectronVector[i]->eta() << std::endl;
-      }
-    }
-
-    //Print PF Objects
-    if(ElectronVector.size()>1){
-      for (unsigned int i=0;i<ElectronVector.size();i++){
-	std::cout << "Electron, pT: " << ElectronVector[i]->pt() << " GeV | eta: " << ElectronVector[i]->eta() << std::endl;
-      }
+    for(unsigned int i=0;i<PFVector.size();i++){
+      std::cout << "PF Information --> pT: " << PFVector[i]->pt() << " [GeV] | eta: " << PFVector[i]->eta() << " | phi: " << PFVector[i]->phi() << std::endl;
     }
   }
-
-  math::XYZTLorentzVector ZBosonMuonPFSystem(0.,0.,0.,0.);
-  math::XYZTLorentzVector ZBosonElectronPFSystem(0.,0.,0.,0.);
-  math::XYZTLorentzVector ZBosonMuonSystem(0.,0.,0.,0.);
-  math::XYZTLorentzVector ZBosonElectronSystem(0.,0.,0.,0.);
-
-  bool z1 = false;
-  bool z2 = false;
-  bool z3 = false;
-  bool z4 = false;
-
-  if(PFMuonVector.size()>1){
-    ZBosonMuonPFSystem += PFMuonVector[0]->p4();
-    ZBosonMuonPFSystem += PFMuonVector[1]->p4();
-    if (ZBosonMuonPFSystem.M() > 60 && ZBosonMuonPFSystem.M() < 110.){
-      if(debugOrder)std::cout << "Mass Z, muon PF: " << ZBosonMuonPFSystem.M() << std::endl;
-      z1=true;
-    }
-  }
-
-  if(PFElectronVector.size()>1){
-    ZBosonElectronPFSystem += PFElectronVector[0]->p4();
-    ZBosonElectronPFSystem += PFElectronVector[1]->p4();
-    if (ZBosonElectronPFSystem.M() > 60 && ZBosonElectronPFSystem.M() < 110.){
-      if(debugOrder)std::cout << "Mass Z, electron PF: " << ZBosonElectronPFSystem.M() << std::endl;
-      z2=true;
-    }
-  }
-
-  if(MuonVector.size()>1){
-    ZBosonMuonSystem += MuonVector[0]->p4();
-    ZBosonMuonSystem += MuonVector[1]->p4();
-    if (ZBosonMuonSystem.M() > 60 && ZBosonMuonSystem.M() < 110.) {
-      if(debugOrder)std::cout << "Mass Z, muon: " << ZBosonMuonSystem.M() << std::endl;
-      z3=true;
-    }
-  }
-
-  if(ElectronVector.size()>1){
-    ZBosonElectronSystem += ElectronVector[0]->p4();
-    ZBosonElectronSystem += ElectronVector[1]->p4();
-    if (ZBosonElectronSystem.M() > 60 && ZBosonElectronSystem.M() < 110.){ 
-      if(debugOrder)std::cout << "Mass Z, electron: " << ZBosonElectronSystem.M() << std::endl;
-      z4=true;
-    }
-  }
-
-  // Compute Gap Size Excluding Z Candidates
-  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
-
-    const reco::PFCandidate *particle = &(*iter);
-    double et=particle->et();
-    double energy=particle->energy();
-    double pt=particle->pt();
-    double p=particle->p();
-    double px=particle->px();
-    double py=particle->py();
-    double pz=particle->pz();
-    double eta=particle->eta();
-    double charge=particle->charge();
-    double theta=particle->theta();
-
-    // Fill 2D TTree (eta,energy);
-
-    //eta cut - excluding ring 12 13 HF  
-    if (fabs(eta)>4.7) continue;
-
-    //int type=particle->particleId();
-
-    TLorentzVector tmp(px,py,pz,energy);
-
-    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
-				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
-    {        
-
-      nPart_PF++;
-
-      Epz_PF_plus+=p+p*TMath::Cos(theta);
-      Epz_PF_minus+=p-p*TMath::Cos(theta);
-      xi_PF_minus += et * pow(2.71,-eta) / (7000);
-      xi_PF_plus += et * pow(2.71,eta) / (7000);
-
-      etaTimesEnergy+=eta*energy;
-      sumpxModule +=fabs(px);
-      sumpyModule +=fabs(py);
-      sumpzModule +=fabs(pz);
-      sumpx +=px;
-      sumpy +=py;
-      sumpz +=pz;
-      sumEnergyPF +=energy;
-
-      if(particle->particleId()==reco::PFCandidate::mu){
-	if(PFMuonVector.size()>1){
-	  if(z1 && (PFMuonVector[0]->pt()==pt || PFMuonVector[1]->pt()==pt)) continue;
-	}
-	if(MuonVector.size()>1){
-	  if(z3 && (MuonVector[0]->pt()==pt || MuonVector[1]->pt()==pt)) continue;
-	}
-      }  
-
-      if(particle->particleId()==reco::PFCandidate::e){ 
-	if(PFElectronVector.size()>1){
-	  if(z2 && (PFElectronVector[0]->pt()==pt || PFElectronVector[1]->pt()==pt)) continue;
-	}
-	if(ElectronVector.size()>1){
-	  if(z4 && (ElectronVector[0]->pt()==pt || ElectronVector[1]->pt()==pt)) continue;
-	}
-      }
-
-      // Excluding Z from LRG calculation
-      if (debugOrder) std::cout << "Compute LRG, eta: " << eta << ", pT: "<< pt << " GeV" << std::endl;
-      etas.push_back(eta);
-
-    } 
-
-  }
-
-  eventData.SetXi_PF_minus(xi_PF_minus);
-  eventData.SetXi_PF_plus(xi_PF_plus);
-  eventData.SetEpz_PF_minus(Epz_PF_minus);
-  eventData.SetEpz_PF_plus(Epz_PF_plus);
-  eventData.SetMultiplicityPF(nPart_PF);
-  eventData.SetSumEtaTimesEnergyPF(etaTimesEnergy);
-  eventData.SetSumpxModulePF(sumpxModule);
-  eventData.SetSumpyModulePF(sumpyModule);
-  eventData.SetSumpzModulePF(sumpzModule);
-  eventData.SetSumpxPF(sumpx);
-  eventData.SetSumpyPF(sumpy);
-  eventData.SetSumpzPF(sumpz);
-  eventData.SetSumEnergyPF(sumEnergyPF);
-
-  //// Computing GAPs
-  //// adding two fake entries at +-4.9 in etas!!!
-  etas.push_back(4.9);
-  etas.push_back(-4.9);
-
-  const int  size = (int) etas.size();
-  int *sorted = new int[size];
-  double *v = new double[size];
-  double eta_gap_limplus = -10.0;
-  double eta_gap_limminus = -10.0;
-
-  for (int i=0; i<size; i++) {
-    v[i] = etas[i];
-    if (debug) std::cout<<v[i]<<std::endl;
-  }
-  TMath::Sort(size, v, sorted, true);
-
-  if (size > 1) {
-    double *diff = new double[size-1];
-    int *diffsorted = new int[size-1];
-    for (int i=0; i<(size-1); i++) {
-      diff[i] = fabs(etas[sorted[i+1]]-etas[sorted[i]]);
-    }
-
-    TMath::Sort(size-1, diff, diffsorted, true);
-
-    //checking the max gap
-    double max_eta_gap=diff[diffsorted[0]];
-    eta_gap_limminus = etas[sorted[diffsorted[0]+1]] ;
-    eta_gap_limplus = etas[sorted[diffsorted[0]]] ;
-
-    eventData.SetMaxGapPF(max_eta_gap);
-    eventData.SetLimPlusGapPF(eta_gap_limplus);
-    eventData.SetLimMinusGapPF(eta_gap_limminus);
-
-    if (size>2) {
-      double max_second_eta_gap=diff[diffsorted[1]];
-      if (debug) std::cout<<" diff  " << diff[diffsorted[0]] << " sec " << diff[diffsorted[1]] << " diff size "<< diff[size-2] <<std::endl;
-      eventData.SetSecondMaxGapPF(max_second_eta_gap);
-    }
-
-    else {
-      eventData.SetSecondMaxGapPF(-999.);
-    }
-
-    delete [] diff;
-    delete [] diffsorted;
-
-  }
-
-  else {
-
-    eventData.SetMaxGapPF(-999.);
-    eventData.SetSecondMaxGapPF(-999.);
-    eventData.SetLimPlusGapPF(-999.);
-    eventData.SetLimMinusGapPF(-999.);
-
-  }
-
-  delete [] sorted;
-  delete [] v;
-
-  //sorting electron energy
-  const int  size3 = (int) electronEnergy.size();
-  int *sorted3 = new int[size3];
-  double *v3 = new double[size3];
-
-  for (int i=0; i<size3; i++) {
-    v3[i] = electronEnergy[i];
-  }
-  TMath::Sort(size3, v3, sorted3, true);
-  for (int i=0; i<size3; i++) {
-    electronEnergy[i] = v3[sorted3[i]];
-  }
-
-  //sorting muon energy
-  const int  size4 = (int) muEnergy.size();
-  int *sorted4 = new int[size4];
-  double *v4 = new double[size4];
-
-  for (int i=0; i<size4; i++) {
-    v4[i] = muEnergy[i];
-  }
-  TMath::Sort(size4, v4, sorted4, true);
-  for (int i=0; i<size4; i++) {
-    muEnergy[i] = v4[sorted4[i]];
-  }
-  delete [] sorted3;
-  delete [] v3;
-  delete [] sorted4;
-  delete [] v4;
-
-  double MXsumPxPF = 0.;
-  double MXsumPyPF = 0.;
-  double MXsumPzPF = 0.;
-  double MXsumEPF = 0.;
-  double MYsumPxPF = 0.;
-  double MYsumPyPF = 0.;
-  double MYsumPzPF = 0.;
-  double MYsumEPF = 0.;
-  double xiMass = -999.;
-
-  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
-
-    const reco::PFCandidate *particle = &(*iter);
-    double energy=particle->energy();
-    double pt=particle->pt();
-    double eta=particle->eta();
-    double charge=particle->charge();
-
-    //eta cut - excluding ring 12 13 HF  
-    if (fabs(eta)>4.7) continue;
-
-    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
-				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
-    {        
-
-      if ( particle->eta() >= eta_gap_limplus ){
-	MXsumPxPF += particle->px();
-	MXsumPyPF += particle->py();
-	MXsumPzPF += particle->pz();
-	MXsumEPF += particle->energy();
-      }
-      else {
-	MYsumPxPF += particle->px();
-	MYsumPyPF += particle->py();
-	MYsumPzPF += particle->pz();
-	MYsumEPF += particle->energy();
-      }
-
-    } 
-
-  }
-
-  TLorentzVector M_x(MXsumPxPF,MXsumPyPF,MXsumPzPF,MXsumEPF);
-  TLorentzVector M_y(MYsumPxPF,MYsumPyPF,MYsumPzPF,MYsumEPF);
-
-  double massX2 = pow(M_x.M(),2);
-  double massY2 = pow(M_y.M(),2);
-
-  if (massX2 > massY2 && massX2 > 0.) xiMass = massX2/(7000.*7000.);
-  else if (massY2 > massX2 && massY2 > 0.) xiMass = massY2/(7000.*7000.);
-
-  if (debugxi) {
-    std::cout << "Xi Computation" << std::endl;
-    std::cout << ">>>>> Xi, including Z: " << xiMass << std::endl;
-  }
-
-  eventData.SetXiMass(xiMass);
-
-  //TLorentzVector dataMass_plus(0.,0.,0.,0.);
-  //TLorentzVector dataMass_minus(0.,0.,0.,0.);
-  int nplus =0;
-  int nminus =0;
-
-  double sumPTPFm = 0.;
-  double sumPTPFp = 0.;
-  double MXsumPxPFNoZ = 0.;
-  double MXsumPyPFNoZ = 0.;
-  double MXsumPzPFNoZ = 0.;
-  double MXsumEPFNoZ = 0.;
-  double MYsumPxPFNoZ = 0.;
-  double MYsumPyPFNoZ = 0.;
-  double MYsumPzPFNoZ = 0.;
-  double MYsumEPFNoZ = 0.;
-  double xiMassNoZ = -999.;
-
-  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
-    const reco::PFCandidate *particle = &(*iter);
-    double energy=particle->energy();
-    double pt=particle->pt();
-    double px=particle->px();
-    double py=particle->py();
-    double pz=particle->pz();
-    double eta=particle->eta();
-    double charge=particle->charge();
-
-    //eta cut - excluding ring 12 13 HF  
-    if (fabs(eta)>4.7) continue;
-
-    TLorentzVector tmp(px,py,pz,energy); 
-
-    if  (  (fabs(charge) >0 && pt >  pTPFThresholdCharged_ ) ||
-	(fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > energyPFThresholdBar_)  ||
-				 (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > energyPFThresholdEnd_) ||
-				 (fabs(eta) > 3 && energy >energyPFThresholdHF_) ) )   )
-    {
-
-      if(particle->particleId()==reco::PFCandidate::mu){
-	if(PFMuonVector.size()>1){
-	  if(z1 && (PFMuonVector[0]->pt()==pt || PFMuonVector[1]->pt()==pt)) continue;
-	}
-	if(MuonVector.size()>1){
-	  if(z3 && (MuonVector[0]->pt()==pt || MuonVector[1]->pt()==pt)) continue;
-	}
-      }
-
-      if(particle->particleId()==reco::PFCandidate::e){
-	if(PFElectronVector.size()>1){
-	  if(z2 && (PFElectronVector[0]->pt()==pt || PFElectronVector[1]->pt()==pt)) continue;
-	}
-	if(ElectronVector.size()>1){
-	  if(z4 && (ElectronVector[0]->pt()==pt || ElectronVector[1]->pt()==pt)) continue;
-	}
-      }
-
-      if ( eta >= eta_gap_limplus ){
-	//dataMass_plus+=tmp;
-	nplus++;
-	sumPTPFp += pt;
-	MXsumPxPFNoZ += particle->px();
-	MXsumPyPFNoZ += particle->py();
-	MXsumPzPFNoZ += particle->pz();
-	MXsumEPFNoZ += particle->energy();
-      }
-      else {
-	//dataMass_minus+=tmp;
-	nminus++;
-	sumPTPFm += pt;
-	MYsumPxPFNoZ += particle->px();
-	MYsumPyPFNoZ += particle->py();
-	MYsumPzPFNoZ += particle->pz();
-	MYsumEPFNoZ += particle->energy();
-      }
-
-      if (debugOrder) std::cout << "SUM, pT: Compute LRG, eta: " << eta << ", pT: "<< pt << " GeV" << std::endl;
-
-    }
-  }  // PF loop
-
-  if (sumPTPFp > sumPTPFm){
-    eventData.SetPTMaxGapMaxPF(sumPTPFp);
-    eventData.SetPTMinGapMaxPF(sumPTPFm);
-  }else{
-    eventData.SetPTMaxGapMaxPF(sumPTPFm);
-    eventData.SetPTMinGapMaxPF(sumPTPFp);
-  }
-
-  eventData.SetElectronEnergyPF(-999.); // First Electron, Fill Second Electron also. Eta, phi, pT and ISO from PF.
-  eventData.SetMuEnergyPF(-999.); // First Muon, Fill Second Muon also. Eta, phi, pT and ISO from PF.
-  eventData.SetMultiplicityGapPlusPF(nplus);
-  eventData.SetMultiplicityGapMinusPF(nminus);
-
-  TLorentzVector M_xNoz(MXsumPxPFNoZ,MXsumPyPFNoZ,MXsumPzPFNoZ,MXsumEPFNoZ);
-  TLorentzVector M_yNoz(MYsumPxPFNoZ,MYsumPyPFNoZ,MYsumPzPFNoZ,MYsumEPFNoZ);
-
-  double massX2NoZ = pow(M_xNoz.M(),2);
-  double massY2NoZ = pow(M_yNoz.M(),2);
-
-  if (massX2NoZ > massY2NoZ && massX2NoZ > 0.) xiMassNoZ = massX2NoZ/(7000.*7000.);
-  else if (massY2NoZ > massX2NoZ && massY2NoZ > 0.) xiMassNoZ = massY2NoZ/(7000.*7000.);
-
-  if (debugxi) {
-    std::cout << "Xi Computation" << std::endl;
-    std::cout << ">>>>> Xi, no Z: " << xiMassNoZ << std::endl;
-  }
-
-  eventData.SetXiMassNoZ(xiMassNoZ);
 
 }
 

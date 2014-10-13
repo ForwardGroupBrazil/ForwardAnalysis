@@ -100,33 +100,42 @@ class DiffractiveZEvent {
     void SetTracksPt(const std::vector<std::vector<double> >& fTracksPt) { TracksPt_ = fTracksPt; }
     void SetZDCdigifC(const std::vector<std::vector<double> >& fZDCdigifC) { ZDCdigifC_ = fZDCdigifC; }
 
-    void SetPrimaryGapMaxGen(double fPrimaryGapMaxGen)    { PrimaryGapMaxGen_     = fPrimaryGapMaxGen;}
-    void SetSecondGapMaxGen(double fSecondGapMaxGen)    { SecondGapMaxGen_    = fSecondGapMaxGen;}
-    void SetTracksPtGen(const std::vector<double>& fTracksPtGen)    { TracksPtGen_     = fTracksPtGen;}
-    void SetEtaOfTracksPtGen(const std::vector<double>& fEtaOfTracksPtGen)    { EtaOfTracksPtGen_     = fEtaOfTracksPtGen;}
-    void SetNTracksGen(int fNTracksGen)    { NTracksGen_     = fNTracksGen;}
-    void SetMx2PlusGen(double fMx2PlusGen)    { Mx2PlusGen_     = fMx2PlusGen;}
-    void SetMx2MinusGen(double fMx2MinusGen)    { Mx2MinusGen_     = fMx2MinusGen;}
-    void SetMx2Gen(double fMx2Gen)    { Mx2Gen_     = fMx2Gen;}
-    void SetMx2ZGen(double fMx2ZGen)    { Mx2ZGen_     = fMx2ZGen;}
-    void SetNMx2PlusGen(int fNMx2PlusGen)    { NMx2PlusGen_     = fNMx2PlusGen;}
-    void SetNMx2MinusGen(int fNMx2MinusGen)    { NMx2MinusGen_     = fNMx2MinusGen;}
-    void SetEtaGaplimPlusGen(double fEtaGaplimPlusGen)    { EtaGaplimPlusGen_     = fEtaGaplimPlusGen;}
-    void SetEtaGaplimMinusGen(double fEtaGaplimMinusGen)    { EtaGaplimMinusGen_     = fEtaGaplimMinusGen;}
-    void SetNParticlesGen(int fNParticlesGen)    { NParticlesGen_     = fNParticlesGen;}
+    void SetXiGenMinus(double fxigenminus)    { xigenminus_     = fxigenminus;}
+    void SetXiGenPlus(double fxigenplus)    { xigenplus_     = fxigenplus;}
+
+    void SetMxGenMinus(double fmxgenminus)    { mxgenminus_     = fmxgenminus;}
+    void SetMxGenPlus(double fmxgenplus)    { mxgenplus_     = fmxgenplus;}
+    void SetMx2GenMinus(double fmx2genminus)    { mx2genminus_     = fmx2genminus;}
+    void SetMx2GenPlus(double fmx2genplus)    { mx2genplus_     = fmx2genplus;}
+    void SetMxGenLeft(double fmxgenleft)    { mxgenleft_     = fmxgenleft;}
+    void SetMxGenRight(double fmxgenright)    { mxgenright_     = fmxgenright;}
+    void SetMx2GenLeft(double fmx2genleft)    { mx2genleft_     = fmx2genleft;}
+    void SetMx2GenRight(double fmx2genright)    { mx2genright_     = fmx2genright;}
+    void SetLrgGen(double flrggen)    { lrggen_     = flrggen;}
+    void SetEtaMaxGen(double fetamaxgen)    { etamaxgen_     = fetamaxgen;}
+    void SetEtaMinGen(double fetamingen)    { etamingen_     = fetamingen;}
+    void SetEpluspzGen(double fepluspzgen)    { epluspzgen_     = fepluspzgen;}
+    void SetEminuspzGen(double feminuspzgen)    { eminuspzgen_     = feminuspzgen;}
+    void SetEtExpoPlusGen(double fetexpoplusgen)    { etexpoplusgen_     = fetexpoplusgen;}
+    void SetEtExpoMinusGen(double fetexpominusgen)    { etexpominusgen_     = fetexpominusgen;}
     void SetsumECastorMinusGen(double fsumECastorMinusGen)    { sumECastorMinusGen_     = fsumECastorMinusGen;}
-    void SetsumECastorPlusGen(double fsumECastorPlusGen)    { sumECastorPlusGen_     = fsumECastorPlusGen;}
-    void SetsumEZDCMinusGen(double fsumEZDCMinusGen)    { sumEZDCMinusGen_     = fsumEZDCMinusGen;}
-    void SetsumEZDCPlusGen(double fsumEZDCPlusGen)    { sumEZDCPlusGen_     = fsumEZDCPlusGen;}
-    void SetEtaOutcomingProtonGen(double fEtaOutcomingProtonGen)    { EtaOutcomingProtonGen_     = fEtaOutcomingProtonGen;}
-    void SetxLGen(double fxLGen)   { xLGen_     = fxLGen;}
-    void SetxLMostEnergeticGen(double fxLMostEnergeticGen)    { xLMostEnergeticGen_     = fxLMostEnergeticGen;}
-    void SetxiZMinusGen(double fxiZMinusGen)    { xiZMinusGen_     = fxiZMinusGen;}
-    void SetxiZPlusGen(double fxiZPlusGen)    { xiZPlusGen_     = fxiZPlusGen;}
-    void SetEtaZGen(double fEtaZGen)    { EtaZGen_     = fEtaZGen;}
-    void SetEnergyZGen(double fEnergyZGen)    { EnergyZGen_     = fEnergyZGen;}
-    void SetpDissMassGen(double fpDissMassGen)    { pDissMassGen_     = fpDissMassGen;}
-    void SetxLpDissMass(double fxLpDissMass)    { xLpDissMass_     = fxLpDissMass;}
+
+    void SetMxGenMinusCMS(double fmxgenminusCMS)    { mxgenminusCMS_     = fmxgenminusCMS;}
+    void SetMxGenPlusCMS(double fmxgenplusCMS)    { mxgenplusCMS_     = fmxgenplusCMS;}
+    void SetMx2GenMinusCMS(double fmx2genminusCMS)    { mx2genminusCMS_     = fmx2genminusCMS;}
+    void SetMx2GenPlusCMS(double fmx2genplusCMS)    { mx2genplusCMS_     = fmx2genplusCMS;}
+    void SetMxGenLeftCMS(double fmxgenleftCMS)    { mxgenleftCMS_     = fmxgenleftCMS;}
+    void SetMxGenRightCMS(double fmxgenrightCMS)    { mxgenrightCMS_     = fmxgenrightCMS;}
+    void SetMx2GenLeftCMS(double fmx2genleftCMS)    { mx2genleftCMS_     = fmx2genleftCMS;}
+    void SetMx2GenRightCMS(double fmx2genrightCMS)    { mx2genrightCMS_     = fmx2genrightCMS;}
+    void SetLrgGenCMS(double flrggenCMS)    { lrggenCMS_     = flrggenCMS;}
+    void SetEtaMaxGenCMS(double fetamaxgenCMS)    { etamaxgenCMS_     = fetamaxgenCMS;}
+    void SetEtaMinGenCMS(double fetamingenCMS)    { etamingenCMS_     = fetamingenCMS;}
+    void SetEpluspzGenCMS(double fepluspzgenCMS)    { epluspzgenCMS_     = fepluspzgenCMS;}
+    void SetEminuspzGenCMS(double feminuspzgenCMS)    { eminuspzgenCMS_     = feminuspzgenCMS;}
+    void SetEtExpoPlusGenCMS(double fetexpoplusgenCMS)    { etexpoplusgenCMS_     = fetexpoplusgenCMS;}
+    void SetEtExpoMinusGenCMS(double fetexpominusgenCMS)    { etexpominusgenCMS_     = fetexpominusgenCMS;}
+    void SetsumECastorMinusGenCMS(double fsumECastorMinusGenCMS)    { sumECastorMinusGenCMS_     = fsumECastorMinusGenCMS;}
 
     void SetDiElectronMassPF(double fDiElectronMassPF) { DiElectronMassPF_ = fDiElectronMassPF;}
     void SetDiMuonMassPF(double fDiMuonMassPF) { DiMuonMassPF_ = fDiMuonMassPF;}
@@ -161,10 +170,10 @@ class DiffractiveZEvent {
     void SetSumEEBMinus(double fSumEEBMinus)    { SumEEBMinus_ = fSumEEBMinus;}
     void SetSumEtEBMinus(double fSumEtEBMinus)    { SumEtEBMinus_ = fSumEtEBMinus;}
 
-    void SetEPZCaloPlus(double fEPZCaloPlus)    { EPZCaloPlus_ = fEPZCaloPlus;}
-    void SetEPZCaloMinus(double fEPZCaloMinus)    { EPZCaloMinus_ = fEPZCaloMinus;}
-    void SetXiCaloPlus(double fXiCaloPlus)    { XiCaloPlus_ = fXiCaloPlus;}
-    void SetXiCaloMinus(double fXiCaloMinus)    { XiCaloMinus_ = fXiCaloMinus;}
+    void SetEpluspzCalo(double fEPZCaloPlus)    { EPZCaloPlus_ = fEPZCaloPlus;}
+    void SetEminuspzCalo(double fEPZCaloMinus)    { EPZCaloMinus_ = fEPZCaloMinus;}
+    void SetEtExpoPlusCalo(double fEtEtaCaloPlus)    { EtEtaCaloPlus_ = fEtEtaCaloPlus;}
+    void SetEtExpoMinusCalo(double fEtEtaCaloMinus)    { EtEtaCaloMinus_ = fEtEtaCaloMinus;}
 
     void SetEtaCaloMax(double fEtaCaloMax)    { EtaCaloMax_ = fEtaCaloMax;}
     void SetEtaCaloMin(double fEtaCaloMin)    { EtaCaloMin_ = fEtaCaloMin;}
@@ -420,33 +429,43 @@ class DiffractiveZEvent {
     double GetVy(int i) const { return Vy_[i]; }
     double GetTracksPt(int i,int j) const { return TracksPt_[i][j]; }
     double GetZDCdigifC(int i,int j) const { return ZDCdigifC_[i][j]; }
-    double GetPrimaryGapMaxGen()    const {return PrimaryGapMaxGen_;}
-    double GetSecondGapMaxGen()    const {return SecondGapMaxGen_;}
-    double GetTracksPtGen(int i)    const {return TracksPtGen_[i];}
-    double GetEtaOfTracksPtGen(int i)    const {return EtaOfTracksPtGen_[i];}
-    int GetNTracksGen()    const {return NTracksGen_;}
-    double GetMx2PlusGen()    const {return Mx2PlusGen_;}
-    double GetMx2MinusGen()    const {return Mx2MinusGen_;}
-    double GetMx2Gen()    const {return Mx2Gen_;}
-    double GetMx2ZGen()    const {return Mx2ZGen_;}
-    int GetNMx2PlusGen()    const {return NMx2PlusGen_;}
-    int GetNMx2MinusGen()    const {return NMx2MinusGen_;}
-    double GetEtaGaplimPlusGen()    const {return EtaGaplimPlusGen_;}
-    double GetEtaGaplimMinusGen()    const {return EtaGaplimMinusGen_;}
-    int GetNParticlesGen()    const {return NParticlesGen_;}
-    double GetsumECastorMinusGen()    const {return sumECastorMinusGen_;}
-    double GetsumECastorPlusGen()    const {return sumECastorPlusGen_;}
-    double GetsumEZDCMinusGen()    const {return sumEZDCMinusGen_;}
-    double GetsumEZDCPlusGen()    const {return sumEZDCPlusGen_;}
-    double GetEtaOutcomingProtonGen()    const {return EtaOutcomingProtonGen_;}
-    double GetxLGen()   const {return xLGen_;}
-    double GetxLMostEnergeticGen()    const {return xLMostEnergeticGen_;}
-    double GetxiZMinusGen()    const {return xiZMinusGen_;}
-    double GetxiZPlusGen()    const {return xiZPlusGen_;}
-    double GetEtaZGen()    const {return EtaZGen_;}
-    double GetEnergyZGen()    const {return EnergyZGen_;}
-    double GetpDissMassGen()    const {return pDissMassGen_;}
-    double GetxLpDissMass()    const {return xLpDissMass_;}
+
+    double GetXiGenMinus() const {return xigenminus_;}
+    double GetXiGenPlus() const {return xigenplus_;}
+
+    double GetMxGenMinus() const { return mxgenminus_;}
+    double GetMxGenPlus() const { return mxgenplus_;}
+    double GetMx2GenMinus() const { return mx2genminus_;}
+    double GetMx2GenPlus() const { return mx2genplus_;}
+    double GetMxGenLeft() const { return mxgenleft_;}
+    double GetMxGenRight() const { return mxgenright_;}
+    double GetMx2GenLeft() const { return mx2genleft_;}
+    double GetMx2GenRight() const { return mx2genright_;}
+    double GetLrgGen() const { return lrggen_;}
+    double GetEtaMaxGen() const { return etamaxgen_;}
+    double GetEtaMinGen() const { return etamingen_;}
+    double GetEpluspzGen() const { return epluspzgen_;}
+    double GetEminuspzGen() const { return eminuspzgen_;}
+    double GetEtExpoPlusGen() const { return etexpoplusgen_;}
+    double GetEtExpoMinusGen() const { return etexpominusgen_;}
+    double GetsumECastorMinusGen() const { return sumECastorMinusGen_;}
+
+    double GetMxGenMinusCMS() const { return mxgenminusCMS_;}
+    double GetMxGenPlusCMS() const { return mxgenplusCMS_;}
+    double GetMx2GenMinusCMS() const { return mx2genminusCMS_;}
+    double GetMx2GenPlusCMS() const { return mx2genplusCMS_;}
+    double GetMxGenLeftCMS() const { return mxgenleftCMS_;}
+    double GetMxGenRightCMS() const { return mxgenrightCMS_;}
+    double GetMx2GenLeftCMS() const { return mx2genleftCMS_;}
+    double GetMx2GenRightCMS() const { return mx2genrightCMS_;}
+    double GetLrgGenCMS() const { return lrggenCMS_;}
+    double GetEtaMaxGenCMS() const { return etamaxgenCMS_;}
+    double GetEtaMinGenCMS() const { return etamingenCMS_;}
+    double GetEpluspzGenCMS() const { return epluspzgenCMS_;}
+    double GetEminuspzGenCMS() const { return eminuspzgenCMS_;}
+    double GetEtExpoPlusGenCMS() const { return etexpoplusgenCMS_;}
+    double GetEtExpoMinusGenCMS() const { return etexpominusgenCMS_;}
+    double GetsumECastorMinusGenCMS() const { return sumECastorMinusGenCMS_;}
 
     double GetDiElectronMassPF() const {return DiElectronMassPF_;}
     double GetDiMuonMassPF() const {return DiMuonMassPF_;}
@@ -481,10 +500,10 @@ class DiffractiveZEvent {
     double GetSumEEBMinus()    const {return SumEEBMinus_;}
     double GetSumEtEBMinus()    const {return SumEtEBMinus_;}
 
-    double GetEPZCaloPlus()    const {return EPZCaloPlus_;}
-    double GetEPZCaloMinus()    const {return EPZCaloMinus_;}
-    double GetXiCaloPlus()    const {return XiCaloPlus_;}
-    double GetXiCaloMinus()    const {return XiCaloMinus_;}
+    double GetEpluspzCalo()    const {return EPZCaloPlus_;}
+    double GetEminuspzCalo()    const {return EPZCaloMinus_;}
+    double GetEtExpoPlusCalo()    const {return EtEtaCaloPlus_;}
+    double GetEtExpoPlusMinus()    const {return EtEtaCaloMinus_;}
 
     double GetEtaCaloMax()    const {return EtaCaloMax_;}
     double GetEtaCaloMin()    const {return EtaCaloMin_;}
@@ -761,33 +780,42 @@ class DiffractiveZEvent {
     int CastorNumberBadChannels_;
     int EachTowerCounter_;
 
-    double PrimaryGapMaxGen_;
-    double SecondGapMaxGen_;
-    std::vector<double> TracksPtGen_;
-    std::vector<double> EtaOfTracksPtGen_;
-    int NTracksGen_;
-    double Mx2PlusGen_;
-    double Mx2MinusGen_;
-    double Mx2Gen_;
-    double Mx2ZGen_;
-    int NMx2PlusGen_;
-    int NMx2MinusGen_;
-    double EtaGaplimPlusGen_;
-    double EtaGaplimMinusGen_;
-    int NParticlesGen_;
+    double xigenminus_;
+    double xigenplus_;
+
+    double mxgenminus_;
+    double mxgenplus_;
+    double mx2genminus_;
+    double mx2genplus_;
+    double mxgenleft_;
+    double mxgenright_;
+    double mx2genleft_;
+    double mx2genright_;
+    double lrggen_;
+    double etamaxgen_;
+    double etamingen_;
+    double epluspzgen_;
+    double eminuspzgen_;
+    double etexpoplusgen_;
+    double etexpominusgen_;
     double sumECastorMinusGen_;
-    double sumECastorPlusGen_;
-    double sumEZDCMinusGen_;
-    double sumEZDCPlusGen_;
-    double EtaOutcomingProtonGen_;
-    double xLGen_;
-    double xLMostEnergeticGen_;
-    double xiZMinusGen_;
-    double xiZPlusGen_;
-    double EtaZGen_;
-    double EnergyZGen_;
-    double pDissMassGen_;
-    double xLpDissMass_;
+
+    double mxgenminusCMS_;
+    double mxgenplusCMS_;
+    double mx2genminusCMS_;
+    double mx2genplusCMS_;
+    double mxgenleftCMS_;
+    double mxgenrightCMS_;
+    double mx2genleftCMS_;
+    double mx2genrightCMS_;
+    double lrggenCMS_;
+    double etamaxgenCMS_;
+    double etamingenCMS_;
+    double epluspzgenCMS_;
+    double eminuspzgenCMS_;
+    double etexpoplusgenCMS_;
+    double etexpominusgenCMS_;
+    double sumECastorMinusGenCMS_;
 
     double DiElectronMassPF_;
     double DiMuonMassPF_;
@@ -818,8 +846,8 @@ class DiffractiveZEvent {
     double SumEtEBMinus_;
     double EPZCaloPlus_;
     double EPZCaloMinus_;
-    double XiCaloPlus_;
-    double XiCaloMinus_;
+    double EtEtaCaloPlus_;
+    double EtEtaCaloMinus_;
     double EtaCaloMax_;
     double EtaCaloMin_;
     int MultiplicityHFPlus_;

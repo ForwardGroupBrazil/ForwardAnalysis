@@ -24,6 +24,24 @@
 #include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
 #include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
 
+/*
+#include "DataFormats/HcalDetId/interface/HcalZDCDetId.h"
+#include "DataFormats/HcalRecHit/interface/HcalRecHitCollections.h"
+#include "ForwardAnalysis/Utilities/interface/CastorEnergy.h"
+
+#include "DataFormats/HcalDetId/interface/HcalGenericDetId.h"
+#include "DataFormats/HcalDetId/interface/HcalElectronicsId.h"
+#include "DataFormats/HcalDetId/interface/HcalDetId.h"
+#include "DataFormats/HcalDigi/interface/HcalDigiCollections.h"
+
+#include "DataFormats/EcalDetId/interface/EcalTrigTowerDetId.h"
+#include "DataFormats/EcalDetId/interface/EBDetId.h"
+
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "CalibFormats/HcalObjects/interface/HcalCoderDb.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
+*/
 
 #include <vector>
 #include <string>
@@ -93,20 +111,54 @@ namespace diffractiveZAnalysis {
       double fCGeVCastor_;
       edm::InputTag caloTowerTag_; 
       edm::InputTag trackTag_;
+      double beamEnergy_;
 
       std::string selectionPathName_;
-      
+
       std::vector<const reco::Muon*> MuonVector;
       std::vector<const reco::GsfElectron*> ElectronVector;
       std::vector<const pat::Muon*> PatMuonVector;
       std::vector<const pat::Electron*> PatElectronVector;
       std::vector<const reco::PFCandidate*> PFMuonVector;
       std::vector<const reco::PFCandidate*> PFElectronVector;
+      std::vector<const reco::PFCandidate*> PFVector;
+      std::vector<const reco::GenParticle*> genVector;
+      std::vector<const reco::GenParticle*> genCMSVector;
+      std::vector<const reco::GenParticle*> genProtonVector;
+      std::vector<const CaloTower*> towerVector;
 
       TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
       TH1F *CastorChannelHisto_;
       TH1F *histo_castor_channels;
       std::vector<TH1F*> m_hVector_histo_castor_channels;
+
+      struct orderPT
+      {
+	template <class T, class W>
+	  inline bool operator() (T vec1, W vec2)
+	  {
+	    return (vec1->pt() > vec2->pt());
+	  }
+      };
+
+      struct orderETA
+      {
+	template <class T, class W>
+	  inline bool operator() (T vec1, W vec2)
+	  {
+	    return (vec1->eta() > vec2->eta());
+	  }
+      };
+
+      struct orderAbsolutPZ
+      {
+	template <class T, class W>
+	  inline bool operator() (T vec1, W vec2)
+	  {
+	    return (fabs(vec1->pz()) > fabs(vec2->pz()));
+	  }
+      };
+
   };
 
 } // namespace

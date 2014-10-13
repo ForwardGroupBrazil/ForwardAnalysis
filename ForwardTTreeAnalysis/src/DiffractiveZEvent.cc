@@ -58,34 +58,43 @@ void DiffractiveZEvent::reset(){
   CastorBadChannels_.clear();
   CastorNumberBadChannels_ = -999;
   EachTowerCounter_ = -1;
-  
-  PrimaryGapMaxGen_=-999.;
-  SecondGapMaxGen_=-999.;
-  TracksPtGen_.clear();
-  EtaOfTracksPtGen_.clear();
-  NTracksGen_=-999;
-  Mx2PlusGen_=-999.;
-  Mx2MinusGen_=-999.;
-  Mx2Gen_=-999.;
-  Mx2ZGen_=-999.;
-  NMx2PlusGen_=-999;
-  NMx2MinusGen_=-999;
-  EtaGaplimPlusGen_=-999.;
-  EtaGaplimMinusGen_=-999.;
-  NParticlesGen_=-999;
+
+  xigenminus_=-999.;
+  xigenplus_=-999.;
+
+  mxgenminus_=-999.;
+  mxgenplus_=-999.;
+  mx2genminus_=-999.;
+  mx2genplus_=-999.;
+  mxgenleft_=-999.;
+  mx2genright_=-999.;
+  mx2genleft_=-999.;
+  mxgenright_=-999.;
+  lrggen_=-999.;
+  etamaxgen_=-999.;
+  etamingen_=-999.;
+  epluspzgen_=-999.;
+  eminuspzgen_=-999.;
+  etexpoplusgen_=-999.;
+  etexpominusgen_=-999.;
   sumECastorMinusGen_=-999.;
-  sumECastorPlusGen_=-999.;
-  sumEZDCMinusGen_=-999.;
-  sumEZDCPlusGen_=-999.;
-  EtaOutcomingProtonGen_=-999.;
-  xLGen_=-999.;
-  xLMostEnergeticGen_=-999.;
-  xiZMinusGen_=-999.;
-  xiZPlusGen_=-999.;
-  EtaZGen_=-999.;
-  EnergyZGen_=-999.;
-  pDissMassGen_=-999.;
-  xLpDissMass_=-999.;
+
+  mxgenminusCMS_=-999.;
+  mxgenplusCMS_=-999.;
+  mx2genminusCMS_=-999.;
+  mx2genplusCMS_=-999.;
+  mxgenleftCMS_=-999.;
+  mxgenrightCMS_=-999.;
+  mx2genleftCMS_=-999.;
+  mx2genrightCMS_=-999.;
+  lrggenCMS_=-999.;
+  etamaxgenCMS_=-999.;
+  etamingenCMS_=-999.;
+  epluspzgenCMS_=-999.;
+  eminuspzgenCMS_=-999.;
+  etexpoplusgenCMS_=-999.;
+  etexpominusgenCMS_=-999.;
+  sumECastorMinusGenCMS_=-999.;
 
   DiElectronMassPF_=-999.;
   DiMuonMassPF_=-999.;
@@ -116,8 +125,8 @@ void DiffractiveZEvent::reset(){
   SumEtEBMinus_ = -999.; 
   EPZCaloPlus_ = -999.; 
   EPZCaloMinus_ = -999.; 
-  XiCaloPlus_ = -999.; 
-  XiCaloMinus_ = -999.; 
+  EtEtaCaloPlus_ = -999.; 
+  EtEtaCaloMinus_ = -999.; 
   EtaCaloMax_ = -999.; 
   EtaCaloMin_ = -999.; 
 

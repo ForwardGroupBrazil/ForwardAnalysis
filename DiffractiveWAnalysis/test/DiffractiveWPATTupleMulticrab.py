@@ -40,7 +40,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 4000
+config.NumberOfEvents = -1
 
 #
 # Define Options to Run
@@ -215,7 +215,7 @@ if config.runOnMC:
 else:
     config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/MuRun2010/MuRunA2010.root'   
+    config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'   
 
 #
 # CMSSW Main Code
@@ -400,7 +400,6 @@ from ForwardAnalysis.ForwardTTreeAnalysis.PFCandInfo_cfi import PFCandInfo
 ######################################################################################
 
 process.diffractiveWFilter = cms.EDFilter("diffractiveWFilter",
-                             nLeptons = cms.untracked.int32(1),
                              muonTag = cms.untracked.InputTag("muons"),
                              electronTag = cms.untracked.InputTag("gsfElectrons"),
                              metTag = cms.untracked.InputTag("pfMet"),
