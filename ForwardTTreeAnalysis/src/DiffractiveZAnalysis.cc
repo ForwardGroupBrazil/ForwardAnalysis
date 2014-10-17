@@ -60,6 +60,10 @@
 #include "CalibFormats/HcalObjects/interface/HcalDbService.h"
 #include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
 
+#include <stdio.h>
+#include <math.h> 
+#include <cmath>
+
 using diffractiveZAnalysis::DiffractiveZAnalysis;
 
 const char* DiffractiveZAnalysis::name = "DiffractiveZAnalysis";
@@ -1359,36 +1363,160 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 
   bool debug=true;
 
-  //PFMuonVector.clear();
-  //PFElectronVector.clear();
+  PFMuonVector.clear();
+  PFElectronVector.clear();
   PFVector.clear();
+  PFNoZVector.clear();
+  PFHFVector.clear();
 
   edm::Handle<reco::VertexCollection> Vertexes;
   event.getByLabel(PVtxCollectionTag_, Vertexes);
 
   edm::Handle <reco::PFCandidateCollection> PFCandidates;
   event.getByLabel(pfTag_,PFCandidates);
-
   int pfsize = PFCandidates->size();
   int itPF;
+
+  double E_pz_plus = 0.;
+  double E_pz_minus = 0.;
+  double et_expo_plus = 0.;
+  double et_expo_minus = 0.;
+
+  math::XYZTLorentzVector SPlusCMS(0.,0.,0.,0.);
+  math::XYZTLorentzVector SMinusCMS(0.,0.,0.,0.);
+
   if(PFCandidates->size()>0){
     for(itPF=0; itPF < pfsize; ++itPF){
       const reco::PFCandidate* pfAll = &((*PFCandidates)[itPF]);
       // Excluding HF Calorimeter Rings 12, 13, 29, 30, 40, 41
       if( ( (fabs(pfAll->eta()) >= 2.866) && (fabs(pfAll->eta()) < 3.152) ) || (fabs(pfAll->eta()) >= 4.730) ) continue;
-      PFVector.push_back(pfAll);
+
+      if ( (fabs(pfAll->charge()) > 0 && pfAll->pt() > pTPFThresholdCharged_ ) || (fabs(pfAll->charge()) == 0 && ( (fabs(pfAll->eta()) <= 1.5 && pfAll->energy() > energyPFThresholdBar_) || 
+	      (fabs(pfAll->eta()) > 1.5 && fabs(pfAll->eta()) <= 3 && pfAll->energy() > energyPFThresholdEnd_) || (fabs(pfAll->eta()) > 3 && pfAll->energy() >energyPFThresholdHF_) ) ) ){
+
+	PFVector.push_back(pfAll);
+	if (pfAll->particleId()==reco::PFCandidate::e) PFElectronVector.push_back(pfAll);
+	if (pfAll->particleId()==reco::PFCandidate::mu) PFMuonVector.push_back(pfAll);
+	if (pfAll->particleId()==reco::PFCandidate::h_HF || pfAll->particleId()==reco::PFCandidate::egamma_HF) PFHFVector.push_back(pfAll);
+
+      }
+
     }
   }
 
-  // Sorting Vector
-  std::sort(PFVector.begin(), PFVector.end(), orderETA());
+  // Computing PF Variables
+  if(PFVector.size()>0){
+    for(unsigned int i=0;i<PFVector.size();i++){
+      math::XYZTLorentzVector tmp(PFVector[i]->px(), PFVector[i]->py(), PFVector[i]->pz(), PFVector[i]->energy());
+      E_pz_plus += PFVector[i]->energy()+PFVector[i]->pz();
+      et_expo_plus += PFVector[i]->et()*pow(2.71,PFVector[i]->eta());
+      E_pz_minus += PFVector[i]->energy()-PFVector[i]->pz();
+      et_expo_minus += PFVector[i]->et()*pow(2.71,-PFVector[i]->eta());
+      if(PFVector[i]->eta()>0.){
+	SPlusCMS+=tmp;
+      }else{
+	SMinusCMS+=tmp;
+      }
+    }
+  }
 
   if(PFVector.size()>0){
-
-    for(unsigned int i=0;i<PFVector.size();i++){
-      std::cout << "PF Information --> pT: " << PFVector[i]->pt() << " [GeV] | eta: " << PFVector[i]->eta() << " | phi: " << PFVector[i]->phi() << std::endl;
+    std::sort(PFVector.begin(), PFVector.end(), orderETA());
+    if(debug){
+      std::cout << "\nCMS Particles After Sort by Eta Info:" << std::endl;
+      std::cout << "Reconstructed Variables CMS PF Info:" << std::endl;
+      std::cout << "Eta, CMS Max: " << PFVector[0]->eta() << std::endl;
+      std::cout << "Eta, CMS Min: " << PFVector[PFVector.size()-1]->eta() << std::endl;
+      std::cout << "PF CMS Mass -: " << SMinusCMS.M() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass +: " << SPlusCMS.M() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass^2 -: " << SMinusCMS.M2() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass^2 +: " << SPlusCMS.M2() << " [GeV]" << std::endl;
+      std::cout << "E + pz, CMS: " << E_pz_plus << " [GeV]" << std::endl;
+      std::cout << "E - pz, CMS: " << E_pz_minus << " [GeV]" << std::endl;
+      std::cout << "Et*exp(+eta), CMS: " << et_expo_plus << " [GeV]" << std::endl;
+      std::cout << "Et*exp(-eta), CMS: " << et_expo_minus << " [GeV]" << std::endl;
+      for(unsigned int i=0;i<PFVector.size();i++){
+	std::cout << "All PF Information --> pT: " << PFVector[i]->pt() << " [GeV] | eta: " << PFVector[i]->eta() << " | phi: " << PFVector[i]->phi() << " | id: " << PFVector[i]->particleId() << " | # Particles: " << PFVector.size() << std::endl;
+      }
     }
   }
+
+  if(PFElectronVector.size()>0){
+    std::sort(PFElectronVector.begin(), PFElectronVector.end(), orderPT());
+    if(debug){
+      for(unsigned int i=0;i<PFElectronVector.size();i++){
+	std::cout << "Electron PF Information --> pT: " << PFElectronVector[i]->pt() << " [GeV] | eta: " << PFElectronVector[i]->eta() << " | phi: " << PFElectronVector[i]->phi() << std::endl;
+      }
+    }
+  }
+
+  if(PFMuonVector.size()>0){
+    std::sort(PFMuonVector.begin(), PFMuonVector.end(), orderPT());
+    if(debug){
+      for(unsigned int i=0;i<PFMuonVector.size();i++){
+	std::cout << "Muon PF Information --> pT: " << PFMuonVector[i]->pt() << " [GeV] | eta: " << PFMuonVector[i]->eta() << " | phi: " << PFMuonVector[i]->phi() << std::endl;
+      }
+    }
+  }
+
+  if(PFHFVector.size()>0){
+    std::sort(PFHFVector.begin(), PFHFVector.end(), orderETA());
+    if(debug){
+      for(unsigned int i=0;i<PFHFVector.size();i++){
+	std::cout << "PF HF Information --> pT: " << PFHFVector[i]->pt() << " [GeV] | eta: " << PFHFVector[i]->eta() << " | phi: " << PFHFVector[i]->phi() << " | id: " << PFVector[i]->particleId() << std::endl;
+      }
+    }
+  }
+
+  bool ZMuon=false;
+  bool ZElectron=false;
+  bool ZPFMuon=false;
+  bool ZPFElectron=false;
+
+  if(PFMuonVector.size()>1){
+    if(InvariantMass(PFMuonVector[0],PFMuonVector[1])>60. && InvariantMass(PFMuonVector[0],PFMuonVector[1])<110.) ZPFMuon=true;
+    if(debug) std::cout << "\nInvariant Z Mass, dimuon PF: " << InvariantMass(PFMuonVector[0],PFMuonVector[1]) << " [GeV]" << std::endl;
+  }
+
+  if(PFElectronVector.size()>1){
+    if(InvariantMass(PFElectronVector[0],PFElectronVector[1])>60. && InvariantMass(PFElectronVector[0],PFElectronVector[1])<110.) ZPFElectron=true;
+    if(debug) std::cout << "\nInvariant Z Mass, dielectron PF: " << InvariantMass(PFElectronVector[0],PFElectronVector[1]) << " [GeV]" << std::endl;
+  }
+
+  if(MuonVector.size()>1){
+    if(InvariantMass(MuonVector[0],MuonVector[1])>60. && InvariantMass(MuonVector[0],MuonVector[1])<110.) ZMuon=true;
+    if(debug) std::cout << "\nInvariant Z Mass, dimuon: " << InvariantMass(MuonVector[0],MuonVector[1]) << " [GeV]" << std::endl;
+  }
+
+  if(ElectronVector.size()>1){
+    if(InvariantMass(ElectronVector[0],ElectronVector[1])>60. && InvariantMass(ElectronVector[0],ElectronVector[1])<110.) ZElectron=true;
+    if(debug) std::cout << "\nInvariant Z Mass, dielectron: " << InvariantMass(ElectronVector[0],ElectronVector[1]) << " [GeV]" << std::endl;
+  }
+
+
+  if(PFVector.size()>1 && ZPFMuon){
+    for(unsigned int i=0;i<PFVector.size();i++){
+      if( PFVector[i]->pt() == PFMuonVector[0]->pt() || PFVector[i]->pt() == PFMuonVector[1]->pt() ) continue;
+      PFNoZVector.push_back(PFVector[i]);
+    }
+  }
+
+  /*
+     if(PFVector.size()>1 && ZPFElectron){
+     for(unsigned int i=0;i<PFVector.size();i++){
+     if( PFVector[i]->pt()!=PFElectronVector[0]->pt() || PFVector[i]->pt()!=PFElectronVector[1]->pt() ) PFNoZVector.push_back(PFVector[i]);
+     }
+     }
+   */
+
+  if(debug){
+    if(PFNoZVector.size()>0){
+      for(unsigned int i=0;i<PFNoZVector.size();i++){
+	std::cout << "All PF Information, no Z --> pT: " << PFNoZVector[i]->pt() << " [GeV] | eta: " << PFNoZVector[i]->eta() << " | phi: " << PFNoZVector[i]->phi() << " | id: " << PFNoZVector[i]->particleId() << " | # Particles: " << PFNoZVector.size() << std::endl;
+      }
+    }
+  }
+
 
 }
 
@@ -2370,4 +2498,24 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
 
 }
 
+template <class T, class W>
+math::XYZTLorentzVector DiffractiveZAnalysis::DiSystem(T obj1, W obj2){
+  math::XYZTLorentzVector DiObj(0.,0.,0.,0.);
+  DiObj += obj1->p4();
+  DiObj += obj2->p4();
+  return DiObj;
+}
 
+template <class T, class W>
+double DiffractiveZAnalysis::InvariantMass(T lepton1, W lepton2){
+  double mass_=-999.;
+  math::XYZTLorentzVector DiSystem(0.,0.,0.,0.);
+  DiSystem += lepton1->p4();
+  DiSystem += lepton2->p4();
+  mass_ = DiSystem.M();
+  // Defense
+  if (!std::isfinite(mass_)) {
+    mass_ = -999.;
+  }
+  return mass_;
+}

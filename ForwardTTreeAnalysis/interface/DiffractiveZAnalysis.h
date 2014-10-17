@@ -24,28 +24,12 @@
 #include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
 #include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
 
-/*
-#include "DataFormats/HcalDetId/interface/HcalZDCDetId.h"
-#include "DataFormats/HcalRecHit/interface/HcalRecHitCollections.h"
-#include "ForwardAnalysis/Utilities/interface/CastorEnergy.h"
-
-#include "DataFormats/HcalDetId/interface/HcalGenericDetId.h"
-#include "DataFormats/HcalDetId/interface/HcalElectronicsId.h"
-#include "DataFormats/HcalDetId/interface/HcalDetId.h"
-#include "DataFormats/HcalDigi/interface/HcalDigiCollections.h"
-
-#include "DataFormats/EcalDetId/interface/EcalTrigTowerDetId.h"
-#include "DataFormats/EcalDetId/interface/EBDetId.h"
-
-#include "FWCore/Framework/interface/ESHandle.h"
-#include "CalibFormats/HcalObjects/interface/HcalCoderDb.h"
-#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
-#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
-*/
-
 #include <vector>
 #include <string>
 #include <map>
+#include <stdio.h>
+#include <math.h>
+#include <cmath>
 
 class DiffractiveZEvent;
 class TH1F;
@@ -81,6 +65,12 @@ namespace diffractiveZAnalysis {
       void fillCastorDebug(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillZDC(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillDetectorEnergyEtaInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+
+      template <class T, class W>
+	math::XYZTLorentzVector DiSystem(T obj1, W obj2);
+
+      template <class T, class W>
+	double InvariantMass(T lepton1, W lepton2);
 
       edm::InputTag triggerResultsTag_;
       std::vector<std::string> hltPathNames_;
@@ -122,6 +112,8 @@ namespace diffractiveZAnalysis {
       std::vector<const reco::PFCandidate*> PFMuonVector;
       std::vector<const reco::PFCandidate*> PFElectronVector;
       std::vector<const reco::PFCandidate*> PFVector;
+      std::vector<const reco::PFCandidate*> PFNoZVector;
+      std::vector<const reco::PFCandidate*> PFHFVector;
       std::vector<const reco::GenParticle*> genVector;
       std::vector<const reco::GenParticle*> genCMSVector;
       std::vector<const reco::GenParticle*> genProtonVector;
