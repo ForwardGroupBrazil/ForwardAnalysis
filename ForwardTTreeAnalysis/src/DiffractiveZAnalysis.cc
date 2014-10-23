@@ -703,14 +703,14 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
       if (fabs(genAll->pdgId()) == 2212) continue;
       if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGen+=genAll->energy();
       genVector.push_back(genAll);
-      if(fabs(genAll->eta())<4.730){
-	if ( ( fabs(genAll->eta()) <= 1.5 && genAll->energy() > energyPFThresholdBar_ ) ||
-	    (fabs(genAll->eta()) > 1.5 && fabs(genAll->eta()) <= 3 && genAll->energy() > energyPFThresholdEnd_) ||
-	    (fabs(genAll->eta()) > 3 && genAll->energy() >energyPFThresholdHF_) ) {
-	  if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGenCMS+=genAll->energy();
-	  genCMSVector.push_back(genAll);      
-	}
+      if( ( (fabs(genAll->eta()) >= 2.866) && (fabs(genAll->eta()) < 3.152) ) || (fabs(genAll->eta()) >= 4.730) ) continue;
+      if ( ( fabs(genAll->eta()) <= 1.5 && genAll->energy() > energyPFThresholdBar_ ) ||
+	  (fabs(genAll->eta()) > 1.5 && fabs(genAll->eta()) <= 3 && genAll->energy() > energyPFThresholdEnd_) ||
+	  (fabs(genAll->eta()) > 3 && genAll->energy() >energyPFThresholdHF_) ) {
+	if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGenCMS+=genAll->energy();
+	genCMSVector.push_back(genAll);      
       }
+
     }
   }
 
@@ -1304,6 +1304,8 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
       std::cout << "Calorimeter, Et*exp(-eta): " << Et_eta_minus << std::endl;
       std::cout << "Calorimeter, E + pz: " << Epz_plus << std::endl;
       std::cout << "Calorimeter, E - pz: " << Epz_minus << std::endl;
+      std::cout << "Calorimeter, Sum HF+: " << sumEHF_plus << " [GeV]" << std::endl;
+      std::cout << "Calorimeter, Sum HF-: " << sumEHF_minus << " [GeV]"<< std::endl;
     }
   }else{
     eventData.SetEtaCaloMax(999.);
@@ -1344,6 +1346,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
   eventData.SetEminuspzCalo(Epz_minus);
   eventData.SetEtExpoPlusCalo(Et_eta_plus);
   eventData.SetEtExpoMinusCalo(Et_eta_minus);
+  //include Max LRG
 
   eventData.SetMultiplicityHFPlus(nTowersHF_plus);
   eventData.SetMultiplicityHEPlus(nTowersHE_plus);
@@ -1459,12 +1462,24 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     }
   }
 
+  double PFHFEnergyPlus = 0.;
+  double PFHFEnergyMinus = 0.;
+
   if(PFHFVector.size()>0){
     std::sort(PFHFVector.begin(), PFHFVector.end(), orderETA());
-    if(debug){
-      for(unsigned int i=0;i<PFHFVector.size();i++){
+    for(unsigned int i=0;i<PFHFVector.size();i++){
+      if(PFHFVector[i]->eta()>0){
+	PFHFEnergyPlus += PFHFVector[i]->energy();
+      }else{
+	PFHFEnergyMinus += PFHFVector[i]->energy();
+      }
+      if (debug) {
 	std::cout << "PF HF Information --> pT: " << PFHFVector[i]->pt() << " [GeV] | eta: " << PFHFVector[i]->eta() << " | phi: " << PFHFVector[i]->phi() << " | id: " << PFVector[i]->particleId() << std::endl;
       }
+    }
+    if(debug){
+      std::cout << "HF+ Energy from PF: " << PFHFEnergyPlus  << " [GeV]" << std::endl;
+      std::cout << "HF- Energy from PF: " << PFHFEnergyMinus  << " [GeV]" << std::endl;
     }
   }
 
@@ -1473,46 +1488,96 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   bool ZPFMuon=false;
   bool ZPFElectron=false;
 
+  // Z Candidates from Electron, Muon and PF Colections
+
   if(PFMuonVector.size()>1){
     if(InvariantMass(PFMuonVector[0],PFMuonVector[1])>60. && InvariantMass(PFMuonVector[0],PFMuonVector[1])<110.) ZPFMuon=true;
-    if(debug) std::cout << "\nInvariant Z Mass, dimuon PF: " << InvariantMass(PFMuonVector[0],PFMuonVector[1]) << " [GeV]" << std::endl;
+    if(debug) std::cout << "Invariant Z Mass, dimuon PF: " << InvariantMass(PFMuonVector[0],PFMuonVector[1]) << " [GeV]" << std::endl;
   }
 
   if(PFElectronVector.size()>1){
     if(InvariantMass(PFElectronVector[0],PFElectronVector[1])>60. && InvariantMass(PFElectronVector[0],PFElectronVector[1])<110.) ZPFElectron=true;
-    if(debug) std::cout << "\nInvariant Z Mass, dielectron PF: " << InvariantMass(PFElectronVector[0],PFElectronVector[1]) << " [GeV]" << std::endl;
+    if(debug) std::cout << "Invariant Z Mass, dielectron PF: " << InvariantMass(PFElectronVector[0],PFElectronVector[1]) << " [GeV]" << std::endl;
   }
 
   if(MuonVector.size()>1){
     if(InvariantMass(MuonVector[0],MuonVector[1])>60. && InvariantMass(MuonVector[0],MuonVector[1])<110.) ZMuon=true;
-    if(debug) std::cout << "\nInvariant Z Mass, dimuon: " << InvariantMass(MuonVector[0],MuonVector[1]) << " [GeV]" << std::endl;
+    if(debug) std::cout << "Invariant Z Mass, dimuon: " << InvariantMass(MuonVector[0],MuonVector[1]) << " [GeV]" << std::endl;
   }
 
   if(ElectronVector.size()>1){
     if(InvariantMass(ElectronVector[0],ElectronVector[1])>60. && InvariantMass(ElectronVector[0],ElectronVector[1])<110.) ZElectron=true;
-    if(debug) std::cout << "\nInvariant Z Mass, dielectron: " << InvariantMass(ElectronVector[0],ElectronVector[1]) << " [GeV]" << std::endl;
+    if(debug) std::cout << "Invariant Z Mass, dielectron: " << InvariantMass(ElectronVector[0],ElectronVector[1]) << " [GeV]" << std::endl;
   }
 
 
-  if(PFVector.size()>1 && ZPFMuon){
+  // Fill PF Vector excluing Z candidate decay products
+  if(PFVector.size()>1 && (ZPFMuon || ZMuon)){
     for(unsigned int i=0;i<PFVector.size();i++){
-      if( PFVector[i]->pt() == PFMuonVector[0]->pt() || PFVector[i]->pt() == PFMuonVector[1]->pt() ) continue;
+      if( ZPFMuon && (PFVector[i]->pt() == PFMuonVector[0]->pt() || PFVector[i]->pt() == PFMuonVector[1]->pt()) ) continue;
+      if( ZMuon && (PFVector[i]->pt() == MuonVector[0]->pt() || PFVector[i]->pt() == MuonVector[1]->pt()) ) continue;
       PFNoZVector.push_back(PFVector[i]);
     }
   }
+  else if(PFVector.size()>1 && (ZPFElectron || ZElectron)){
+    for(unsigned int i=0;i<PFVector.size();i++){
+      if( ZPFElectron && (PFVector[i]->pt() == PFElectronVector[0]->pt() || PFVector[i]->pt() == PFElectronVector[1]->pt()) ) continue;
+      if( ZElectron && (PFVector[i]->pt() == ElectronVector[0]->pt() || PFVector[i]->pt() == ElectronVector[1]->pt()) ) continue;
+      PFNoZVector.push_back(PFVector[i]);
+    }
+  }else{
+    if(PFVector.size()>1){
+      for(unsigned int i=0;i<PFVector.size();i++){
+	PFNoZVector.push_back(PFVector[i]);
+      }
+    }
+  }
 
-  /*
-     if(PFVector.size()>1 && ZPFElectron){
-     for(unsigned int i=0;i<PFVector.size();i++){
-     if( PFVector[i]->pt()!=PFElectronVector[0]->pt() || PFVector[i]->pt()!=PFElectronVector[1]->pt() ) PFNoZVector.push_back(PFVector[i]);
-     }
-     }
-   */
+  // PF Without Z products
 
-  if(debug){
-    if(PFNoZVector.size()>0){
-      for(unsigned int i=0;i<PFNoZVector.size();i++){
-	std::cout << "All PF Information, no Z --> pT: " << PFNoZVector[i]->pt() << " [GeV] | eta: " << PFNoZVector[i]->eta() << " | phi: " << PFNoZVector[i]->phi() << " | id: " << PFNoZVector[i]->particleId() << " | # Particles: " << PFNoZVector.size() << std::endl;
+  double E_pz_plus_noz = 0.;
+  double E_pz_minus_noz = 0.;
+  double et_expo_plus_noz = 0.;
+  double et_expo_minus_noz = 0.;
+
+  math::XYZTLorentzVector SPlusCMSnoz(0.,0.,0.,0.);
+  math::XYZTLorentzVector SMinusCMSnoz(0.,0.,0.,0.);
+
+  // Computing PF Variables
+  if(PFNoZVector.size()>0){
+    for(unsigned int i=0;i<PFNoZVector.size();i++){
+      math::XYZTLorentzVector tmp(PFNoZVector[i]->px(), PFNoZVector[i]->py(), PFNoZVector[i]->pz(), PFNoZVector[i]->energy());
+      E_pz_plus_noz += PFNoZVector[i]->energy()+PFNoZVector[i]->pz();
+      et_expo_plus_noz += PFNoZVector[i]->et()*pow(2.71,PFNoZVector[i]->eta());
+      E_pz_minus_noz += PFNoZVector[i]->energy()-PFNoZVector[i]->pz();
+      et_expo_minus_noz += PFNoZVector[i]->et()*pow(2.71,-PFNoZVector[i]->eta());
+      if(PFNoZVector[i]->eta()>0.){
+	SPlusCMSnoz+=tmp;
+      }else{
+	SMinusCMSnoz+=tmp;
+      }
+    }
+  }
+
+  if(PFNoZVector.size()>0){
+    std::sort(PFNoZVector.begin(), PFNoZVector.end(), orderETA());
+    if(debug){
+      std::cout << "\nCMS Particles After Sort by Eta Info, excluding Z Boson products:" << std::endl;
+      std::cout << "Reconstructed Variables CMS PF Info:" << std::endl;
+      std::cout << "Eta, CMS Max: " << PFNoZVector[0]->eta() << std::endl;
+      std::cout << "Eta, CMS Min: " << PFNoZVector[PFNoZVector.size()-1]->eta() << std::endl;
+      std::cout << "PF CMS Mass -: " << SMinusCMSnoz.M() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass +: " << SPlusCMSnoz.M() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass^2 -: " << SMinusCMSnoz.M2() << " [GeV]" << std::endl;
+      std::cout << "PF CMS Mass^2 +: " << SPlusCMSnoz.M2() << " [GeV]" << std::endl;
+      std::cout << "E + pz, CMS: " << E_pz_plus_noz << " [GeV]" << std::endl;
+      std::cout << "E - pz, CMS: " << E_pz_minus_noz << " [GeV]" << std::endl;
+      std::cout << "Et*exp(+eta), CMS: " << et_expo_plus_noz << " [GeV]" << std::endl;
+      std::cout << "Et*exp(-eta), CMS: " << et_expo_minus_noz << " [GeV]" << std::endl;
+      if(PFNoZVector.size()>0){
+	for(unsigned int i=0;i<PFNoZVector.size();i++){
+	  std::cout << "All PF Information, no Z products --> pT: " << PFNoZVector[i]->pt() << " [GeV] | eta: " << PFNoZVector[i]->eta() << " | phi: " << PFNoZVector[i]->phi() << " | id: " << PFNoZVector[i]->particleId() << " | # Particles: " << PFNoZVector.size() << std::endl;
+	}
       }
     }
   }
