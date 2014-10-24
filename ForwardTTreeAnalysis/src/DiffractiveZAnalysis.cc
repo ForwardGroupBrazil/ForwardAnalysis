@@ -865,7 +865,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   if(GapVector.size()>0){
     if(debug) std::cout << "\nLooking Gap" << std::endl;
     std::sort(GapVector.rbegin(), GapVector.rend());
-    for(unsigned int i=0;i<genVector.size()-1;i++){
+    for(unsigned int i=0;i<GapVector.size()-1;i++){
       if (debug) std::cout << "GapSize: " << GapVector[i].first << " | eta edge: " << GapVector[i].second << std::endl;
     }
     eventData.SetLrgGen(GapVector[0].first);
@@ -877,21 +877,26 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   math::XYZTLorentzVector systemY(0.,0.,0.,0.);
   //double xi_mx = 0;
 
+  double sumpTX = 0.;
+  double sumpTY = 0.;
   if(genVector.size()>0 && GapVector.size()>0){
     std::sort(genVector.begin(), genVector.end(), orderETA());
     std::sort(GapVector.rbegin(), GapVector.rend());
-
     for(unsigned int i=0;i<genVector.size();i++){
       math::XYZTLorentzVector tmp(genVector[i]->px(), genVector[i]->py(), genVector[i]->pz(), genVector[i]->energy());
       if(genVector[i]->eta()>GapVector[0].second){
 	systemX += tmp;
+	sumpTX += genVector[i]->pt();
       }else{
 	systemY +=tmp;
+	sumpTY += genVector[i]->pt();
       }
     }
 
     //if (systemX.M2() > systemY.M2() && systemX.M2() > 0.) xi_mx = systemX.M2()/(4*beamEnergy_*beamEnergy_);
     //else if (systemY.M2() > systemX.M2() && systemY.M2() > 0.) xi_mx = systemY.M2()/(4*beamEnergy_*beamEnergy_);
+
+    // INCLUDE SUM PT PF CMS AND PF
 
     if(debug){
       std::cout << "\nLooking Diffractive System" << std::endl;
@@ -986,7 +991,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   if(GapCMSVector.size()>0){
     if (debug) std::cout << "\nLooking Gap CMS" << std::endl;
     std::sort(GapCMSVector.rbegin(), GapCMSVector.rend());
-    for(unsigned int i=0;i<genCMSVector.size()-1;i++){
+    for(unsigned int i=0;i<GapCMSVector.size()-1;i++){
       if (debug) std::cout << "GapSize CMS: " << GapCMSVector[i].first << " | eta edge: " << GapCMSVector[i].second << std::endl;
     }
     eventData.SetLrgGenCMS(GapCMSVector[0].first);
@@ -998,6 +1003,9 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   math::XYZTLorentzVector systemYCMS(0.,0.,0.,0.);
   //double xi_mx_CMS = 0;
 
+
+  double sumpTXCMS = 0.;
+  double sumpTYCMS = 0.;
   if(genCMSVector.size()>0 && GapCMSVector.size()>0){
     std::sort(genCMSVector.begin(), genCMSVector.end(), orderETA());
     std::sort(GapCMSVector.rbegin(), GapCMSVector.rend());
@@ -1005,8 +1013,10 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
       math::XYZTLorentzVector tmp(genCMSVector[i]->px(), genCMSVector[i]->py(), genCMSVector[i]->pz(), genCMSVector[i]->energy());
       if(genCMSVector[i]->eta()>GapCMSVector[0].second){
 	systemXCMS += tmp;
+	sumpTXCMS += genCMSVector[i]->pt();
       }else{
 	systemYCMS +=tmp;
+	sumpTYCMS += genCMSVector[i]->pt();
       }
     }
 
@@ -1312,6 +1322,27 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
     eventData.SetEtaCaloMin(-999.);
   }
 
+  // Find LRG CaloTower
+  std::vector<std::pair<double, double> > GapCaloVector;
+  GapCaloVector.clear();
+
+  if(towerVector.size()>1){
+    std::sort(towerVector.begin(), towerVector.end(), orderETA());
+    for(unsigned int i=0;i<towerVector.size()-1;i++){
+      GapCaloVector.push_back(std::make_pair(fabs(towerVector[i+1]->eta()-towerVector[i]->eta()),towerVector[i]->eta()));
+    }
+  }
+
+  if(GapCaloVector.size()>0){
+    if (debug) std::cout << "\nLooking Calorimeter Gap CMS" << std::endl;
+    std::sort(GapCaloVector.rbegin(), GapCaloVector.rend());
+    for(unsigned int i=0;i<GapCaloVector.size()-1;i++){
+      if (debug) std::cout << "Calorimeter GapSize CMS: " << GapCaloVector[i].first << " | eta edge: " << GapCaloVector[i].second << std::endl;
+    }
+  }
+
+
+  //Fill Variables
   eventData.SetSumEHFPlus(sumEHF_plus);
   eventData.SetSumEHF_SPlus(sumEHF_S_plus);
   eventData.SetSumEHF_LPlus(sumEHF_L_plus);
@@ -1346,7 +1377,6 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
   eventData.SetEminuspzCalo(Epz_minus);
   eventData.SetEtExpoPlusCalo(Et_eta_plus);
   eventData.SetEtExpoMinusCalo(Et_eta_minus);
-  //include Max LRG
 
   eventData.SetMultiplicityHFPlus(nTowersHF_plus);
   eventData.SetMultiplicityHEPlus(nTowersHE_plus);
@@ -1364,7 +1394,8 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
 void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug=true;
+  bool debug=false;
+  bool debugDeep = false;
 
   PFMuonVector.clear();
   PFElectronVector.clear();
@@ -1438,15 +1469,17 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       std::cout << "E - pz, CMS: " << E_pz_minus << " [GeV]" << std::endl;
       std::cout << "Et*exp(+eta), CMS: " << et_expo_plus << " [GeV]" << std::endl;
       std::cout << "Et*exp(-eta), CMS: " << et_expo_minus << " [GeV]" << std::endl;
-      for(unsigned int i=0;i<PFVector.size();i++){
-	std::cout << "All PF Information --> pT: " << PFVector[i]->pt() << " [GeV] | eta: " << PFVector[i]->eta() << " | phi: " << PFVector[i]->phi() << " | id: " << PFVector[i]->particleId() << " | # Particles: " << PFVector.size() << std::endl;
+      if(debugDeep){
+	for(unsigned int i=0;i<PFVector.size();i++){
+	  std::cout << "All PF Information --> pT: " << PFVector[i]->pt() << " [GeV] | eta: " << PFVector[i]->eta() << " | phi: " << PFVector[i]->phi() << " | id: " << PFVector[i]->particleId() << " | # Particles: " << PFVector.size() << std::endl;
+	}
       }
     }
   }
 
   if(PFElectronVector.size()>0){
     std::sort(PFElectronVector.begin(), PFElectronVector.end(), orderPT());
-    if(debug){
+    if(debugDeep){
       for(unsigned int i=0;i<PFElectronVector.size();i++){
 	std::cout << "Electron PF Information --> pT: " << PFElectronVector[i]->pt() << " [GeV] | eta: " << PFElectronVector[i]->eta() << " | phi: " << PFElectronVector[i]->phi() << std::endl;
       }
@@ -1455,7 +1488,7 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 
   if(PFMuonVector.size()>0){
     std::sort(PFMuonVector.begin(), PFMuonVector.end(), orderPT());
-    if(debug){
+    if(debugDeep){
       for(unsigned int i=0;i<PFMuonVector.size();i++){
 	std::cout << "Muon PF Information --> pT: " << PFMuonVector[i]->pt() << " [GeV] | eta: " << PFMuonVector[i]->eta() << " | phi: " << PFMuonVector[i]->phi() << std::endl;
       }
@@ -1473,7 +1506,7 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       }else{
 	PFHFEnergyMinus += PFHFVector[i]->energy();
       }
-      if (debug) {
+      if (debugDeep) {
 	std::cout << "PF HF Information --> pT: " << PFHFVector[i]->pt() << " [GeV] | eta: " << PFHFVector[i]->eta() << " | phi: " << PFHFVector[i]->phi() << " | id: " << PFVector[i]->particleId() << std::endl;
       }
     }
@@ -1489,7 +1522,6 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   bool ZPFElectron=false;
 
   // Z Candidates from Electron, Muon and PF Colections
-
   if(PFMuonVector.size()>1){
     if(InvariantMass(PFMuonVector[0],PFMuonVector[1])>60. && InvariantMass(PFMuonVector[0],PFMuonVector[1])<110.) ZPFMuon=true;
     if(debug) std::cout << "Invariant Z Mass, dimuon PF: " << InvariantMass(PFMuonVector[0],PFMuonVector[1]) << " [GeV]" << std::endl;
@@ -1509,7 +1541,6 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     if(InvariantMass(ElectronVector[0],ElectronVector[1])>60. && InvariantMass(ElectronVector[0],ElectronVector[1])<110.) ZElectron=true;
     if(debug) std::cout << "Invariant Z Mass, dielectron: " << InvariantMass(ElectronVector[0],ElectronVector[1]) << " [GeV]" << std::endl;
   }
-
 
   // Fill PF Vector excluing Z candidate decay products
   if(PFVector.size()>1 && (ZPFMuon || ZMuon)){
@@ -1534,7 +1565,6 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   }
 
   // PF Without Z products
-
   double E_pz_plus_noz = 0.;
   double E_pz_minus_noz = 0.;
   double et_expo_plus_noz = 0.;
@@ -1574,11 +1604,106 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       std::cout << "E - pz, CMS: " << E_pz_minus_noz << " [GeV]" << std::endl;
       std::cout << "Et*exp(+eta), CMS: " << et_expo_plus_noz << " [GeV]" << std::endl;
       std::cout << "Et*exp(-eta), CMS: " << et_expo_minus_noz << " [GeV]" << std::endl;
-      if(PFNoZVector.size()>0){
-	for(unsigned int i=0;i<PFNoZVector.size();i++){
-	  std::cout << "All PF Information, no Z products --> pT: " << PFNoZVector[i]->pt() << " [GeV] | eta: " << PFNoZVector[i]->eta() << " | phi: " << PFNoZVector[i]->phi() << " | id: " << PFNoZVector[i]->particleId() << " | # Particles: " << PFNoZVector.size() << std::endl;
+      if(debugDeep){
+	if(PFNoZVector.size()>0){
+	  for(unsigned int i=0;i<PFNoZVector.size();i++){
+	    std::cout << "All PF Information, no Z products --> pT: " << PFNoZVector[i]->pt() << " [GeV] | eta: " << PFNoZVector[i]->eta() << " | phi: " << PFNoZVector[i]->phi() << " | id: " << PFNoZVector[i]->particleId() << " | # Particles: " << PFNoZVector.size() << std::endl;
+	  }
 	}
       }
+    }
+  }
+
+  std::vector<std::pair<double, double> > GapPFVector;
+  GapPFVector.clear();
+
+  std::vector<std::pair<double, double> > GapPFVectornoz;
+  GapPFVectornoz.clear();
+
+  // Find LRG
+  if(PFVector.size()>1){
+    std::sort(PFVector.begin(), PFVector.end(), orderETA());
+    for(unsigned int i=0;i<PFVector.size()-1;i++){
+      GapPFVector.push_back(std::make_pair(fabs(PFVector[i+1]->eta()-PFVector[i]->eta()),PFVector[i]->eta()));
+    }
+  }
+
+  if(GapPFVector.size()>0){
+    if (debugDeep) std::cout << "\nLooking Gap CMS" << std::endl;
+    std::sort(GapPFVector.rbegin(), GapPFVector.rend());
+    for(unsigned int i=0;i<GapPFVector.size()-1;i++){
+      if (debugDeep) std::cout << "GapSize CMS: " << GapPFVector[i].first << " | eta edge: " << GapPFVector[i].second << std::endl;
+    }
+  }
+
+  // Find LRG No Z
+  if(PFNoZVector.size()>1){
+    std::sort(PFNoZVector.begin(), PFNoZVector.end(), orderETA());
+    for(unsigned int i=0;i<PFNoZVector.size()-1;i++){
+      GapPFVectornoz.push_back(std::make_pair(fabs(PFNoZVector[i+1]->eta()-PFNoZVector[i]->eta()),PFNoZVector[i]->eta()));
+    }
+  }
+
+  if(GapPFVectornoz.size()>0){
+    if (debugDeep) std::cout << "\nLooking Gap CMS, excluding Z decay products" << std::endl;
+    std::sort(GapPFVectornoz.rbegin(), GapPFVectornoz.rend());
+    for(unsigned int i=0;i<GapPFVectornoz.size()-1;i++){
+      if (debugDeep) std::cout << "GapSize CMS: " << GapPFVectornoz[i].first << " | eta edge: " << GapPFVectornoz[i].second << std::endl;
+    }
+  }
+
+  // Calculate Sum pT and Mx left and right edge of the LRG
+  math::XYZTLorentzVector systemXCMS(0.,0.,0.,0.);
+  math::XYZTLorentzVector systemYCMS(0.,0.,0.,0.);
+  double sumPTX = 0.;
+  double sumPTY = 0.;
+
+  if(PFVector.size()>0 && GapPFVector.size()>0){
+    std::sort(PFVector.begin(), PFVector.end(), orderETA());
+    std::sort(GapPFVector.rbegin(), GapPFVector.rend());
+    for(unsigned int i=0;i<PFVector.size();i++){
+      math::XYZTLorentzVector tmp(PFVector[i]->px(), PFVector[i]->py(), PFVector[i]->pz(), PFVector[i]->energy());
+      if(PFVector[i]->eta()>GapPFVector[0].second){
+	systemXCMS += tmp;
+	sumPTX += PFVector[i]->pt();
+      }else{
+	systemYCMS +=tmp;
+	sumPTY += PFVector[i]->pt();
+      }
+    }
+    if(debug){
+      std::cout << "\nLooking CMS Diffractive System" << std::endl;
+      std::cout << "Mx: " << systemXCMS.M() << " [GeV]" << std::endl;
+      std::cout << "My: " << systemYCMS.M() << " [GeV]" << std::endl;
+      std::cout << "Sum pT X system: " << sumPTX << " [GeV]" << std::endl;
+      std::cout << "Sum pT Y system: " << sumPTY << " [GeV]" << std::endl;
+    }
+  }
+
+  math::XYZTLorentzVector systemXCMSnoz(0.,0.,0.,0.);
+  math::XYZTLorentzVector systemYCMSnoz(0.,0.,0.,0.);
+  double sumPTXnoz = 0.;
+  double sumPTYnoz = 0.;
+
+  if(PFNoZVector.size()>0 && GapPFVectornoz.size()>0){
+    std::sort(PFNoZVector.begin(), PFNoZVector.end(), orderETA());
+    std::sort(GapPFVectornoz.rbegin(), GapPFVectornoz.rend());
+    for(unsigned int i=0;i<PFNoZVector.size();i++){
+      math::XYZTLorentzVector tmp(PFNoZVector[i]->px(), PFNoZVector[i]->py(), PFNoZVector[i]->pz(), PFNoZVector[i]->energy());
+      if(PFNoZVector[i]->eta()>GapPFVectornoz[0].second){
+	systemXCMSnoz += tmp;
+	sumPTXnoz += PFNoZVector[i]->pt();
+      }else{
+	systemYCMSnoz +=tmp;
+	sumPTYnoz += PFNoZVector[i]->pt();
+      }
+    }
+    if(debug){
+      std::cout << "\nLooking CMS Diffractive System, Excluding Z decay products" << std::endl;
+      std::cout << "Mx: " << systemXCMSnoz.M() << " [GeV]" << std::endl;
+      std::cout << "My: " << systemYCMSnoz.M() << " [GeV]" << std::endl;
+      std::cout << "Sum pT X system: " << sumPTXnoz << " [GeV]" << std::endl;
+      std::cout << "Sum pT Y system: " << sumPTYnoz << " [GeV]" << std::endl;
     }
   }
 
