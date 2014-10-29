@@ -64,7 +64,6 @@ namespace diffractiveZAnalysis {
       void fillCastor(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillCastorDebug(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillZDC(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
-      void fillDetectorEnergyEtaInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       template <class T, class W>
 	math::XYZTLorentzVector DiSystem(T obj1, W obj2);

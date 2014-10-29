@@ -159,8 +159,6 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
     fillCastorDebug(eventData,event,setup);
   }
   if (RunZDC_) fillZDC(eventData,event,setup);
-  if (EachTower_) fillDetectorEnergyEtaInfo(eventData,event,setup);
-
 }
 
 // Fill Trigger
@@ -896,26 +894,24 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     //if (systemX.M2() > systemY.M2() && systemX.M2() > 0.) xi_mx = systemX.M2()/(4*beamEnergy_*beamEnergy_);
     //else if (systemY.M2() > systemX.M2() && systemY.M2() > 0.) xi_mx = systemY.M2()/(4*beamEnergy_*beamEnergy_);
 
-    // INCLUDE SUM PT PF CMS AND PF
-
     if(debug){
       std::cout << "\nLooking Diffractive System" << std::endl;
       std::cout << "Mx: " << systemX.M() << " [GeV]" << std::endl;
       std::cout << "My: " << systemY.M() << " [GeV]" << std::endl;
     }
-
     eventData.SetMxGenLeft(systemY.M());
     eventData.SetMxGenRight(systemX.M());
     eventData.SetMx2GenLeft(systemY.M2());
     eventData.SetMx2GenRight(systemX.M2());
-
+    eventData.SetSumptGenLeft(sumpTY);
+    eventData.SetSumptGenRight(sumpTX);
   }else{
-
     eventData.SetMxGenLeft(-999.);
     eventData.SetMxGenRight(-999.);
     eventData.SetMx2GenLeft(-999.);
     eventData.SetMx2GenRight(-999.);
-
+    eventData.SetSumptGenLeft(-999.);
+    eventData.SetSumptGenRight(-999.);
   }
 
   // GEN CMS LRG
@@ -953,7 +949,6 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
       std::cout << "Et*exp(+eta), CMS: " << et_expo_plus_gen_CMS << " [GeV]" << std::endl;
       std::cout << "Et*exp(-eta), CMS: " << et_expo_minus_gen_CMS << " [GeV]" << std::endl;
     }
-
     eventData.SetEtaMaxGenCMS(genCMSVector[0]->eta());
     eventData.SetEtaMinGenCMS(genCMSVector[genCMSVector.size()-1]->eta());
     eventData.SetMxGenMinusCMS(SMinusCMS.M());
@@ -964,9 +959,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     eventData.SetEminuspzGenCMS(E_pz_minus_gen_CMS);
     eventData.SetEtExpoPlusGenCMS(et_expo_plus_gen_CMS);
     eventData.SetEtExpoMinusGenCMS(et_expo_minus_gen_CMS);
-
   }else{
-
     eventData.SetEtaMaxGenCMS(-999.);
     eventData.SetEtaMinGenCMS(-999.);
     eventData.SetMxGenMinusCMS(-999.);
@@ -977,7 +970,6 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     eventData.SetEminuspzGenCMS(-999.);
     eventData.SetEtExpoPlusGenCMS(-999.);
     eventData.SetEtExpoMinusGenCMS(-999.);
-
   }
 
   if(genCMSVector.size()>1){
@@ -1028,19 +1020,19 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
       std::cout << "Mx: " << systemXCMS.M() << " [GeV]" << std::endl;
       std::cout << "My: " << systemYCMS.M() << " [GeV]" << std::endl;
     }
-
     eventData.SetMxGenLeftCMS(systemYCMS.M());
     eventData.SetMxGenRightCMS(systemXCMS.M());
     eventData.SetMx2GenLeftCMS(systemYCMS.M2());
     eventData.SetMx2GenRightCMS(systemXCMS.M2());
-
+    eventData.SetSumptGenLeftCMS(sumpTYCMS);
+    eventData.SetSumptGenRightCMS(sumpTXCMS);
   }else{
-
     eventData.SetMxGenLeftCMS(-999.);
     eventData.SetMxGenRightCMS(-999.);
     eventData.SetMx2GenLeftCMS(-999.);
     eventData.SetMx2GenRightCMS(-999.);
-
+    eventData.SetSumptGenLeftCMS(-999.);
+    eventData.SetSumptGenRightCMS(-999.);
   }
 
   if(debug){
@@ -1064,6 +1056,11 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
   bool debug = false;
 
+  std::vector<double> energy_tower;
+  std::vector<double> eta_tower;
+
+  energy_tower.clear();
+  eta_tower.clear();
   towerVector.clear();
 
   double Epz_plus=0.;  
@@ -1115,6 +1112,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
   int towersize = towerCollectionH->size();
   int itTower;
+  int counter_tower=0;
 
   for(itTower=0; itTower < towersize; ++itTower){
     const CaloTower* calotower = &((*towerCollectionH)[itTower]);
@@ -1247,6 +1245,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
     {
       if( caloTowerEmEnergy >= energyThresholdEE_)
       {
+
 	CalAboveTh = true;
 
 	if (debug) std::cout << "EE>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << std::endl;
@@ -1290,6 +1289,9 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
     if(CalAboveTh)
     {
+      ++counter_tower;
+      energy_tower.push_back(calotower->energy());
+      eta_tower.push_back(calotower->eta());
       towerVector.push_back(calotower);
       Et_eta_minus += caloTowerEt * pow(2.71,-calotower->eta());
       Et_eta_plus += caloTowerEt * pow(2.71,calotower->eta());
@@ -1334,13 +1336,15 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
   }
 
   if(GapCaloVector.size()>0){
-    if (debug) std::cout << "\nLooking Calorimeter Gap CMS" << std::endl;
     std::sort(GapCaloVector.rbegin(), GapCaloVector.rend());
+    eventData.SetLrgCalo(GapCaloVector[0].first);
+    if (debug) std::cout << "\nLooking Calorimeter Gap CMS" << std::endl;
     for(unsigned int i=0;i<GapCaloVector.size()-1;i++){
       if (debug) std::cout << "Calorimeter GapSize CMS: " << GapCaloVector[i].first << " | eta edge: " << GapCaloVector[i].second << std::endl;
     }
+  }else{
+    eventData.SetLrgCalo(-999.);
   }
-
 
   //Fill Variables
   eventData.SetSumEHFPlus(sumEHF_plus);
@@ -1383,7 +1387,12 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
   eventData.SetMultiplicityEEPlus(nTowersEE_plus);
   eventData.SetMultiplicityHFMinus(nTowersHF_minus);
   eventData.SetMultiplicityHEMinus(nTowersHE_minus);
-  eventData.SetMultiplicityEEMinus(nTowersEE_minus); 
+  eventData.SetMultiplicityEEMinus(nTowersEE_minus);
+  if(EachTower_){
+    eventData.SetEachTowerCounter(counter_tower);
+    eventData.SetEachTowerEta(eta_tower);
+    eventData.SetEachTowerEnergy(energy_tower);
+  }
 
 }
 
@@ -1405,6 +1414,8 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 
   edm::Handle<reco::VertexCollection> Vertexes;
   event.getByLabel(PVtxCollectionTag_, Vertexes);
+
+  eventData.SetVertex(Vertexes->size());
 
   edm::Handle <reco::PFCandidateCollection> PFCandidates;
   event.getByLabel(pfTag_,PFCandidates);
@@ -1452,10 +1463,29 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 	SMinusCMS+=tmp;
       }
     }
+    eventData.SetMxPFMinus(SMinusCMS.M());
+    eventData.SetMxPFPlus(SPlusCMS.M());
+    eventData.SetMx2PFMinus(SMinusCMS.M2());
+    eventData.SetMx2PFPlus(SPlusCMS.M2());
+    eventData.SetEpluspzPF(E_pz_plus);
+    eventData.SetEminuspzPF(E_pz_minus);
+    eventData.SetEtExpoPlusPF(et_expo_plus);
+    eventData.SetEtExpoMinusPF(et_expo_minus);
+  }else{
+    eventData.SetMxPFMinus(-999.);
+    eventData.SetMxPFPlus(-999.);
+    eventData.SetMx2PFMinus(-999.);
+    eventData.SetMx2PFPlus(-999.);
+    eventData.SetEpluspzPF(-999.);
+    eventData.SetEminuspzPF(-999.);
+    eventData.SetEtExpoPlusPF(-999.);
+    eventData.SetEtExpoMinusPF(-999.);
   }
 
   if(PFVector.size()>0){
     std::sort(PFVector.begin(), PFVector.end(), orderETA());
+    eventData.SetEtaMaxPF(PFVector[0]->eta());
+    eventData.SetEtaMinPF(PFVector[PFVector.size()-1]->eta());
     if(debug){
       std::cout << "\nCMS Particles After Sort by Eta Info:" << std::endl;
       std::cout << "Reconstructed Variables CMS PF Info:" << std::endl;
@@ -1475,6 +1505,9 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 	}
       }
     }
+  }else{
+    eventData.SetEtaMaxPF(-999.);
+    eventData.SetEtaMinPF(-999.);
   }
 
   if(PFElectronVector.size()>0){
@@ -1587,10 +1620,29 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 	SMinusCMSnoz+=tmp;
       }
     }
+    eventData.SetMxPFNoZMinus(SMinusCMSnoz.M());
+    eventData.SetMxPFNoZPlus(SPlusCMSnoz.M());
+    eventData.SetMx2PFNoZMinus(SMinusCMSnoz.M2());
+    eventData.SetMx2PFNoZPlus(SPlusCMSnoz.M2());
+    eventData.SetEpluspzPFNoZ(E_pz_plus_noz);
+    eventData.SetEminuspzPFNoZ(E_pz_minus_noz);
+    eventData.SetEtExpoPlusPFNoZ(et_expo_plus_noz);
+    eventData.SetEtExpoMinusPFNoZ(et_expo_minus_noz);
+  }else{
+    eventData.SetMxPFNoZMinus(-999.);
+    eventData.SetMxPFNoZPlus(-999.);
+    eventData.SetMx2PFNoZMinus(-999.);
+    eventData.SetMx2PFNoZPlus(-999.);
+    eventData.SetEpluspzPFNoZ(-999.);
+    eventData.SetEminuspzPFNoZ(-999.);
+    eventData.SetEtExpoPlusPFNoZ(-999.);
+    eventData.SetEtExpoMinusPFNoZ(-999.);
   }
 
   if(PFNoZVector.size()>0){
     std::sort(PFNoZVector.begin(), PFNoZVector.end(), orderETA());
+    eventData.SetEtaMaxPFNoZ(PFNoZVector[0]->eta());
+    eventData.SetEtaMinPFNoZ(PFNoZVector[PFNoZVector.size()-1]->eta());
     if(debug){
       std::cout << "\nCMS Particles After Sort by Eta Info, excluding Z Boson products:" << std::endl;
       std::cout << "Reconstructed Variables CMS PF Info:" << std::endl;
@@ -1612,6 +1664,9 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 	}
       }
     }
+  }else{
+    eventData.SetEtaMaxPFNoZ(-999.);
+    eventData.SetEtaMinPFNoZ(-999.);
   }
 
   std::vector<std::pair<double, double> > GapPFVector;
@@ -1629,11 +1684,14 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   }
 
   if(GapPFVector.size()>0){
-    if (debugDeep) std::cout << "\nLooking Gap CMS" << std::endl;
     std::sort(GapPFVector.rbegin(), GapPFVector.rend());
+    eventData.SetLrgPF(GapPFVector[0].first);
+    if (debugDeep) std::cout << "\nLooking Gap CMS" << std::endl;
     for(unsigned int i=0;i<GapPFVector.size()-1;i++){
       if (debugDeep) std::cout << "GapSize CMS: " << GapPFVector[i].first << " | eta edge: " << GapPFVector[i].second << std::endl;
     }
+  }else{
+    eventData.SetLrgPF(-999.);
   }
 
   // Find LRG No Z
@@ -1645,11 +1703,14 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   }
 
   if(GapPFVectornoz.size()>0){
-    if (debugDeep) std::cout << "\nLooking Gap CMS, excluding Z decay products" << std::endl;
     std::sort(GapPFVectornoz.rbegin(), GapPFVectornoz.rend());
+    eventData.SetLrgPFNoZ(GapPFVectornoz[0].first);
+    if (debugDeep) std::cout << "\nLooking Gap CMS, excluding Z decay products" << std::endl;
     for(unsigned int i=0;i<GapPFVectornoz.size()-1;i++){
       if (debugDeep) std::cout << "GapSize CMS: " << GapPFVectornoz[i].first << " | eta edge: " << GapPFVectornoz[i].second << std::endl;
     }
+  }else{
+    eventData.SetLrgPFNoZ(-999.);
   }
 
   // Calculate Sum pT and Mx left and right edge of the LRG
@@ -1678,6 +1739,19 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       std::cout << "Sum pT X system: " << sumPTX << " [GeV]" << std::endl;
       std::cout << "Sum pT Y system: " << sumPTY << " [GeV]" << std::endl;
     }
+    eventData.SetMxPFLeft(systemYCMS.M());
+    eventData.SetMxPFRight(systemXCMS.M());
+    eventData.SetMx2PFLeft(systemYCMS.M2());
+    eventData.SetMx2PFRight(systemXCMS.M2());
+    eventData.SetSumptPFLeft(sumPTY);
+    eventData.SetSumptPFRight(sumPTX);
+  }else{
+    eventData.SetMxPFLeft(-999.);
+    eventData.SetMxPFRight(-999.);
+    eventData.SetMx2PFLeft(-999.);
+    eventData.SetMx2PFRight(-999.);
+    eventData.SetSumptPFLeft(-999.);
+    eventData.SetSumptPFRight(-999.);
   }
 
   math::XYZTLorentzVector systemXCMSnoz(0.,0.,0.,0.);
@@ -1705,8 +1779,20 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       std::cout << "Sum pT X system: " << sumPTXnoz << " [GeV]" << std::endl;
       std::cout << "Sum pT Y system: " << sumPTYnoz << " [GeV]" << std::endl;
     }
+    eventData.SetMxPFNoZLeft(systemYCMSnoz.M());
+    eventData.SetMxPFNoZRight(systemXCMSnoz.M());
+    eventData.SetMx2PFNoZLeft(systemYCMSnoz.M2());
+    eventData.SetMx2PFNoZRight(systemXCMSnoz.M2());
+    eventData.SetSumptPFNoZLeft(sumPTYnoz);
+    eventData.SetSumptPFNoZRight(sumPTXnoz);
+  }else{
+    eventData.SetMxPFNoZLeft(-999.);
+    eventData.SetMxPFNoZRight(-999.);
+    eventData.SetMx2PFNoZLeft(-999.);
+    eventData.SetMx2PFNoZRight(-999.);
+    eventData.SetSumptPFNoZLeft(-999.);
+    eventData.SetSumptPFNoZRight(-999.);
   }
-
 
 }
 
@@ -1717,10 +1803,10 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   // Declaring Variables
-
   bool debug = false;
-  int ElectronsN=0;
-  int MuonsN=0;
+
+  PatElectronVector.clear();
+  PatMuonVector.clear();
 
   // Detector Objects and Candidates
   edm::Handle<std::vector<pat::Muon> > muons;
@@ -1729,112 +1815,102 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
   edm::Handle<std::vector<pat::Electron> > electrons;
   event.getByLabel("patElectrons", electrons);
 
-  if (debug) {
-
-    if (muons->size() > 1) {
-      std::cout << "More than 2 Muons!" << std::endl; 
+  int electronsize = electrons->size();
+  int itElectron;
+  if(electrons->size()>0){
+    for(itElectron=0; itElectron < electronsize; ++itElectron){
+      const pat::Electron* electronAll = &((*electrons)[itElectron]);
+      PatElectronVector.push_back(electronAll);
     }
-
-    if (electrons->size() > 1) {    
-      std::cout << "More than 2 Electrons!" << std::endl;
-    }
-
   }
-
-  // Read information of Muon Candidate
-
-  const pat::Muon* muon1=NULL;
-  const pat::Muon* muon2=NULL;
 
   int muonsize = muons->size();
   int itMuon;
-
-  if(muons->size()>1){
-
+  if(muons->size()>0){
     for(itMuon=0; itMuon < muonsize; ++itMuon){
-
-      ++MuonsN;
-
       const pat::Muon* muonAll = &((*muons)[itMuon]);
-
-      if (muonAll==NULL) continue;
-
-      if (muon1==NULL) {muon1=muonAll; continue;}
-      if (muonAll->pt()>muon1->pt()) {
-	muon2=muon1;
-	muon1=muonAll;
-	continue;
-      }
-
-      if (muon2==NULL) {muon2=muonAll; continue;}
-      if (muonAll->pt()>muon2->pt()) muon2 = muonAll;
-
+      PatMuonVector.push_back(muonAll);
     }
+  }
 
-    double muon1SumPtR03 = muon1->isolationR03().sumPt;
-    double muon1EmEtR03 = muon1->isolationR03().emEt;
-    double muon1HadEtR03 = muon1->isolationR03().hadEt;    
-    double muon1SumPtR05 = muon1->isolationR05().sumPt;
-    double muon1EmEtR05 = muon1->isolationR05().emEt;
-    double muon1HadEtR05 = muon1->isolationR05().hadEt;    
+  // Sorting Vector
+  std::sort(PatElectronVector.begin(), PatElectronVector.end(), orderPT());
+  std::sort(PatMuonVector.begin(), PatMuonVector.end(), orderPT());
 
-    double muon2SumPtR03 = muon2->isolationR03().sumPt;
-    double muon2EmEtR03 = muon2->isolationR03().emEt;
-    double muon2HadEtR03 = muon2->isolationR03().hadEt;
-    double muon2SumPtR05 = muon2->isolationR05().sumPt;
-    double muon2EmEtR05 = muon2->isolationR05().emEt;
-    double muon2HadEtR05 = muon2->isolationR05().hadEt;
+  if(PatElectronVector.size()>0){
+    for(unsigned int i=0;i<PatElectronVector.size();i++){
+      if (debug) {
+	std::cout << "PAT Electron --> pT: " << PatElectronVector[i]->pt() << " [GeV] | eta: " << PatElectronVector[i]->eta() << " | phi: " << PatElectronVector[i]->phi() << std::endl;
+      }
+    }
+  }
 
-    double relIsoFirstMuonDr03 = (muon1SumPtR03 + muon1EmEtR03 + muon1HadEtR03)/muon1->pt();
-    double relIsoSecondMuonDr03 = (muon2SumPtR03 + muon2EmEtR03 + muon2HadEtR03)/muon2->pt();
-    double relIsoFirstMuonDr05 = (muon1SumPtR05 + muon1EmEtR05 + muon1HadEtR05)/muon1->pt();
-    double relIsoSecondMuonDr05 = (muon2SumPtR05 + muon2EmEtR05 + muon2HadEtR05)/muon2->pt();
+  if(PatMuonVector.size()>0){
+    for(unsigned int i=0;i<PatMuonVector.size();i++){
+      if (debug) {
+	std::cout << "PAT Muon --> pT: " << PatMuonVector[i]->pt() << " [GeV] | eta: " << PatMuonVector[i]->eta() << " | phi: " << PatMuonVector[i]->phi() << std::endl;
+      }
+    }
+  }
 
-    double relIsoFirstMuon = (muon1->trackIso()+muon1->ecalIso()+muon1->hcalIso())/muon1->pt();
-    double relIsoSecondMuon = (muon2->trackIso()+muon2->ecalIso()+muon2->hcalIso())/muon2->pt();
+
+  if(PatMuonVector.size()>1){
+    double muon1SumPtR03 = PatMuonVector[0]->isolationR03().sumPt;
+    double muon1EmEtR03 = PatMuonVector[0]->isolationR03().emEt;
+    double muon1HadEtR03 = PatMuonVector[0]->isolationR03().hadEt;    
+    double muon1SumPtR05 = PatMuonVector[0]->isolationR05().sumPt;
+    double muon1EmEtR05 = PatMuonVector[0]->isolationR05().emEt;
+    double muon1HadEtR05 = PatMuonVector[0]->isolationR05().hadEt;    
+    double muon2SumPtR03 = PatMuonVector[1]->isolationR03().sumPt;
+    double muon2EmEtR03 = PatMuonVector[1]->isolationR03().emEt;
+    double muon2HadEtR03 = PatMuonVector[1]->isolationR03().hadEt;
+    double muon2SumPtR05 = PatMuonVector[1]->isolationR05().sumPt;
+    double muon2EmEtR05 = PatMuonVector[1]->isolationR05().emEt;
+    double muon2HadEtR05 = PatMuonVector[1]->isolationR05().hadEt;
+    double relIsoFirstMuonDr03 = (muon1SumPtR03 + muon1EmEtR03 + muon1HadEtR03)/PatMuonVector[0]->pt();
+    double relIsoSecondMuonDr03 = (muon2SumPtR03 + muon2EmEtR03 + muon2HadEtR03)/PatMuonVector[1]->pt();
+    double relIsoFirstMuonDr05 = (muon1SumPtR05 + muon1EmEtR05 + muon1HadEtR05)/PatMuonVector[0]->pt();
+    double relIsoSecondMuonDr05 = (muon2SumPtR05 + muon2EmEtR05 + muon2HadEtR05)/PatMuonVector[1]->pt();
+
+    double relIsoFirstMuon = (PatMuonVector[0]->trackIso()+PatMuonVector[0]->ecalIso()+PatMuonVector[0]->hcalIso())/PatMuonVector[0]->pt();
+    double relIsoSecondMuon = (PatMuonVector[1]->trackIso()+PatMuonVector[1]->ecalIso()+PatMuonVector[1]->hcalIso())/PatMuonVector[1]->pt();
 
     // DiMuon Mass
     math::XYZTLorentzVector DipatMuonSystem(0.,0.,0.,0.);
-    DipatMuonSystem += muon1->p4();
-    DipatMuonSystem += muon2->p4();
+    DipatMuonSystem += PatMuonVector[0]->p4();
+    DipatMuonSystem += PatMuonVector[1]->p4();
 
     eventData.SetPatDiMuonMass(DipatMuonSystem.M());
     eventData.SetPatDiMuonEta(DipatMuonSystem.eta());
     eventData.SetPatDiMuonPhi(DipatMuonSystem.phi());
     eventData.SetPatDiMuonPt(DipatMuonSystem.pt());
-
-    eventData.SetPatNMuon(muons->size());
-    eventData.SetPatMuon1Pt(muon1->pt());
-    eventData.SetPatMuon1Charge(muon1->charge());
-    eventData.SetPatMuon1Phi(muon1->phi());
-    eventData.SetPatMuon1Eta(muon1->eta());
-    eventData.SetPatMuon1Et(muon1->et());
-
-    eventData.SetPatMuon2Pt(muon2->pt());
-    eventData.SetPatMuon2Charge(muon2->charge());
-    eventData.SetPatMuon2Phi(muon2->phi());
-    eventData.SetPatMuon2Eta(muon2->eta());
-    eventData.SetPatMuon2Et(muon2->et());
-
+    eventData.SetPatNMuon(PatMuonVector.size());
+    eventData.SetPatMuon1Pt(PatMuonVector[0]->pt());
+    eventData.SetPatMuon1Charge(PatMuonVector[0]->charge());
+    eventData.SetPatMuon1Phi(PatMuonVector[0]->phi());
+    eventData.SetPatMuon1Eta(PatMuonVector[0]->eta());
+    eventData.SetPatMuon1Et(PatMuonVector[0]->et());
+    eventData.SetPatMuon2Pt(PatMuonVector[1]->pt());
+    eventData.SetPatMuon2Charge(PatMuonVector[1]->charge());
+    eventData.SetPatMuon2Phi(PatMuonVector[1]->phi());
+    eventData.SetPatMuon2Eta(PatMuonVector[1]->eta());
+    eventData.SetPatMuon2Et(PatMuonVector[1]->et());
     eventData.SetPatMuon1SumPtR03(muon1SumPtR03);
     eventData.SetPatMuon1EmEtR03(muon1EmEtR03);
     eventData.SetPatMuon1HadEtR03(muon1HadEtR03);    
     eventData.SetPatMuon1SumPtR05(muon1SumPtR05);
     eventData.SetPatMuon1EmEtR05(muon1EmEtR05);
     eventData.SetPatMuon1HadEtR05(muon1HadEtR05);    
-
     eventData.SetPatMuon2SumPtR03(muon2SumPtR03);
     eventData.SetPatMuon2EmEtR03(muon2EmEtR03);
     eventData.SetPatMuon2HadEtR03(muon2HadEtR03);    
     eventData.SetPatMuon2SumPtR05(muon2SumPtR05);
     eventData.SetPatMuon2EmEtR05(muon2EmEtR05);
     eventData.SetPatMuon2HadEtR05(muon2HadEtR05);  
-
     eventData.SetPatMuon1relIsoDr03(relIsoFirstMuonDr03);
     eventData.SetPatMuon2relIsoDr03(relIsoSecondMuonDr03);
     eventData.SetPatMuon1relIsoDr05(relIsoFirstMuonDr05);
     eventData.SetPatMuon2relIsoDr05(relIsoSecondMuonDr05);
-
     eventData.SetPatMuon1relIso(relIsoFirstMuon);
     eventData.SetPatMuon2relIso(relIsoSecondMuon);
 
@@ -1851,17 +1927,17 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
-      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.3))
+      if ((deltaR(track->eta(),track->phi(),PatMuonVector[0]->eta(),PatMuonVector[0]->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),PatMuonVector[1]->eta(),PatMuonVector[1]->phi()) > 0.3))
       {
 	goodTracksCountm03++;
       }
 
-      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.4))
+      if ((deltaR(track->eta(),track->phi(),PatMuonVector[0]->eta(),PatMuonVector[0]->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),PatMuonVector[1]->eta(),PatMuonVector[1]->phi()) > 0.4))
       {
 	goodTracksCountm04++;
       }
 
-      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.5))
+      if ((deltaR(track->eta(),track->phi(),PatMuonVector[0]->eta(),PatMuonVector[0]->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),PatMuonVector[1]->eta(),PatMuonVector[1]->phi()) > 0.5))
       {
 	goodTracksCountm05++;
       }
@@ -1876,17 +1952,17 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << ">>> Pat Muon" << std::endl;
       std::cout<<"Muon1 -> 0.3 Radion Rel Iso: "<<relIsoFirstMuonDr03<<" sumPt "<<muon1SumPtR03<<" emEt "<<muon1EmEtR03<<" hadEt "<<muon1HadEtR03<<std::endl;
       std::cout<<"Muon1 -> 0.5 Radion Rel Iso: "<<relIsoFirstMuonDr05<<" sumPt "<<muon1SumPtR05<<" emEt "<<muon1EmEtR05<<" hadEt "<<muon1HadEtR05<<std::endl;
-      std::cout << "Muon1 -> trackIso(): " << muon1->trackIso() << " | muon1 -> ecalIso(): " << muon1->ecalIso() << " | muon1 -> hcalIso(): " << muon1->hcalIso() << " | muon1->Iso(): " << relIsoFirstMuon << std::endl; 
+      std::cout << "Muon1 -> trackIso(): " << PatMuonVector[0]->trackIso() << " | muon1 -> ecalIso(): " << PatMuonVector[0]->ecalIso() << " | muon1 -> hcalIso(): " << PatMuonVector[0]->hcalIso() << " | PatMuonVector[0]->Iso(): " << relIsoFirstMuon << std::endl; 
       std::cout<<"Muon2 -> 0.3 Radion Rel Iso: "<<relIsoSecondMuonDr03<<" sumPt "<<muon2SumPtR03<<" emEt "<<muon2EmEtR03<<" hadEt "<<muon2HadEtR03<<std::endl;
       std::cout<<"Muon2 -> 0.5 Radion Rel Iso: "<<relIsoSecondMuonDr05<<" sumPt "<<muon2SumPtR05<<" emEt "<<muon2EmEtR05<<" hadEt "<<muon2HadEtR05<<std::endl;
-      std::cout << "Muon2 -> trackIso(): " << muon2->trackIso() << " | muon2 -> ecalIso(): " << muon2->ecalIso() << " | muon2 -> hcalIso(): " << muon2->hcalIso() << " | muon2->Iso(): " << relIsoSecondMuon << std::endl;  
+      std::cout << "Muon2 -> trackIso(): " << PatMuonVector[1]->trackIso() << " | muon2 -> ecalIso(): " << PatMuonVector[1]->ecalIso() << " | muon2 -> hcalIso(): " << PatMuonVector[1]->hcalIso() << " | PatMuonVector[1]->Iso(): " << relIsoSecondMuon << std::endl;  
       std::cout << "NSize: " << muons->size() << std::endl;
-      std::cout << "Muon, pT 1: " << muon1->pt() << std::endl;
-      std::cout << "Muon, pT 2: " << muon2->pt() << std::endl;
-      std::cout << "Muon, eta 1: " << muon1->eta() << std::endl;
-      std::cout << "Muon, eta 2: " << muon2->eta() << std::endl;
-      std::cout << "Muon1, p4(): " << muon1->p4() << std::endl;
-      std::cout << "Muon2, p4(): " << muon2->p4() << std::endl;
+      std::cout << "Muon, pT 1: " << PatMuonVector[0]->pt() << std::endl;
+      std::cout << "Muon, pT 2: " << PatMuonVector[1]->pt() << std::endl;
+      std::cout << "Muon, eta 1: " << PatMuonVector[0]->eta() << std::endl;
+      std::cout << "Muon, eta 2: " << PatMuonVector[1]->eta() << std::endl;
+      std::cout << "Muon1, p4(): " << PatMuonVector[0]->p4() << std::endl;
+      std::cout << "Muon2, p4(): " << PatMuonVector[1]->p4() << std::endl;
       std::cout << "DiMuon, M(): " << DipatMuonSystem.M() << std::endl;
       std::cout << "Eta Z: " << DipatMuonSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DipatMuonSystem.phi() << std::endl;
@@ -1895,149 +1971,101 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "pz Z: " << DipatMuonSystem.pz() << std::endl;
       std::cout << "" << std::endl;
     }
-
   }
-
   else {
-
     eventData.SetPatMuon1Pt(-999.);
     eventData.SetPatMuon1Charge(-999);
     eventData.SetPatMuon1Phi(-999.);
     eventData.SetPatMuon1Eta(-999.);
     eventData.SetPatMuon1Et(-999.);
-
     eventData.SetPatMuon2Pt(-999.);
     eventData.SetPatMuon2Charge(-999);
     eventData.SetPatMuon2Phi(-999.);
     eventData.SetPatMuon2Eta(-999.);
     eventData.SetPatMuon2Et(-999.);
-
     eventData.SetPatMuon1SumPtR03(-999.);
     eventData.SetPatMuon1EmEtR03(-999.);
     eventData.SetPatMuon1HadEtR03(-999.);
     eventData.SetPatMuon1SumPtR05(-999.);
     eventData.SetPatMuon1EmEtR05(-999.);
     eventData.SetPatMuon1HadEtR05(-999.);
-
     eventData.SetPatMuon2SumPtR03(-999.);
     eventData.SetPatMuon2EmEtR03(-999.);
     eventData.SetPatMuon2HadEtR03(-999.);
     eventData.SetPatMuon2SumPtR05(-999.);
     eventData.SetPatMuon2EmEtR05(-999.);
     eventData.SetPatMuon2HadEtR05(-999.);
-
     eventData.SetPatMuon1relIsoDr03(-999.);
     eventData.SetPatMuon2relIsoDr03(-999.);
     eventData.SetPatMuon1relIsoDr05(-999.);
     eventData.SetPatMuon2relIsoDr05(-999.);
-
     eventData.SetPatMuon1relIso(-999.);
     eventData.SetPatMuon2relIso(-999.);
-
     eventData.SetPatDiMuonMass(-999.);
     eventData.SetPatDiMuonPt(-999.);
     eventData.SetPatDiMuonEta(-999.);
     eventData.SetPatDiMuonPhi(-999.);
-
-
   } 
 
-  // Read Information of Electron Candidate 
-
-  const pat::Electron* electron1=NULL;
-  const pat::Electron* electron2=NULL;
-
-  int electronsize = electrons->size();
-  int itElectron;
-
-  if(electrons->size()>1){
-
-    for(itElectron=0; itElectron < electronsize; ++itElectron){
-
-      ++ElectronsN;
-
-      const pat::Electron* electronAll = &((*electrons)[itElectron]);
-
-      if (electronAll==NULL) continue;
-      if (electron1==NULL) {electron1=electronAll; continue;}
-      if (electronAll->pt()>electron1->pt()) {
-	electron2=electron1;
-	electron1=electronAll;
-	continue;
-      }
-
-      if (electron2==NULL) {electron2=electronAll; continue;}
-      if (electronAll->pt()>electron2->pt()) electron2 = electronAll;
-
-    }
-
-    double relIsoFirstElectronDr03 = (electron1->dr03TkSumPt()+electron1->dr03EcalRecHitSumEt()+electron1->dr03HcalTowerSumEt())/electron1->et();
-    double relIsoFirstElectronDr04 = (electron1->dr04TkSumPt()+electron1->dr04EcalRecHitSumEt()+electron1->dr04HcalTowerSumEt())/electron1->et();
-    double relIsoSecondElectronDr03 = (electron2->dr03TkSumPt()+electron2->dr03EcalRecHitSumEt()+electron2->dr03HcalTowerSumEt())/electron2->et();
-    double relIsoSecondElectronDr04 = (electron2->dr04TkSumPt()+electron2->dr04EcalRecHitSumEt()+electron2->dr04HcalTowerSumEt())/electron2->et();
-    double InnerHits1 = electron1->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
-    double InnerHits2 = electron2->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+  if(PatElectronVector.size()>1){
+    double relIsoFirstElectronDr03 = (PatElectronVector[0]->dr03TkSumPt()+PatElectronVector[0]->dr03EcalRecHitSumEt()+PatElectronVector[0]->dr03HcalTowerSumEt())/PatElectronVector[0]->et();
+    double relIsoFirstElectronDr04 = (PatElectronVector[0]->dr04TkSumPt()+PatElectronVector[0]->dr04EcalRecHitSumEt()+PatElectronVector[0]->dr04HcalTowerSumEt())/PatElectronVector[0]->et();
+    double relIsoSecondElectronDr03 = (PatElectronVector[1]->dr03TkSumPt()+PatElectronVector[1]->dr03EcalRecHitSumEt()+PatElectronVector[1]->dr03HcalTowerSumEt())/PatElectronVector[1]->et();
+    double relIsoSecondElectronDr04 = (PatElectronVector[1]->dr04TkSumPt()+PatElectronVector[1]->dr04EcalRecHitSumEt()+PatElectronVector[1]->dr04HcalTowerSumEt())/PatElectronVector[1]->et();
+    double InnerHits1 = PatElectronVector[0]->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+    double InnerHits2 = PatElectronVector[1]->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
 
     // Dielectron Mass
     math::XYZTLorentzVector DipatElectronSystem(0.,0.,0.,0.);
-    DipatElectronSystem += electron1->p4();
-    DipatElectronSystem += electron2->p4();
-
+    DipatElectronSystem += PatElectronVector[0]->p4();
+    DipatElectronSystem += PatElectronVector[1]->p4();
     eventData.SetPatDiElectronMass(DipatElectronSystem.M());
     eventData.SetPatDiElectronEta(DipatElectronSystem.eta());
     eventData.SetPatDiElectronPhi(DipatElectronSystem.phi());
     eventData.SetPatDiElectronPt(DipatElectronSystem.pt());
 
     // Fill Electron Variables
-    eventData.SetPatNElectron(electrons->size());
-    eventData.SetPatElectron1Pt(electron1->pt());
-    eventData.SetPatElectron1Charge(electron1->charge());
-    eventData.SetPatElectron1Phi(electron1->phi());
-    eventData.SetPatElectron1Eta(electron1->eta());
-    eventData.SetPatElectron1Et(electron1->et());
-
-    eventData.SetPatElectron2Pt(electron2->pt());
-    eventData.SetPatElectron2Charge(electron2->charge());
-    eventData.SetPatElectron2Phi(electron2->phi());
-    eventData.SetPatElectron2Eta(electron2->eta());
-    eventData.SetPatElectron2Et(electron2->et());
-
-    eventData.SetPatElectron1TkDr03(electron1->dr03TkSumPt());
-    eventData.SetPatElectron1EcalDr03(electron1->dr03EcalRecHitSumEt());
-    eventData.SetPatElectron1HcalDr03(electron1->dr03HcalTowerSumEt());
-
-    eventData.SetPatElectron2TkDr03(electron2->dr03TkSumPt());
-    eventData.SetPatElectron2EcalDr03(electron2->dr03EcalRecHitSumEt());
-    eventData.SetPatElectron2HcalDr03(electron2->dr03HcalTowerSumEt());
-
-    eventData.SetPatElectron1TkDr04(electron1->dr04TkSumPt());
-    eventData.SetPatElectron1EcalDr04(electron1->dr04EcalRecHitSumEt());
-    eventData.SetPatElectron1HcalDr04(electron1->dr04HcalTowerSumEt());
-
-    eventData.SetPatElectron2TkDr04(electron2->dr04TkSumPt());
-    eventData.SetPatElectron2EcalDr04(electron2->dr04EcalRecHitSumEt());
-    eventData.SetPatElectron2HcalDr04(electron2->dr04HcalTowerSumEt());
-
+    eventData.SetPatNElectron(PatElectronVector.size());
+    eventData.SetPatElectron1Pt(PatElectronVector[0]->pt());
+    eventData.SetPatElectron1Charge(PatElectronVector[0]->charge());
+    eventData.SetPatElectron1Phi(PatElectronVector[0]->phi());
+    eventData.SetPatElectron1Eta(PatElectronVector[0]->eta());
+    eventData.SetPatElectron1Et(PatElectronVector[0]->et());
+    eventData.SetPatElectron2Pt(PatElectronVector[1]->pt());
+    eventData.SetPatElectron2Charge(PatElectronVector[1]->charge());
+    eventData.SetPatElectron2Phi(PatElectronVector[1]->phi());
+    eventData.SetPatElectron2Eta(PatElectronVector[1]->eta());
+    eventData.SetPatElectron2Et(PatElectronVector[1]->et());
+    eventData.SetPatElectron1TkDr03(PatElectronVector[0]->dr03TkSumPt());
+    eventData.SetPatElectron1EcalDr03(PatElectronVector[0]->dr03EcalRecHitSumEt());
+    eventData.SetPatElectron1HcalDr03(PatElectronVector[0]->dr03HcalTowerSumEt());
+    eventData.SetPatElectron2TkDr03(PatElectronVector[1]->dr03TkSumPt());
+    eventData.SetPatElectron2EcalDr03(PatElectronVector[1]->dr03EcalRecHitSumEt());
+    eventData.SetPatElectron2HcalDr03(PatElectronVector[1]->dr03HcalTowerSumEt());
+    eventData.SetPatElectron1TkDr04(PatElectronVector[0]->dr04TkSumPt());
+    eventData.SetPatElectron1EcalDr04(PatElectronVector[0]->dr04EcalRecHitSumEt());
+    eventData.SetPatElectron1HcalDr04(PatElectronVector[0]->dr04HcalTowerSumEt());
+    eventData.SetPatElectron2TkDr04(PatElectronVector[1]->dr04TkSumPt());
+    eventData.SetPatElectron2EcalDr04(PatElectronVector[1]->dr04EcalRecHitSumEt());
+    eventData.SetPatElectron2HcalDr04(PatElectronVector[1]->dr04HcalTowerSumEt());
     eventData.SetPatElectron1relIsoDr03(relIsoFirstElectronDr03);
     eventData.SetPatElectron1relIsoDr04(relIsoFirstElectronDr04);
     eventData.SetPatElectron2relIsoDr03(relIsoSecondElectronDr03);
     eventData.SetPatElectron2relIsoDr04(relIsoSecondElectronDr04);
-
-    eventData.SetPatElectron1DeltaPhiTkClu(electron1->deltaPhiSuperClusterTrackAtVtx());
-    eventData.SetPatElectron1DeltaEtaTkClu(electron1->deltaEtaSuperClusterTrackAtVtx());
-    eventData.SetPatElectron1SigmaIeIe(electron1->sigmaIetaIeta());
-    eventData.SetPatElectron1DCot(electron1->convDcot());
-    eventData.SetPatElectron1Dist(electron1->convDist());
+    eventData.SetPatElectron1DeltaPhiTkClu(PatElectronVector[0]->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetPatElectron1DeltaEtaTkClu(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetPatElectron1SigmaIeIe(PatElectronVector[0]->sigmaIetaIeta());
+    eventData.SetPatElectron1DCot(PatElectronVector[0]->convDcot());
+    eventData.SetPatElectron1Dist(PatElectronVector[0]->convDist());
     eventData.SetPatElectron1InnerHits(InnerHits1);
-    eventData.SetPatElectron1HE(electron1->hadronicOverEm());
-
-    eventData.SetPatElectron2DeltaPhiTkClu(electron2->deltaPhiSuperClusterTrackAtVtx());
-    eventData.SetPatElectron2DeltaEtaTkClu(electron2->deltaEtaSuperClusterTrackAtVtx());
-    eventData.SetPatElectron2SigmaIeIe(electron2->sigmaIetaIeta());
-    eventData.SetPatElectron2DCot(electron2->convDcot());
-    eventData.SetPatElectron2Dist(electron2->convDist());
+    eventData.SetPatElectron1HE(PatElectronVector[0]->hadronicOverEm());
+    eventData.SetPatElectron2DeltaPhiTkClu(PatElectronVector[1]->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetPatElectron2DeltaEtaTkClu(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetPatElectron2SigmaIeIe(PatElectronVector[1]->sigmaIetaIeta());
+    eventData.SetPatElectron2DCot(PatElectronVector[1]->convDcot());
+    eventData.SetPatElectron2Dist(PatElectronVector[1]->convDist());
     eventData.SetPatElectron2InnerHits(InnerHits2);
-    eventData.SetPatElectron2HE(electron2->hadronicOverEm());
+    eventData.SetPatElectron2HE(PatElectronVector[1]->hadronicOverEm());
 
     edm::Handle<edm::View<reco::Track> > trackHandle;
     event.getByLabel(trackTag_,trackHandle);
@@ -2052,17 +2080,17 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
-      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.3))
+      if ((deltaR(track->eta(),track->phi(),PatElectronVector[0]->eta(),PatElectronVector[0]->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),PatElectronVector[1]->eta(),PatElectronVector[1]->phi()) > 0.3))
       {
 	goodTracksCounte03++;
       }
 
-      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.4))
+      if ((deltaR(track->eta(),track->phi(),PatElectronVector[0]->eta(),PatElectronVector[0]->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),PatElectronVector[1]->eta(),PatElectronVector[1]->phi()) > 0.4))
       {
 	goodTracksCounte04++;
       }
 
-      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.5))
+      if ((deltaR(track->eta(),track->phi(),PatElectronVector[0]->eta(),PatElectronVector[0]->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),PatElectronVector[1]->eta(),PatElectronVector[1]->phi()) > 0.5))
       {
 	goodTracksCounte05++;
       }
@@ -2075,82 +2103,70 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
     if (debug) {
       std::cout << ">>> Pat Electron" << std::endl;
-      std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
-      std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
-      std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
-      std::cout << "electron2 -> dr04 TK: " << electron2->dr04TkSumPt() << "| dr04 Ecal: " << electron2->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron2->dr04HcalTowerSumEt() <<  std::endl;
-      std::cout << "NElectron: " << ElectronsN << std::endl;
-      std::cout << "NSize: " << electrons->size() << std::endl;
-      std::cout << "Electron, pT 1: " << electron1->pt() << std::endl;
-      std::cout << "Electron, pT 2: " << electron2->pt() << std::endl;
-      std::cout << "Electron, eta 1: " << electron1->eta() << std::endl;
-      std::cout << "Electron, eta 2: " << electron2->eta() << std::endl;
-      std::cout << "Electron1, p4(): " << electron1->p4() << std::endl;
-      std::cout << "Electron2, p4(): " << electron2->p4() << std::endl;
+      std::cout << "electron1 -> dr03 TK: " << PatElectronVector[0]->dr03TkSumPt() << "| dr03 Ecal: " << PatElectronVector[0]->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << PatElectronVector[0]->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron1 -> dr04 TK: " << PatElectronVector[0]->dr04TkSumPt() << "| dr04 Ecal: " << PatElectronVector[0]->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << PatElectronVector[0]->dr04HcalTowerSumEt() <<  std::endl;
+      std::cout << "electron2 -> dr03 TK: " << PatElectronVector[1]->dr03TkSumPt() << "| dr03 Ecal: " << PatElectronVector[1]->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << PatElectronVector[1]->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron2 -> dr04 TK: " << PatElectronVector[1]->dr04TkSumPt() << "| dr04 Ecal: " << PatElectronVector[1]->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << PatElectronVector[1]->dr04HcalTowerSumEt() <<  std::endl;
+      std::cout << "Electron, pT 1: " << PatElectronVector[0]->pt() << std::endl;
+      std::cout << "Electron, pT 2: " << PatElectronVector[1]->pt() << std::endl;
+      std::cout << "Electron, eta 1: " << PatElectronVector[0]->eta() << std::endl;
+      std::cout << "Electron, eta 2: " << PatElectronVector[1]->eta() << std::endl;
+      std::cout << "Electron1, p4(): " << PatElectronVector[0]->p4() << std::endl;
+      std::cout << "Electron2, p4(): " << PatElectronVector[1]->p4() << std::endl;
       std::cout << "DiElectron, M(): " << DipatElectronSystem.M() << std::endl;
       std::cout << "Eta Z: " << DipatElectronSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DipatElectronSystem.phi() << std::endl;
       std::cout << "pT Z: " << DipatElectronSystem.pt() << std::endl;
       std::cout << "energy Z: " << DipatElectronSystem.energy() << std::endl;
       std::cout << "pz Z: " << DipatElectronSystem.pz() << std::endl;
-      std::cout << "DeltaPhiTkClu, electron1: " << electron1->deltaPhiSuperClusterTrackAtVtx() << std::endl;
-      std::cout << "DeltaEtaTkClu, electron1: " << electron1->deltaEtaSuperClusterTrackAtVtx() << std::endl;
-      std::cout << "SigmaIeIe, electron1: " << electron1->sigmaIetaIeta() << std::endl;
-      std::cout << "Dcot, electron1: " << electron1->convDcot() << std::endl;
-      std::cout << "Dist, electron1: " << electron1->convDist() << std::endl;
-      std::cout << "Number Of Expected Inner Hits, electron1: " << electron1->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
-      std::cout << "H/E, electron1: " << electron1->hadronicOverEm() << std::endl;
-      std::cout << "DeltaPhiTkClu, electron2: " << electron2->deltaPhiSuperClusterTrackAtVtx() << std::endl;
-      std::cout << "DeltaEtaTkClu, electron2: " << electron2->deltaEtaSuperClusterTrackAtVtx() << std::endl;
-      std::cout << "SigmaIeIe, electron2: " << electron2->sigmaIetaIeta() << std::endl;
-      std::cout << "Dcot, electron2: " << electron2->convDcot() << std::endl;
-      std::cout << "Dist, electron2: " << electron2->convDist() << std::endl;
-      std::cout << "Number Of Expected Inner Hits, electron2: " << electron2->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
-      std::cout << "H/E, electron2: " << electron2->hadronicOverEm() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron1: " << PatElectronVector[0]->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron1: " << PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron1: " << PatElectronVector[0]->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron1: " << PatElectronVector[0]->convDcot() << std::endl;
+      std::cout << "Dist, electron1: " << PatElectronVector[0]->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron1: " << PatElectronVector[0]->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron1: " << PatElectronVector[0]->hadronicOverEm() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron2: " << PatElectronVector[1]->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron2: " << PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron2: " << PatElectronVector[1]->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron2: " << PatElectronVector[1]->convDcot() << std::endl;
+      std::cout << "Dist, electron2: " << PatElectronVector[1]->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron2: " << PatElectronVector[1]->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron2: " << PatElectronVector[1]->hadronicOverEm() << std::endl;
       std::cout << "" << std::endl;
     }
-
   }
   else{
-
     eventData.SetPatElectron1Pt(-999.);
     eventData.SetPatElectron1Charge(-999);
     eventData.SetPatElectron1Phi(-999.);
     eventData.SetPatElectron1Eta(-999.);
     eventData.SetPatElectron1Et(-999.);
-
     eventData.SetPatElectron2Pt(-999.);
     eventData.SetPatElectron2Charge(-999);
     eventData.SetPatElectron2Phi(-999.);
     eventData.SetPatElectron2Eta(-999.);
     eventData.SetPatElectron2Et(-999.);
-
     eventData.SetPatElectron1TkDr03(-999.);
     eventData.SetPatElectron1EcalDr03(-999.);
     eventData.SetPatElectron1HcalDr03(-999.);
-
     eventData.SetPatElectron2TkDr03(-999.);
     eventData.SetPatElectron2EcalDr03(-999.);
     eventData.SetPatElectron2HcalDr03(-999.);
-
     eventData.SetPatElectron1TkDr04(-999.);
     eventData.SetPatElectron1EcalDr04(-999.);
     eventData.SetPatElectron1HcalDr04(-999.);
-
     eventData.SetPatElectron2TkDr04(-999.);
     eventData.SetPatElectron2EcalDr04(-999.);
     eventData.SetPatElectron2HcalDr04(-999.);
-
     eventData.SetPatElectron1relIsoDr03(-999.);
     eventData.SetPatElectron1relIsoDr04(-999.);
     eventData.SetPatElectron2relIsoDr03(-999.);
     eventData.SetPatElectron2relIsoDr04(-999.);
-
     eventData.SetPatDiElectronMass(-999.);
     eventData.SetPatDiElectronEta(-999.);
     eventData.SetPatDiElectronPhi(-999.);
     eventData.SetPatDiElectronPt(-999.);
-
     eventData.SetPatElectron1DeltaPhiTkClu(-999.);
     eventData.SetPatElectron1DeltaEtaTkClu(-999.);
     eventData.SetPatElectron1SigmaIeIe(-999.);
@@ -2165,7 +2181,6 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron2Dist(-999.);
     eventData.SetPatElectron2InnerHits(-999.);
     eventData.SetPatElectron2HE(-999.);
-
   }
 
 }
@@ -2246,35 +2261,28 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
       for(int isec = 0; isec < 16; isec++) {
 	if (rh.id().sector()== isec+1){
 	  sumCastorTower[isec]+=rh.energy()*fCGeVCastor_; 
-
 	  if (rh.id().module() == 1){
 	    energyModule1[isec] = rh.energy()*fCGeVCastor_;
 	    if (idmod1) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
-
 	  if (rh.id().module() == 2){
 	    energyModule2[isec] = rh.energy()*fCGeVCastor_;
 	    if (idmod2) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
-
 	  if (rh.id().module() == 3){
 	    energyModule3[isec] = rh.energy()*fCGeVCastor_;
 	    if (idmod3) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
-
 	  if (rh.id().module() == 4){
 	    energyModule4[isec] = rh.energy()*fCGeVCastor_;
 	    if (idmod4) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
-
 	  if (rh.id().module() == 5){
 	    energyModule5[isec] = rh.energy()*fCGeVCastor_;
 	    if (idmod5) std::cout << "Module " << rh.id().module() << ", Channel " << cha << ", isec " << isec << "." << std::endl;
 	  }
 	}
       }
-
-
     }
 
     for (int isec=0;isec<16;isec++){
@@ -2293,14 +2301,12 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
 	std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
       }
     }
-
     eventData.SetCastorTowerEnergy(castor_tower);
     eventData.SetCastorModule1Energy(castor_tower_module1);
     eventData.SetCastorModule2Energy(castor_tower_module2);
     eventData.SetCastorModule3Energy(castor_tower_module3);
     eventData.SetCastorModule4Energy(castor_tower_module4);
     eventData.SetCastorModule5Energy(castor_tower_module5);
-
   }else{
     if (debug) std::cout << "There is no Castor valid recHitSector "<< std::cout;
   }
@@ -2341,11 +2347,9 @@ void DiffractiveZAnalysis::fillCastorDebug(DiffractiveZEvent& eventData, const e
 
       ++NRecHits;
       if (rh.id().module() > 5 ) ++NRecHitsPartial;
-
       if (debug_deep){
 	std::cout << "Channel: " << cha << std::endl;
       }
-
     }
 
     // Search Bad Channels
@@ -2365,14 +2369,11 @@ void DiffractiveZAnalysis::fillCastorDebug(DiffractiveZEvent& eventData, const e
 	if (debug) std::cout << "Channel " << i << " was not working." << std::endl;
       }
     }
-
     if (BadChannels < 1){
       BChannels.push_back(-999);
     }
-
     eventData.SetCastorNumberBadChannels(BadChannels); 
     eventData.SetCastorBadChannels(BChannels);  
-
   }else{
     if (debug) std::cout << "There is no Castor valid recHitSector "<< std::cout;
   }
@@ -2419,7 +2420,6 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 
   if (zdc_recHits) {
     for (ZDCRecHitCollection::const_iterator zhit = zdc_recHits->begin(); zhit != zdc_recHits->end(); zhit++){		
-
       // Some Variables
       int ZDCSide      = (zhit->id()).zside();
       int ZDCSection   = (zhit->id()).section();
@@ -2428,35 +2428,26 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
       //int ZDCChannel   = (zhit->id()).channel();
 
       if (zhit->energy() >= 0.){
-
 	if (ZDCSide == -1){
-
 	  if (ZDCSection == 1 ){
 	    ZDCNSumEMEnergy += zhit->energy();
 	    ZDCNSumEMTime += zhit->time();
 	  }
-
 	  if (ZDCSection == 2 ){
 	    ZDCNSumHADEnergy += zhit->energy();
 	    ZDCNSumHADTime += zhit->time();
 	  }
-
 	}
-
 	if (ZDCSide == 1){
-
 	  if (ZDCSection == 1 ){
 	    ZDCPSumEMEnergy += zhit->energy();
 	    ZDCPSumEMTime += zhit->time();
 	  }
-
 	  if (ZDCSection == 2 ){
 	    ZDCPSumHADEnergy += zhit->energy();
 	    ZDCPSumHADTime += zhit->time();
 	  }
-
 	}
-
       }
 
     }
@@ -2475,9 +2466,7 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
   }
 
   if (zdc_digi){
-
     for(int i=0; i<180; i++){DigiDatafC[i]=0;DigiDataADC[i]=0;}
-
     for (ZDCDigiCollection::const_iterator j=zdc_digi->begin();j!=zdc_digi->end();j++){
       const ZDCDataFrame digi = (const ZDCDataFrame)(*j);		
       int iSide      = digi.id().zside();
@@ -2511,180 +2500,10 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 	std::cout << "iChannel: " << iChannel << std::endl;
 	std::cout << "chid: " << chid << std::endl;
       }
-
       digiAllPMT.push_back(digiPMT);
-
     }
-
     eventData.SetZDCdigifC(digiAllPMT);
-
   }
-
-}
-
-//
-// Fill Tower Information Energy x Eta
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
-
-  bool debug = false;
-  bool debug_deep = false;
-
-  std::vector<double> energy_tower;
-  std::vector<double> eta_tower; 
-
-  edm::Handle<CaloTowerCollection> towerCollectionH;
-  event.getByLabel(caloTowerTag_,towerCollectionH);
-  const CaloTowerCollection& towerCollection = *towerCollectionH;
-
-  CaloTowerCollection::const_iterator calotower;
-  calotower = towerCollection.begin();
-  CaloTowerCollection::const_iterator calotowers_end = towerCollection.end();
-
-  int counter_tower=0;
-
-  for(; calotower != calotowers_end; ++calotower) {
-
-    if (fabs(calotower->eta())> 4.7) continue;   /// excluding ring12 and ring13 of HF
-
-    bool hasHCAL = false;
-    bool hasHF = false;
-    bool hasHE = false;
-    bool hasHB = false;
-    bool hasHO = false;
-    bool hasECAL = false;
-    bool hasEE = false;
-    bool hasEB = false;  
-
-    for(size_t iconst = 0; iconst < calotower->constituentsSize(); iconst++){
-
-      DetId adetId = calotower->constituent(iconst);
-      if(adetId.det()==DetId::Hcal){
-	hasHCAL = true;
-	if (debug_deep) std::cout << "HCAL is true." << std::endl;
-	HcalDetId hcalDetId(adetId);
-	if(hcalDetId.subdet()==HcalForward) {
-	  hasHF = true;
-	  if (debug_deep) std::cout << "HF is true." << std::endl;
-	}
-	else if(hcalDetId.subdet()==HcalEndcap) {
-	  hasHE = true;
-	  if (debug_deep) std::cout << "HE is true." << std::endl;
-	}
-	else if(hcalDetId.subdet()==HcalBarrel) {
-	  hasHB = true;
-	  if (debug_deep) std::cout << "HB is true." << std::endl;
-	} 
-	else if(hcalDetId.subdet()==HcalOuter) {
-	  hasHO = true;  
-	  if (debug_deep) std::cout << "HO is true." << std::endl;
-	}
-      } 
-      else if(adetId.det()==DetId::Ecal){
-	hasECAL = true;
-	if (debug_deep) std::cout << "ECAL is true." << std::endl;
-	EcalSubdetector ecalSubDet = (EcalSubdetector)adetId.subdetId();
-	if(ecalSubDet == EcalEndcap) {
-	  hasEE = true;
-	  if (debug_deep) std::cout << "EE is true." << std::endl; 
-	}
-	else if(ecalSubDet == EcalBarrel) {
-	  hasEB = true;
-	  if (debug_deep) std::cout << "EB is true." << std::endl;
-	}
-      }
-    }
-
-    double caloTowerEnergy = calotower->energy();
-    double caloTowerEta = calotower->eta();
-    double caloTowerPhi = calotower->phi();
-    double caloTowerEmEnergy = calotower->emEnergy();
-    double caloTowerHadEnergy = calotower->hadEnergy();
-
-    if( hasHF && !hasHE )
-    {
-
-      if (debug_deep) std::cout << "HF, no threshold." << std::endl;    
-
-      if( caloTowerEnergy > energyThresholdHF_ && fabs(calotower->eta())> 2.98 )   //// excluding HF ring1
-      {
-	++counter_tower;
-	energy_tower.push_back(caloTowerEnergy);
-	eta_tower.push_back(caloTowerEta);
-
-	if (debug) {
-	  std::cout << "HF Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
-	}
-
-      }
-    }
-    else if( hasHE && !hasHF && !hasHB )
-    {
-
-      if (debug_deep) std::cout << "HE, no threshold." << std::endl;
-      if( caloTowerHadEnergy > energyThresholdHE_)
-      {
-	++counter_tower;
-	energy_tower.push_back(caloTowerEnergy);
-	eta_tower.push_back(caloTowerEta);
-
-	if (debug) {
-	  std::cout << "HE Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
-	}
-
-      }
-    }
-    else if( hasHB && !hasHE )
-    {
-      if (debug_deep) std::cout << "HB, no threshold." << std::endl;
-      if( caloTowerHadEnergy > energyThresholdHB_)
-      {
-	++counter_tower;
-	energy_tower.push_back(caloTowerEnergy);
-	eta_tower.push_back(caloTowerEta);
-
-	if (debug) {
-	  std::cout << "HB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
-	}
-
-      }
-    }
-
-    if( hasEE && !hasEB )
-    {
-      if (debug_deep) std::cout << "EE, no threshold." << std::endl;
-      if( caloTowerEmEnergy >= energyThresholdEE_)
-      {
-	++counter_tower;
-	energy_tower.push_back(caloTowerEnergy);
-	eta_tower.push_back(caloTowerEta);
-	if (debug) {
-	  std::cout << "EB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
-	}
-
-      }
-    }
-    else if( hasEB && !hasEE )
-    {
-      if (debug_deep) std::cout << "EB, no threshold." << std::endl;
-      if( caloTowerEmEnergy >= energyThresholdEB_)
-      {
-	++counter_tower;
-	energy_tower.push_back(caloTowerEnergy);
-	eta_tower.push_back(caloTowerEta);
-
-	if (debug) {
-	  std::cout << "EB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
-	}
-      }
-    }
-  }  ////has to close calotower loop
-
-  if (debug) std::cout << "Active Towers: " << counter_tower << std::endl;
-  eventData.SetEachTowerCounter(counter_tower);
-  eventData.SetEachTowerEta(eta_tower);
-  eventData.SetEachTowerEnergy(energy_tower);
 
 }
 

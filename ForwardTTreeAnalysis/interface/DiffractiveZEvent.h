@@ -119,6 +119,8 @@ class DiffractiveZEvent {
     void SetEtExpoPlusGen(double fetexpoplusgen)    { etexpoplusgen_     = fetexpoplusgen;}
     void SetEtExpoMinusGen(double fetexpominusgen)    { etexpominusgen_     = fetexpominusgen;}
     void SetsumECastorMinusGen(double fsumECastorMinusGen)    { sumECastorMinusGen_     = fsumECastorMinusGen;}
+    void SetSumptGenLeft(double fsumptgenleft)    { sumptgenleft_     = fsumptgenleft;}
+    void SetSumptGenRight(double fsumptgenright)    { sumptgenright_     = fsumptgenright;}
 
     void SetMxGenMinusCMS(double fmxgenminusCMS)    { mxgenminusCMS_     = fmxgenminusCMS;}
     void SetMxGenPlusCMS(double fmxgenplusCMS)    { mxgenplusCMS_     = fmxgenplusCMS;}
@@ -136,6 +138,8 @@ class DiffractiveZEvent {
     void SetEtExpoPlusGenCMS(double fetexpoplusgenCMS)    { etexpoplusgenCMS_     = fetexpoplusgenCMS;}
     void SetEtExpoMinusGenCMS(double fetexpominusgenCMS)    { etexpominusgenCMS_     = fetexpominusgenCMS;}
     void SetsumECastorMinusGenCMS(double fsumECastorMinusGenCMS)    { sumECastorMinusGenCMS_     = fsumECastorMinusGenCMS;}
+    void SetSumptGenLeftCMS(double fsumptgenleftCMS)    { sumptgenleftCMS_     = fsumptgenleftCMS;}
+    void SetSumptGenRightCMS(double fsumptgenrightCMS)    { sumptgenrightCMS_     = fsumptgenrightCMS;}
 
     void SetDiElectronMassPF(double fDiElectronMassPF) { DiElectronMassPF_ = fDiElectronMassPF;}
     void SetDiMuonMassPF(double fDiMuonMassPF) { DiMuonMassPF_ = fDiMuonMassPF;}
@@ -177,6 +181,7 @@ class DiffractiveZEvent {
 
     void SetEtaCaloMax(double fEtaCaloMax)    { EtaCaloMax_ = fEtaCaloMax;}
     void SetEtaCaloMin(double fEtaCaloMin)    { EtaCaloMin_ = fEtaCaloMin;}
+    void SetLrgCalo(double flrgCalo)    { lrgCalo_     = flrgCalo;}
 
     void SetMultiplicityHFPlus(int fMultiplicityHFPlus)    { MultiplicityHFPlus_ = fMultiplicityHFPlus;}
     void SetMultiplicityHEPlus(int fMultiplicityHEPlus)    { MultiplicityHEPlus_ = fMultiplicityHEPlus;}
@@ -186,32 +191,41 @@ class DiffractiveZEvent {
     void SetMultiplicityEEMinus(int fMultiplicityEEMinus)    { MultiplicityEEMinus_ = fMultiplicityEEMinus;}
 
     void SetVertex(int fVertex)    { Vertex_ = fVertex;}
-    void SetXi_PF_minus(double fXi_PF_minus)    { Xi_PF_minus_ = fXi_PF_minus;}
-    void SetXi_PF_plus(double fXi_PF_plus)    { Xi_PF_plus_ = fXi_PF_plus;}
-    void SetXiMass(double fXi_mass)    { Xi_mass_ = fXi_mass;}
-    void SetXiMassNoZ(double fXi_massnoz)    { Xi_massnoz_ = fXi_massnoz;}
+    void SetMxPFMinus(double fmxpfminus)    { mxpfminus_     = fmxpfminus;}
+    void SetMxPFPlus(double fmxpfplus)    { mxpfplus_     = fmxpfplus;}  
+    void SetMx2PFMinus(double fmx2pfminus)    { mx2pfminus_     = fmx2pfminus;}
+    void SetMx2PFPlus(double fmx2pfplus)    { mx2pfplus_     = fmx2pfplus;}
+    void SetEtaMaxPF(double fetamaxpf)    { etamaxpf_     = fetamaxpf;}
+    void SetEtaMinPF(double fetaminpf)    { etaminpf_     = fetaminpf;}
+    void SetEpluspzPF(double fepluspzpf)    { epluspzpf_     = fepluspzpf;}
+    void SetEminuspzPF(double feminuspzpf)    { eminuspzpf_     = feminuspzpf;}
+    void SetEtExpoPlusPF(double fetexpopluspf)    { etexpopluspf_     = fetexpopluspf;}
+    void SetEtExpoMinusPF(double fetexpominuspf)    { etexpominuspf_     = fetexpominuspf;}
+    void SetLrgPF(double flrgPF)    { lrgPF_     = flrgPF;}
+    void SetMxPFLeft(double fmxpfleft)    { mxpfleft_     = fmxpfleft;}
+    void SetMxPFRight(double fmxpfright)    { mxpfright_     = fmxpfright;}
+    void SetMx2PFLeft(double fmx2pfleft)    { mx2pfleft_     = fmx2pfleft;}
+    void SetMx2PFRight(double fmx2pfright)    { mx2pfright_     = fmx2pfright;}
+    void SetSumptPFLeft(double fsumptpfleft)    { sumptpfleft_     = fsumptpfleft;}
+    void SetSumptPFRight(double fsumptpfright)    { sumptpfright_     = fsumptpfright;}
 
-    void SetEpz_PF_minus(double fEpz_PF_minus)    { Epz_PF_minus_= fEpz_PF_minus;}
-    void SetEpz_PF_plus(double fEpz_PF_plus)    { Epz_PF_plus_ = fEpz_PF_plus;}
-    void SetMultiplicityPF(int fMultiplicityPF)    { MultiplicityPF_ = fMultiplicityPF;}
-    void SetSumEtaTimesEnergyPF(double fSumEtaTimesEnergyPF)    { SumEtaTimesEnergyPF_ = fSumEtaTimesEnergyPF;}
-    void SetSumpxModulePF(double fSumpxModulePF)    { SumpxModulePF_ = fSumpxModulePF;}
-    void SetSumpyModulePF(double fSumpyModulePF)    { SumpyModulePF_ = fSumpyModulePF;}
-    void SetSumpzModulePF(double fSumpzModulePF)    { SumpzModulePF_ = fSumpzModulePF;}
-    void SetSumpxPF(double fSumpxPF)    { SumpxPF_ = fSumpxPF;}
-    void SetSumpyPF(double fSumpyPF)    { SumpyPF_ = fSumpyPF;}
-    void SetSumpzPF(double fSumpzPF)    { SumpzPF_ = fSumpzPF;}
-    void SetSumEnergyPF(double fSumEnergyPF)    { SumEnergyPF_ = fSumEnergyPF;}
-    void SetMuEnergyPF(double fMuEnergyPF)    { MuEnergyPF_ = fMuEnergyPF;}
-    void SetElectronEnergyPF(double fElectronEnergyPF)    { ElectronEnergyPF_ = fElectronEnergyPF;}
-    void SetMaxGapPF(double fMaxGapPF)    { MaxGapPF_ = fMaxGapPF;}
-    void SetSecondMaxGapPF(double fSecondMaxGapPF)    { SecondMaxGapPF_ = fSecondMaxGapPF;}
-    void SetLimPlusGapPF(double fLimPlusGapPF)    { LimPlusGapPF_ = fLimPlusGapPF;}
-    void SetLimMinusGapPF(double fLimMinusGapPF)    { LimMinusGapPF_ = fLimMinusGapPF;}
-    void SetPTMaxGapMaxPF(double fPTMaxGapMaxPF)    { PTMaxGapMaxPF_ = fPTMaxGapMaxPF;}
-    void SetPTMinGapMaxPF(double fPTMinGapMaxPF)    { PTMinGapMaxPF_ = fPTMinGapMaxPF;}
-    void SetMultiplicityGapPlusPF(int fMultiplicityGapPlusPF)    { MultiplicityGapPlusPF_ = fMultiplicityGapPlusPF;}
-    void SetMultiplicityGapMinusPF(int fMultiplicityGapMinusPF)    { MultiplicityGapMinusPF_ = fMultiplicityGapMinusPF;}
+    void SetMxPFNoZMinus(double fmxpfnozminus)    { mxpfnozminus_     = fmxpfnozminus;} 
+    void SetMxPFNoZPlus(double fmxpfnozplus)    { mxpfnozplus_     = fmxpfnozplus;}  
+    void SetMx2PFNoZMinus(double fmx2pfnozminus)    { mx2pfnozminus_     = fmx2pfnozminus;}
+    void SetMx2PFNoZPlus(double fmx2pfnozplus)    { mx2pfnozplus_     = fmx2pfnozplus;}
+    void SetEtaMaxPFNoZ(double fetamaxpfnoz)    { etamaxpfnoz_     = fetamaxpfnoz;}
+    void SetEtaMinPFNoZ(double fetaminpfnoz)    { etaminpfnoz_     = fetaminpfnoz;}
+    void SetEpluspzPFNoZ(double fepluspzpfnoz)    { epluspzpfnoz_     = fepluspzpfnoz;}
+    void SetEminuspzPFNoZ(double feminuspzpfnoz)    { eminuspzpfnoz_     = feminuspzpfnoz;}
+    void SetEtExpoPlusPFNoZ(double fetexpopluspfnoz)    { etexpopluspfnoz_     = fetexpopluspfnoz;}
+    void SetEtExpoMinusPFNoZ(double fetexpominuspfnoz)    { etexpominuspfnoz_     = fetexpominuspfnoz;}
+    void SetLrgPFNoZ(double flrgPFnoz)    { lrgPFnoz_     = flrgPFnoz;}
+    void SetMxPFNoZLeft(double fmxpfnozleft)    { mxpfnozleft_     = fmxpfnozleft;}
+    void SetMxPFNoZRight(double fmxpfnozright)    { mxpfnozright_     = fmxpfnozright;}
+    void SetMx2PFNoZLeft(double fmx2pfnozleft)    { mx2pfnozleft_     = fmx2pfnozleft;}
+    void SetMx2PFNoZRight(double fmx2pfnozright)    { mx2pfnozright_     = fmx2pfnozright;}
+    void SetSumptPFNoZLeft(double fsumptpfnozleft)    { sumptpfnozleft_     = fsumptpfnozleft;}
+    void SetSumptPFNoZRight(double fsumptpfnozright)    { sumptpfnozright_     = fsumptpfnozright;}
 
     void SetPatNMuon(int fpatNMuon)    {patNMuon_ = fpatNMuon;}
     void SetPatMuon1Pt(double fpatMuon1Pt)    {patMuon1Pt_ = fpatMuon1Pt;}
@@ -449,6 +463,8 @@ class DiffractiveZEvent {
     double GetEtExpoPlusGen() const { return etexpoplusgen_;}
     double GetEtExpoMinusGen() const { return etexpominusgen_;}
     double GetsumECastorMinusGen() const { return sumECastorMinusGen_;}
+    double GetSumptGenLeft() const { return sumptgenleft_;}
+    double GetSumptGenRight() const { return sumptgenright_;}
 
     double GetMxGenMinusCMS() const { return mxgenminusCMS_;}
     double GetMxGenPlusCMS() const { return mxgenplusCMS_;}
@@ -466,6 +482,8 @@ class DiffractiveZEvent {
     double GetEtExpoPlusGenCMS() const { return etexpoplusgenCMS_;}
     double GetEtExpoMinusGenCMS() const { return etexpominusgenCMS_;}
     double GetsumECastorMinusGenCMS() const { return sumECastorMinusGenCMS_;}
+    double GetSumptGenLeftCMS() const { return sumptgenleftCMS_;}
+    double GetSumptGenRightCMS() const { return sumptgenrightCMS_;}
 
     double GetDiElectronMassPF() const {return DiElectronMassPF_;}
     double GetDiMuonMassPF() const {return DiMuonMassPF_;}
@@ -507,6 +525,7 @@ class DiffractiveZEvent {
 
     double GetEtaCaloMax()    const {return EtaCaloMax_;}
     double GetEtaCaloMin()    const {return EtaCaloMin_;}
+    double GetLrgCalo() const { return lrgCalo_;}
 
     int GetMultiplicityHFPlus()    const {return MultiplicityHFPlus_;}
     int GetMultiplicityHEPlus()    const {return MultiplicityHEPlus_;}
@@ -515,33 +534,42 @@ class DiffractiveZEvent {
     int GetMultiplicityHEMinus()    const {return MultiplicityHEMinus_;}
     int GetMultiplicityEEMinus()    const {return MultiplicityEEMinus_;}
 
-    int GetVertex()    const {return Vertex_;}
-    double GetXi_PF_minus()    const {return Xi_PF_minus_;}
-    double GetXi_PF_plus()    const {return Xi_PF_plus_;}
-    double GetXiMass()    const {return Xi_mass_;}
-    double GetXiMassNoZ()    const {return Xi_massnoz_;}
+    int GetVertex()    const {return Vertex_;}   
+    double GetMxPFMinus() const { return mxpfminus_;}
+    double GetMxPFPlus() const { return mxpfplus_;}
+    double GetMx2PFMinus() const { return mx2pfminus_;}
+    double GetMx2PFPlus() const { return mx2pfplus_;}
+    double GetEtaMaxPF() const { return etamaxpf_;}
+    double GetEtaMinPF() const { return etaminpf_;}
+    double GetEpluspzPF() const { return epluspzpf_;}
+    double GetEminuspzPF() const { return eminuspzpf_;}
+    double GetEtExpoPlusPF() const { return etexpopluspf_;}
+    double GetEtExpoMinusPF() const { return etexpominuspf_;}
+    double GetLrgPF() const { return lrgPF_;}
+    double GetMxPFLeft() const { return mxpfleft_;}
+    double GetMxPFRight() const { return mxpfright_;}
+    double GetMx2PFLeft() const { return mx2pfleft_;}
+    double GetMx2PFRight() const { return mx2pfright_;}
+    double GetSumptPFLeft() const { return sumptpfleft_;}
+    double GetSumptPFRight() const { return sumptpfright_;}
 
-    double GetEpz_PF_minus()    const {return Epz_PF_minus_;}
-    double GetEpz_PF_plus()    const {return Epz_PF_plus_;}
-    int GetMultiplicityPF()    const {return MultiplicityPF_;}
-    double GetSumEtaTimesEnergyPF()    const {return SumEtaTimesEnergyPF_;}
-    double GetSumpxModulePF()    const {return SumpxModulePF_;}
-    double GetSumpyModulePF()    const {return SumpyModulePF_;}
-    double GetSumpzModulePF()    const {return SumpzModulePF_;}
-    double GetSumpxPF()    const {return SumpxPF_;}
-    double GetSumpyPF()    const {return SumpyPF_;}
-    double GetSumpzPF()    const {return SumpzPF_;}
-    double GetSumEnergyPF()    const {return SumEnergyPF_;}
-    double GetMuEnergyPF()    const {return MuEnergyPF_;}
-    double GetElectronEnergyPF()    const {return ElectronEnergyPF_;}
-    double GetMaxGapPF()    const {return MaxGapPF_;}
-    double GetSecondMaxGapPF()    const {return SecondMaxGapPF_;}
-    double GetLimPlusGapPF()    const {return LimPlusGapPF_;}
-    double GetLimMinusGapPF()    const {return LimMinusGapPF_;}
-    double GetPTMaxGapMaxPF()    const {return PTMaxGapMaxPF_;}
-    double GetPTMinGapMaxPF()    const {return PTMinGapMaxPF_;}
-    int GetMultiplicityGapPlusPF()    const {return MultiplicityGapPlusPF_;}
-    int GetMultiplicityGapMinusPF()    const {return MultiplicityGapMinusPF_;}
+    double GetMxPFNoZMinus() const { return mxpfnozminus_;}
+    double GetMxPFNoZPlus() const { return mxpfnozplus_;}
+    double GetMx2PFNoZMinus() const { return mx2pfnozminus_;}
+    double GetMx2PFNoZPlus() const { return mx2pfnozplus_;}
+    double GetEtaMaxPFNoZ() const { return etamaxpfnoz_;}
+    double GetEtaMinPFNoZ() const { return etaminpfnoz_;}
+    double GetEpluspzPFNoZ() const { return epluspzpfnoz_;}
+    double GetEminuspzPFNoZ() const { return eminuspzpfnoz_;}
+    double GetEtExpoPlusPFNoZ() const { return etexpopluspfnoz_;}
+    double GetEtExpoMinusPFNoZ() const { return etexpominuspfnoz_;}
+    double GetLrgPFNoZ() const { return lrgPFnoz_;}
+    double GetMxPFNoZLeft() const { return mxpfnozleft_;}
+    double GetMxPFNoZRight() const { return mxpfnozright_;}
+    double GetMx2PFNoZLeft() const { return mx2pfnozleft_;}
+    double GetMx2PFNoZRight() const { return mx2pfnozright_;}
+    double GetSumptPFNoZLeft() const { return sumptpfnozleft_;}
+    double GetSumptPFNoZRight() const { return sumptpfnozright_;}
 
     int GetPatNMuon() const {return patNMuon_;}
     double GetPatMuon1Pt() const {return patMuon1Pt_;}
@@ -799,6 +827,8 @@ class DiffractiveZEvent {
     double etexpoplusgen_;
     double etexpominusgen_;
     double sumECastorMinusGen_;
+    double sumptgenleft_;
+    double sumptgenright_;
 
     double mxgenminusCMS_;
     double mxgenplusCMS_;
@@ -816,6 +846,8 @@ class DiffractiveZEvent {
     double etexpoplusgenCMS_;
     double etexpominusgenCMS_;
     double sumECastorMinusGenCMS_;
+    double sumptgenleftCMS_;
+    double sumptgenrightCMS_;
 
     double DiElectronMassPF_;
     double DiMuonMassPF_;
@@ -850,6 +882,7 @@ class DiffractiveZEvent {
     double EtEtaCaloMinus_;
     double EtaCaloMax_;
     double EtaCaloMin_;
+    double lrgCalo_;
     int MultiplicityHFPlus_;
     int MultiplicityHEPlus_;
     int MultiplicityEEPlus_;
@@ -858,31 +891,41 @@ class DiffractiveZEvent {
     int MultiplicityEEMinus_;
 
     int Vertex_;
-    double Xi_PF_minus_;
-    double Xi_PF_plus_;
-    double Xi_mass_;
-    double Xi_massnoz_;
-    double Epz_PF_minus_;
-    double Epz_PF_plus_;
-    int MultiplicityPF_;
-    double SumEtaTimesEnergyPF_;
-    double SumpxModulePF_;
-    double SumpyModulePF_;
-    double SumpzModulePF_;
-    double SumpxPF_;
-    double SumpyPF_;
-    double SumpzPF_;
-    double SumEnergyPF_;
-    double MuEnergyPF_;
-    double ElectronEnergyPF_;
-    double MaxGapPF_;
-    double SecondMaxGapPF_;
-    double LimPlusGapPF_;
-    double LimMinusGapPF_;
-    double PTMaxGapMaxPF_;
-    double PTMinGapMaxPF_;
-    int MultiplicityGapPlusPF_;
-    int MultiplicityGapMinusPF_;
+    double mxpfminus_;
+    double mxpfplus_;
+    double mx2pfminus_;
+    double mx2pfplus_;
+    double etamaxpf_;
+    double etaminpf_;
+    double epluspzpf_; 
+    double eminuspzpf_;
+    double etexpopluspf_;
+    double etexpominuspf_;
+    double lrgPF_;
+    double mxpfleft_;
+    double mxpfright_;
+    double mx2pfleft_;
+    double mx2pfright_;
+    double sumptpfleft_;
+    double sumptpfright_;
+
+    double mxpfnozminus_;
+    double mxpfnozplus_;
+    double mx2pfnozminus_;
+    double mx2pfnozplus_;
+    double etamaxpfnoz_;
+    double etaminpfnoz_;
+    double epluspzpfnoz_;
+    double eminuspzpfnoz_;
+    double etexpopluspfnoz_;
+    double etexpominuspfnoz_;
+    double lrgPFnoz_;
+    double mxpfnozleft_;
+    double mxpfnozright_;
+    double mx2pfnozleft_;
+    double mx2pfnozright_;
+    double sumptpfnozleft_;
+    double sumptpfnozright_;
 
     int patNMuon_;
 

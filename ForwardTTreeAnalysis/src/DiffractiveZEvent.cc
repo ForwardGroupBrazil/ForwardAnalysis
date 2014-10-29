@@ -78,6 +78,8 @@ void DiffractiveZEvent::reset(){
   etexpoplusgen_=-999.;
   etexpominusgen_=-999.;
   sumECastorMinusGen_=-999.;
+  sumptgenleft_=-999.;
+  sumptgenright_=-999.;
 
   mxgenminusCMS_=-999.;
   mxgenplusCMS_=-999.;
@@ -95,6 +97,8 @@ void DiffractiveZEvent::reset(){
   etexpoplusgenCMS_=-999.;
   etexpominusgenCMS_=-999.;
   sumECastorMinusGenCMS_=-999.;
+  sumptgenleftCMS_=-999.;
+  sumptgenrightCMS_=-999.;
 
   DiElectronMassPF_=-999.;
   DiMuonMassPF_=-999.;
@@ -129,34 +133,44 @@ void DiffractiveZEvent::reset(){
   EtEtaCaloMinus_ = -999.; 
   EtaCaloMax_ = -999.; 
   EtaCaloMin_ = -999.; 
+  lrgCalo_ = -999.;
 
   Vertex_ = -999;
-  Xi_PF_minus_ = -999.;
-  Xi_PF_plus_ = -999.;
-  Xi_mass_ = -999.;
-  Xi_massnoz_ = -999.;
+  mxpfminus_ =-999.;
+  mxpfplus_ = -999.;
+  mx2pfminus_ = -999.;
+  mx2pfplus_ = -999.;
+  etamaxpf_ = -999.;
+  etaminpf_ = -999.;
+  epluspzpf_= -999.;
+  eminuspzpf_=-999.;
+  etexpopluspf_=-999.;
+  etexpominuspf_=-999.;
+  lrgPF_=-999.;
+  mxpfleft_ =-999.;
+  mxpfright_=-999.;
+  mx2pfleft_=-999.;
+  mx2pfright_=-999.;
+  sumptpfleft_=-999.;
+  sumptpfright_=-999.;
 
-  Epz_PF_minus_ = -999.;
-  Epz_PF_plus_ = -999.;
-  MultiplicityPF_ = -999;
-  SumEtaTimesEnergyPF_ = -999.;
-  SumpxModulePF_ = -999.;
-  SumpyModulePF_ = -999.;
-  SumpzModulePF_ = -999.;
-  SumpxPF_ = -999.;
-  SumpyPF_ = -999.;
-  SumpzPF_ = -999.;
-  SumEnergyPF_ = -999.;
-  MuEnergyPF_ = -999.;
-  ElectronEnergyPF_ = -999.;
-  MaxGapPF_ = -999.;
-  SecondMaxGapPF_ = -999.;
-  LimPlusGapPF_ = -999.;
-  LimMinusGapPF_ = -999.;
-  PTMaxGapMaxPF_ = -999.;
-  PTMinGapMaxPF_ = -999.;
-  MultiplicityGapPlusPF_ = -999;
-  MultiplicityGapMinusPF_ = -999;
+  mxpfnozminus_ =-999.;
+  mxpfnozplus_ = -999.;
+  mx2pfnozminus_ = -999.;
+  mx2pfnozplus_ = -999.;
+  etamaxpfnoz_ = -999.;
+  etaminpfnoz_ = -999.;
+  epluspzpfnoz_= -999.;
+  eminuspzpfnoz_=-999.;
+  etexpopluspfnoz_=-999.;
+  etexpominuspfnoz_=-999.;
+  lrgPFnoz_=-999.;
+  mxpfnozleft_ =-999.;
+  mxpfnozright_=-999.;
+  mx2pfnozleft_=-999.;
+  mx2pfnozright_=-999.;
+  sumptpfnozleft_=-999.;
+  sumptpfnozright_=-999.;
 
   patNMuon_ = -1;
 
