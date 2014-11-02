@@ -136,6 +136,8 @@ void DiffractiveZEvent::reset(){
   lrgCalo_ = -999.;
 
   Vertex_ = -999;
+  tracketamax_=-999.;
+  tracketamin_=-999.;
   mxpfminus_ =-999.;
   mxpfplus_ = -999.;
   mx2pfminus_ = -999.;

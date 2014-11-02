@@ -828,11 +828,11 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_pfetamin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
   m_hVector_pfetamincastor[index].at(pileup)->Fill(etamin_,totalweight);
   m_hVector_pfetamax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-  m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffZ->GetMaxGapPF()),totalweight);
-  m_hVector_LimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetLimPlusGapPF(),totalweight);
-  m_hVector_LimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetLimMinusGapPF(),totalweight);
-  m_hVector_SumPTLimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMaxGapMaxPF(),totalweight);
-  m_hVector_SumPTLimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMinGapMaxPF(),totalweight);
+  //m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffZ->GetMaxGapPF()),totalweight);
+  //m_hVector_LimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetLimPlusGapPF(),totalweight);
+  //m_hVector_LimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetLimMinusGapPF(),totalweight);
+  //m_hVector_SumPTLimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMaxGapMaxPF(),totalweight);
+  //m_hVector_SumPTLimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMinGapMaxPF(),totalweight);
   m_hVector_absdeltaEtaPF[index].at(pileup)->Fill(fabs(deltaetapf),totalweight);
   m_hVector_deltaEtaPF[index].at(pileup)->Fill(deltaetapf,totalweight);
   m_hVector_absdeltaEtaPFCastor[index].at(pileup)->Fill(fabs(deltaetapfcastor),totalweight);
@@ -1674,9 +1674,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bSumEnergyHFPlus = eventdiff->GetSumEnergyHFPlus();
     bsumCastorEnergy = sumCastorEnergy;
     bSectorCastorHit = counterHit;
-    bMaxGapPF = eventdiffZ->GetMaxGapPF();
-    bPTMaxGapMaxPF = eventdiffZ->GetPTMaxGapMaxPF();
-    bPTMinGapMaxPF = eventdiffZ->GetPTMinGapMaxPF();
+    //bMaxGapPF = eventdiffZ->GetMaxGapPF();
+    //bPTMaxGapMaxPF = eventdiffZ->GetPTMaxGapMaxPF();
+    //bPTMinGapMaxPF = eventdiffZ->GetPTMinGapMaxPF();
     bXiPlusFromPFCands = eventdiff->GetXiPlusFromPFCands();
     bXiMinusFromPFCands = eventdiff->GetXiMinusFromPFCands();
     betasignedHF = etasignedHF;
@@ -1686,8 +1686,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     betamax = eventdiff->GetEtaMaxFromPFCands();
     betamin = eventdiff->GetEtaMinFromPFCands();
     betamincastor = etamin_;
-    betalimmin = eventdiffZ->GetLimMinusGapPF();
-    betalimmax = eventdiffZ->GetLimPlusGapPF();
+    //betalimmin = eventdiffZ->GetLimMinusGapPF();
+    //betalimmax = eventdiffZ->GetLimPlusGapPF();
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
 

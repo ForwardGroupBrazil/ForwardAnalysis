@@ -98,6 +98,8 @@ class DiffractiveZEvent {
     void SetVx(const std::vector<double>& fVx) { Vx_ = fVx; }
     void SetVy(const std::vector<double>& fVy) { Vy_ = fVy; }
     void SetTracksPt(const std::vector<std::vector<double> >& fTracksPt) { TracksPt_ = fTracksPt; }
+    void SetTrackEtaMin(double ftracketamin)    { tracketamin_     = ftracketamin;}
+    void SetTrackEtaMax(double ftracketamax)    { tracketamax_     = ftracketamax;}
     void SetZDCdigifC(const std::vector<std::vector<double> >& fZDCdigifC) { ZDCdigifC_ = fZDCdigifC; }
 
     void SetXiGenMinus(double fxigenminus)    { xigenminus_     = fxigenminus;}
@@ -442,6 +444,8 @@ class DiffractiveZEvent {
     double GetVx(int i) const { return Vx_[i]; }
     double GetVy(int i) const { return Vy_[i]; }
     double GetTracksPt(int i,int j) const { return TracksPt_[i][j]; }
+    double GetTrackEtaMin() const {return tracketamin_;}
+    double GetTrackEtaMax() const {return tracketamax_;}
     double GetZDCdigifC(int i,int j) const { return ZDCdigifC_[i][j]; }
 
     double GetXiGenMinus() const {return xigenminus_;}
@@ -810,6 +814,8 @@ class DiffractiveZEvent {
 
     double xigenminus_;
     double xigenplus_;
+    double tracketamin_;
+    double tracketamax_;
 
     double mxgenminus_;
     double mxgenplus_;

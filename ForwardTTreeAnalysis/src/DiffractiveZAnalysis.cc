@@ -603,6 +603,8 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
 
 void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
+  bool debug = false;
+
   std::vector<double> vertexNDOF;
   std::vector<double> vertexChiNorm;
   std::vector<double> vertexMultiplicity;
@@ -612,7 +614,10 @@ void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const ed
   std::vector<double> V_z; 
   std::vector<double> pt;
   std::vector<double> tracks;
+  std::vector<double> trackseta;
   std::vector<std::vector<double> > tracksPT;
+
+  trackseta.clear();
 
   edm::Handle<reco::VertexCollection>  vertexCollectionHandle;
   event.getByLabel(PVtxCollectionTag_, vertexCollectionHandle);
@@ -626,6 +631,7 @@ void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const ed
     for(;it!=lastTrack;it++) {
       nhit+=(*it)->numberOfValidHits();
       pt.push_back((*it)->pt());
+      trackseta.push_back((*it)->eta());
     }
 
     //Sorting the pt tracks, in order to take only the 31 most energetics
@@ -665,6 +671,19 @@ void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const ed
 
   } // loop over vtx
 
+  if(trackseta.size()>0){
+    std::sort(trackseta.rbegin(), trackseta.rend());
+    if(debug){
+      for(unsigned int i=0;i<trackseta.size();i++){
+	std::cout << "Tracks Eta: " << trackseta[i] << std::endl;  
+      }
+    }
+    eventData.SetTrackEtaMax(trackseta[0]);
+    eventData.SetTrackEtaMin(trackseta[trackseta.size()-1]);
+  }else{
+    eventData.SetTrackEtaMax(-999.);
+    eventData.SetTrackEtaMin(-999.);
+  }
   eventData.SetVertexMultiplicity(vertexMultiplicity);
   eventData.SetVertexChiNorm(vertexChiNorm);
   eventData.SetVertexNDOF(vertexNDOF);
@@ -2080,6 +2099,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
+
       if ((deltaR(track->eta(),track->phi(),PatElectronVector[0]->eta(),PatElectronVector[0]->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),PatElectronVector[1]->eta(),PatElectronVector[1]->phi()) > 0.3))
       {
 	goodTracksCounte03++;
