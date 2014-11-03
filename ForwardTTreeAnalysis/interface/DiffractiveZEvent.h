@@ -235,12 +235,14 @@ class DiffractiveZEvent {
     void SetPatMuon1Phi(double fpatMuon1Phi)    {patMuon1Phi_ = fpatMuon1Phi;}
     void SetPatMuon1Eta(double fpatMuon1Eta)    {patMuon1Eta_ = fpatMuon1Eta;}
     void SetPatMuon1Et(double fpatMuon1Et)    {patMuon1Et_ = fpatMuon1Et;}
+    void SetPatMuon1P4(LorentzVector fpatMuon1P4)    {patMuon1P4_ = fpatMuon1P4;}
 
     void SetPatMuon2Pt(double fpatMuon2Pt)    {patMuon2Pt_ = fpatMuon2Pt;}
     void SetPatMuon2Charge(int fpatMuon2Charge)    {patMuon2Charge_ = fpatMuon2Charge;}
     void SetPatMuon2Phi(double fpatMuon2Phi)    {patMuon2Phi_ = fpatMuon2Phi;}
     void SetPatMuon2Eta(double fpatMuon2Eta)    {patMuon2Eta_ = fpatMuon2Eta;}
     void SetPatMuon2Et(double fpatMuon2Et)    {patMuon2Et_ = fpatMuon2Et;}
+    void SetPatMuon2P4(LorentzVector fpatMuon2P4)    {patMuon2P4_ = fpatMuon2P4;}
 
     void SetPatMuon1SumPtR03(double fpatMuon1SumPtR03)    {patMuon1SumPtR03_ = fpatMuon1SumPtR03;}
     void SetPatMuon1EmEtR03(double fpatMuon1EmEtR03)    {patMuon1EmEtR03_ = fpatMuon1EmEtR03;}
@@ -275,12 +277,14 @@ class DiffractiveZEvent {
     void SetPatElectron1Phi(double fpatElectron1Phi)    {patElectron1Phi_ = fpatElectron1Phi;}
     void SetPatElectron1Eta(double fpatElectron1Eta)    {patElectron1Eta_ = fpatElectron1Eta;}
     void SetPatElectron1Et(double fpatElectron1Et)    {patElectron1Et_ = fpatElectron1Et;}
+    void SetPatElectron1P4(LorentzVector fpatElectron1P4)    {patElectron1P4_ = fpatElectron1P4;}
 
     void SetPatElectron2Pt(double fpatElectron2Pt)    {patElectron2Pt_ = fpatElectron2Pt;}
     void SetPatElectron2Charge(int fpatElectron2Charge)    {patElectron2Charge_ = fpatElectron2Charge;}
     void SetPatElectron2Phi(double fpatElectron2Phi)    {patElectron2Phi_ = fpatElectron2Phi;}
     void SetPatElectron2Eta(double fpatElectron2Eta)    {patElectron2Eta_ = fpatElectron2Eta;}
     void SetPatElectron2Et(double fpatElectron2Et)    {patElectron2Et_ = fpatElectron2Et;}
+    void SetPatElectron2P4(LorentzVector fpatElectron2P4)    {patElectron2P4_ = fpatElectron2P4;}
 
     void SetPatElectron1TkDr03(double fpatElectron1TkDr03)    {patElectron1TkDr03_ = fpatElectron1TkDr03;}
     void SetPatElectron1EcalDr03(double fpatElectron1EcalDr03)    {patElectron1EcalDr03_ = fpatElectron1EcalDr03;}
@@ -581,12 +585,14 @@ class DiffractiveZEvent {
     double GetPatMuon1Phi() const {return patMuon1Phi_;}
     double GetPatMuon1Eta() const {return patMuon1Eta_;}
     double GetPatMuon1Et() const {return patMuon1Et_;}
+    const LorentzVector& GetPatMuon1P4() const {return patMuon1P4_;}
 
     double GetPatMuon2Pt() const {return patMuon2Pt_;}
     int GetPatMuon2Charge() const {return patMuon2Charge_;}
     double GetPatMuon2Phi() const {return patMuon2Phi_;}
     double GetPatMuon2Eta() const {return patMuon2Eta_;}
     double GetPatMuon2Et() const {return patMuon2Et_;}
+    const LorentzVector& GetPatMuon2P4() const {return patMuon2P4_;}
 
     double GetPatMuon1SumPtR03() const {return patMuon1SumPtR03_;}
     double GetPatMuon1EmEtR03() const {return patMuon1EmEtR03_;}
@@ -621,12 +627,14 @@ class DiffractiveZEvent {
     double GetPatElectron1Phi() const {return patElectron1Phi_;}
     double GetPatElectron1Eta() const {return patElectron1Eta_;}
     double GetPatElectron1Et() const {return patElectron1Et_;}
+    const LorentzVector& GetPatElectron1P4() const {return patElectron1P4_;}
 
     double GetPatElectron2Pt() const {return patElectron2Pt_;}
     int GetPatElectron2Charge() const {return patElectron2Charge_;}
     double GetPatElectron2Phi() const {return patElectron2Phi_;}
     double GetPatElectron2Eta() const {return patElectron2Eta_;}
     double GetPatElectron2Et() const {return patElectron2Et_;}
+    const LorentzVector& GetPatElectron2P4() const {return patElectron2P4_;}
 
     double GetPatElectron1TkDr03() const  {return patElectron1TkDr03_;}    
     double GetPatElectron1EcalDr03() const  {return patElectron1EcalDr03_;}
@@ -711,7 +719,6 @@ class DiffractiveZEvent {
     double GetPatElectron2Dist() const {return patElectron2Dist_;}
     double GetPatElectron2InnerHits() const {return patElectron2InnerHits_;}
     double GetPatElectron2HE() const {return patElectron2HE_;}
-
 
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
@@ -940,12 +947,14 @@ class DiffractiveZEvent {
     double patMuon1Phi_;
     double patMuon1Eta_;
     double patMuon1Et_;
+    LorentzVector patMuon1P4_;
 
     double patMuon2Pt_;
     int patMuon2Charge_;
     double patMuon2Phi_ ;
     double patMuon2Eta_;
     double patMuon2Et_;
+    LorentzVector patMuon2P4_;
 
     double patMuon1SumPtR03_;
     double patMuon1EmEtR03_;
@@ -986,12 +995,14 @@ class DiffractiveZEvent {
     double patElectron1Phi_;
     double patElectron1Eta_;
     double patElectron1Et_;
+    LorentzVector patElectron1P4_;
 
     double patElectron2Pt_;
     int patElectron2Charge_;
     double patElectron2Phi_;
     double patElectron2Eta_;
     double patElectron2Et_;
+    LorentzVector patElectron2P4_;
 
     double patElectron1TkDr03_;    
     double patElectron1EcalDr03_;
@@ -1055,6 +1066,22 @@ class DiffractiveZEvent {
     double patElectron2Dist_;
     double patElectron2InnerHits_;
     double patElectron2HE_;    
+
+    double fmetPt_;
+    double fmetPhi_;
+    double fmetEt_;
+    double fmetSumEt_;
+    double fmetpx_;
+    double fmetpy_;
+    LorentzVector fmetp4_;
+
+    double fpatmetPt_;
+    double fpatmetPhi_;
+    double fpatmetEt_;
+    double fpatmetSumEt_;
+    double fpatmetpx_;
+    double fpatmetpy_;
+    LorentzVector fpatmetp4_;
 
 };
 

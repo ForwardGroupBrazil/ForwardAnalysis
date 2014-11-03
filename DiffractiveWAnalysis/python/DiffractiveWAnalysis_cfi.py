@@ -15,6 +15,7 @@ DiffractiveWAnalysis = cms.PSet(
     zdcHitsTag = cms.InputTag("zdcreco"),
     castorHitsTag = cms.InputTag("castorRecHitCorrector"),
     RunMC = cms.untracked.bool(False),
+    RunWPat = cms.untracked.bool(True),
     RunZDC = cms.untracked.bool(False),
     RunCastor = cms.untracked.bool(True),
     RunA = cms.untracked.bool(True), # When RunA == RunB == True/False (All Channels). RunA=True and RunB=False (Good Channels Run A)/ RunA=False and RunB=True (Good Channels RunB)
@@ -32,5 +33,6 @@ DiffractiveWAnalysis = cms.PSet(
     energyThresholdEB = cms.double(0.6),
     energyThresholdEE = cms.double(1.5),
     CaloTowerTag = cms.InputTag("towerMaker"),
-    TrackTag = cms.InputTag("analysisTracks")
+    TrackTag = cms.InputTag("analysisTracks"),
+    beamEnergy = cms.double(3500.)
     )

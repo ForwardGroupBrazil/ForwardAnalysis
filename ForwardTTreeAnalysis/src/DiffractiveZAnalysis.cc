@@ -1909,11 +1909,13 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatMuon1Phi(PatMuonVector[0]->phi());
     eventData.SetPatMuon1Eta(PatMuonVector[0]->eta());
     eventData.SetPatMuon1Et(PatMuonVector[0]->et());
+    eventData.SetPatMuon1P4(PatMuonVector[0]->p4());
     eventData.SetPatMuon2Pt(PatMuonVector[1]->pt());
     eventData.SetPatMuon2Charge(PatMuonVector[1]->charge());
     eventData.SetPatMuon2Phi(PatMuonVector[1]->phi());
     eventData.SetPatMuon2Eta(PatMuonVector[1]->eta());
     eventData.SetPatMuon2Et(PatMuonVector[1]->et());
+    eventData.SetPatMuon2P4(PatMuonVector[1]->p4());
     eventData.SetPatMuon1SumPtR03(muon1SumPtR03);
     eventData.SetPatMuon1EmEtR03(muon1EmEtR03);
     eventData.SetPatMuon1HadEtR03(muon1HadEtR03);    
@@ -2050,11 +2052,13 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron1Phi(PatElectronVector[0]->phi());
     eventData.SetPatElectron1Eta(PatElectronVector[0]->eta());
     eventData.SetPatElectron1Et(PatElectronVector[0]->et());
+    eventData.SetPatElectron1P4(PatElectronVector[0]->p4());
     eventData.SetPatElectron2Pt(PatElectronVector[1]->pt());
     eventData.SetPatElectron2Charge(PatElectronVector[1]->charge());
     eventData.SetPatElectron2Phi(PatElectronVector[1]->phi());
     eventData.SetPatElectron2Eta(PatElectronVector[1]->eta());
     eventData.SetPatElectron2Et(PatElectronVector[1]->et());
+    eventData.SetPatElectron2P4(PatElectronVector[1]->p4());
     eventData.SetPatElectron1TkDr03(PatElectronVector[0]->dr03TkSumPt());
     eventData.SetPatElectron1EcalDr03(PatElectronVector[0]->dr03EcalRecHitSumEt());
     eventData.SetPatElectron1HcalDr03(PatElectronVector[0]->dr03HcalTowerSumEt());

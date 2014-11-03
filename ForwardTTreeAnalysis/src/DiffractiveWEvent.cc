@@ -16,14 +16,20 @@ void DiffractiveWEvent::reset(){
   LeadingElectronEta_=-999.;
   LeadingElectronPhi_=-999.;
   LeadingElectronCharge_=-999.;
-  LeadingElectronEt_=-999.;
+  BosonElectronMass_=-999.;
+  BosonElectronPt_ = -999.;
+  BosonElectronEta_ = -999.;
+  BosonElectronPhi_ = -999.;
   ElectronsN_= -1;
 
   LeadingMuonPt_=-999.;
   LeadingMuonEta_=-999.;
   LeadingMuonPhi_=-999.;
   LeadingMuonCharge_=-999.;
-  LeadingMuonEt_=-999.;
+  BosonMuonMass_=-999.;
+  BosonMuonPt_ = -999.;
+  BosonMuonEta_ = -999.;
+  BosonMuonPhi_ = -999.; 
   MuonsN_= -1;
 
   VertexMultiplicity_.clear();
@@ -45,33 +51,49 @@ void DiffractiveWEvent::reset(){
   CastorNumberBadChannels_ = -999;
   EachTowerCounter_ = -1;
 
-  PrimaryGapMaxGen_=-999.;
-  SecondGapMaxGen_=-999.;
-  TracksPtGen_.clear();
-  EtaOfTracksPtGen_.clear();
-  NTracksGen_=-999;
-  Mx2PlusGen_=-999.;
-  Mx2MinusGen_=-999.;
-  Mx2Gen_=-999.;
-  Mx2ZGen_=-999.;
-  NMx2PlusGen_=-999;
-  NMx2MinusGen_=-999;
-  EtaGaplimPlusGen_=-999.;
-  EtaGaplimMinusGen_=-999.;
-  NParticlesGen_=-999;
+  xigenminus_=-999.;
+  xigenplus_=-999.;
+
+  mxgenminus_=-999.;
+  mxgenplus_=-999.;
+  mx2genminus_=-999.;
+  mx2genplus_=-999.;
+  mxgenleft_=-999.;
+  mx2genright_=-999.;
+  mx2genleft_=-999.;
+  mxgenright_=-999.;
+  lrggen_=-999.;
+  etamaxgen_=-999.;
+  etamingen_=-999.;
+  epluspzgen_=-999.;
+  eminuspzgen_=-999.;
+  etexpoplusgen_=-999.;
+  etexpominusgen_=-999.;
   sumECastorMinusGen_=-999.;
-  sumECastorPlusGen_=-999.;
-  sumEZDCMinusGen_=-999.;
-  sumEZDCPlusGen_=-999.;
-  EtaOutcomingProtonGen_=-999.;
-  xLGen_=-999.;
-  xLMostEnergeticGen_=-999.;
-  xiZMinusGen_=-999.;
-  xiZPlusGen_=-999.;
-  EtaZGen_=-999.;
-  EnergyZGen_=-999.;
-  pDissMassGen_=-999.;
-  xLpDissMass_=-999.;
+  sumptgenleft_=-999.;
+  sumptgenright_=-999.;
+
+  mxgenminusCMS_=-999.;
+  mxgenplusCMS_=-999.;
+  mx2genminusCMS_=-999.;
+  mx2genplusCMS_=-999.;
+  mxgenleftCMS_=-999.;
+  mxgenrightCMS_=-999.;
+  mx2genleftCMS_=-999.;
+  mx2genrightCMS_=-999.;
+  lrggenCMS_=-999.;
+  etamaxgenCMS_=-999.;
+  etamingenCMS_=-999.;
+  epluspzgenCMS_=-999.;
+  eminuspzgenCMS_=-999.;
+  etexpoplusgenCMS_=-999.;
+  etexpominusgenCMS_=-999.;
+  sumECastorMinusGenCMS_=-999.;
+  sumptgenleftCMS_=-999.;
+  sumptgenrightCMS_=-999.;
+
+  BosonElectronMassPF_=-999.;
+  BosonMuonMassPF_=-999.;
 
   SumEHFPlus_ = -999.; 
   SumEHF_SPlus_ = -999.; 
@@ -99,38 +121,50 @@ void DiffractiveWEvent::reset(){
   SumEtEBMinus_ = -999.; 
   EPZCaloPlus_ = -999.; 
   EPZCaloMinus_ = -999.; 
-  XiCaloPlus_ = -999.; 
-  XiCaloMinus_ = -999.; 
+  EtEtaCaloPlus_ = -999.; 
+  EtEtaCaloMinus_ = -999.; 
   EtaCaloMax_ = -999.; 
   EtaCaloMin_ = -999.; 
+  lrgCalo_ = -999.;
 
   Vertex_ = -999;
-  Xi_PF_minus_ = -999.;
-  Xi_PF_plus_ = -999.;
-  Xi_mass_ = -999.;
-  Xi_massnow_ = -999.;
+  tracketamax_=-999.;
+  tracketamin_=-999.;
+  mxpfminus_ =-999.;
+  mxpfplus_ = -999.;
+  mx2pfminus_ = -999.;
+  mx2pfplus_ = -999.;
+  etamaxpf_ = -999.;
+  etaminpf_ = -999.;
+  epluspzpf_= -999.;
+  eminuspzpf_=-999.;
+  etexpopluspf_=-999.;
+  etexpominuspf_=-999.;
+  lrgPF_=-999.;
+  mxpfleft_ =-999.;
+  mxpfright_=-999.;
+  mx2pfleft_=-999.;
+  mx2pfright_=-999.;
+  sumptpfleft_=-999.;
+  sumptpfright_=-999.;
 
-  Epz_PF_minus_ = -999.;
-  Epz_PF_plus_ = -999.;
-  MultiplicityPF_ = -999;
-  SumEtaTimesEnergyPF_ = -999.;
-  SumpxModulePF_ = -999.;
-  SumpyModulePF_ = -999.;
-  SumpzModulePF_ = -999.;
-  SumpxPF_ = -999.;
-  SumpyPF_ = -999.;
-  SumpzPF_ = -999.;
-  SumEnergyPF_ = -999.;
-  MuEnergyPF_ = -999.;
-  ElectronEnergyPF_ = -999.;
-  MaxGapPF_ = -999.;
-  SecondMaxGapPF_ = -999.;
-  LimPlusGapPF_ = -999.;
-  LimMinusGapPF_ = -999.;
-  PTMaxGapMaxPF_ = -999.;
-  PTMinGapMaxPF_ = -999.;
-  MultiplicityGapPlusPF_ = -999;
-  MultiplicityGapMinusPF_ = -999;
+  mxpfnowminus_ =-999.;
+  mxpfnowplus_ = -999.;
+  mx2pfnowminus_ = -999.;
+  mx2pfnowplus_ = -999.;
+  etamaxpfnow_ = -999.;
+  etaminpfnow_ = -999.;
+  epluspzpfnow_= -999.;
+  eminuspzpfnow_=-999.;
+  etexpopluspfnow_=-999.;
+  etexpominuspfnow_=-999.;
+  lrgPFnow_=-999.;
+  mxpfnowleft_ =-999.;
+  mxpfnowright_=-999.;
+  mx2pfnowleft_=-999.;
+  mx2pfnowright_=-999.;
+  sumptpfnowleft_=-999.;
+  sumptpfnowright_=-999.;
 
   patNMuon_ = -1;
 
@@ -152,6 +186,11 @@ void DiffractiveWEvent::reset(){
 
   patMuon1relIso_=-999.;
 
+  patBosonMuonMass_ = -999.;
+  patBosonMuonPt_ = -999.;
+  patBosonMuonEta_ = -999.;
+  patBosonMuonPhi_ = -999.;
+
   patNElectron_ = -1;
 
   patElectron1Pt_=-999.;
@@ -170,6 +209,11 @@ void DiffractiveWEvent::reset(){
 
   patElectron1relIsoDr03_=-999.;
   patElectron1relIsoDr03_=-999.;
+
+  patBosonElectronMass_ = -999.;
+  patBosonElectronPt_ = -999.;
+  patBosonElectronPhi_ = -999.;
+  patBosonElectronEta_ = -999.;
 
   LeadingElectronTkDr03_=-999.;
   LeadingElectronEcalDr03_=-999.;
@@ -191,6 +235,21 @@ void DiffractiveWEvent::reset(){
 
   LeadingMuonrelIsoDr03_=-999.;
   LeadingMuonrelIsoDr05_=-999.;
+
+  TracksNonConeMuon03_ = -1;
+  TracksNonConeElectron03_ = -1;
+  TracksNonConepatMuon03_ = -1;
+  TracksNonConepatElectron03_ = -1;
+
+  TracksNonConeMuon04_ = -1;
+  TracksNonConeElectron04_ = -1;
+  TracksNonConepatMuon04_ = -1;
+  TracksNonConepatElectron04_ = -1;
+
+  TracksNonConeMuon05_ = -1;
+  TracksNonConeElectron05_ = -1;
+  TracksNonConepatMuon05_ = -1;
+  TracksNonConepatElectron05_ = -1;
 
   LeadingElectronDeltaPhiTkClu_ = -999.;
   LeadingElectronDeltaEtaTkClu_ = -999.;
@@ -220,11 +279,6 @@ void DiffractiveWEvent::reset(){
   fpatmetSumEt_ = -999.;
   fpatmetpx_ = -999.;
   fpatmetpy_ = -999.;
-
-  Mwenu_ = -999.;
-  Mwmunu_ = -999.;
-  Mpatwenu_ = -999.;
-  Mpatmunu_ = -999.;
 
   //ZDCdigifC_.clear();
 

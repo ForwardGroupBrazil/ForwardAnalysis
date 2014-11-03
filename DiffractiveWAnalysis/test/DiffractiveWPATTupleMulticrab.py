@@ -40,7 +40,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = -1
+config.NumberOfEvents = 100
 
 #
 # Define Options to Run
@@ -210,12 +210,12 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = '/storage1/dmf/TestSamples/WSample/PomwigWRECO42X.root'
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/PomwigWRECO42X.root'
 
 else:
     config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'   
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/MuRunA2010.root'   
 
 #
 # CMSSW Main Code
