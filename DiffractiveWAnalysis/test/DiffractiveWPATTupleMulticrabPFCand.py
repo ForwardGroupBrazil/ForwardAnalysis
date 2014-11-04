@@ -195,12 +195,12 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/DyToMuMuPU2010/DyToMuMu.root'
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/PomwigWRECO42X.root'
 
 else:
     config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/MuRun2010/MuRunA2010.root'   
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/MuRunA2010.root'
 
 #
 # CMSSW Main Code

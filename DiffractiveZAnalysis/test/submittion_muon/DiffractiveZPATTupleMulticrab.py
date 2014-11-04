@@ -40,7 +40,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 5000
+config.NumberOfEvents = 100
 
 #
 # Define Options to Run
@@ -195,12 +195,12 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/DyToMuMuPU2010/DyToMuMu.root'
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/DyToMuMu.root'
 
 else:
     config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/TestSamples/MuRun2010/MuRunA2010.root'   
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/MuRunA2010.root'   
 
 #
 # CMSSW Main Code
@@ -364,7 +364,6 @@ from ForwardAnalysis.ForwardTTreeAnalysis.PFCandInfo_cfi import PFCandInfo
 ######################################################################################
 
 process.diffractiveZFilter = cms.EDFilter("diffractiveZFilter",
-                             nLeptons = cms.untracked.int32(2),
                              muonTag = cms.untracked.InputTag("muons"),
                              electronTag = cms.untracked.InputTag("gsfElectrons")
                              )
