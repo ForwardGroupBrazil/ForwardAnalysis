@@ -167,21 +167,6 @@ elif options.Run == "MC_none":
   config.runGen = False
   config.sys = False
 
-elif options.Run == "MC_none_W":
-  print("")
-  print("#########")
-  print("MC None W")
-  print("#########")
-  print("")
-  config.globalTagNameMC = 'START42_V17D::All'
-  config.TriggerOn = False
-  triggerlist = 'no_trigger','no_trigger'
-  l1list = 'no_trigger','no_trigger'
-  config.runOnMC = True
-  config.runPUMC = False
-  config.runGen = False
-  config.sys = False
-
 else:
   print("")
   print("") 
