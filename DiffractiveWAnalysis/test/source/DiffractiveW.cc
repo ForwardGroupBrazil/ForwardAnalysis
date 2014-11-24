@@ -820,7 +820,6 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
   if (check1.GetDirectory(processname.c_str())){
     LoadFile(filein,processname);
   }
-
   else{
     std::cout << "---------------------------------------------------" << std::endl;
     std::cout << " There is no directory/path " << processname << std::endl;
