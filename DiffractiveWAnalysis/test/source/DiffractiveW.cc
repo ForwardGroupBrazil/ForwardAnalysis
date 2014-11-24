@@ -212,10 +212,8 @@ void DiffractiveW::CreateHistos(std::string type){
     m_hVector_pfetamin.push_back( std::vector<TH1F*>() );
     m_hVector_pfetamincastor.push_back( std::vector<TH1F*>() );
     m_hVector_maxetagap.push_back( std::vector<TH1F*>() );
-    m_hVector_LimPlusgap.push_back( std::vector<TH1F*>() );
-    m_hVector_LimMinusgap.push_back( std::vector<TH1F*>() );
-    m_hVector_SumPTLimPlusgap.push_back( std::vector<TH1F*>() );
-    m_hVector_SumPTLimMinusgap.push_back( std::vector<TH1F*>() );
+    m_hVector_SumPTMax.push_back( std::vector<TH1F*>() );
+    m_hVector_SumPTMin.push_back( std::vector<TH1F*>() );
     m_hVector_absdeltaEtaPF.push_back( std::vector<TH1F*>() );
     m_hVector_deltaEtaPF.push_back( std::vector<TH1F*>() );
     m_hVector_absdeltaEtaPFCastor.push_back( std::vector<TH1F*>() );
@@ -474,21 +472,13 @@ void DiffractiveW::CreateHistos(std::string type){
       TH1F *histo_maxetagap = new TH1F(name,"Particle Flow #Delta#eta_{max} Distribution; #Delta#eta_{max}; N events",40,0.,6.);
       m_hVector_maxetagap[j].push_back(histo_maxetagap);
 
-      sprintf(name,"LimPlusgap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LimPlusgap = new TH1F(name,"Particle Flow #eta_{max} Gap upper limit; #eta; N events",50,-5.2,5.2);
-      m_hVector_LimPlusgap[j].push_back(histo_LimPlusgap);
-
       sprintf(name,"SumPTMaxgap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SumPTLimPlusgap = new TH1F(name,"Particle Flow P_{T}; #sum pT_{max} [GeV]; N events",1200,0,600);
-      m_hVector_SumPTLimPlusgap[j].push_back(histo_SumPTLimPlusgap);
-
-      sprintf(name,"LimMinusgap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LimMinusgap = new TH1F(name,"Particle Flow #eta_{max} Gap lower limit; #eta; N events",50,-5.2,5.2);
-      m_hVector_LimMinusgap[j].push_back(histo_LimMinusgap);
+      TH1F *histo_SumPTMax = new TH1F(name,"Particle Flow P_{T}; #sum pT_{max} [GeV]; N events",1200,0,600);
+      m_hVector_SumPTMax[j].push_back(histo_SumPTMax);
 
       sprintf(name,"SumPTMingap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SumPTLimMinusgap = new TH1F(name,"Particle Flow P_{T}; #sum pT_{min} [GeV]; N events",1200,0,600);
-      m_hVector_SumPTLimMinusgap[j].push_back(histo_SumPTLimMinusgap);
+      TH1F *histo_SumPTMin = new TH1F(name,"Particle Flow P_{T}; #sum pT_{min} [GeV]; N events",1200,0,600);
+      m_hVector_SumPTMin[j].push_back(histo_SumPTMin);
 
       sprintf(name,"deltaEtamaxminPF_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_deltaEtaPF = new TH1F(name,"#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",14,binarraydelta);
@@ -622,11 +612,14 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_pfetamax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
   m_hVector_pfetamin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
   m_hVector_pfetamincastor[index].at(pileup)->Fill(etamin_,totalweight);
-  //m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffW->GetMaxGapPF()),totalweight);
-  //m_hVector_LimPlusgap[index].at(pileup)->Fill(eventdiffW->GetLimPlusGapPF(),totalweight);
-  //m_hVector_LimMinusgap[index].at(pileup)->Fill(eventdiffW->GetLimMinusGapPF(),totalweight);
-  //m_hVector_SumPTLimPlusgap[index].at(pileup)->Fill(eventdiffW->GetPTMaxGapMaxPF(),totalweight);
-  //m_hVector_SumPTLimMinusgap[index].at(pileup)->Fill(eventdiffW->GetPTMinGapMaxPF(),totalweight);
+  m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffW->GetLrgPF()),totalweight);
+  if(fabs(eventdiffW->GetSumptPFLeft())>fabs(eventdiffW->GetSumptPFRight())){
+    m_hVector_SumPTMax[index].at(pileup)->Fill(eventdiffW->GetSumptPFLeft(),totalweight);
+    m_hVector_SumPTMin[index].at(pileup)->Fill(eventdiffW->GetSumptPFRight(),totalweight);
+  }else{
+    m_hVector_SumPTMax[index].at(pileup)->Fill(eventdiffW->GetSumptPFRight(),totalweight);
+    m_hVector_SumPTMin[index].at(pileup)->Fill(eventdiffW->GetSumptPFLeft(),totalweight);
+  }
   m_hVector_absdeltaEtaPF[index].at(pileup)->Fill(fabs(deltaetapf),totalweight);
   m_hVector_deltaEtaPF[index].at(pileup)->Fill(deltaetapf,totalweight);
   m_hVector_absdeltaEtaPFCastor[index].at(pileup)->Fill(fabs(deltaetapfcastor),totalweight);
@@ -721,10 +714,8 @@ void DiffractiveW::SaveHistos(std::string type,std::string typesel){
       m_hVector_pfetamin[j].at(i)->Write();
       m_hVector_pfetamincastor[j].at(i)->Write();
       m_hVector_maxetagap[j].at(i)->Write();
-      m_hVector_LimPlusgap[j].at(i)->Write();
-      m_hVector_LimMinusgap[j].at(i)->Write();
-      m_hVector_SumPTLimPlusgap[j].at(i)->Write();
-      m_hVector_SumPTLimMinusgap[j].at(i)->Write();
+      m_hVector_SumPTMax[j].at(i)->Write();
+      m_hVector_SumPTMin[j].at(i)->Write();
       m_hVector_absdeltaEtaPF[j].at(i)->Write();
       m_hVector_deltaEtaPF[j].at(i)->Write();
       m_hVector_absdeltaEtaPFCastor[j].at(i)->Write();
@@ -796,15 +787,13 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("etasignedHF",&betasignedHF,"betasignedHF/D");
   trout->Branch("etasignedCASTOR",&betasignedCASTOR,"betasignedCASTOR/D");
   trout->Branch("MaxGapPF",&bMaxGapPF,"bMaxGapPF/D");
-  trout->Branch("PTMaxGapMaxPF",&bPTMaxGapMaxPF,"bPTMaxGapMaxPF/D");
-  trout->Branch("PTMinGapMaxPF",&bPTMinGapMaxPF,"bPTMinGapMaxPF/D");
+  trout->Branch("SumPTMaxLrgPF",&SumPTMaxLrgPF,"SumPTMaxLrgPF/D");
+  trout->Branch("SumPTMinLrgPF",&SumPTMinLrgPF,"SumPTMinLrgPF/D");
   trout->Branch("XiPlusFromPFCands",&bXiPlusFromPFCands,"bXiPlusFromPFCands/D");
   trout->Branch("XiMinusFromPFCands",&bXiMinusFromPFCands,"bXiMinusFromPFCands/D");
   trout->Branch("EtaMaxPF",&betamax,"betamax/D");
   trout->Branch("EtaMinPF",&betamin,"betamin/D");
   trout->Branch("EtaMinPFCastor",&betamincastor,"betamincastor/D");
-  trout->Branch("EtaLimMinus",&betalimmin,"betalimmin/D");
-  trout->Branch("EtaLimPlus",&betalimmax,"betalimmax/D");
 
   TTreeCASTOR = "TTreeCASTORW_" + savehistofile;
   fOutCASTOR = new TFile(TTreeCASTOR, "RECREATE");
@@ -1138,7 +1127,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
 
-      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetMETPt()*eventdiffW->GetLeadingElectronPt()*(1.-TMath::Cos(eventdiffW->GetLeadingElectronPhi() - eventdiffW->GetMETPhi())));
+      bosonWMass = eventdiffW->GetBosonElectronMass();
       bosonWEta = eventdiffW->GetLeadingElectronEta();
       bosonWPhi = eventdiffW->GetLeadingElectronPhi();
       bosonWPt = eventdiffW->GetLeadingElectronPt();
@@ -1163,7 +1152,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	AEcastor = (eventdiff->GetSumEnergyHFMinus() - sumCastorEnergy)/(eventdiff->GetSumEnergyHFMinus() + sumCastorEnergy);
       }
 
-      //if (eventdiffW->GetLeadingElectronPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt && eventdiffW->GetLeadingMuonPt()<10) presel = true;
+      if (eventdiffW->GetLeadingElectronPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt && eventdiffW->GetLeadingMuonPt()<10) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
 
       if(NElectrons==1) acceptEvt = true;
@@ -1204,7 +1193,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if (typesel == "RecoMuon"){
       selStatus = "Reco::Muon";
 
-      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetMETPt()*eventdiffW->GetLeadingMuonPt()*(1.-TMath::Cos(eventdiffW->GetLeadingMuonPhi() - eventdiffW->GetMETPhi())));
+      bosonWMass = eventdiffW->GetBosonMuonMass();
       bosonWEta = eventdiffW->GetLeadingMuonEta();
       bosonWPhi = eventdiffW->GetLeadingMuonPhi();
       bosonWPt = eventdiffW->GetLeadingMuonPt();
@@ -1215,7 +1204,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
       if(NMuons ==1) acceptEvt = true;
 
-      //if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt && eventdiffW->GetLeadingElectronPt()<10) presel = true;
+      if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt && eventdiffW->GetLeadingElectronPt()<10) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
       if (isoRec < 3) { 
 	isolation = true;
@@ -1236,7 +1225,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if (typesel == "PatElectron"){
       selStatus = "Pat::Electron";
 
-      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetPatMETPt()*eventdiffW->GetPatElectron1Pt()*(1.-TMath::Cos(eventdiffW->GetPatElectron1Phi() - eventdiffW->GetPatMETPhi())));
+      bosonWMass = eventdiffW->GetPatBosonElectronMass();
       bosonWEta = eventdiffW->GetPatElectron1Eta();
       bosonWPhi = eventdiffW->GetPatElectron1Phi();
       bosonWPt = eventdiffW->GetPatElectron1Pt();
@@ -1255,7 +1244,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       sigmaIeIe1 = eventdiffW->GetPatElectron1SigmaIeIe();
       HE1 = eventdiffW->GetPatElectron1HE();
 
-      //if (eventdiffW->GetPatElectron1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt && eventdiffW->GetPatMuon1Pt()<10) presel = true;
+      if (eventdiffW->GetPatElectron1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt && eventdiffW->GetPatMuon1Pt()<10) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
 
       if(NElectrons==1) acceptEvt = true;
@@ -1296,7 +1285,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if(typesel == "PatMuon"){
       selStatus = "Pat::Muon";
 
-      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetPatMETPt()*eventdiffW->GetPatMuon1Pt()*(1.-TMath::Cos(eventdiffW->GetPatMuon1Phi() - eventdiffW->GetPatMETPhi())));
+      bosonWMass = eventdiffW->GetPatBosonMuonMass();
       bosonWEta = eventdiffW->GetPatMuon1Eta();
       bosonWPhi = eventdiffW->GetPatMuon1Phi();
       bosonWPt = eventdiffW->GetPatMuon1Pt();
@@ -1307,7 +1296,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
       if(NMuons ==1) acceptEvt = true;
 
-      //if (eventdiffW->GetPatMuon1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt && eventdiffW->GetPatElectron1Pt()<10) presel = true;
+      if (eventdiffW->GetPatMuon1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt && eventdiffW->GetPatElectron1Pt()<10) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
       if (isoRec < 3) {
 	candSel = true;
@@ -1363,9 +1352,14 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     bSumEnergyHFPlus = eventdiff->GetSumEnergyHFPlus();
     bsumCastorEnergy = sumCastorEnergy;
     bSectorCastorHit = counterHit;
-    //bMaxGapPF = eventdiffW->GetMaxGapPF();
-    //bPTMaxGapMaxPF = eventdiffW->GetPTMaxGapMaxPF();
-    //bPTMinGapMaxPF = eventdiffW->GetPTMinGapMaxPF();
+    bMaxGapPF = eventdiffW->GetLrgPF();
+    if(fabs(eventdiffW->GetSumptPFLeft())>fabs(eventdiffW->GetSumptPFRight())){
+      SumPTMaxLrgPF = eventdiffW->GetSumptPFLeft();
+      SumPTMinLrgPF = eventdiffW->GetSumptPFRight();
+    }else{
+      SumPTMaxLrgPF = eventdiffW->GetSumptPFRight();
+      SumPTMinLrgPF = eventdiffW->GetSumptPFLeft();
+    }
     bXiPlusFromPFCands = eventdiff->GetXiPlusFromPFCands();
     bXiMinusFromPFCands = eventdiff->GetXiMinusFromPFCands();
     betasignedHF = etasignedHF;
@@ -1374,8 +1368,6 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     betamax = eventdiff->GetEtaMaxFromPFCands();
     betamin = eventdiff->GetEtaMinFromPFCands();
     betamincastor = etamin_;
-    //betalimmin = eventdiffW->GetLimMinusGapPF();
-    //betalimmax = eventdiffW->GetLimPlusGapPF();
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
 
