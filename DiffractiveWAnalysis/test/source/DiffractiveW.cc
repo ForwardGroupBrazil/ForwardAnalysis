@@ -1512,14 +1512,17 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
   std::cout << "\n" << std::endl;
 
   fOut->cd();
+  trout->SetWeight(totalweight);
   trout->Write();
   fOut->Close();
 
   fOutW->cd();
+  troutW->SetWeight(totalweight);
   troutW->Write();
   fOutW->Close();
 
   fOutCASTOR->cd();
+  troutCASTOR->SetWeight(totalweight);
   troutCASTOR->Write();
   fOutCASTOR->Close();
 
