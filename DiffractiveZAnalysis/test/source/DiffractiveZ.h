@@ -122,15 +122,13 @@ class DiffractiveZ {
   double betasignedHF;
   double betasignedCASTOR;
   double bMaxGapPF;
-  double bPTMinGapMaxPF;
-  double bPTMaxGapMaxPF;
+  double SumPTMinLrgPF;
+  double SumPTMaxLrgPF;
   double bXiPlusFromPFCands;
   double bXiMinusFromPFCands;
   double betamax;
   double betamin;
   double betamincastor;
-  double betalimmin;
-  double betalimmax;
 
   std::string filein;
   std::string processname;
@@ -258,8 +256,8 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_maxetagap;
   std::vector<std::vector<TH1F*> > m_hVector_LimPlusgap;
   std::vector<std::vector<TH1F*> > m_hVector_LimMinusgap;
-  std::vector<std::vector<TH1F*> > m_hVector_SumPTLimPlusgap;
-  std::vector<std::vector<TH1F*> > m_hVector_SumPTLimMinusgap;
+  std::vector<std::vector<TH1F*> > m_hVector_SumPTMax;
+  std::vector<std::vector<TH1F*> > m_hVector_SumPTMin;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamax;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamin;
 
