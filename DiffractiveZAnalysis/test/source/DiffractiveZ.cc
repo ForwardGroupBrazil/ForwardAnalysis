@@ -268,10 +268,8 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_absdeltaEtaPFCastor.push_back( std::vector<TH1F*>() );
     m_hVector_deltaEtaPFCastor.push_back( std::vector<TH1F*>() );
     m_hVector_maxetagap.push_back( std::vector<TH1F*>() );
-    m_hVector_LimPlusgap.push_back( std::vector<TH1F*>() );
-    m_hVector_LimMinusgap.push_back( std::vector<TH1F*>() );
-    m_hVector_SumPTLimPlusgap.push_back( std::vector<TH1F*>() );
-    m_hVector_SumPTLimMinusgap.push_back( std::vector<TH1F*>() );
+    m_hVector_SumPTMax.push_back( std::vector<TH1F*>() );
+    m_hVector_SumPTMin.push_back( std::vector<TH1F*>() );
     m_hVector_pfetamax.push_back( std::vector<TH1F*>() );
     m_hVector_pfetamin.push_back( std::vector<TH1F*>() );
     m_hVector_asumE.push_back( std::vector<TH1F*>() );
@@ -671,21 +669,13 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_PFEtamincastor = new TH1F(name,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
       m_hVector_pfetamincastor[j].push_back(histo_PFEtamincastor);
 
-      sprintf(name,"LimPlusgap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LimPlusgap = new TH1F(name,"Particle Flow #eta_{max} Gap upper limit; #eta; N events",50,-5.2,5.2);
-      m_hVector_LimPlusgap[j].push_back(histo_LimPlusgap);
-
       sprintf(name,"SumPTMaxgap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SumPTLimPlusgap = new TH1F(name,"Particle Flow P_{T}; #sum pT_{max} [GeV]; N events",1200,0,600);
-      m_hVector_SumPTLimPlusgap[j].push_back(histo_SumPTLimPlusgap);
-
-      sprintf(name,"LimMinusgap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LimMinusgap = new TH1F(name,"Particle Flow #eta_{max} Gap lower limit; #eta; N events",50,-5.2,5.2);
-      m_hVector_LimMinusgap[j].push_back(histo_LimMinusgap);
+      TH1F *histo_SumPTMax = new TH1F(name,"Particle Flow P_{T}; #sum pT_{max} [GeV]; N events",1200,0,600);
+      m_hVector_SumPTMax[j].push_back(histo_SumPTMax);
 
       sprintf(name,"SumPTMingap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SumPTLimMinusgap = new TH1F(name,"Particle Flow P_{T}; #sum pT_{min} [GeV]; N events",1200,0,600);
-      m_hVector_SumPTLimMinusgap[j].push_back(histo_SumPTLimMinusgap);
+      TH1F *histo_SumPTMin = new TH1F(name,"Particle Flow P_{T}; #sum pT_{min} [GeV]; N events",1200,0,600);
+      m_hVector_SumPTMin[j].push_back(histo_SumPTMin);
 
       sprintf(name,"AEcastor_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_AEcastor = new TH1F(name,"A_{Energy}; A_{Energy}; N events",1200,-1.5,1.5);
@@ -828,11 +818,14 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_pfetamin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
   m_hVector_pfetamincastor[index].at(pileup)->Fill(etamin_,totalweight);
   m_hVector_pfetamax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-  //m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffZ->GetMaxGapPF()),totalweight);
-  //m_hVector_LimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetLimPlusGapPF(),totalweight);
-  //m_hVector_LimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetLimMinusGapPF(),totalweight);
-  //m_hVector_SumPTLimPlusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMaxGapMaxPF(),totalweight);
-  //m_hVector_SumPTLimMinusgap[index].at(pileup)->Fill(eventdiffZ->GetPTMinGapMaxPF(),totalweight);
+  m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffZ->GetLrgPF()),totalweight);
+  if(fabs(eventdiffZ->GetSumptPFLeft())>fabs(eventdiffZ->GetSumptPFRight())){
+    m_hVector_SumPTMax[index].at(pileup)->Fill(eventdiffZ->GetSumptPFLeft(),totalweight);
+    m_hVector_SumPTMin[index].at(pileup)->Fill(eventdiffZ->GetSumptPFRight(),totalweight);
+  }else{
+    m_hVector_SumPTMax[index].at(pileup)->Fill(eventdiffZ->GetSumptPFRight(),totalweight);
+    m_hVector_SumPTMin[index].at(pileup)->Fill(eventdiffZ->GetSumptPFLeft(),totalweight);
+  }
   m_hVector_absdeltaEtaPF[index].at(pileup)->Fill(fabs(deltaetapf),totalweight);
   m_hVector_deltaEtaPF[index].at(pileup)->Fill(deltaetapf,totalweight);
   m_hVector_absdeltaEtaPFCastor[index].at(pileup)->Fill(fabs(deltaetapfcastor),totalweight);
@@ -963,10 +956,8 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
       m_hVector_absdeltaEtaPF[j].at(i)->Write();
       m_hVector_deltaEtaPF[j].at(i)->Write();
       m_hVector_maxetagap[j].at(i)->Write();
-      m_hVector_LimPlusgap[j].at(i)->Write();
-      m_hVector_LimMinusgap[j].at(i)->Write();
-      m_hVector_SumPTLimPlusgap[j].at(i)->Write();
-      m_hVector_SumPTLimMinusgap[j].at(i)->Write();
+      m_hVector_SumPTMax[j].at(i)->Write();
+      m_hVector_SumPTMin[j].at(i)->Write();
       m_hVector_pfetamax[j].at(i)->Write();
       m_hVector_pfetamin[j].at(i)->Write();
       m_hVector_asumE[j].at(i)->Write();
@@ -1033,15 +1024,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("etasignedHF",&betasignedHF,"betasignedHF/D");
   trout->Branch("etasignedCASTOR",&betasignedCASTOR,"betasignedCASTOR/D");
   trout->Branch("MaxGapPF",&bMaxGapPF,"bMaxGapPF/D");
-  trout->Branch("PTMaxGapMaxPF",&bPTMaxGapMaxPF,"bPTMaxGapMaxPF/D");
-  trout->Branch("PTMinGapMaxPF",&bPTMinGapMaxPF,"bPTMinGapMaxPF/D");
+  trout->Branch("SumPTMaxLrgPF",&SumPTMaxLrgPF,"SumPTMaxLrgPF/D");
+  trout->Branch("SumPTMinLrgPF",&SumPTMinLrgPF,"SumPTMinLrgPF/D");
   trout->Branch("XiPlusFromPFCands",&bXiPlusFromPFCands,"bXiPlusFromPFCands/D");
   trout->Branch("XiMinusFromPFCands",&bXiMinusFromPFCands,"bXiMinusFromPFCands/D");
   trout->Branch("EtaMaxPF",&betamax,"betamax/D");
   trout->Branch("EtaMinPF",&betamin,"betamin/D");
   trout->Branch("EtaMinPFCastor",&betamincastor,"betamincastor/D");
-  trout->Branch("EtaLimMinus",&betalimmin,"betalimmin/D");
-  trout->Branch("EtaLimPlus",&betalimmax,"betalimmax/D");
 
   TTreeCASTOR = "TTreeCASTOR_" + savehistofile;
   fOutCASTOR = new TFile(TTreeCASTOR, "RECREATE");
@@ -1674,9 +1663,14 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bSumEnergyHFPlus = eventdiff->GetSumEnergyHFPlus();
     bsumCastorEnergy = sumCastorEnergy;
     bSectorCastorHit = counterHit;
-    //bMaxGapPF = eventdiffZ->GetMaxGapPF();
-    //bPTMaxGapMaxPF = eventdiffZ->GetPTMaxGapMaxPF();
-    //bPTMinGapMaxPF = eventdiffZ->GetPTMinGapMaxPF();
+    bMaxGapPF = eventdiffZ->GetLrgPF();
+      if(fabs(eventdiffZ->GetSumptPFLeft())>fabs(eventdiffZ->GetSumptPFRight())){
+	SumPTMaxLrgPF = eventdiffZ->GetSumptPFLeft();
+	SumPTMinLrgPF = eventdiffZ->GetSumptPFRight();
+      }else{
+	SumPTMaxLrgPF = eventdiffZ->GetSumptPFRight();
+	SumPTMinLrgPF = eventdiffZ->GetSumptPFLeft();
+      }
     bXiPlusFromPFCands = eventdiff->GetXiPlusFromPFCands();
     bXiMinusFromPFCands = eventdiff->GetXiMinusFromPFCands();
     betasignedHF = etasignedHF;
@@ -1686,8 +1680,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     betamax = eventdiff->GetEtaMaxFromPFCands();
     betamin = eventdiff->GetEtaMinFromPFCands();
     betamincastor = etamin_;
-    //betalimmin = eventdiffZ->GetLimMinusGapPF();
-    //betalimmax = eventdiffZ->GetLimPlusGapPF();
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
 
@@ -1837,13 +1829,16 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   std::cout << "\n" << std::endl;
 
   fOut->cd();
+  trout->SetWeight(totalweight);
   trout->Write();
   fOut->Close();
   fOutZ->cd();
+  troutZ->SetWeight(totalweight);
   troutZ->Write();
   fOutZ->Close();
 
   fOutCASTOR->cd();
+  troutCASTOR->SetWeight(totalweight);
   troutCASTOR->Write();
   fOutCASTOR->Close();
 }
