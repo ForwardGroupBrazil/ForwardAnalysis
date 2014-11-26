@@ -1697,6 +1697,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel) {
 	  FillHistos(7,pileup,totalcommon);
 	  fOutZ->cd();
+          troutZ->SetWeight(totalcommon);
 	  troutZ->Fill();
 	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8,pileup,totalcommon);
@@ -1716,12 +1717,14 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap){
 	  FillHistos(16,pileup,totalcommon);
 	  fOutCASTOR->cd();
+          troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
 	  outstring << "CASTOR Gap, Z Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(17,pileup,totalcommon);
 	  fOut->cd();
+          trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
 
@@ -1741,6 +1744,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel) {
 	  FillHistos(7,pileup,totalcommon);
 	  fOutZ->cd();
+          troutZ->SetWeight(totalcommon);
 	  troutZ->Fill();
 	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8,pileup,totalcommon);
@@ -1754,11 +1758,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap){ 
 	  FillHistos(16,pileup,totalcommon);
 	  fOutCASTOR->cd();
+          troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
 	  FillHistos(17,pileup,totalcommon);
 	  fOut->cd();
+          trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
@@ -1829,16 +1835,12 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   std::cout << "\n" << std::endl;
 
   fOut->cd();
-  trout->SetWeight(totalweight);
   trout->Write();
   fOut->Close();
   fOutZ->cd();
-  troutZ->SetWeight(totalweight);
   troutZ->Write();
   fOutZ->Close();
-
   fOutCASTOR->cd();
-  troutCASTOR->SetWeight(totalweight);
   troutCASTOR->Write();
   fOutCASTOR->Close();
 }
