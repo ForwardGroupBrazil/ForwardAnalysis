@@ -99,8 +99,13 @@ void DiffractiveZ::CleanVariables(){
   etasignedCASTOR = -999;
   aSumE = -999.;
   AEcastor = -999.;
-  deltaetapf = -999.;
-  deltaetapfcastor = -999.;  
+  deltaeta = -999.;
+  deltaetacastor = -999.;  
+  etamin = -999.;
+  etamax = -999.;
+  xiplus = -999.;
+  ximinus = -999.;
+  maxLRG = -999.;
 
 }
 
@@ -259,19 +264,19 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_AEcastor.push_back( std::vector<TH1F*>() );
     m_hVector_etasignedHF.push_back( std::vector<TH1F*>() );
     m_hVector_etasignedCASTOR.push_back( std::vector<TH1F*>() );
-    m_hVector_XiPlusPF.push_back( std::vector<TH1F*>() );
-    m_hVector_XiMinusPF.push_back( std::vector<TH1F*>() );
-    m_hVector_XiPF.push_back( std::vector<TH1F*>() );
-    m_hVector_pfetamincastor.push_back( std::vector<TH1F*>() );
-    m_hVector_absdeltaEtaPF.push_back( std::vector<TH1F*>() );
-    m_hVector_deltaEtaPF.push_back( std::vector<TH1F*>() );
-    m_hVector_absdeltaEtaPFCastor.push_back( std::vector<TH1F*>() );
-    m_hVector_deltaEtaPFCastor.push_back( std::vector<TH1F*>() );
+    m_hVector_XiPlus.push_back( std::vector<TH1F*>() );
+    m_hVector_XiMinus.push_back( std::vector<TH1F*>() );
+    m_hVector_Xi.push_back( std::vector<TH1F*>() );
+    m_hVector_etamincastor.push_back( std::vector<TH1F*>() );
+    m_hVector_absdeltaEta.push_back( std::vector<TH1F*>() );
+    m_hVector_deltaEta.push_back( std::vector<TH1F*>() );
+    m_hVector_absdeltaEtaCastor.push_back( std::vector<TH1F*>() );
+    m_hVector_deltaEtaCastor.push_back( std::vector<TH1F*>() );
     m_hVector_maxetagap.push_back( std::vector<TH1F*>() );
     m_hVector_SumPTMax.push_back( std::vector<TH1F*>() );
     m_hVector_SumPTMin.push_back( std::vector<TH1F*>() );
-    m_hVector_pfetamax.push_back( std::vector<TH1F*>() );
-    m_hVector_pfetamin.push_back( std::vector<TH1F*>() );
+    m_hVector_etamax.push_back( std::vector<TH1F*>() );
+    m_hVector_etamin.push_back( std::vector<TH1F*>() );
     m_hVector_asumE.push_back( std::vector<TH1F*>() );
     m_hVector_EnergyHFPlusVsCastorTProf.push_back( std::vector<TProfile*>() );
     m_hVector_EnergyHFMinusVsCastorTProf.push_back( std::vector<TProfile*>() );
@@ -625,56 +630,56 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_aSumE = new TH1F(name,"Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",100,-2,2);
       m_hVector_asumE[j].push_back(histo_aSumE);
 
-      sprintf(name,"pfetamax_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_PFEtamax = new TH1F(name,"Particle Flow #eta_{max} Distribution; #eta; N events",18,binarrayplus);
-      m_hVector_pfetamax[j].push_back(histo_PFEtamax);
+      sprintf(name,"etamax_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_Etamax = new TH1F(name,"#eta_{max} Distribution; #eta; N events",18,binarrayplus);
+      m_hVector_etamax[j].push_back(histo_Etamax);
 
-      sprintf(name,"pfetamin_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_PFEtamin = new TH1F(name,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
-      m_hVector_pfetamin[j].push_back(histo_PFEtamin);
+      sprintf(name,"etamin_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_Etamin = new TH1F(name,"#eta_{min} Distribution; #eta; N events",18,binarrayminus);
+      m_hVector_etamin[j].push_back(histo_Etamin);
 
       sprintf(name,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_maxetagap = new TH1F(name,"Particle Flow #Delta#eta_{max} Distribution; #Delta#eta_{max}; N events",40,0.,6.);
+      TH1F *histo_maxetagap = new TH1F(name,"#Delta#eta_{max} Distribution; #Delta#eta_{max}; N events",40,0.,6.);
       m_hVector_maxetagap[j].push_back(histo_maxetagap);
 
-      sprintf(name,"deltaEtamaxminPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_deltaEtaPF = new TH1F(name,"#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",14,binarraydelta);
-      m_hVector_deltaEtaPF[j].push_back(histo_deltaEtaPF);
+      sprintf(name,"deltaEtamaxmin_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_deltaEta = new TH1F(name,"#Delta#eta Distribution; #eta_{max}-#eta_{min}; N events",14,binarraydelta);
+      m_hVector_deltaEta[j].push_back(histo_deltaEta);
 
-      sprintf(name,"absdeltaEtamaxminPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_absdeltaEtaPF = new TH1F(name,"|#Delta#eta_{PF}| Distribution; |#eta_{max}-#eta_{min}|; N events",14,binarraydelta);
-      m_hVector_absdeltaEtaPF[j].push_back(histo_absdeltaEtaPF);
+      sprintf(name,"absdeltaEtamaxmin_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_absdeltaEta = new TH1F(name,"|#Delta#eta| Distribution; |#eta_{max}-#eta_{min}|; N events",14,binarraydelta);
+      m_hVector_absdeltaEta[j].push_back(histo_absdeltaEta);
 
-      sprintf(name,"deltaEtamaxminPFCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_deltaEtaPFCastor = new TH1F(name,"#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",14,binarraydelta);
-      m_hVector_deltaEtaPFCastor[j].push_back(histo_deltaEtaPFCastor);
+      sprintf(name,"deltaEtamaxminCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_deltaEtaCastor = new TH1F(name,"#Delta#eta Distribution; #eta_{max}-#eta_{min}; N events",14,binarraydelta);
+      m_hVector_deltaEtaCastor[j].push_back(histo_deltaEtaCastor);
 
-      sprintf(name,"absdeltaEtamaxminPFCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_absdeltaEtaPFCastor = new TH1F(name,"|#Delta#eta_{PF}| Distribution; |#eta_{max}-#eta_{min}|; N events",14,binarraydelta);
-      m_hVector_absdeltaEtaPFCastor[j].push_back(histo_absdeltaEtaPFCastor);
+      sprintf(name,"absdeltaEtamaxminCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_absdeltaEtaCastor = new TH1F(name,"|#Delta#eta| Distribution; |#eta_{max}-#eta_{min}|; N events",14,binarraydelta);
+      m_hVector_absdeltaEtaCastor[j].push_back(histo_absdeltaEtaCastor);
 
-      sprintf(name,"xiPlusPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_XiPlusPF = new TH1F(name,"#xi_{plus} Particle Flow; #xi_{plus}; N Event",17,xi_bin);
-      m_hVector_XiPlusPF[j].push_back(histo_XiPlusPF);
+      sprintf(name,"xiPlus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_XiPlus = new TH1F(name,"#xi_{plus}; #xi_{plus}; N Event",17,xi_bin);
+      m_hVector_XiPlus[j].push_back(histo_XiPlus);
 
-      sprintf(name,"xiMinusPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_XiMinusPF = new TH1F(name,"#xi_{minus} Particle Flow; #xi_{minus}; N Event",17,xi_bin);
-      m_hVector_XiMinusPF[j].push_back(histo_XiMinusPF);
+      sprintf(name,"xiMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_XiMinus = new TH1F(name,"#xi_{minus}; #xi_{minus}; N Event",17,xi_bin);
+      m_hVector_XiMinus[j].push_back(histo_XiMinus);
 
-      sprintf(name,"xiPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_XiPF = new TH1F(name,"#xi Particle Flow; #xi; N Event",17,xi_bin);
-      m_hVector_XiPF[j].push_back(histo_XiPF);
+      sprintf(name,"xi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_Xi = new TH1F(name,"#xi; #xi; N Event",17,xi_bin);
+      m_hVector_Xi[j].push_back(histo_Xi);
 
-      sprintf(name,"pfetamincastor_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_PFEtamincastor = new TH1F(name,"Particle Flow #eta_{min} Distribution; #eta; N events",18,binarrayminus);
-      m_hVector_pfetamincastor[j].push_back(histo_PFEtamincastor);
+      sprintf(name,"etamincastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_Etamincastor = new TH1F(name,"#eta_{min} Distribution; #eta; N events",18,binarrayminus);
+      m_hVector_etamincastor[j].push_back(histo_Etamincastor);
 
       sprintf(name,"SumPTMaxgap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SumPTMax = new TH1F(name,"Particle Flow P_{T}; #sum pT_{max} [GeV]; N events",1200,0,600);
+      TH1F *histo_SumPTMax = new TH1F(name,"P_{T}; #sum pT_{max} [GeV]; N events",1200,0,600);
       m_hVector_SumPTMax[j].push_back(histo_SumPTMax);
 
       sprintf(name,"SumPTMingap_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SumPTMin = new TH1F(name,"Particle Flow P_{T}; #sum pT_{min} [GeV]; N events",1200,0,600);
+      TH1F *histo_SumPTMin = new TH1F(name,"P_{T}; #sum pT_{min} [GeV]; N events",1200,0,600);
       m_hVector_SumPTMin[j].push_back(histo_SumPTMin);
 
       sprintf(name,"AEcastor_%s_%s",tag,Folders.at(j).c_str());
@@ -755,17 +760,17 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
 
 
   // Detector
-  m_hVector_sumEHFplus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-  m_hVector_sumEHFminus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-  m_hVector_sumEHEplus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-  m_hVector_sumEHEminus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
+  m_hVector_sumEHFplus[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlus(),totalweight);
+  m_hVector_sumEHFminus[index].at(pileup)->Fill(eventdiffZ->GetSumEHFMinus(),totalweight);
+  m_hVector_sumEHEplus[index].at(pileup)->Fill(eventdiffZ->GetSumEHEPlus(),totalweight);
+  m_hVector_sumEHEminus[index].at(pileup)->Fill(eventdiffZ->GetSumEHEMinus(),totalweight);
 
-  if (eventdiff->GetSumEnergyHFPlus() > eventdiff->GetSumEnergyHFMinus()){
-    m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-    m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
+  if (eventdiffZ->GetSumEHFPlus() > eventdiffZ->GetSumEHFMinus()){
+    m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlus(),totalweight);
+    m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiffZ->GetSumEHFMinus(),totalweight);
   }else{
-    m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-    m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
+    m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiffZ->GetSumEHFMinus(),totalweight);
+    m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlus(),totalweight);
   }
 
   m_hVector_SumEHFplus_S[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_SPlus(),totalweight);
@@ -774,8 +779,8 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_SumEHFminus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LMinus(),totalweight);
   m_hVector_sumEEEminus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEMinus(),totalweight);
   m_hVector_sumEEEplus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEPlus(),totalweight);
-  m_hVector_multhf[index].at(pileup)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-  m_hVector_EnergyHFPlusVsEnergyHFMinus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),eventdiff->GetSumEnergyHFMinus(),totalweight);
+  m_hVector_multhf[index].at(pileup)->Fill(eventdiffZ->GetMultiplicityHFPlus(),eventdiffZ->GetMultiplicityHFMinus(),totalweight);
+  m_hVector_EnergyHFPlusVsEnergyHFMinus[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlus(),eventdiffZ->GetSumEHFMinus(),totalweight);
   m_hVector_EnergyEEPlusVsEnergyEEMinus[index].at(pileup)->Fill(eventdiffZ->GetSumEEEPlus(),eventdiffZ->GetSumEEEMinus(),totalweight);
 
   for (int k=0; k<16;k++){
@@ -792,12 +797,12 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_SectorVsTotalCastorEnergyTProf[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
   m_hVector_sumECastorMinus[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
   m_hVector_sumECastorMinusLow[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
-  sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiff->GetSumEnergyHFMinus();
+  sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiffZ->GetSumEHFMinus();
   m_hVector_sumECastorAndHFMinus[index].at(pileup)->Fill(sumCastorAndHFMinusEnergy,totalweight);
-  m_hVector_etcalos_p[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),sumCastorEnergy,totalweight);
-  m_hVector_etcalos_n[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),sumCastorEnergy,totalweight);
-  m_hVector_EnergyHFMinusVsCastorTProf[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),sumCastorEnergy,totalweight);
-  m_hVector_EnergyHFPlusVsCastorTProf[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),sumCastorEnergy,totalweight);
+  m_hVector_etcalos_p[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlus(),sumCastorEnergy,totalweight);
+  m_hVector_etcalos_n[index].at(pileup)->Fill(eventdiffZ->GetSumEHFMinus(),sumCastorEnergy,totalweight);
+  m_hVector_EnergyHFMinusVsCastorTProf[index].at(pileup)->Fill(eventdiffZ->GetSumEHFMinus(),sumCastorEnergy,totalweight);
+  m_hVector_EnergyHFPlusVsCastorTProf[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlus(),sumCastorEnergy,totalweight);
   m_hVector_CastorMultiplicity[index].at(pileup)->Fill(counterHit,totalweight);
   m_hVector_CastorMultiplicityVsLumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),counterHit,totalweight);
 
@@ -815,10 +820,10 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   // Diffration
   m_hVector_asumE[index].at(pileup)->Fill(aSumE,totalweight);
   m_hVector_AEcastor[index].at(pileup)->Fill(AEcastor,totalweight);
-  m_hVector_pfetamin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-  m_hVector_pfetamincastor[index].at(pileup)->Fill(etamin_,totalweight);
-  m_hVector_pfetamax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-  m_hVector_maxetagap[index].at(pileup)->Fill(fabs(eventdiffZ->GetLrgPF()),totalweight);
+  m_hVector_etamin[index].at(pileup)->Fill(etamin,totalweight);
+  m_hVector_etamincastor[index].at(pileup)->Fill(etamin_,totalweight);
+  m_hVector_etamax[index].at(pileup)->Fill(etamax,totalweight);
+  m_hVector_maxetagap[index].at(pileup)->Fill(fabs(maxLRG),totalweight);
   if(fabs(eventdiffZ->GetSumptPFLeft())>fabs(eventdiffZ->GetSumptPFRight())){
     m_hVector_SumPTMax[index].at(pileup)->Fill(eventdiffZ->GetSumptPFLeft(),totalweight);
     m_hVector_SumPTMin[index].at(pileup)->Fill(eventdiffZ->GetSumptPFRight(),totalweight);
@@ -826,14 +831,14 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
     m_hVector_SumPTMax[index].at(pileup)->Fill(eventdiffZ->GetSumptPFRight(),totalweight);
     m_hVector_SumPTMin[index].at(pileup)->Fill(eventdiffZ->GetSumptPFLeft(),totalweight);
   }
-  m_hVector_absdeltaEtaPF[index].at(pileup)->Fill(fabs(deltaetapf),totalweight);
-  m_hVector_deltaEtaPF[index].at(pileup)->Fill(deltaetapf,totalweight);
-  m_hVector_absdeltaEtaPFCastor[index].at(pileup)->Fill(fabs(deltaetapfcastor),totalweight);
-  m_hVector_deltaEtaPFCastor[index].at(pileup)->Fill(deltaetapfcastor,totalweight);
-  m_hVector_XiPlusPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
-  m_hVector_XiMinusPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
-  m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiPlusFromPFCands(),totalweight);
-  m_hVector_XiPF[index].at(pileup)->Fill(eventdiff->GetXiMinusFromPFCands(),totalweight);
+  m_hVector_absdeltaEta[index].at(pileup)->Fill(fabs(deltaeta),totalweight);
+  m_hVector_deltaEta[index].at(pileup)->Fill(deltaeta,totalweight);
+  m_hVector_absdeltaEtaCastor[index].at(pileup)->Fill(fabs(deltaetacastor),totalweight);
+  m_hVector_deltaEtaCastor[index].at(pileup)->Fill(deltaetacastor,totalweight);
+  m_hVector_XiPlus[index].at(pileup)->Fill(xiplus,totalweight);
+  m_hVector_XiMinus[index].at(pileup)->Fill(ximinus,totalweight);
+  m_hVector_Xi[index].at(pileup)->Fill(xiplus,totalweight);
+  m_hVector_Xi[index].at(pileup)->Fill(ximinus,totalweight);
   m_hVector_etasignedHF[index].at(pileup)->Fill(etasignedHF,totalweight);
   m_hVector_etasignedCASTOR[index].at(pileup)->Fill(etasignedCASTOR,totalweight);
 
@@ -947,19 +952,19 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
       m_hVector_AEcastor[j].at(i)->Write();
       m_hVector_etasignedHF[j].at(i)->Write();
       m_hVector_etasignedCASTOR[j].at(i)->Write();
-      m_hVector_XiPlusPF[j].at(i)->Write();
-      m_hVector_XiMinusPF[j].at(i)->Write();
-      m_hVector_XiPF[j].at(i)->Write();
-      m_hVector_pfetamincastor[j].at(i)->Write();
-      m_hVector_absdeltaEtaPF[j].at(i)->Write();
-      m_hVector_deltaEtaPF[j].at(i)->Write();
-      m_hVector_absdeltaEtaPF[j].at(i)->Write();
-      m_hVector_deltaEtaPF[j].at(i)->Write();
+      m_hVector_XiPlus[j].at(i)->Write();
+      m_hVector_XiMinus[j].at(i)->Write();
+      m_hVector_Xi[j].at(i)->Write();
+      m_hVector_etamincastor[j].at(i)->Write();
+      m_hVector_absdeltaEta[j].at(i)->Write();
+      m_hVector_deltaEta[j].at(i)->Write();
+      m_hVector_absdeltaEta[j].at(i)->Write();
+      m_hVector_deltaEta[j].at(i)->Write();
       m_hVector_maxetagap[j].at(i)->Write();
       m_hVector_SumPTMax[j].at(i)->Write();
       m_hVector_SumPTMin[j].at(i)->Write();
-      m_hVector_pfetamax[j].at(i)->Write();
-      m_hVector_pfetamin[j].at(i)->Write();
+      m_hVector_etamax[j].at(i)->Write();
+      m_hVector_etamin[j].at(i)->Write();
       m_hVector_asumE[j].at(i)->Write();
 
     }
@@ -971,6 +976,7 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
 void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_, double castorthreshold_, double channelsthreshold_, std::string castorcorrfile_, std::string gapseltype_, std::string pumfile_, std::string pudfile_){
 
   bool debug = false;
+  double sqrtS = 7000.;
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -1019,18 +1025,18 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   trout->Branch("SumEnergyHFPlus",&bSumEnergyHFPlus,"bSumEnergyHFPlus/D");
   trout->Branch("sumCastorEnergy",&bsumCastorEnergy,"bsumCastorEnergy/D");
   trout->Branch("SectorCastorHit",&bSectorCastorHit,"bSectorCastorHit/D");
-  trout->Branch("deltaetapf",&bdeltaetapf,"bdeltaetapf/D");
+  trout->Branch("deltaeta",&bdeltaeta,"bdeltaeta/D");
   trout->Branch("AEcastor",&bAEcastor,"AEcastor/D");
   trout->Branch("etasignedHF",&betasignedHF,"betasignedHF/D");
   trout->Branch("etasignedCASTOR",&betasignedCASTOR,"betasignedCASTOR/D");
-  trout->Branch("MaxGapPF",&bMaxGapPF,"bMaxGapPF/D");
+  trout->Branch("MaxGap",&bMaxGap,"bMaxGap/D");
   trout->Branch("SumPTMaxLrgPF",&SumPTMaxLrgPF,"SumPTMaxLrgPF/D");
   trout->Branch("SumPTMinLrgPF",&SumPTMinLrgPF,"SumPTMinLrgPF/D");
-  trout->Branch("XiPlusFromPFCands",&bXiPlusFromPFCands,"bXiPlusFromPFCands/D");
-  trout->Branch("XiMinusFromPFCands",&bXiMinusFromPFCands,"bXiMinusFromPFCands/D");
-  trout->Branch("EtaMaxPF",&betamax,"betamax/D");
-  trout->Branch("EtaMinPF",&betamin,"betamin/D");
-  trout->Branch("EtaMinPFCastor",&betamincastor,"betamincastor/D");
+  trout->Branch("XiPlus",&bXiPlus,"bXiPlus/D");
+  trout->Branch("XiMinus",&bXiMinus,"bXiMinus/D");
+  trout->Branch("EtaMax",&betamax,"betamax/D");
+  trout->Branch("EtaMin",&betamin,"betamin/D");
+  trout->Branch("EtaMinCastor",&betamincastor,"betamincastor/D");
 
   TTreeCASTOR = "TTreeCASTOR_" + savehistofile;
   fOutCASTOR = new TFile(TTreeCASTOR, "RECREATE");
@@ -1143,9 +1149,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       }
     }
 
-    double totalASum = eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus();
+    double totalASum = eventdiffZ->GetSumEHFPlus() + eventdiffZ->GetSumEHFMinus();
     if (totalASum > 0.){
-      aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
+      aSumE = (eventdiffZ->GetSumEHFPlus() - eventdiffZ->GetSumEHFMinus())/(eventdiffZ->GetSumEHFPlus() + eventdiffZ->GetSumEHFMinus());
     }
 
     double puweight;
@@ -1329,31 +1335,27 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       castorgap = true;
     }
 
-    sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiff->GetSumEnergyHFMinus();
-
-    // Redefinition of etamin_
-    //------------------------
-
-    // CMS and CASTOR acceptance
-    if (castoractivity) {
-      etamin_ = -6.;
-    }else{
-      etamin_ = eventdiff->GetEtaMinFromPFCands();
-    }
-    //----->
-
-    deltaetapf = eventdiff->GetEtaMaxFromPFCands() - eventdiff->GetEtaMinFromPFCands();
-    deltaetapfcastor = eventdiff->GetEtaMaxFromPFCands() - etamin_;
+    sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiffZ->GetSumEHFMinus();
 
     if (eventdiff->GetNVertex() == nVertex) vertex = true;
 
     if (gapseltype == "PF" || gapseltype == "pf"){
-      if ((eventdiff->GetEtaMinFromPFCands() > -3.)) diffseln = true;
-      if ((eventdiff->GetEtaMaxFromPFCands() <  3.)) diffselp = true;
+      etamax = eventdiffZ->GetEtaMaxPF();
+      etamin = eventdiffZ->GetEtaMinPF();
+      xiplus = eventdiffZ->GetEminuspzPF()/sqrtS;
+      ximinus = eventdiffZ->GetEpluspzPF()/sqrtS;
+      maxLRG = eventdiffZ->GetLrgPF();
+      if (etamax > -3.) diffseln = true;
+      if (etamin <  3.) diffselp = true;
     }
-    else if(gapseltype == "HF" || gapseltype == "hf"){
-      if ((eventdiff->GetSumEnergyHFMinus()<1.)) diffseln = true;
-      if ((eventdiff->GetSumEnergyHFPlus()<1.)) diffselp = true;   
+    else if(gapseltype == "CALO" || gapseltype == "calo"){
+      etamax = eventdiffZ->GetEtaCaloMax();
+      etamin = eventdiffZ->GetEtaCaloMin();
+      xiplus = eventdiffZ->GetEminuspzCalo()/sqrtS;
+      ximinus = eventdiffZ->GetEpluspzCalo()/sqrtS;
+      maxLRG = eventdiffZ->GetLrgCalo();
+      if (eventdiffZ->GetSumEHFMinus()<1.) diffseln = true;
+      if (eventdiffZ->GetSumEHFPlus()<1.) diffselp = true;   
     }else{
       std::cout << "" << std::endl;
       std::cout << "Please insert the correct gap type selection: " << std::endl;
@@ -1362,6 +1364,20 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       std::cout << "" << std::endl;
       exit(EXIT_FAILURE);
     }
+
+    deltaeta = etamax - etamin;
+    deltaetacastor = etamax - etamin_;
+
+    // Redefinition of etamin_ 
+    //------------------------
+
+    // CMS and CASTOR acceptance
+    if (castoractivity) {
+      etamin_ = -6.;
+    }else{
+      etamin_ = etamin;
+    }
+    //----->
 
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
@@ -1404,9 +1420,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       cone04tracks = eventdiffZ->GetTracksNonConeElectron04();
       cone05tracks = eventdiffZ->GetTracksNonConeElectron05();
 
-      double totalASumCastor = eventdiff->GetSumEnergyHFMinus() + sumCastorEnergy;
+      double totalASumCastor = eventdiffZ->GetSumEHFMinus() + sumCastorEnergy;
       if(totalASumCastor > 0.){
-	AEcastor = (eventdiff->GetSumEnergyHFMinus() - sumCastorEnergy)/(eventdiff->GetSumEnergyHFMinus() + sumCastorEnergy);
+	AEcastor = (eventdiffZ->GetSumEHFMinus() - sumCastorEnergy)/(eventdiffZ->GetSumEHFMinus() + sumCastorEnergy);
       }
 
       if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel = true;
@@ -1659,26 +1675,26 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bMultiplicityTracks = eventdiff->GetMultiplicityTracks();
     bSumEEEMinus = eventdiffZ->GetSumEEEMinus();
     bSumEEEPlus = eventdiffZ->GetSumEEEPlus();
-    bSumEnergyHFMinus = eventdiff->GetSumEnergyHFMinus();
-    bSumEnergyHFPlus = eventdiff->GetSumEnergyHFPlus();
+    bSumEnergyHFMinus = eventdiffZ->GetSumEHFMinus();
+    bSumEnergyHFPlus = eventdiffZ->GetSumEHFPlus();
     bsumCastorEnergy = sumCastorEnergy;
     bSectorCastorHit = counterHit;
-    bMaxGapPF = eventdiffZ->GetLrgPF();
-      if(fabs(eventdiffZ->GetSumptPFLeft())>fabs(eventdiffZ->GetSumptPFRight())){
-	SumPTMaxLrgPF = eventdiffZ->GetSumptPFLeft();
-	SumPTMinLrgPF = eventdiffZ->GetSumptPFRight();
-      }else{
-	SumPTMaxLrgPF = eventdiffZ->GetSumptPFRight();
-	SumPTMinLrgPF = eventdiffZ->GetSumptPFLeft();
-      }
-    bXiPlusFromPFCands = eventdiff->GetXiPlusFromPFCands();
-    bXiMinusFromPFCands = eventdiff->GetXiMinusFromPFCands();
+    bMaxGap = maxLRG;
+    if(fabs(eventdiffZ->GetSumptPFLeft())>fabs(eventdiffZ->GetSumptPFRight())){
+      SumPTMaxLrgPF = eventdiffZ->GetSumptPFLeft();
+      SumPTMinLrgPF = eventdiffZ->GetSumptPFRight();
+    }else{
+      SumPTMaxLrgPF = eventdiffZ->GetSumptPFRight();
+      SumPTMinLrgPF = eventdiffZ->GetSumptPFLeft();
+    }
+    bXiPlus = xiplus;
+    bXiMinus = ximinus;
     betasignedHF = etasignedHF;
     betasignedCASTOR = etasignedCASTOR;
     bAEcastor = AEcastor;
-    bdeltaetapf = deltaetapf;
-    betamax = eventdiff->GetEtaMaxFromPFCands();
-    betamin = eventdiff->GetEtaMinFromPFCands();
+    bdeltaeta = deltaeta;
+    betamax = etamax;
+    betamin = etamin;
     betamincastor = etamin_;
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
@@ -1697,7 +1713,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel) {
 	  FillHistos(7,pileup,totalcommon);
 	  fOutZ->cd();
-          troutZ->SetWeight(totalcommon);
+	  troutZ->SetWeight(totalcommon);
 	  troutZ->Fill();
 	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8,pileup,totalcommon);
@@ -1717,14 +1733,14 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap){
 	  FillHistos(16,pileup,totalcommon);
 	  fOutCASTOR->cd();
-          troutCASTOR->SetWeight(totalcommon);
+	  troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
 	  outstring << "CASTOR Gap, Z Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(17,pileup,totalcommon);
 	  fOut->cd();
-          trout->SetWeight(totalcommon);
+	  trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
 
@@ -1744,7 +1760,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel) {
 	  FillHistos(7,pileup,totalcommon);
 	  fOutZ->cd();
-          troutZ->SetWeight(totalcommon);
+	  troutZ->SetWeight(totalcommon);
 	  troutZ->Fill();
 	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8,pileup,totalcommon);
@@ -1758,13 +1774,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap){ 
 	  FillHistos(16,pileup,totalcommon);
 	  fOutCASTOR->cd();
-          troutCASTOR->SetWeight(totalcommon);
+	  troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
 	  FillHistos(17,pileup,totalcommon);
 	  fOut->cd();
-          trout->SetWeight(totalcommon);
+	  trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
