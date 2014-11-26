@@ -1382,6 +1382,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt) {
 	  FillHistos(5,pileup,totalcommon);
 	  fOutW->cd();
+          troutW->SetWeight(totalcommon);
 	  troutW->Fill();
 	}
 	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln) FillHistos(6,pileup,totalcommon);
@@ -1401,12 +1402,14 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && castorgap){
 	  FillHistos(14,pileup,totalcommon);
 	  fOutCASTOR->cd();
+          troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
 	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && castorgap && WKinP){
 	  outstring << "CASTOR Gap, W Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(15,pileup,totalcommon);
 	  fOut->cd();
+          trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
 
@@ -1424,6 +1427,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && isolation && candSel && dimass && acceptEvt) {
 	  FillHistos(5,pileup,totalcommon);
 	  fOutW->cd();
+          troutW->SetWeight(totalcommon);
 	  troutW->Fill();
 	}
 	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln) FillHistos(6,pileup,totalcommon);
@@ -1437,11 +1441,13 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && isolation && candSel && dimass && acceptEvt && castorgap){ 
 	  FillHistos(14,pileup,totalcommon);
 	  fOutCASTOR->cd();
+          troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
 	if(vertex && presel && isolation && candSel && dimass && acceptEvt && castorgap && WKinP){
 	  FillHistos(15,pileup,totalcommon);
 	  fOut->cd();
+          trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
 	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castorgap) FillHistos(16,pileup,totalcommon);
@@ -1512,17 +1518,14 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
   std::cout << "\n" << std::endl;
 
   fOut->cd();
-  trout->SetWeight(totalweight);
   trout->Write();
   fOut->Close();
 
   fOutW->cd();
-  troutW->SetWeight(totalweight);
   troutW->Write();
   fOutW->Close();
 
   fOutCASTOR->cd();
-  troutCASTOR->SetWeight(totalweight);
   troutCASTOR->Write();
   fOutCASTOR->Close();
 
