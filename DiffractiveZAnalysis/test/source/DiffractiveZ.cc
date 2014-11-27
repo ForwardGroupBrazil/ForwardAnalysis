@@ -123,19 +123,20 @@ void DiffractiveZ::CreateHistos(std::string type){
   std::string step4 = "step4"; 
   std::string step5 = "step5"; 
   std::string step6 = "step6"; 
-  std::string step7 = "step7"; 
-  std::string step8 = "NGapCMS";
-  std::string step9 = "PGapCMS";
-  std::string step10 = "NGapCMSAndCASTOR";
-  std::string step11 = "PGapCMSAndCastorActivity";
-  std::string step12 = "NGapCMSAndZKinP";
-  std::string step13 = "PGapCMSAndZKinN";
-  std::string step14 = "NGapCMSAndCASTORAndZKinP";
-  std::string step15 = "PGapCMSAndCastorActivityAndZKinN";
-  std::string step16 = "NGapCASTOR";
-  std::string step17 = "NGapCASTORAndZKinP";
-  std::string step18 = "PGapCMSAndCASTOR";
-  std::string step19 = "PGapCMSAndCASTORAndZKinP";
+  std::string step7 = "step7";
+  std::string step8 = "step8"; 
+  std::string step9 = "NGapCMS";
+  std::string step10 = "PGapCMS";
+  std::string step11 = "NGapCMSAndCASTOR";
+  std::string step12 = "PGapCMSAndCastorActivity";
+  std::string step13 = "NGapCMSAndZKinP";
+  std::string step14 = "PGapCMSAndZKinN";
+  std::string step15 = "NGapCMSAndCASTORAndZKinP";
+  std::string step16 = "PGapCMSAndCastorActivityAndZKinN";
+  std::string step17 = "NGapCASTOR";
+  std::string step18 = "NGapCASTORAndZKinP";
+  std::string step19 = "PGapCMSAndCASTOR";
+  std::string step20 = "PGapCMSAndCASTORAndZKinP";
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -157,6 +158,7 @@ void DiffractiveZ::CreateHistos(std::string type){
   Folders.push_back(step17);
   Folders.push_back(step18);
   Folders.push_back(step19);
+  Folders.push_back(step20);
 
   int nloop;
 
@@ -1704,87 +1706,89 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger) {
 	  ++totalT;
 	  FillHistos(1,pileup,totalcommon);
-	} 
-	if(trigger && vertex && presel) FillHistos(2,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel) FillHistos(3,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass) FillHistos(5,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation) FillHistos(6,pileup,totalcommon);
+	}
+        if(trigger && vertex) FillHistos(2,pileup,totalcommon); 
+	if(trigger && vertex && presel) FillHistos(3,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel) FillHistos(4,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge) FillHistos(5,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass) FillHistos(6,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation) FillHistos(7,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel) {
-	  FillHistos(7,pileup,totalcommon);
+	  FillHistos(8,pileup,totalcommon);
 	  fOutZ->cd();
 	  troutZ->SetWeight(totalcommon);
 	  troutZ->Fill();
 	}
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp) FillHistos(9,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap) FillHistos(10,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity) FillHistos(11,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(9,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp) FillHistos(10,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap) FillHistos(11,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity) FillHistos(12,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && ZKinP){
 	  outstring << "HF- Gap, Z Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-	  FillHistos(12,pileup,totalcommon);
+	  FillHistos(13,pileup,totalcommon);
 	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && ZKinN){
 	  outstring << "HF+ Gap, Z Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-	  FillHistos(13,pileup,totalcommon);
+	  FillHistos(14,pileup,totalcommon);
 	}
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(14,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(15,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(15,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(16,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap){
-	  FillHistos(16,pileup,totalcommon);
+	  FillHistos(17,pileup,totalcommon);
 	  fOutCASTOR->cd();
 	  troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
 	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
 	  outstring << "CASTOR Gap, Z Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-	  FillHistos(17,pileup,totalcommon);
+	  FillHistos(18,pileup,totalcommon);
 	  fOut->cd();
 	  trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
 
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap && ZKinP) FillHistos(19,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(19,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap && ZKinP) FillHistos(20,pileup,totalcommon);
 
       }
 
       else if (switchtrigger =="no_trigger_nocorrection" || switchtrigger == "no_trigger_correction" ){
 	--totalT;
 	FillHistos(0,pileup,totalcommon);
-	if(vertex && presel) FillHistos(2,pileup,totalcommon);
-	if(vertex && presel && nSel) FillHistos(3,pileup,totalcommon);
-	if(vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass) FillHistos(5,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation) FillHistos(6,pileup,totalcommon);
+        if(vertex) FillHistos(2,pileup,totalcommon);
+	if(vertex && presel) FillHistos(3,pileup,totalcommon);
+	if(vertex && presel && nSel) FillHistos(4,pileup,totalcommon);
+	if(vertex && presel && nSel && charge) FillHistos(5,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass) FillHistos(6,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation) FillHistos(7,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel) {
-	  FillHistos(7,pileup,totalcommon);
+	  FillHistos(8,pileup,totalcommon);
 	  fOutZ->cd();
 	  troutZ->SetWeight(totalcommon);
 	  troutZ->Fill();
 	}
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(8,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp) FillHistos(9,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap) FillHistos(10,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity) FillHistos(11,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && ZKinP) FillHistos(12,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && ZKinN) FillHistos(13,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(14,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(15,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln) FillHistos(9,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp) FillHistos(10,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap) FillHistos(11,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity) FillHistos(12,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && ZKinP) FillHistos(13,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && ZKinN) FillHistos(14,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffseln && castorgap && ZKinP) FillHistos(15,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(16,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap){ 
-	  FillHistos(16,pileup,totalcommon);
+	  FillHistos(17,pileup,totalcommon);
 	  fOutCASTOR->cd();
 	  troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && castorgap && ZKinP){
-	  FillHistos(17,pileup,totalcommon);
+	  FillHistos(18,pileup,totalcommon);
 	  fOut->cd();
 	  trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap && ZKinP) FillHistos(19,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(19,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap && ZKinP) FillHistos(20,pileup,totalcommon);
       }
 
       else{
