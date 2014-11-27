@@ -920,8 +920,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       aSumE = (eventdiffW->GetSumEHFPlus() - eventdiffW->GetSumEHFMinus())/(eventdiffW->GetSumEHFPlus() + eventdiffW->GetSumEHFMinus());
     }
 
-    double puweight;
-    double totalcommon;
+    double puweight = -1.;
+    double totalcommon = -1.;
 
     if (switchlumiweight == "mc_lumi_weight"){
       totalcommon = mcweight;
@@ -1129,9 +1129,6 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       exit(EXIT_FAILURE);
     }
 
-    deltaeta = etamax - etamin;
-    deltaetacastor = etamax - etamin_;
-
     // Redefinition of etamin_
     //------------------------
 
@@ -1143,6 +1140,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     }
     //----->
 
+    deltaeta = etamax - etamin;
+    deltaetacastor = etamax - etamin_;
 
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
