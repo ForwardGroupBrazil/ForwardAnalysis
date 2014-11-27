@@ -1367,9 +1367,6 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       exit(EXIT_FAILURE);
     }
 
-    deltaeta = etamax - etamin;
-    deltaetacastor = etamax - etamin_;
-
     // Redefinition of etamin_ 
     //------------------------
 
@@ -1380,6 +1377,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       etamin_ = etamin;
     }
     //----->
+
+    deltaeta = etamax - etamin;
+    deltaetacastor = etamax - etamin_;
 
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
