@@ -330,7 +330,7 @@ bool diffractiveWFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
     std::cout << "Event Accepted!" << std::endl;
   }
 
-  return accept;
+  return acceptevent;
 
 }
 
