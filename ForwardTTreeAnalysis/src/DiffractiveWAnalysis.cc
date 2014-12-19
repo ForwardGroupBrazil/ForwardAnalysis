@@ -473,11 +473,14 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
 
 void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug = false;
+  bool debug = true;
   MuonVector.clear();
 
   edm::Handle<reco::MuonCollection> muons;
   event.getByLabel(muonTag_,muons);
+
+  edm::Handle<reco::VertexCollection>  vertex;
+  event.getByLabel(PVtxCollectionTag_, vertex);
 
   int muonsize = muons->size();
   int itMuon;
@@ -571,6 +574,8 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
       std::cout << "pT W: " << BosonMuonSystem.pt() << std::endl;
       std::cout << "energy W: " << BosonMuonSystem.energy() << std::endl;
       std::cout << "pz W: " << BosonMuonSystem.pz() << std::endl;
+      std::cout << "Tracker Hits: " << MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      std::cout << "dxy: " << MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
     }
 
   }
