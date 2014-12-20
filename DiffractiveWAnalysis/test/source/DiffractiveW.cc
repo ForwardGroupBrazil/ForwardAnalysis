@@ -210,7 +210,7 @@ void DiffractiveW::CreateHistos(std::string type){
     m_hVector_lumi.push_back( std::vector<TH1F*>() );
     m_hVector_tracks.push_back( std::vector<TH1F*>() );
     m_hVector_vertex.push_back( std::vector<TH1F*>() );
-
+    m_hVector_pu.push_back( std::vector<TH1F*>() );
 
     // Diffraction
     m_hVector_asumE.push_back( std::vector<TH1F*>() );
@@ -452,6 +452,10 @@ void DiffractiveW::CreateHistos(std::string type){
       sprintf(name,"vertex_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_vertex = new TH1F(name,"Number of Vertex; # Vertex; N events",25,0,25);
       m_hVector_vertex[j].push_back(histo_vertex);
+      
+      sprintf(name,"pileup_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_pu = new TH1F(name,"Pile Up; # pile up; N events",25,0,25);
+      m_hVector_pu[j].push_back(histo_pu);
 
 
       // Diffraction
@@ -612,6 +616,7 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_lumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),totalweight);
   m_hVector_tracks[index].at(pileup)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
   m_hVector_vertex[index].at(pileup)->Fill(eventdiff->GetNVertex(),totalweight);
+  m_hVector_pu[index].at(pileup)->Fill(eventinfo->GetNPileUpBx0(),totalweight);
 
   // Diffractive Variables
   m_hVector_asumE[index].at(pileup)->Fill(aSumE,totalweight);
@@ -712,6 +717,7 @@ void DiffractiveW::SaveHistos(std::string type,std::string typesel){
       m_hVector_lumi[j].at(i)->Write();
       m_hVector_tracks[j].at(i)->Write();
       m_hVector_vertex[j].at(i)->Write();
+      m_hVector_pu[j].at(i)->Write();
 
       // Diffraction
       foldersFile[3]->cd();
