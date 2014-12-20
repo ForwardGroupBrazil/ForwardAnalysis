@@ -43,7 +43,7 @@ class DiffractiveW {
   std::string gapseltype;
   int index;
   int pileup;
-  int totalweight;
+  double totalweight;
 
   double bosonWMass;
   double bosonWEta;
@@ -189,6 +189,7 @@ class DiffractiveW {
   std::vector<std::vector<TH1F*> > m_hVector_lumi;
   std::vector<std::vector<TH1F*> > m_hVector_tracks;
   std::vector<std::vector<TH1F*> > m_hVector_vertex;
+  std::vector<std::vector<TH1F*> > m_hVector_pu;
 
   // Diffraction
   std::vector<std::vector<TH1F*> > m_hVector_asumE;
