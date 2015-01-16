@@ -183,8 +183,15 @@ void DiffractiveWEvent::reset(){
 
   patMuon1relIsoDr03_=-999.;
   patMuon1relIsoDr05_=-999.;
-
   patMuon1relIso_=-999.;
+
+  patMuon1TrackerHits_ = -999.;
+  patMuon1PixelHits_ = -999.;
+  patMuon1NormalizedChi2_ = -999.;
+  patMuon1MatchedStations_ = -999.;
+  patMuon1Dxy_ = -999.;
+  patMuon1IsGlobal_ = false;
+  patMuon1IsTracker_ = false;
 
   patBosonMuonMass_ = -999.;
   patBosonMuonPt_ = -999.;
@@ -235,6 +242,13 @@ void DiffractiveWEvent::reset(){
 
   LeadingMuonrelIsoDr03_=-999.;
   LeadingMuonrelIsoDr05_=-999.;
+  LeadingMuonTrackerHits_ = -999.;
+  LeadingMuonPixelHits_ = -999.;
+  LeadingMuonNormalizedChi2_ = -999.;
+  LeadingMuonMatchedStations_ = -999.;
+  LeadingMuonDxy_ = -999.;
+  LeadingMuonIsGlobal_ = false;
+  LeadingMuonIsTracker_ = false;
 
   TracksNonConeMuon03_ = -1;
   TracksNonConeElectron03_ = -1;

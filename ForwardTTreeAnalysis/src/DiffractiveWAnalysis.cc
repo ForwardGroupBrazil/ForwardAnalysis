@@ -473,7 +473,7 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
 
 void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug = true;
+  bool debug = false;
   MuonVector.clear();
 
   edm::Handle<reco::MuonCollection> muons;
@@ -575,8 +575,31 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
       std::cout << "energy W: " << BosonMuonSystem.energy() << std::endl;
       std::cout << "pz W: " << BosonMuonSystem.pz() << std::endl;
       std::cout << "Tracker Hits: " << MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      std::cout << "Number of Valid Pixel Hits: " << MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      std::cout << "Chi2/ndof: " << MuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Matched Stations: " << MuonVector[0]->numberOfMatchedStations() << std::endl;
       std::cout << "dxy: " << MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+      std::cout << "Is Global Muon? " << MuonVector[0]->isGlobalMuon() << std::endl;
+      std::cout << "Is Tracker Muon? " << MuonVector[0]->isTrackerMuon() << std::endl;
     }
+
+    // INCLUDE Quality Criteria ttree
+    //Muon Tight
+    if( (MuonVector[0]->isGlobalMuon() && MuonVector[0]->globalTrack()->normalizedChi2() < 10. && MuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits() > 0 && MuonVector[0]->numberOfMatchedStations() > 1 && fabs(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2 && fabs(MuonVector[0]->innerTrack()->dz(vertex->at(0).position())) < 0.5 && MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0 && MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 5 )){
+    std::cout << "Muon Tight!" << std::endl;
+    }
+
+    //Muon Loose
+    if(MuonVector[0]->isGlobalMuon() || MuonVector[0]->isTrackerMuon()) std::cout << "Muon Loose!" << std::endl;
+    // END
+
+    eventData.SetLeadingMuonTrackerHits(MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
+    eventData.SetLeadingMuonPixelHits(MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
+    eventData.SetLeadingMuonNormalizedChi2(MuonVector[0]->globalTrack()->normalizedChi2());
+    eventData.SetLeadingMuonMatchedStations(MuonVector[0]->numberOfMatchedStations());
+    eventData.SetLeadingMuonDxy(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+    eventData.SetLeadingMuonIsGlobal(MuonVector[0]->isGlobalMuon());
+    eventData.SetLeadingMuonIsTracker(MuonVector[0]->isTrackerMuon());
 
   }
   else{
@@ -599,6 +622,14 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
 
     eventData.SetLeadingMuonrelIsoDr03(-999.);
     eventData.SetLeadingMuonrelIsoDr05(-999.);
+
+    eventData.SetLeadingMuonTrackerHits(-999.);
+    eventData.SetLeadingMuonPixelHits(-999.);
+    eventData.SetLeadingMuonNormalizedChi2(-999.);
+    eventData.SetLeadingMuonMatchedStations(-999.);
+    eventData.SetLeadingMuonDxy(-999.);
+    eventData.SetLeadingMuonIsGlobal(false);
+    eventData.SetLeadingMuonIsTracker(false);
 
   } 
 
@@ -1839,6 +1870,9 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
   edm::Handle<std::vector<pat::Electron> > electrons;
   event.getByLabel("patElectrons", electrons);
 
+  edm::Handle<reco::VertexCollection>  vertex;
+  event.getByLabel(PVtxCollectionTag_, vertex);
+
   int electronsize = electrons->size();
   int itElectron;
   if(electrons->size()>0){
@@ -1914,6 +1948,13 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatMuon1relIsoDr03(relIsoFirstMuonDr03);
     eventData.SetPatMuon1relIsoDr05(relIsoFirstMuonDr05);
     eventData.SetPatMuon1relIso(relIsoFirstMuon);
+    eventData.SetPatMuon1TrackerHits(PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
+    eventData.SetPatMuon1PixelHits(PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
+    eventData.SetPatMuon1NormalizedChi2(PatMuonVector[0]->globalTrack()->normalizedChi2());
+    eventData.SetPatMuon1MatchedStations(PatMuonVector[0]->numberOfMatchedStations());
+    eventData.SetPatMuon1Dxy(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+    eventData.SetPatMuon1IsGlobal(PatMuonVector[0]->isGlobalMuon());
+    eventData.SetPatMuon1IsTracker(PatMuonVector[0]->isTrackerMuon());
 
     edm::Handle<edm::View<reco::Track> > trackHandle;
     event.getByLabel(trackTag_,trackHandle);
@@ -1957,7 +1998,14 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
       std::cout << "NSize: " << muons->size() << std::endl;
       std::cout << "Muon, pT 1: " << PatMuonVector[0]->pt() << std::endl;
       std::cout << "Muon, eta 1: " << PatMuonVector[0]->eta() << std::endl;
-      std::cout << "Muon1, p4(): " << PatMuonVector[0]->p4() << std::endl;
+      std::cout << "Muon, p4(): " << PatMuonVector[0]->p4() << std::endl;
+      std::cout << "Tracker Hits: " << PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      std::cout << "Number of Valid Pixel Hits: " << PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      std::cout << "Chi2/ndof: " << PatMuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Matched Stations: " << PatMuonVector[0]->numberOfMatchedStations() << std::endl;
+      std::cout << "dxy: " << PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+      std::cout << "Is Global Muon? " << PatMuonVector[0]->isGlobalMuon() << std::endl;
+      std::cout << "Is Tracker Muon? " << PatMuonVector[0]->isTrackerMuon() << std::endl;
       std::cout << "BosonMuon, M(): " << BosonPatMuonSystem.M() << std::endl;
       std::cout << "Eta W: " << BosonPatMuonSystem.eta() << std::endl;
       std::cout << "Phi W: " << BosonPatMuonSystem.phi() << std::endl;
@@ -1982,6 +2030,13 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatMuon1relIsoDr03(-999.);
     eventData.SetPatMuon1relIsoDr05(-999.);
     eventData.SetPatMuon1relIso(-999.);
+    eventData.SetPatMuon1TrackerHits(-999.);
+    eventData.SetPatMuon1PixelHits(-999.);
+    eventData.SetPatMuon1NormalizedChi2(-999.);
+    eventData.SetPatMuon1MatchedStations(-999.);
+    eventData.SetPatMuon1Dxy(-999.);
+    eventData.SetPatMuon1IsGlobal(false);
+    eventData.SetPatMuon1IsTracker(false);
     eventData.SetPatBosonMuonMass(-999.);
     eventData.SetPatBosonMuonPt(-999.);
     eventData.SetPatBosonMuonEta(-999.);
