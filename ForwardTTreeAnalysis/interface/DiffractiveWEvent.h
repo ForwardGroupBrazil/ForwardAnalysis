@@ -79,6 +79,13 @@ class DiffractiveWEvent {
 
     void SetLeadingMuonrelIsoDr03(double fLeadingMuonrelIsoDr03)    {LeadingMuonrelIsoDr03_ = fLeadingMuonrelIsoDr03;}
     void SetLeadingMuonrelIsoDr05(double fLeadingMuonrelIsoDr05)    {LeadingMuonrelIsoDr05_ = fLeadingMuonrelIsoDr05;}
+    void SetLeadingMuonTrackerHits(double fLeadingMuonTrackerHits)    {LeadingMuonTrackerHits_ = fLeadingMuonTrackerHits;}
+    void SetLeadingMuonPixelHits(double fLeadingMuonPixelHits)    {LeadingMuonPixelHits_ = fLeadingMuonPixelHits;}
+    void SetLeadingMuonNormalizedChi2(double fLeadingMuonNormalizedChi2)    {LeadingMuonNormalizedChi2_ = fLeadingMuonNormalizedChi2;}
+    void SetLeadingMuonMatchedStations(double fLeadingMuonMatchedStations)    {LeadingMuonMatchedStations_ = fLeadingMuonMatchedStations;}
+    void SetLeadingMuonDxy(double fLeadingMuonDxy)    {LeadingMuonDxy_ = fLeadingMuonDxy;}
+    void SetLeadingMuonIsGlobal(bool fLeadingMuonIsGlobal)    {LeadingMuonIsGlobal_ = fLeadingMuonIsGlobal;}
+    void SetLeadingMuonIsTracker(bool fLeadingMuonIsTracker)    {LeadingMuonIsTracker_ = fLeadingMuonIsTracker;}
 
     void SetVertexMultiplicity(const std::vector<double>& fVertexMultiplicity) { VertexMultiplicity_ = fVertexMultiplicity; }
     void SetVertexChiNorm(const std::vector<double>& fVertexChiNorm) { VertexChiNorm_ = fVertexChiNorm; }
@@ -235,8 +242,15 @@ class DiffractiveWEvent {
 
     void SetPatMuon1relIsoDr03(double fpatMuon1relIsoDr03)    {patMuon1relIsoDr03_ = fpatMuon1relIsoDr03;}
     void SetPatMuon1relIsoDr05(double fpatMuon1relIsoDr05)    {patMuon1relIsoDr05_ = fpatMuon1relIsoDr05;}
-
     void SetPatMuon1relIso(double fpatMuon1relIso)    {patMuon1relIso_ = fpatMuon1relIso;}
+
+    void SetPatMuon1TrackerHits(double fpatMuon1TrackerHits)    {patMuon1TrackerHits_ = fpatMuon1TrackerHits;}
+    void SetPatMuon1PixelHits(double fpatMuon1PixelHits)    {patMuon1PixelHits_ = fpatMuon1PixelHits;}
+    void SetPatMuon1NormalizedChi2(double fpatMuon1NormalizedChi2)    {patMuon1NormalizedChi2_ = fpatMuon1NormalizedChi2;}
+    void SetPatMuon1MatchedStations(double fpatMuon1MatchedStations)    {patMuon1MatchedStations_ = fpatMuon1MatchedStations;}
+    void SetPatMuon1Dxy(double fpatMuon1Dxy)    {patMuon1Dxy_ = fpatMuon1Dxy;}
+    void SetPatMuon1IsGlobal(bool fpatMuon1IsGlobal)    {patMuon1IsGlobal_ = fpatMuon1IsGlobal;}
+    void SetPatMuon1IsTracker(bool fpatMuon1IsTracker)    {patMuon1IsTracker_ = fpatMuon1IsTracker;}
 
     void SetPatBosonMuonMass(double fpatBosonMuonMass) { patBosonMuonMass_ = fpatBosonMuonMass;}
     void SetPatBosonMuonPt(double fpatBosonMuonPt) { patBosonMuonPt_ = fpatBosonMuonPt;}
@@ -354,6 +368,14 @@ class DiffractiveWEvent {
 
     double GetLeadingMuonrelIsoDr03() const {return LeadingMuonrelIsoDr03_;}
     double GetLeadingMuonrelIsoDr05() const {return LeadingMuonrelIsoDr05_;}
+
+    double GetLeadingMuonTrackerHits() const   {return LeadingMuonTrackerHits_;}
+    double GetLeadingMuonPixelHits() const   {return LeadingMuonPixelHits_;}
+    double GetLeadingMuonNormalizedChi2() const   {return LeadingMuonNormalizedChi2_;}
+    double GetLeadingMuonMatchedStations() const   {return LeadingMuonMatchedStations_;}
+    double GetLeadingMuonDxy() const    {return LeadingMuonDxy_;}
+    bool GetLeadingMuonIsGlobal() const   {return LeadingMuonIsGlobal_;}
+    bool GetLeadingMuonIsTracker() const   {return LeadingMuonIsTracker_;}
 
     double GetVertexMultiplicity(int i) const { return VertexMultiplicity_[i]; }
     double GetVertexChiNorm(int i) const { return VertexChiNorm_[i]; }
@@ -510,8 +532,15 @@ class DiffractiveWEvent {
 
     double GetPatMuon1relIsoDr03() const {return patMuon1relIsoDr03_;}
     double GetPatMuon1relIsoDr05() const {return patMuon1relIsoDr05_;}
-
     double GetPatMuon1relIso() const {return patMuon1relIso_;}
+
+    double GetPatMuon1TrackerHits() const   {return patMuon1TrackerHits_;}
+    double GetPatMuon1PixelHits() const   {return patMuon1PixelHits_;}
+    double GetPatMuon1NormalizedChi2() const   {return patMuon1NormalizedChi2_;}
+    double GetPatMuon1MatchedStations() const   {return patMuon1MatchedStations_;}
+    double GetPatMuon1Dxy() const    {return patMuon1Dxy_;}
+    bool GetPatMuon1IsGlobal() const   {return patMuon1IsGlobal_;}
+    bool GetPatMuon1IsTracker() const   {return patMuon1IsTracker_;}
 
     double GetPatBosonMuonMass() const {return patBosonMuonMass_;}
     double GetPatBosonMuonPt() const {return patBosonMuonPt_;}
@@ -652,6 +681,13 @@ class DiffractiveWEvent {
 
     double LeadingMuonrelIsoDr03_;
     double LeadingMuonrelIsoDr05_;
+    double LeadingMuonTrackerHits_;
+    double LeadingMuonPixelHits_;
+    double LeadingMuonNormalizedChi2_;
+    double LeadingMuonMatchedStations_;
+    double LeadingMuonDxy_;
+    bool LeadingMuonIsGlobal_;
+    bool LeadingMuonIsTracker_;
 
     std::vector<double> VertexMultiplicity_;
     std::vector<double> VertexChiNorm_;
@@ -813,8 +849,15 @@ class DiffractiveWEvent {
 
     double patMuon1relIsoDr03_;
     double patMuon1relIsoDr05_;
-
     double patMuon1relIso_;
+
+    double patMuon1TrackerHits_;
+    double patMuon1PixelHits_;
+    double patMuon1NormalizedChi2_;
+    double patMuon1MatchedStations_;
+    double patMuon1Dxy_;
+    bool patMuon1IsGlobal_;
+    bool patMuon1IsTracker_;
 
     double patBosonMuonMass_;
     double patBosonMuonPt_;
