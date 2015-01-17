@@ -434,7 +434,7 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
 
 void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug = false;
+  bool debug = true;
   MuonVector.clear();
 
   edm::Handle<reco::MuonCollection> muons;
@@ -514,7 +514,7 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     eventData.SetSecondMuonrelIsoDr03(relIsoSecondMuonDr03);
     eventData.SetLeadingMuonrelIsoDr05(relIsoFirstMuonDr05);
     eventData.SetSecondMuonrelIsoDr05(relIsoSecondMuonDr05);
-    
+
     edm::Handle<edm::View<reco::Track> > trackHandle;
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
@@ -551,10 +551,28 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
 
     if (debug){
       std::cout << "NMuons: " << MuonVector.size() << std::endl;
-      std::cout << "Muon, pT 1: " << MuonVector[0]->pt() << std::endl;
-      std::cout << "Muon, pT 2: " << MuonVector[1]->pt() << std::endl;
-      std::cout << "Muon, eta 1: " << MuonVector[0]->eta() << std::endl;
-      std::cout << "Muon, eta 2: " << MuonVector[1]->eta() << std::endl;
+      std::cout << "Muon 1, pT: " << MuonVector[0]->pt() << std::endl;
+      std::cout << "Muon 2, pT: " << MuonVector[1]->pt() << std::endl;
+      std::cout << "Muon 1, eta: " << MuonVector[0]->eta() << std::endl;
+      std::cout << "Muon 2, eta: " << MuonVector[1]->eta() << std::endl;
+      if(!MuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      if(!MuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << MuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Muon 1, Matched Stations: " << MuonVector[0]->numberOfMatchedStations() << std::endl;
+      if(!MuonVector[1]->innerTrack().isNull()){ 
+	std::cout << "Muon 1, dxy: " << MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+	std::cout << "Muon 1, Number of Valid Pixel Hits: " << MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      }
+      std::cout << "Muon 1, Is Global Muon? " << MuonVector[0]->isGlobalMuon() << std::endl;
+      std::cout << "Muon 1, Is Tracker Muon? " << MuonVector[0]->isTrackerMuon() << std::endl;
+      if(!MuonVector[1]->track().isNull()) std::cout << "Muon 2, Tracker Hits: " << MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      if(!MuonVector[1]->globalTrack().isNull()) std::cout << "Muon 2, Chi2/ndof: " << MuonVector[1]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Muon 2, Matched Stations: " << MuonVector[1]->numberOfMatchedStations() << std::endl;
+      if(!MuonVector[1]->innerTrack().isNull()){
+	std::cout << "Muon 2, dxy: " << MuonVector[1]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+	std::cout << "Muon 2, Number of Valid Pixel Hits: " << MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      }
+      std::cout << "Muon 2, Is Global Muon? " << MuonVector[1]->isGlobalMuon() << std::endl;
+      std::cout << "Muon 2, Is Tracker Muon? " << MuonVector[1]->isTrackerMuon() << std::endl;
       std::cout << "Eta Z: " << DimuonSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DimuonSystem.phi() << std::endl;
       std::cout << "pT Z: " << DimuonSystem.pt() << std::endl;
@@ -562,21 +580,47 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
       std::cout << "pz Z: " << DimuonSystem.pz() << std::endl;
     }
 
-    eventData.SetLeadingMuonTrackerHits(MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
-    eventData.SetLeadingMuonPixelHits(MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
-    eventData.SetLeadingMuonNormalizedChi2(MuonVector[0]->globalTrack()->normalizedChi2());
+    if(!MuonVector[0]->track().isNull()){ 
+      eventData.SetLeadingMuonTrackerHits(MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
+    }else{
+      eventData.SetLeadingMuonTrackerHits(-999.);
+    }
+    if(!MuonVector[0]->innerTrack().isNull()){
+      eventData.SetLeadingMuonPixelHits(MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
+      eventData.SetLeadingMuonDxy(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+    }else{
+      eventData.SetLeadingMuonPixelHits(-999.);
+      eventData.SetLeadingMuonDxy(-999.);
+    }
+    if(!MuonVector[0]->globalTrack().isNull()){
+      eventData.SetLeadingMuonNormalizedChi2(MuonVector[0]->globalTrack()->normalizedChi2());
+    }else{
+      eventData.SetLeadingMuonNormalizedChi2(-999.);
+    }
     eventData.SetLeadingMuonMatchedStations(MuonVector[0]->numberOfMatchedStations());
-    eventData.SetLeadingMuonDxy(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
     eventData.SetLeadingMuonIsGlobal(MuonVector[0]->isGlobalMuon());
     eventData.SetLeadingMuonIsTracker(MuonVector[0]->isTrackerMuon());
-    eventData.SetSecondMuonTrackerHits(MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement());
-    eventData.SetSecondMuonPixelHits(MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits());
-    eventData.SetSecondMuonNormalizedChi2(MuonVector[1]->globalTrack()->normalizedChi2());
+
+    if(!MuonVector[1]->track().isNull()){
+      eventData.SetSecondMuonTrackerHits(MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement());
+    }else{
+      eventData.SetSecondMuonTrackerHits(-999.);
+    }
+    if(!MuonVector[1]->innerTrack().isNull()){
+      eventData.SetSecondMuonPixelHits(MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits());
+      eventData.SetSecondMuonDxy(MuonVector[1]->innerTrack()->dxy(vertex->at(0).position()));
+    }else{
+      eventData.SetSecondMuonPixelHits(-999.);
+      eventData.SetSecondMuonDxy(-999.);
+    }
+    if(!MuonVector[1]->globalTrack().isNull()){
+      eventData.SetSecondMuonNormalizedChi2(MuonVector[1]->globalTrack()->normalizedChi2());
+    }else{
+      eventData.SetSecondMuonNormalizedChi2(-999.);
+    }
     eventData.SetSecondMuonMatchedStations(MuonVector[1]->numberOfMatchedStations());
-    eventData.SetSecondMuonDxy(MuonVector[1]->innerTrack()->dxy(vertex->at(0).position()));
     eventData.SetSecondMuonIsGlobal(MuonVector[1]->isGlobalMuon());
     eventData.SetSecondMuonIsTracker(MuonVector[1]->isTrackerMuon());
-
   }
   else{
     eventData.SetDiMuonMass(-999.);
@@ -625,7 +669,6 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     eventData.SetSecondMuonDxy(-999.);
     eventData.SetSecondMuonIsGlobal(false);
     eventData.SetSecondMuonIsTracker(false);
-
   } 
 
 }
@@ -1969,7 +2012,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatMuon2relIsoDr05(relIsoSecondMuonDr05);
     eventData.SetPatMuon1relIso(relIsoFirstMuon);
     eventData.SetPatMuon2relIso(relIsoSecondMuon);
-   
+
     edm::Handle<edm::View<reco::Track> > trackHandle;
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
@@ -2011,7 +2054,23 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "Muon1 -> trackIso(): " << PatMuonVector[0]->trackIso() << " | muon1 -> ecalIso(): " << PatMuonVector[0]->ecalIso() << " | muon1 -> hcalIso(): " << PatMuonVector[0]->hcalIso() << " | PatMuonVector[0]->Iso(): " << relIsoFirstMuon << std::endl; 
       std::cout<<"Muon2 -> 0.3 Radion Rel Iso: "<<relIsoSecondMuonDr03<<" sumPt "<<muon2SumPtR03<<" emEt "<<muon2EmEtR03<<" hadEt "<<muon2HadEtR03<<std::endl;
       std::cout<<"Muon2 -> 0.5 Radion Rel Iso: "<<relIsoSecondMuonDr05<<" sumPt "<<muon2SumPtR05<<" emEt "<<muon2EmEtR05<<" hadEt "<<muon2HadEtR05<<std::endl;
-      std::cout << "Muon2 -> trackIso(): " << PatMuonVector[1]->trackIso() << " | muon2 -> ecalIso(): " << PatMuonVector[1]->ecalIso() << " | muon2 -> hcalIso(): " << PatMuonVector[1]->hcalIso() << " | PatMuonVector[1]->Iso(): " << relIsoSecondMuon << std::endl;  
+      std::cout << "Muon2 -> trackIso(): " << PatMuonVector[1]->trackIso() << " | muon2 -> ecalIso(): " << PatMuonVector[1]->ecalIso() << " | muon2 -> hcalIso(): " << PatMuonVector[1]->hcalIso() << " | PatMuonVector[1]->Iso(): " << relIsoSecondMuon << std::endl; 
+      if(!PatMuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      if(!PatMuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << PatMuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Muon 1, Matched Stations: " << PatMuonVector[0]->numberOfMatchedStations() << std::endl;
+      if(!PatMuonVector[1]->innerTrack().isNull()){
+	std::cout << "Muon 1, dxy: " << PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+	std::cout << "Muon 1, Number of Valid Pixel Hits: " << PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      }
+
+
+      if(!PatMuonVector[1]->track().isNull()) std::cout << "Muon 2, Tracker Hits: " << PatMuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      if(!PatMuonVector[1]->globalTrack().isNull()) std::cout << "Muon 2, Chi2/ndof: " << PatMuonVector[1]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Muon 2, Matched Stations: " << PatMuonVector[1]->numberOfMatchedStations() << std::endl;
+      if(!PatMuonVector[1]->innerTrack().isNull()){
+	std::cout << "Muon 2, dxy: " << PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+	std::cout << "Muon 2, Number of Valid Pixel Hits: " << PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      } 
       std::cout << "NSize: " << muons->size() << std::endl;
       std::cout << "Muon, pT 1: " << PatMuonVector[0]->pt() << std::endl;
       std::cout << "Muon, pT 2: " << PatMuonVector[1]->pt() << std::endl;
@@ -2027,21 +2086,50 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "pz Z: " << DipatMuonSystem.pz() << std::endl;
       std::cout << "" << std::endl;
     }
-    
-    eventData.SetPatMuon1TrackerHits(PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
-    eventData.SetPatMuon1PixelHits(PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
-    eventData.SetPatMuon1NormalizedChi2(PatMuonVector[0]->globalTrack()->normalizedChi2());
+
+    if(!PatMuonVector[0]->track().isNull()){
+      eventData.SetPatMuon1TrackerHits(PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
+    }else{
+      eventData.SetPatMuon1TrackerHits(-999.);
+    }
+    if(!PatMuonVector[0]->innerTrack().isNull()){
+      eventData.SetPatMuon1PixelHits(PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
+      eventData.SetPatMuon1Dxy(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+    }else{
+      eventData.SetPatMuon1PixelHits(-999.);
+      eventData.SetPatMuon1Dxy(-999.);
+    }
+    if(!PatMuonVector[0]->globalTrack().isNull()){
+      eventData.SetPatMuon1NormalizedChi2(PatMuonVector[0]->globalTrack()->normalizedChi2());
+    }else{
+      eventData.SetPatMuon1NormalizedChi2(-999.);
+    }
     eventData.SetPatMuon1MatchedStations(PatMuonVector[0]->numberOfMatchedStations());
-    eventData.SetPatMuon1Dxy(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
     eventData.SetPatMuon1IsGlobal(PatMuonVector[0]->isGlobalMuon());
     eventData.SetPatMuon1IsTracker(PatMuonVector[0]->isTrackerMuon());
-    eventData.SetPatMuon2TrackerHits(PatMuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement());
-    eventData.SetPatMuon2PixelHits(PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits());
-    eventData.SetPatMuon2NormalizedChi2(PatMuonVector[1]->globalTrack()->normalizedChi2());
+
+
+    if(!PatMuonVector[1]->track().isNull()){
+      eventData.SetPatMuon2TrackerHits(PatMuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement());
+    }else{
+      eventData.SetPatMuon2TrackerHits(-999.);
+    }
+    if(!PatMuonVector[1]->innerTrack().isNull()){
+      eventData.SetPatMuon2PixelHits(PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits());
+      eventData.SetPatMuon2Dxy(PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position()));
+    }else{
+      eventData.SetPatMuon2PixelHits(-999.);
+      eventData.SetPatMuon2Dxy(-999.);
+    }
+    if(!PatMuonVector[1]->globalTrack().isNull()){
+      eventData.SetPatMuon2NormalizedChi2(PatMuonVector[1]->globalTrack()->normalizedChi2());
+    }else{
+      eventData.SetPatMuon2NormalizedChi2(-999.);
+    }
     eventData.SetPatMuon2MatchedStations(PatMuonVector[1]->numberOfMatchedStations());
-    eventData.SetPatMuon2Dxy(PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position()));
     eventData.SetPatMuon2IsGlobal(PatMuonVector[1]->isGlobalMuon());
     eventData.SetPatMuon2IsTracker(PatMuonVector[1]->isTrackerMuon());
+
   }
   else {
     eventData.SetPatMuon1Pt(-999.);

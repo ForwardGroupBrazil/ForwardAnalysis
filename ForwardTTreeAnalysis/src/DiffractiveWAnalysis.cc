@@ -569,35 +569,48 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
       std::cout << "NMuons: " << MuonVector.size() << std::endl;
       std::cout << "Muon, pT 1: " << MuonVector[0]->pt() << std::endl;
       std::cout << "Muon, eta 1: " << MuonVector[0]->eta() << std::endl;
+      if(!MuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      if(!MuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << MuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Muon 1, Matched Stations: " << MuonVector[0]->numberOfMatchedStations() << std::endl;
+      if(!PatMuonVector[1]->innerTrack().isNull()){
+	std::cout << "Muon 1, dxy: " << MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+	std::cout << "Muon 1, Number of Valid Pixel Hits: " << MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      }
       std::cout << "Eta W: " << BosonMuonSystem.eta() << std::endl;
       std::cout << "Phi W: " << BosonMuonSystem.phi() << std::endl;
       std::cout << "pT W: " << BosonMuonSystem.pt() << std::endl;
       std::cout << "energy W: " << BosonMuonSystem.energy() << std::endl;
       std::cout << "pz W: " << BosonMuonSystem.pz() << std::endl;
-      std::cout << "Tracker Hits: " << MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
-      std::cout << "Number of Valid Pixel Hits: " << MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
-      std::cout << "Chi2/ndof: " << MuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
-      std::cout << "Matched Stations: " << MuonVector[0]->numberOfMatchedStations() << std::endl;
-      std::cout << "dxy: " << MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
-      std::cout << "Is Global Muon? " << MuonVector[0]->isGlobalMuon() << std::endl;
-      std::cout << "Is Tracker Muon? " << MuonVector[0]->isTrackerMuon() << std::endl;
     }
 
     // INCLUDE Quality Criteria ttree
     //Muon Tight
     if( (MuonVector[0]->isGlobalMuon() && MuonVector[0]->globalTrack()->normalizedChi2() < 10. && MuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits() > 0 && MuonVector[0]->numberOfMatchedStations() > 1 && fabs(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2 && fabs(MuonVector[0]->innerTrack()->dz(vertex->at(0).position())) < 0.5 && MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0 && MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 5 )){
-    std::cout << "Muon Tight!" << std::endl;
+      std::cout << "Muon Tight!" << std::endl;
     }
 
     //Muon Loose
     if(MuonVector[0]->isGlobalMuon() || MuonVector[0]->isTrackerMuon()) std::cout << "Muon Loose!" << std::endl;
     // END
 
-    eventData.SetLeadingMuonTrackerHits(MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
-    eventData.SetLeadingMuonPixelHits(MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
-    eventData.SetLeadingMuonNormalizedChi2(MuonVector[0]->globalTrack()->normalizedChi2());
+    if(!MuonVector[0]->track().isNull()){
+      eventData.SetLeadingMuonTrackerHits(MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
+    }else{
+      eventData.SetLeadingMuonTrackerHits(-999.);
+    }
+    if(!MuonVector[0]->innerTrack().isNull()){
+      eventData.SetLeadingMuonPixelHits(MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
+      eventData.SetLeadingMuonDxy(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+    }else{
+      eventData.SetLeadingMuonPixelHits(-999.);
+      eventData.SetLeadingMuonDxy(-999.);
+    }
+    if(!MuonVector[0]->globalTrack().isNull()){
+      eventData.SetLeadingMuonNormalizedChi2(MuonVector[0]->globalTrack()->normalizedChi2());
+    }else{
+      eventData.SetLeadingMuonNormalizedChi2(-999.);
+    }
     eventData.SetLeadingMuonMatchedStations(MuonVector[0]->numberOfMatchedStations());
-    eventData.SetLeadingMuonDxy(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
     eventData.SetLeadingMuonIsGlobal(MuonVector[0]->isGlobalMuon());
     eventData.SetLeadingMuonIsTracker(MuonVector[0]->isTrackerMuon());
 
@@ -1948,13 +1961,6 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatMuon1relIsoDr03(relIsoFirstMuonDr03);
     eventData.SetPatMuon1relIsoDr05(relIsoFirstMuonDr05);
     eventData.SetPatMuon1relIso(relIsoFirstMuon);
-    eventData.SetPatMuon1TrackerHits(PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
-    eventData.SetPatMuon1PixelHits(PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
-    eventData.SetPatMuon1NormalizedChi2(PatMuonVector[0]->globalTrack()->normalizedChi2());
-    eventData.SetPatMuon1MatchedStations(PatMuonVector[0]->numberOfMatchedStations());
-    eventData.SetPatMuon1Dxy(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
-    eventData.SetPatMuon1IsGlobal(PatMuonVector[0]->isGlobalMuon());
-    eventData.SetPatMuon1IsTracker(PatMuonVector[0]->isTrackerMuon());
 
     edm::Handle<edm::View<reco::Track> > trackHandle;
     event.getByLabel(trackTag_,trackHandle);
@@ -1999,11 +2005,14 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
       std::cout << "Muon, pT 1: " << PatMuonVector[0]->pt() << std::endl;
       std::cout << "Muon, eta 1: " << PatMuonVector[0]->eta() << std::endl;
       std::cout << "Muon, p4(): " << PatMuonVector[0]->p4() << std::endl;
-      std::cout << "Tracker Hits: " << PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
-      std::cout << "Number of Valid Pixel Hits: " << PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
-      std::cout << "Chi2/ndof: " << PatMuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
+      if(!PatMuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      if(!PatMuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << PatMuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Muon 1, Matched Stations: " << PatMuonVector[0]->numberOfMatchedStations() << std::endl;
+      if(!PatMuonVector[1]->innerTrack().isNull()){
+	std::cout << "Muon 1, dxy: " << PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+	std::cout << "Muon 1, Number of Valid Pixel Hits: " << PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      }
       std::cout << "Matched Stations: " << PatMuonVector[0]->numberOfMatchedStations() << std::endl;
-      std::cout << "dxy: " << PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
       std::cout << "Is Global Muon? " << PatMuonVector[0]->isGlobalMuon() << std::endl;
       std::cout << "Is Tracker Muon? " << PatMuonVector[0]->isTrackerMuon() << std::endl;
       std::cout << "BosonMuon, M(): " << BosonPatMuonSystem.M() << std::endl;
@@ -2014,6 +2023,28 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
       std::cout << "pz W: " << BosonPatMuonSystem.pz() << std::endl;
       std::cout << "" << std::endl;
     }
+
+    if(!PatMuonVector[0]->track().isNull()){
+      eventData.SetPatMuon1TrackerHits(PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
+    }else{
+      eventData.SetPatMuon1TrackerHits(-999.);
+    }
+    if(!PatMuonVector[0]->innerTrack().isNull()){
+      eventData.SetPatMuon1PixelHits(PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
+      eventData.SetPatMuon1Dxy(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+    }else{
+      eventData.SetPatMuon1PixelHits(-999.);
+      eventData.SetPatMuon1Dxy(-999.);
+    }
+    if(!PatMuonVector[0]->globalTrack().isNull()){
+      eventData.SetPatMuon1NormalizedChi2(PatMuonVector[0]->globalTrack()->normalizedChi2());
+    }else{
+      eventData.SetPatMuon1NormalizedChi2(-999.);
+    }
+    eventData.SetPatMuon1MatchedStations(PatMuonVector[0]->numberOfMatchedStations());
+    eventData.SetPatMuon1IsGlobal(PatMuonVector[0]->isGlobalMuon());
+    eventData.SetPatMuon1IsTracker(PatMuonVector[0]->isTrackerMuon());
+
   }
   else {
     eventData.SetPatMuon1Pt(-999.);
