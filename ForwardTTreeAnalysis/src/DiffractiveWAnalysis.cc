@@ -434,6 +434,65 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
       std::cout << "H/E, electron1: " << ElectronVector[0]->hadronicOverEm() << std::endl;
       std::cout << "" << std::endl;
     }
+
+    double isoTk1 = ElectronVector[0]->dr03TkSumPt()/ElectronVector[0]->pt();
+    double isoEcal1 = ElectronVector[0]->dr03EcalRecHitSumEt()/ElectronVector[0]->pt();
+    double isoHcal1 = ElectronVector[0]->dr03HcalTowerSumEt()/ElectronVector[0]->pt();
+    bool isoBarrel1WP95 = false;
+    bool isoEndCap1WP95 = false;
+    bool isolationWP95 = false;
+    bool eleEndCap1WP95 = false;
+    bool eleBarrel1WP95 = false;
+    bool candSelWP95 = false;
+    bool isoBarrel1WP80 = false;
+    bool isoEndCap1WP80 = false;
+    bool isolationWP80 = false;
+    bool eleEndCap1WP80 = false;
+    bool eleBarrel1WP80 = false;
+    bool candSelWP80 = false;
+
+    //Isolation Barrel
+    if ((fabs(ElectronVector[0]->eta()) <= 1.4442) ){
+      if (isoTk1<0.15 && isoEcal1<2.0 && isoHcal1<0.12) isoBarrel1WP95 = true;
+      if (isoTk1<0.09 && isoEcal1<0.07 && isoHcal1<0.10) isoBarrel1WP80 = true;
+    }
+
+    // Isolation Endcap
+    if ((fabs(ElectronVector[0]->eta()) >= 1.5660) && (fabs(ElectronVector[0]->eta()) <= 2.5)){
+      if (isoTk1<0.08 && isoEcal1<0.06 && isoHcal1<0.05) isoEndCap1WP95 = true;
+      if (isoTk1<0.04 && isoEcal1<0.05 && isoHcal1<0.025) isoEndCap1WP80 = true;
+    }
+
+    if ((isoEndCap1WP95 || isoBarrel1WP95)) isolationWP95 = true;
+    if ((isoEndCap1WP80 || isoBarrel1WP80)) isolationWP80 = true;
+
+    // Quality criteria Barrel
+    if ((fabs(ElectronVector[0]->eta()) <= 1.4442) ){
+      if (InnerHits1 <= 1 && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && ElectronVector[0]->sigmaIetaIeta() < 0.01 && ElectronVector[0]->hadronicOverEm() < 0.15 ) eleBarrel1WP95 = true;
+      if (InnerHits1 <= 0 && (fabs(ElectronVector[0]->convDcot()) >= 0.02 || fabs(ElectronVector[0]->convDist()) >= 0.02 ) && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.004 && fabs(ElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.06 && ElectronVector[0]->sigmaIetaIeta() < 0.01 && ElectronVector[0]->hadronicOverEm() < 0.04 ) eleBarrel1WP80 = true;
+    }
+
+    // Quality criteria Endcap
+    if ((fabs(ElectronVector[0]->eta()) >= 1.5660) && (fabs(ElectronVector[0]->eta()) <= 2.5)){
+      if (InnerHits1 <= 1 && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.01 && ElectronVector[0]->sigmaIetaIeta() < 0.03 && ElectronVector[0]->hadronicOverEm() < 0.07) eleEndCap1WP95 = true;
+      if (InnerHits1 <= 0 && (fabs(ElectronVector[0]->convDcot()) >= 0.02 || fabs(ElectronVector[0]->convDist()) >= 0.02 ) && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(ElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && ElectronVector[0]->sigmaIetaIeta() < 0.03 && ElectronVector[0]->hadronicOverEm() < 0.025) eleEndCap1WP80 = true;
+    }
+
+    if ((eleEndCap1WP95 || eleBarrel1WP95)) candSelWP95 = true;
+    if ((eleEndCap1WP80 || eleBarrel1WP80)) candSelWP80 = true;
+
+    if(isolationWP80 && candSelWP80){
+      eventData.SetLeadingElectronIsWP80(true);
+    }else{
+      eventData.SetLeadingElectronIsWP80(false);
+    }
+
+    if(isolationWP95 && candSelWP95){
+      eventData.SetLeadingElectronIsWP95(true);
+    }else{
+      eventData.SetLeadingElectronIsWP95(false);
+    }
+
   }
   else {
     eventData.SetBosonElectronMass(-999.);
@@ -464,6 +523,9 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
     eventData.SetLeadingElectronDist(-999.);
     eventData.SetLeadingElectronInnerHits(-999.);
     eventData.SetLeadingElectronHE(-999.);
+
+    eventData.SetLeadingElectronIsWP95(false);
+    eventData.SetLeadingElectronIsWP80(false);
 
   }
 }
@@ -583,15 +645,20 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
       std::cout << "pz W: " << BosonMuonSystem.pz() << std::endl;
     }
 
-    // INCLUDE Quality Criteria ttree
-    //Muon Tight
-    if( (MuonVector[0]->isGlobalMuon() && MuonVector[0]->globalTrack()->normalizedChi2() < 10. && MuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits() > 0 && MuonVector[0]->numberOfMatchedStations() > 1 && fabs(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2 && fabs(MuonVector[0]->innerTrack()->dz(vertex->at(0).position())) < 0.5 && MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0 && MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 5 )){
-      std::cout << "Muon Tight!" << std::endl;
+    if(MuonVector[0]->isGlobalMuon() && MuonVector[0]->isTrackerMuon()){
+      if(!MuonVector[0]->globalTrack().isNull() && MuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
+	if(!MuonVector[0]->track().isNull() && MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
+	  if(!MuonVector[0]->innerTrack().isNull() && MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
+	    if(MuonVector[0]->numberOfMatchedStations() > 1 && MuonVector[0]->globalTrack()->normalizedChi2() < 10. && fabs(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
+	      eventData.SetLeadingMuonIsGood(true);
+	    }
+	  }
+	}
+      }
+    }else{
+      eventData.SetLeadingMuonIsGood(false);
     }
 
-    //Muon Loose
-    if(MuonVector[0]->isGlobalMuon() || MuonVector[0]->isTrackerMuon()) std::cout << "Muon Loose!" << std::endl;
-    // END
 
     if(!MuonVector[0]->track().isNull()){
       eventData.SetLeadingMuonTrackerHits(MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
@@ -601,9 +668,11 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     if(!MuonVector[0]->innerTrack().isNull()){
       eventData.SetLeadingMuonPixelHits(MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
       eventData.SetLeadingMuonDxy(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+      eventData.SetLeadingMuonDz(MuonVector[0]->innerTrack()->dz(vertex->at(0).position()));
     }else{
       eventData.SetLeadingMuonPixelHits(-999.);
       eventData.SetLeadingMuonDxy(-999.);
+      eventData.SetLeadingMuonDz(-999.);
     }
     if(!MuonVector[0]->globalTrack().isNull()){
       eventData.SetLeadingMuonNormalizedChi2(MuonVector[0]->globalTrack()->normalizedChi2());
@@ -641,9 +710,10 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     eventData.SetLeadingMuonNormalizedChi2(-999.);
     eventData.SetLeadingMuonMatchedStations(-999.);
     eventData.SetLeadingMuonDxy(-999.);
+    eventData.SetLeadingMuonDz(-999.);
     eventData.SetLeadingMuonIsGlobal(false);
     eventData.SetLeadingMuonIsTracker(false);
-
+    eventData.SetLeadingMuonIsGood(false);
   } 
 
 }
@@ -2024,6 +2094,20 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
       std::cout << "" << std::endl;
     }
 
+    if(PatMuonVector[0]->isGlobalMuon() && PatMuonVector[0]->isTrackerMuon()){
+      if(!PatMuonVector[0]->globalTrack().isNull() && PatMuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
+	if(!PatMuonVector[0]->track().isNull() && PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
+	  if(!PatMuonVector[0]->innerTrack().isNull() && PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
+	    if(PatMuonVector[0]->numberOfMatchedStations() > 1 && PatMuonVector[0]->globalTrack()->normalizedChi2() < 10. && fabs(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
+	      eventData.SetPatMuon1IsGood(true);
+	    }
+	  }
+	}
+      }
+    }else{
+      eventData.SetPatMuon1IsGood(false);
+    }
+
     if(!PatMuonVector[0]->track().isNull()){
       eventData.SetPatMuon1TrackerHits(PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
     }else{
@@ -2032,9 +2116,11 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     if(!PatMuonVector[0]->innerTrack().isNull()){
       eventData.SetPatMuon1PixelHits(PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
       eventData.SetPatMuon1Dxy(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+      eventData.SetPatMuon1Dz(PatMuonVector[0]->innerTrack()->dz(vertex->at(0).position()));
     }else{
       eventData.SetPatMuon1PixelHits(-999.);
       eventData.SetPatMuon1Dxy(-999.);
+      eventData.SetPatMuon1Dz(-999.);
     }
     if(!PatMuonVector[0]->globalTrack().isNull()){
       eventData.SetPatMuon1NormalizedChi2(PatMuonVector[0]->globalTrack()->normalizedChi2());
@@ -2066,8 +2152,10 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatMuon1NormalizedChi2(-999.);
     eventData.SetPatMuon1MatchedStations(-999.);
     eventData.SetPatMuon1Dxy(-999.);
+    eventData.SetPatMuon1Dz(-999.);
     eventData.SetPatMuon1IsGlobal(false);
     eventData.SetPatMuon1IsTracker(false);
+    eventData.SetPatMuon1IsGood(false);
     eventData.SetPatBosonMuonMass(-999.);
     eventData.SetPatBosonMuonPt(-999.);
     eventData.SetPatBosonMuonEta(-999.);
@@ -2168,6 +2256,65 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
       std::cout << "H/E, electron1: " << PatElectronVector[0]->hadronicOverEm() << std::endl;
       std::cout << "" << std::endl;
     }
+
+    double isoTk1 = PatElectronVector[0]->dr03TkSumPt()/PatElectronVector[0]->pt();
+    double isoEcal1 = PatElectronVector[0]->dr03EcalRecHitSumEt()/PatElectronVector[0]->pt();
+    double isoHcal1 = PatElectronVector[0]->dr03HcalTowerSumEt()/PatElectronVector[0]->pt();
+    bool isoBarrel1WP95 = false;
+    bool isoEndCap1WP95 = false;
+    bool isolationWP95 = false;
+    bool eleEndCap1WP95 = false;
+    bool eleBarrel1WP95 = false;
+    bool candSelWP95 = false;
+    bool isoBarrel1WP80 = false;
+    bool isoEndCap1WP80 = false;
+    bool isolationWP80 = false;
+    bool eleEndCap1WP80 = false;
+    bool eleBarrel1WP80 = false;
+    bool candSelWP80 = false;
+
+    //Isolation Barrel
+    if ((fabs(PatElectronVector[0]->eta()) <= 1.4442) ){
+      if (isoTk1<0.15 && isoEcal1<2.0 && isoHcal1<0.12) isoBarrel1WP95 = true;
+      if (isoTk1<0.09 && isoEcal1<0.07 && isoHcal1<0.10) isoBarrel1WP80 = true;
+    }
+
+    // Isolation Endcap
+    if ((fabs(PatElectronVector[0]->eta()) >= 1.5660) && (fabs(PatElectronVector[0]->eta()) <= 2.5)){
+      if (isoTk1<0.08 && isoEcal1<0.06 && isoHcal1<0.05) isoEndCap1WP95 = true;
+      if (isoTk1<0.04 && isoEcal1<0.05 && isoHcal1<0.025) isoEndCap1WP80 = true;
+    }
+
+    if ((isoEndCap1WP95 || isoBarrel1WP95)) isolationWP95 = true;
+    if ((isoEndCap1WP80 || isoBarrel1WP80)) isolationWP80 = true;
+
+    // Quality criteria Barrel
+    if ((fabs(PatElectronVector[0]->eta()) <= 1.4442) ){
+      if (InnerHits1 <= 1 && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && PatElectronVector[0]->sigmaIetaIeta() < 0.01 && PatElectronVector[0]->hadronicOverEm() < 0.15 ) eleBarrel1WP95 = true;
+      if (InnerHits1 <= 0 && (fabs(PatElectronVector[0]->convDcot()) >= 0.02 || fabs(PatElectronVector[0]->convDist()) >= 0.02 ) && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.004 && fabs(PatElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.06 && PatElectronVector[0]->sigmaIetaIeta() < 0.01 && PatElectronVector[0]->hadronicOverEm() < 0.04 ) eleBarrel1WP80 = true;
+    }
+
+    // Quality criteria Endcap
+    if ((fabs(PatElectronVector[0]->eta()) >= 1.5660) && (fabs(PatElectronVector[0]->eta()) <= 2.5)){
+      if (InnerHits1 <= 1 && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.01 && PatElectronVector[0]->sigmaIetaIeta() < 0.03 && PatElectronVector[0]->hadronicOverEm() < 0.07) eleEndCap1WP95 = true;
+      if (InnerHits1 <= 0 && (fabs(PatElectronVector[0]->convDcot()) >= 0.02 || fabs(PatElectronVector[0]->convDist()) >= 0.02 ) && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(PatElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && PatElectronVector[0]->sigmaIetaIeta() < 0.03 && PatElectronVector[0]->hadronicOverEm() < 0.025) eleEndCap1WP80 = true;
+    }
+
+    if ((eleEndCap1WP95 || eleBarrel1WP95)) candSelWP95 = true;
+    if ((eleEndCap1WP80 || eleBarrel1WP80)) candSelWP80 = true;
+
+    if(isolationWP80 && candSelWP80){
+      eventData.SetPatElectron1IsWP80(true);
+    }else{
+      eventData.SetPatElectron1IsWP80(false);
+    }
+
+    if(isolationWP95 && candSelWP95){
+      eventData.SetPatElectron1IsWP95(true);
+    }else{
+      eventData.SetPatElectron1IsWP95(false);
+    }
+
   }
   else{
     eventData.SetPatElectron1Pt(-999.);
@@ -2194,6 +2341,8 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatElectron1Dist(-999.);
     eventData.SetPatElectron1InnerHits(-999.);
     eventData.SetPatElectron1HE(-999.);
+    eventData.SetPatElectron1IsWP80(false);
+    eventData.SetPatElectron1IsWP95(false);
   }
 
 }
