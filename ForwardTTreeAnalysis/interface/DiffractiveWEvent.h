@@ -84,8 +84,10 @@ class DiffractiveWEvent {
     void SetLeadingMuonNormalizedChi2(double fLeadingMuonNormalizedChi2)    {LeadingMuonNormalizedChi2_ = fLeadingMuonNormalizedChi2;}
     void SetLeadingMuonMatchedStations(double fLeadingMuonMatchedStations)    {LeadingMuonMatchedStations_ = fLeadingMuonMatchedStations;}
     void SetLeadingMuonDxy(double fLeadingMuonDxy)    {LeadingMuonDxy_ = fLeadingMuonDxy;}
+    void SetLeadingMuonDz(double fLeadingMuonDz)    {LeadingMuonDz_ = fLeadingMuonDz;}
     void SetLeadingMuonIsGlobal(bool fLeadingMuonIsGlobal)    {LeadingMuonIsGlobal_ = fLeadingMuonIsGlobal;}
     void SetLeadingMuonIsTracker(bool fLeadingMuonIsTracker)    {LeadingMuonIsTracker_ = fLeadingMuonIsTracker;}
+    void SetLeadingMuonIsGood(bool fLeadingMuonIsGood)    {LeadingMuonIsGood_ = fLeadingMuonIsGood;}
 
     void SetVertexMultiplicity(const std::vector<double>& fVertexMultiplicity) { VertexMultiplicity_ = fVertexMultiplicity; }
     void SetVertexChiNorm(const std::vector<double>& fVertexChiNorm) { VertexChiNorm_ = fVertexChiNorm; }
@@ -249,8 +251,10 @@ class DiffractiveWEvent {
     void SetPatMuon1NormalizedChi2(double fpatMuon1NormalizedChi2)    {patMuon1NormalizedChi2_ = fpatMuon1NormalizedChi2;}
     void SetPatMuon1MatchedStations(double fpatMuon1MatchedStations)    {patMuon1MatchedStations_ = fpatMuon1MatchedStations;}
     void SetPatMuon1Dxy(double fpatMuon1Dxy)    {patMuon1Dxy_ = fpatMuon1Dxy;}
+    void SetPatMuon1Dz(double fpatMuon1Dz)    {patMuon1Dz_ = fpatMuon1Dz;}
     void SetPatMuon1IsGlobal(bool fpatMuon1IsGlobal)    {patMuon1IsGlobal_ = fpatMuon1IsGlobal;}
     void SetPatMuon1IsTracker(bool fpatMuon1IsTracker)    {patMuon1IsTracker_ = fpatMuon1IsTracker;}
+    void SetPatMuon1IsGood(bool fpatMuon1IsGood)    {patMuon1IsGood_ = fpatMuon1IsGood;}
 
     void SetPatBosonMuonMass(double fpatBosonMuonMass) { patBosonMuonMass_ = fpatBosonMuonMass;}
     void SetPatBosonMuonPt(double fpatBosonMuonPt) { patBosonMuonPt_ = fpatBosonMuonPt;}
@@ -316,6 +320,8 @@ class DiffractiveWEvent {
     void SetLeadingElectronDist(double fLeadingElectronDist)    {LeadingElectronDist_ = fLeadingElectronDist;}
     void SetLeadingElectronInnerHits(double fLeadingElectronInnerHits)    {LeadingElectronInnerHits_ = fLeadingElectronInnerHits;}
     void SetLeadingElectronHE(double fLeadingElectronHE)    {LeadingElectronHE_ = fLeadingElectronHE;}
+    void SetLeadingElectronIsWP95(bool fLeadingElectronIsWP95)    {LeadingElectronIsWP95_ = fLeadingElectronIsWP95;}
+    void SetLeadingElectronIsWP80(bool fLeadingElectronIsWP80)    {LeadingElectronIsWP80_ = fLeadingElectronIsWP80;}
 
     void SetPatElectron1DeltaPhiTkClu(double fpatElectron1DeltaPhiTkClu)    {patElectron1DeltaPhiTkClu_ = fpatElectron1DeltaPhiTkClu;}
     void SetPatElectron1DeltaEtaTkClu(double fpatElectron1DeltaEtaTkClu)    {patElectron1DeltaEtaTkClu_ = fpatElectron1DeltaEtaTkClu;}
@@ -324,6 +330,8 @@ class DiffractiveWEvent {
     void SetPatElectron1Dist(double fpatElectron1Dist)    {patElectron1Dist_ = fpatElectron1Dist;}
     void SetPatElectron1InnerHits(double fpatElectron1InnerHits)    {patElectron1InnerHits_ = fpatElectron1InnerHits;}
     void SetPatElectron1HE(double fpatElectron1HE)    {patElectron1HE_ = fpatElectron1HE;}
+    void SetPatElectron1IsWP95(bool fpatElectron1IsWP95)    {patElectron1IsWP95_ = fpatElectron1IsWP95;}
+    void SetPatElectron1IsWP80(bool fpatElectron1IsWP80)    {patElectron1IsWP80_ = fpatElectron1IsWP80;}
 
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetBosonElectronMass() const {return BosonElectronMass_;}
@@ -352,6 +360,9 @@ class DiffractiveWEvent {
     double GetLeadingElectronrelIsoDr03() const {return LeadingElectronrelIsoDr03_;}
     double GetLeadingElectronrelIsoDr04() const {return LeadingElectronrelIsoDr04_;}
 
+    bool GetLeadingElectronIsWP95() const   {return LeadingElectronIsWP95_;}
+    bool GetLeadingElectronIsWP80() const   {return LeadingElectronIsWP80_;}
+
     double GetLeadingMuonPt() const {return LeadingMuonPt_;}
     double GetLeadingMuonEta() const {return LeadingMuonEta_;}
     double GetLeadingMuonPhi() const {return LeadingMuonPhi_;}
@@ -374,8 +385,10 @@ class DiffractiveWEvent {
     double GetLeadingMuonNormalizedChi2() const   {return LeadingMuonNormalizedChi2_;}
     double GetLeadingMuonMatchedStations() const   {return LeadingMuonMatchedStations_;}
     double GetLeadingMuonDxy() const    {return LeadingMuonDxy_;}
+    double GetLeadingMuonDz() const    {return LeadingMuonDz_;}
     bool GetLeadingMuonIsGlobal() const   {return LeadingMuonIsGlobal_;}
     bool GetLeadingMuonIsTracker() const   {return LeadingMuonIsTracker_;}
+    bool GetLeadingMuonIsGood() const   {return LeadingMuonIsGood_;}
 
     double GetVertexMultiplicity(int i) const { return VertexMultiplicity_[i]; }
     double GetVertexChiNorm(int i) const { return VertexChiNorm_[i]; }
@@ -539,8 +552,10 @@ class DiffractiveWEvent {
     double GetPatMuon1NormalizedChi2() const   {return patMuon1NormalizedChi2_;}
     double GetPatMuon1MatchedStations() const   {return patMuon1MatchedStations_;}
     double GetPatMuon1Dxy() const    {return patMuon1Dxy_;}
+    double GetPatMuon1Dz() const    {return patMuon1Dz_;}
     bool GetPatMuon1IsGlobal() const   {return patMuon1IsGlobal_;}
     bool GetPatMuon1IsTracker() const   {return patMuon1IsTracker_;}
+    bool GetPatMuon1IsGood() const   {return patMuon1IsGood_;}
 
     double GetPatBosonMuonMass() const {return patBosonMuonMass_;}
     double GetPatBosonMuonPt() const {return patBosonMuonPt_;}
@@ -565,6 +580,9 @@ class DiffractiveWEvent {
 
     double GetPatElectron1relIsoDr03() const {return patElectron1relIsoDr03_;}
     double GetPatElectron1relIsoDr04() const {return patElectron1relIsoDr04_;}
+
+    bool GetPatElectron1IsWP95() const   {return patElectron1IsWP95_;}
+    bool GetPatElectron1IsWP80() const   {return patElectron1IsWP80_;}
 
     double GetPatBosonElectronMass() const {return patBosonElectronMass_;}
     double GetPatBosonElectronPt() const {return patBosonElectronPt_;}
@@ -686,8 +704,10 @@ class DiffractiveWEvent {
     double LeadingMuonNormalizedChi2_;
     double LeadingMuonMatchedStations_;
     double LeadingMuonDxy_;
+    double LeadingMuonDz_;
     bool LeadingMuonIsGlobal_;
     bool LeadingMuonIsTracker_;
+    bool LeadingMuonIsGood_;
 
     std::vector<double> VertexMultiplicity_;
     std::vector<double> VertexChiNorm_;
@@ -856,8 +876,10 @@ class DiffractiveWEvent {
     double patMuon1NormalizedChi2_;
     double patMuon1MatchedStations_;
     double patMuon1Dxy_;
+    double patMuon1Dz_;
     bool patMuon1IsGlobal_;
     bool patMuon1IsTracker_;
+    bool patMuon1IsGood_;
 
     double patBosonMuonMass_;
     double patBosonMuonPt_;
@@ -911,6 +933,9 @@ class DiffractiveWEvent {
     double LeadingElectronDist_;
     double LeadingElectronInnerHits_;
     double LeadingElectronHE_;
+    bool LeadingElectronIsWP95_;
+    bool LeadingElectronIsWP80_;
+
     double patElectron1DeltaPhiTkClu_;
     double patElectron1DeltaEtaTkClu_;
     double patElectron1SigmaIeIe_;
@@ -918,6 +943,8 @@ class DiffractiveWEvent {
     double patElectron1Dist_;
     double patElectron1InnerHits_;
     double patElectron1HE_;
+    bool patElectron1IsWP95_;
+    bool patElectron1IsWP80_;
 
     double fmetPt_;
     double fmetPhi_;
