@@ -99,6 +99,7 @@ class DiffractiveZEvent {
     void SetLeadingMuonDz(double fLeadingMuonDz) {LeadingMuonDz_ = fLeadingMuonDz;}
     void SetLeadingMuonIsGlobal(bool fLeadingMuonIsGlobal)    {LeadingMuonIsGlobal_ = fLeadingMuonIsGlobal;}
     void SetLeadingMuonIsTracker(bool fLeadingMuonIsTracker)    {LeadingMuonIsTracker_ = fLeadingMuonIsTracker;}
+    void SetLeadingMuonIsGood(bool fLeadingMuonIsGood) {LeadingMuonIsGood_ = fLeadingMuonIsGood;}
     void SetSecondMuonTrackerHits(double fSecondMuonTrackerHits)    {SecondMuonTrackerHits_ = fSecondMuonTrackerHits;}
     void SetSecondMuonPixelHits(double fSecondMuonPixelHits)    {SecondMuonPixelHits_ = fSecondMuonPixelHits;}
     void SetSecondMuonNormalizedChi2(double fSecondMuonNormalizedChi2)    {SecondMuonNormalizedChi2_ = fSecondMuonNormalizedChi2;}
@@ -107,6 +108,7 @@ class DiffractiveZEvent {
     void SetSecondMuonDz(double fSecondMuonDz) {SecondMuonDz_ = fSecondMuonDz;}
     void SetSecondMuonIsGlobal(bool fSecondMuonIsGlobal)    {SecondMuonIsGlobal_ = fSecondMuonIsGlobal;}
     void SetSecondMuonIsTracker(bool fSecondMuonIsTracker)    {SecondMuonIsTracker_ = fSecondMuonIsTracker;}
+    void SetSecondMuonIsGood(bool fSecondMuonIsGood) {SecondMuonIsGood_ = fSecondMuonIsGood;}
 
     void SetVertexMultiplicity(const std::vector<double>& fVertexMultiplicity) { VertexMultiplicity_ = fVertexMultiplicity; }
     void SetVertexChiNorm(const std::vector<double>& fVertexChiNorm) { VertexChiNorm_ = fVertexChiNorm; }
@@ -290,6 +292,7 @@ class DiffractiveZEvent {
     void SetPatMuon1Dz(double fpatMuon1Dz) {patMuon1Dz_ = fpatMuon1Dz;}
     void SetPatMuon1IsGlobal(bool fpatMuon1IsGlobal)    {patMuon1IsGlobal_ = fpatMuon1IsGlobal;}
     void SetPatMuon1IsTracker(bool fpatMuon1IsTracker)    {patMuon1IsTracker_ = fpatMuon1IsTracker;}
+    void SetPatMuon1IsGood(bool fpatMuon1IsGood) {patMuon1IsGood_ = fpatMuon1IsGood;}
     void SetPatMuon2TrackerHits(double fpatMuon2TrackerHits)    {patMuon2TrackerHits_ = fpatMuon2TrackerHits;}
     void SetPatMuon2PixelHits(double fpatMuon2PixelHits)    {patMuon2PixelHits_ = fpatMuon2PixelHits;}
     void SetPatMuon2NormalizedChi2(double fpatMuon2NormalizedChi2)    {patMuon2NormalizedChi2_ = fpatMuon2NormalizedChi2;}
@@ -298,6 +301,7 @@ class DiffractiveZEvent {
     void SetPatMuon2Dz(double fpatMuon2Dz) {patMuon2Dz_ = fpatMuon2Dz;}
     void SetPatMuon2IsGlobal(bool fpatMuon2IsGlobal)    {patMuon2IsGlobal_ = fpatMuon2IsGlobal;}
     void SetPatMuon2IsTracker(bool fpatMuon2IsTracker)    {patMuon2IsTracker_ = fpatMuon2IsTracker;}
+    void SetPatMuon2IsGood(bool fpatMuon2IsGood) {patMuon2IsGood_ = fpatMuon2IsGood;}
 
     void SetPatDiMuonMass(double fpatDiMuonMass) { patDiMuonMass_ = fpatDiMuonMass;}
     void SetPatDiMuonPt(double fpatDiMuonPt) { patDiMuonPt_ = fpatDiMuonPt;}
@@ -481,6 +485,7 @@ class DiffractiveZEvent {
     double GetLeadingMuonDz() const {return LeadingMuonDz_;}
     bool GetLeadingMuonIsGlobal() const   {return LeadingMuonIsGlobal_;}
     bool GetLeadingMuonIsTracker() const   {return LeadingMuonIsTracker_;}
+    bool GetLeadingMuonIsGood() const {return LeadingMuonIsGood_;}
     double GetSecondMuonTrackerHits() const   {return SecondMuonTrackerHits_;}
     double GetSecondMuonPixelHits() const   {return SecondMuonPixelHits_;}
     double GetSecondMuonNormalizedChi2() const   {return SecondMuonNormalizedChi2_;}
@@ -489,6 +494,7 @@ class DiffractiveZEvent {
     double GetSecondMuonDz() const {return SecondMuonDz_;}
     bool GetSecondMuonIsGlobal() const   {return SecondMuonIsGlobal_;}
     bool GetSecondMuonIsTracker() const   {return SecondMuonIsTracker_;}
+    bool GetSecondMuonIsGood() const {return SecondMuonIsGood_;}
 
     double GetVertexMultiplicity(int i) const { return VertexMultiplicity_[i]; }
     double GetVertexChiNorm(int i) const { return VertexChiNorm_[i]; }
@@ -672,6 +678,7 @@ class DiffractiveZEvent {
     double GetPatMuon1Dz() const {return patMuon1Dz_;}
     bool GetPatMuon1IsGlobal() const   {return patMuon1IsGlobal_;}
     bool GetPatMuon1IsTracker() const   {return patMuon1IsTracker_;}
+    bool GetPatMuon1IsGood() const {return patMuon1IsGood_;}
     double GetPatMuon2TrackerHits() const   {return patMuon2TrackerHits_;}
     double GetPatMuon2PixelHits() const   {return patMuon2PixelHits_;}
     double GetPatMuon2NormalizedChi2() const   {return patMuon2NormalizedChi2_;}
@@ -680,6 +687,7 @@ class DiffractiveZEvent {
     double GetPatMuon2Dz() const {return patMuon2Dz_;}
     bool GetPatMuon2IsGlobal() const   {return patMuon2IsGlobal_;}
     bool GetPatMuon2IsTracker() const   {return patMuon2IsTracker_;}
+    bool GetPatMuon2IsGood() const {return patMuon2IsGood_;}
 
     double GetPatDiMuonMass() const {return patDiMuonMass_;}
     double GetPatDiMuonPt() const {return patDiMuonPt_;}
@@ -870,6 +878,7 @@ class DiffractiveZEvent {
     double LeadingMuonDz_;
     bool LeadingMuonIsGlobal_;
     bool LeadingMuonIsTracker_;
+    bool LeadingMuonIsGood_;
     double SecondMuonTrackerHits_;
     double SecondMuonPixelHits_;
     double SecondMuonNormalizedChi2_;
@@ -878,6 +887,7 @@ class DiffractiveZEvent {
     double SecondMuonDz_;
     bool SecondMuonIsGlobal_;
     bool SecondMuonIsTracker_;
+    bool SecondMuonIsGood_;
 
     std::vector<double> VertexMultiplicity_;
     std::vector<double> VertexChiNorm_;
@@ -1065,6 +1075,7 @@ class DiffractiveZEvent {
     double patMuon1Dz_;
     bool patMuon1IsGlobal_;
     bool patMuon1IsTracker_;
+    bool patMuon1IsGood_;
     double patMuon2TrackerHits_;
     double patMuon2PixelHits_;
     double patMuon2NormalizedChi2_;
@@ -1073,6 +1084,7 @@ class DiffractiveZEvent {
     double patMuon2Dz_;
     bool patMuon2IsGlobal_;
     bool patMuon2IsTracker_;
+    bool patMuon2IsGood_;
 
     double patDiMuonMass_;
     double patDiMuonPt_;
