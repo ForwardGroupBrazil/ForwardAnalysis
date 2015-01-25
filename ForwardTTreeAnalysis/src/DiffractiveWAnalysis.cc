@@ -2582,9 +2582,11 @@ void DiffractiveWAnalysis::fillZDC(DiffractiveWEvent& eventData, const edm::Even
 
   if (zdc_recHits) {
     for (ZDCRecHitCollection::const_iterator zhit = zdc_recHits->begin(); zhit != zdc_recHits->end(); zhit++){		
+
       // Some Variables
       int ZDCSide      = (zhit->id()).zside();
       int ZDCSection   = (zhit->id()).section();
+
       //Float_t ZDCEnergy = zhit->energy();
       //Float_t ZDCRecHitTime = zhit->time();
       //int ZDCChannel   = (zhit->id()).channel();
