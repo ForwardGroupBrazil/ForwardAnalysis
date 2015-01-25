@@ -96,6 +96,7 @@ class DiffractiveZEvent {
     void SetLeadingMuonNormalizedChi2(double fLeadingMuonNormalizedChi2)    {LeadingMuonNormalizedChi2_ = fLeadingMuonNormalizedChi2;}
     void SetLeadingMuonMatchedStations(double fLeadingMuonMatchedStations)    {LeadingMuonMatchedStations_ = fLeadingMuonMatchedStations;}
     void SetLeadingMuonDxy(double fLeadingMuonDxy)    {LeadingMuonDxy_ = fLeadingMuonDxy;}
+    void SetLeadingMuonDz(double fLeadingMuonDz) {LeadingMuonDz_ = fLeadingMuonDz;}
     void SetLeadingMuonIsGlobal(bool fLeadingMuonIsGlobal)    {LeadingMuonIsGlobal_ = fLeadingMuonIsGlobal;}
     void SetLeadingMuonIsTracker(bool fLeadingMuonIsTracker)    {LeadingMuonIsTracker_ = fLeadingMuonIsTracker;}
     void SetSecondMuonTrackerHits(double fSecondMuonTrackerHits)    {SecondMuonTrackerHits_ = fSecondMuonTrackerHits;}
@@ -103,6 +104,7 @@ class DiffractiveZEvent {
     void SetSecondMuonNormalizedChi2(double fSecondMuonNormalizedChi2)    {SecondMuonNormalizedChi2_ = fSecondMuonNormalizedChi2;}
     void SetSecondMuonMatchedStations(double fSecondMuonMatchedStations)    {SecondMuonMatchedStations_ = fSecondMuonMatchedStations;}
     void SetSecondMuonDxy(double fSecondMuonDxy)    {SecondMuonDxy_ = fSecondMuonDxy;}
+    void SetSecondMuonDz(double fSecondMuonDz) {SecondMuonDz_ = fSecondMuonDz;}
     void SetSecondMuonIsGlobal(bool fSecondMuonIsGlobal)    {SecondMuonIsGlobal_ = fSecondMuonIsGlobal;}
     void SetSecondMuonIsTracker(bool fSecondMuonIsTracker)    {SecondMuonIsTracker_ = fSecondMuonIsTracker;}
 
@@ -285,6 +287,7 @@ class DiffractiveZEvent {
     void SetPatMuon1NormalizedChi2(double fpatMuon1NormalizedChi2)    {patMuon1NormalizedChi2_ = fpatMuon1NormalizedChi2;}
     void SetPatMuon1MatchedStations(double fpatMuon1MatchedStations)    {patMuon1MatchedStations_ = fpatMuon1MatchedStations;}
     void SetPatMuon1Dxy(double fpatMuon1Dxy)    {patMuon1Dxy_ = fpatMuon1Dxy;}
+    void SetPatMuon1Dz(double fpatMuon1Dz) {patMuon1Dz_ = fpatMuon1Dz;}
     void SetPatMuon1IsGlobal(bool fpatMuon1IsGlobal)    {patMuon1IsGlobal_ = fpatMuon1IsGlobal;}
     void SetPatMuon1IsTracker(bool fpatMuon1IsTracker)    {patMuon1IsTracker_ = fpatMuon1IsTracker;}
     void SetPatMuon2TrackerHits(double fpatMuon2TrackerHits)    {patMuon2TrackerHits_ = fpatMuon2TrackerHits;}
@@ -292,6 +295,7 @@ class DiffractiveZEvent {
     void SetPatMuon2NormalizedChi2(double fpatMuon2NormalizedChi2)    {patMuon2NormalizedChi2_ = fpatMuon2NormalizedChi2;}
     void SetPatMuon2MatchedStations(double fpatMuon2MatchedStations)    {patMuon2MatchedStations_ = fpatMuon2MatchedStations;}
     void SetPatMuon2Dxy(double fpatMuon2Dxy)    {patMuon2Dxy_ = fpatMuon2Dxy;}
+    void SetPatMuon2Dz(double fpatMuon2Dz) {patMuon2Dz_ = fpatMuon2Dz;}
     void SetPatMuon2IsGlobal(bool fpatMuon2IsGlobal)    {patMuon2IsGlobal_ = fpatMuon2IsGlobal;}
     void SetPatMuon2IsTracker(bool fpatMuon2IsTracker)    {patMuon2IsTracker_ = fpatMuon2IsTracker;}
 
@@ -474,6 +478,7 @@ class DiffractiveZEvent {
     double GetLeadingMuonNormalizedChi2() const   {return LeadingMuonNormalizedChi2_;}
     double GetLeadingMuonMatchedStations() const   {return LeadingMuonMatchedStations_;}
     double GetLeadingMuonDxy() const    {return LeadingMuonDxy_;}
+    double GetLeadingMuonDz() const {return LeadingMuonDz_;}
     bool GetLeadingMuonIsGlobal() const   {return LeadingMuonIsGlobal_;}
     bool GetLeadingMuonIsTracker() const   {return LeadingMuonIsTracker_;}
     double GetSecondMuonTrackerHits() const   {return SecondMuonTrackerHits_;}
@@ -481,6 +486,7 @@ class DiffractiveZEvent {
     double GetSecondMuonNormalizedChi2() const   {return SecondMuonNormalizedChi2_;}
     double GetSecondMuonMatchedStations() const   {return SecondMuonMatchedStations_;}
     double GetSecondMuonDxy() const    {return SecondMuonDxy_;}
+    double GetSecondMuonDz() const {return SecondMuonDz_;}
     bool GetSecondMuonIsGlobal() const   {return SecondMuonIsGlobal_;}
     bool GetSecondMuonIsTracker() const   {return SecondMuonIsTracker_;}
 
@@ -663,6 +669,7 @@ class DiffractiveZEvent {
     double GetPatMuon1NormalizedChi2() const   {return patMuon1NormalizedChi2_;}
     double GetPatMuon1MatchedStations() const   {return patMuon1MatchedStations_;}
     double GetPatMuon1Dxy() const    {return patMuon1Dxy_;}
+    double GetPatMuon1Dz() const {return patMuon1Dz_;}
     bool GetPatMuon1IsGlobal() const   {return patMuon1IsGlobal_;}
     bool GetPatMuon1IsTracker() const   {return patMuon1IsTracker_;}
     double GetPatMuon2TrackerHits() const   {return patMuon2TrackerHits_;}
@@ -670,6 +677,7 @@ class DiffractiveZEvent {
     double GetPatMuon2NormalizedChi2() const   {return patMuon2NormalizedChi2_;}
     double GetPatMuon2MatchedStations() const   {return patMuon2MatchedStations_;}
     double GetPatMuon2Dxy() const    {return patMuon2Dxy_;}
+    double GetPatMuon2Dz() const {return patMuon2Dz_;}
     bool GetPatMuon2IsGlobal() const   {return patMuon2IsGlobal_;}
     bool GetPatMuon2IsTracker() const   {return patMuon2IsTracker_;}
 
@@ -859,6 +867,7 @@ class DiffractiveZEvent {
     double LeadingMuonNormalizedChi2_;
     double LeadingMuonMatchedStations_;
     double LeadingMuonDxy_;
+    double LeadingMuonDz_;
     bool LeadingMuonIsGlobal_;
     bool LeadingMuonIsTracker_;
     double SecondMuonTrackerHits_;
@@ -866,6 +875,7 @@ class DiffractiveZEvent {
     double SecondMuonNormalizedChi2_;
     double SecondMuonMatchedStations_;
     double SecondMuonDxy_;
+    double SecondMuonDz_;
     bool SecondMuonIsGlobal_;
     bool SecondMuonIsTracker_;
 
@@ -1052,6 +1062,7 @@ class DiffractiveZEvent {
     double patMuon1NormalizedChi2_;
     double patMuon1MatchedStations_;
     double patMuon1Dxy_;
+    double patMuon1Dz_;
     bool patMuon1IsGlobal_;
     bool patMuon1IsTracker_;
     double patMuon2TrackerHits_;
@@ -1059,6 +1070,7 @@ class DiffractiveZEvent {
     double patMuon2NormalizedChi2_;
     double patMuon2MatchedStations_;
     double patMuon2Dxy_;
+    double patMuon2Dz_;
     bool patMuon2IsGlobal_;
     bool patMuon2IsTracker_;
 
