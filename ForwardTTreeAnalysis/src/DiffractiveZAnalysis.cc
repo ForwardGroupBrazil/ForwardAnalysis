@@ -588,9 +588,11 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     if(!MuonVector[0]->innerTrack().isNull()){
       eventData.SetLeadingMuonPixelHits(MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
       eventData.SetLeadingMuonDxy(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+      eventData.SetLeadingMuonDz(MuonVector[0]->innerTrack()->dz(vertex->at(0).position()));
     }else{
       eventData.SetLeadingMuonPixelHits(-999.);
       eventData.SetLeadingMuonDxy(-999.);
+      eventData.SetLeadingMuonDz(-999.);
     }
     if(!MuonVector[0]->globalTrack().isNull()){
       eventData.SetLeadingMuonNormalizedChi2(MuonVector[0]->globalTrack()->normalizedChi2());
@@ -609,9 +611,11 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     if(!MuonVector[1]->innerTrack().isNull()){
       eventData.SetSecondMuonPixelHits(MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits());
       eventData.SetSecondMuonDxy(MuonVector[1]->innerTrack()->dxy(vertex->at(0).position()));
+      eventData.SetSecondMuonDz(MuonVector[1]->innerTrack()->dz(vertex->at(0).position()));
     }else{
       eventData.SetSecondMuonPixelHits(-999.);
       eventData.SetSecondMuonDxy(-999.);
+      eventData.SetSecondMuonDz(-999.);
     }
     if(!MuonVector[1]->globalTrack().isNull()){
       eventData.SetSecondMuonNormalizedChi2(MuonVector[1]->globalTrack()->normalizedChi2());
@@ -660,6 +664,7 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     eventData.SetLeadingMuonNormalizedChi2(-999.);
     eventData.SetLeadingMuonMatchedStations(-999.);
     eventData.SetLeadingMuonDxy(-999.);
+    eventData.SetLeadingMuonDz(-999.);
     eventData.SetLeadingMuonIsGlobal(false);
     eventData.SetLeadingMuonIsTracker(false);
     eventData.SetSecondMuonTrackerHits(-999.);
@@ -667,6 +672,7 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     eventData.SetSecondMuonNormalizedChi2(-999.);
     eventData.SetSecondMuonMatchedStations(-999.);
     eventData.SetSecondMuonDxy(-999.);
+    eventData.SetSecondMuonDz(-999.);
     eventData.SetSecondMuonIsGlobal(false);
     eventData.SetSecondMuonIsTracker(false);
   } 
@@ -2095,9 +2101,11 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     if(!PatMuonVector[0]->innerTrack().isNull()){
       eventData.SetPatMuon1PixelHits(PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits());
       eventData.SetPatMuon1Dxy(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()));
+      eventData.SetPatMuon1Dz(PatMuonVector[0]->innerTrack()->dz(vertex->at(0).position()));
     }else{
       eventData.SetPatMuon1PixelHits(-999.);
       eventData.SetPatMuon1Dxy(-999.);
+      eventData.SetPatMuon1Dz(-999.);
     }
     if(!PatMuonVector[0]->globalTrack().isNull()){
       eventData.SetPatMuon1NormalizedChi2(PatMuonVector[0]->globalTrack()->normalizedChi2());
@@ -2117,9 +2125,11 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     if(!PatMuonVector[1]->innerTrack().isNull()){
       eventData.SetPatMuon2PixelHits(PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits());
       eventData.SetPatMuon2Dxy(PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position()));
+      eventData.SetPatMuon2Dz(PatMuonVector[1]->innerTrack()->dz(vertex->at(0).position()));
     }else{
       eventData.SetPatMuon2PixelHits(-999.);
       eventData.SetPatMuon2Dxy(-999.);
+      eventData.SetPatMuon2Dz(-999.);
     }
     if(!PatMuonVector[1]->globalTrack().isNull()){
       eventData.SetPatMuon2NormalizedChi2(PatMuonVector[1]->globalTrack()->normalizedChi2());
@@ -2165,6 +2175,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatMuon1NormalizedChi2(-999.);
     eventData.SetPatMuon1MatchedStations(-999.);
     eventData.SetPatMuon1Dxy(-999.);
+    eventData.SetPatMuon1Dz(-999.);
     eventData.SetPatMuon1IsGlobal(false);
     eventData.SetPatMuon1IsTracker(false);
     eventData.SetPatMuon2TrackerHits(-999.);
@@ -2172,6 +2183,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatMuon2NormalizedChi2(-999.);
     eventData.SetPatMuon2MatchedStations(-999.);
     eventData.SetPatMuon2Dxy(-999.);
+    eventData.SetPatMuon2Dz(-999.);
     eventData.SetPatMuon2IsGlobal(false);
     eventData.SetPatMuon2IsTracker(false);
     eventData.SetPatDiMuonMass(-999.);
