@@ -214,6 +214,7 @@ void DiffractiveZEvent::reset(){
   patMuon1NormalizedChi2_ = -999.;
   patMuon1MatchedStations_ = -999.;
   patMuon1Dxy_ = -999.;
+  patMuon1Dz_ = -999.;
   patMuon1IsGlobal_ = false;
   patMuon1IsTracker_ = false;
   patMuon2TrackerHits_ = -999.;
@@ -221,6 +222,7 @@ void DiffractiveZEvent::reset(){
   patMuon2NormalizedChi2_ = -999.;
   patMuon2MatchedStations_ = -999.;
   patMuon2Dxy_ = -999.;
+  patMuon2Dz_ = -999.;
   patMuon2IsGlobal_ = false;
   patMuon2IsTracker_ = false;
 
@@ -309,6 +311,7 @@ void DiffractiveZEvent::reset(){
   LeadingMuonNormalizedChi2_ = -999.;
   LeadingMuonMatchedStations_ = -999.;
   LeadingMuonDxy_ = -999.;
+  LeadingMuonDz_ = -999.;
   LeadingMuonIsGlobal_ = false;
   LeadingMuonIsTracker_ = false;
   SecondMuonTrackerHits_ = -999.;
@@ -316,6 +319,7 @@ void DiffractiveZEvent::reset(){
   SecondMuonNormalizedChi2_ = -999.;
   SecondMuonMatchedStations_ = -999.;
   SecondMuonDxy_ = -999.;
+  SecondMuonDz_ = -999.;
   SecondMuonIsGlobal_ = false;
   SecondMuonIsTracker_ = false;
 
