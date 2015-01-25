@@ -349,6 +349,8 @@ void DiffractiveZEvent::reset(){
   LeadingElectronDist_ = -999.;
   LeadingElectronInnerHits_ = -999.;
   LeadingElectronHE_ = -999.;
+  LeadingElectronIsWP95_ = false;
+  LeadingElectronIsWP80_ = false;
   SecondElectronDeltaPhiTkClu_ = -999.;
   SecondElectronDeltaEtaTkClu_ = -999.;
   SecondElectronSigmaIeIe_ = -999.;
@@ -356,6 +358,8 @@ void DiffractiveZEvent::reset(){
   SecondElectronDist_ = -999.;
   SecondElectronInnerHits_ = -999.;
   SecondElectronHE_ = -999.;
+  SecondElectronIsWP95_ = false;
+  SecondElectronIsWP80_ = false;
   patElectron1DeltaPhiTkClu_ = -999.;
   patElectron1DeltaEtaTkClu_ = -999.;
   patElectron1SigmaIeIe_ = -999.;
@@ -363,6 +367,8 @@ void DiffractiveZEvent::reset(){
   patElectron1Dist_ = -999.;
   patElectron1InnerHits_ = -999.;
   patElectron1HE_ = -999.;
+  patElectron1IsWP95_ = false;
+  patElectron1IsWP80_ = false;
   patElectron2DeltaPhiTkClu_ = -999.;
   patElectron2DeltaEtaTkClu_ = -999.;
   patElectron2SigmaIeIe_ = -999.;
@@ -370,6 +376,8 @@ void DiffractiveZEvent::reset(){
   patElectron2Dist_ = -999.;
   patElectron2InnerHits_ = -999.;
   patElectron2HE_ = -999.;
+  patElectron2IsWP95_ = false;
+  patElectron2IsWP80_ = false;
 
   //ZDCdigifC_.clear();
 
