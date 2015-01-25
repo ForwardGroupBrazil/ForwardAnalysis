@@ -580,33 +580,33 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
       std::cout << "pz Z: " << DimuonSystem.pz() << std::endl;
     }
 
- if(MuonVector[0]->isGlobalMuon() && MuonVector[0]->isTrackerMuon()){
-if(!MuonVector[0]->globalTrack().isNull() && MuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
-if(!MuonVector[0]->track().isNull() && MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
-if(!MuonVector[0]->innerTrack().isNull() && MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
-if(MuonVector[0]->numberOfMatchedStations() > 1 && MuonVector[0]->globalTrack()->normalizedChi2() < 10. && fabs(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
-eventData.SetLeadingMuonIsGood(true);
-}
-}
-}
-}
-}else{
-eventData.SetLeadingMuonIsGood(false);
-}
+    if(MuonVector[0]->isGlobalMuon() && MuonVector[0]->isTrackerMuon()){
+      if(!MuonVector[0]->globalTrack().isNull() && MuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
+	if(!MuonVector[0]->track().isNull() && MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
+	  if(!MuonVector[0]->innerTrack().isNull() && MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
+	    if(MuonVector[0]->numberOfMatchedStations() > 1 && MuonVector[0]->globalTrack()->normalizedChi2() < 10. && fabs(MuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
+	      eventData.SetLeadingMuonIsGood(true);
+	    }
+	  }
+	}
+      }
+    }else{
+      eventData.SetLeadingMuonIsGood(false);
+    }
 
- if(MuonVector[1]->isGlobalMuon() && MuonVector[1]->isTrackerMuon()){
-if(!MuonVector[1]->globalTrack().isNull() && MuonVector[1]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
-if(!MuonVector[1]->track().isNull() && MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
-if(!MuonVector[1]->innerTrack().isNull() && MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
-if(MuonVector[1]->numberOfMatchedStations() > 1 && MuonVector[1]->globalTrack()->normalizedChi2() < 10. && fabs(MuonVector[1]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
-eventData.SetSecondMuonIsGood(true);
-}
-}
-}
-}
-}else{
-eventData.SetSecondMuonIsGood(false);
-}
+    if(MuonVector[1]->isGlobalMuon() && MuonVector[1]->isTrackerMuon()){
+      if(!MuonVector[1]->globalTrack().isNull() && MuonVector[1]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
+	if(!MuonVector[1]->track().isNull() && MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
+	  if(!MuonVector[1]->innerTrack().isNull() && MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
+	    if(MuonVector[1]->numberOfMatchedStations() > 1 && MuonVector[1]->globalTrack()->normalizedChi2() < 10. && fabs(MuonVector[1]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
+	      eventData.SetSecondMuonIsGood(true);
+	    }
+	  }
+	}
+      }
+    }else{
+      eventData.SetSecondMuonIsGood(false);
+    }
 
     if(!MuonVector[0]->track().isNull()){ 
       eventData.SetLeadingMuonTrackerHits(MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
@@ -2123,33 +2123,33 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "" << std::endl;
     }
 
- if(PatMuonVector[0]->isGlobalMuon() && PatMuonVector[0]->isTrackerMuon()){
-if(!PatMuonVector[0]->globalTrack().isNull() && PatMuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
-if(!PatMuonVector[0]->track().isNull() && PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
-if(!PatMuonVector[0]->innerTrack().isNull() && PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
-if(PatMuonVector[0]->numberOfMatchedStations() > 1 && PatMuonVector[0]->globalTrack()->normalizedChi2() < 10. && fabs(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
-eventData.SetPatMuon1IsGood(true);
-}
-}
-}
-}
-}else{
-eventData.SetPatMuon1IsGood(false);
-}
+    if(PatMuonVector[0]->isGlobalMuon() && PatMuonVector[0]->isTrackerMuon()){
+      if(!PatMuonVector[0]->globalTrack().isNull() && PatMuonVector[0]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
+	if(!PatMuonVector[0]->track().isNull() && PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
+	  if(!PatMuonVector[0]->innerTrack().isNull() && PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
+	    if(PatMuonVector[0]->numberOfMatchedStations() > 1 && PatMuonVector[0]->globalTrack()->normalizedChi2() < 10. && fabs(PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
+	      eventData.SetPatMuon1IsGood(true);
+	    }
+	  }
+	}
+      }
+    }else{
+      eventData.SetPatMuon1IsGood(false);
+    }
 
- if(PatMuonVector[1]->isGlobalMuon() && PatMuonVector[1]->isTrackerMuon()){
-if(!PatMuonVector[1]->globalTrack().isNull() && PatMuonVector[1]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
-if(!PatMuonVector[1]->track().isNull() && PatMuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
-if(!PatMuonVector[1]->innerTrack().isNull() && PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
-if(PatMuonVector[1]->numberOfMatchedStations() > 1 && PatMuonVector[1]->globalTrack()->normalizedChi2() < 10. && fabs(PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
-eventData.SetPatMuon2IsGood(true);
-}
-}
-}
-}
-}else{
-eventData.SetPatMuon2IsGood(false);
-}
+    if(PatMuonVector[1]->isGlobalMuon() && PatMuonVector[1]->isTrackerMuon()){
+      if(!PatMuonVector[1]->globalTrack().isNull() && PatMuonVector[1]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
+	if(!PatMuonVector[1]->track().isNull() && PatMuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
+	  if(!PatMuonVector[1]->innerTrack().isNull() && PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
+	    if(PatMuonVector[1]->numberOfMatchedStations() > 1 && PatMuonVector[1]->globalTrack()->normalizedChi2() < 10. && fabs(PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
+	      eventData.SetPatMuon2IsGood(true);
+	    }
+	  }
+	}
+      }
+    }else{
+      eventData.SetPatMuon2IsGood(false);
+    }
 
     if(!PatMuonVector[0]->track().isNull()){
       eventData.SetPatMuon1TrackerHits(PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
