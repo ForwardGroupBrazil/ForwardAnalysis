@@ -374,6 +374,121 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
       std::cout << "H/E, electron2: " << ElectronVector[1]->hadronicOverEm() << std::endl;
       std::cout << "" << std::endl;
     }
+
+    // Electron ID 1
+    double isoTk1 = ElectronVector[0]->dr03TkSumPt()/ElectronVector[0]->pt();
+    double isoEcal1 = ElectronVector[0]->dr03EcalRecHitSumEt()/ElectronVector[0]->pt();
+    double isoHcal1 = ElectronVector[0]->dr03HcalTowerSumEt()/ElectronVector[0]->pt();
+    bool isoBarrel1WP95 = false;
+    bool isoEndCap1WP95 = false;
+    bool isolation1WP95 = false;
+    bool eleEndCap1WP95 = false;
+    bool eleBarrel1WP95 = false;
+    bool candSel1WP95 = false;
+    bool isoBarrel1WP80 = false;
+    bool isoEndCap1WP80 = false;
+    bool isolation1WP80 = false;
+    bool eleEndCap1WP80 = false;
+    bool eleBarrel1WP80 = false;
+    bool candSel1WP80 = false;
+
+    //Isolation Barrel
+    if ((fabs(ElectronVector[0]->eta()) <= 1.4442) ){
+      if (isoTk1<0.15 && isoEcal1<2.0 && isoHcal1<0.12) isoBarrel1WP95 = true;
+      if (isoTk1<0.09 && isoEcal1<0.07 && isoHcal1<0.10) isoBarrel1WP80 = true;
+    }
+
+    // Isolation Endcap
+    if ((fabs(ElectronVector[0]->eta()) >= 1.5660) && (fabs(ElectronVector[0]->eta()) <= 2.5)){
+      if (isoTk1<0.08 && isoEcal1<0.06 && isoHcal1<0.05) isoEndCap1WP95 = true;
+      if (isoTk1<0.04 && isoEcal1<0.05 && isoHcal1<0.025) isoEndCap1WP80 = true;
+    }
+    if ((isoEndCap1WP95 || isoBarrel1WP95)) isolation1WP95 = true;
+    if ((isoEndCap1WP80 || isoBarrel1WP80)) isolation1WP80 = true;
+
+    // Quality criteria Barrel
+    if ((fabs(ElectronVector[0]->eta()) <= 1.4442) ){
+      if (InnerHits1 <= 1 && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && ElectronVector[0]->sigmaIetaIeta() < 0.01 && ElectronVector[0]->hadronicOverEm() < 0.15 ) eleBarrel1WP95 = true;
+      if (InnerHits1 <= 0 && (fabs(ElectronVector[0]->convDcot()) >= 0.02 || fabs(ElectronVector[0]->convDist()) >= 0.02 ) && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.004 && fabs(ElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.06 && ElectronVector[0]->sigmaIetaIeta() < 0.01 && ElectronVector[0]->hadronicOverEm() < 0.04 ) eleBarrel1WP80 = true;
+    }
+
+    // Quality criteria Endcap
+    if ((fabs(ElectronVector[0]->eta()) >= 1.5660) && (fabs(ElectronVector[0]->eta()) <= 2.5)){
+      if (InnerHits1 <= 1 && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.01 && ElectronVector[0]->sigmaIetaIeta() < 0.03 && ElectronVector[0]->hadronicOverEm() < 0.07) eleEndCap1WP95 = true;
+      if (InnerHits1 <= 0 && (fabs(ElectronVector[0]->convDcot()) >= 0.02 || fabs(ElectronVector[0]->convDist()) >= 0.02 ) && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(ElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && ElectronVector[0]->sigmaIetaIeta() < 0.03 && ElectronVector[0]->hadronicOverEm() < 0.025) eleEndCap1WP80 = true;
+    }
+    if ((eleEndCap1WP95 || eleBarrel1WP95)) candSel1WP95 = true;
+    if ((eleEndCap1WP80 || eleBarrel1WP80)) candSel1WP80 = true;
+    if(isolation1WP80 && candSel1WP80){
+      eventData.SetLeadingElectronIsWP80(true);
+    }else{
+      eventData.SetLeadingElectronIsWP80(false);
+    }
+    if(isolation1WP95 && candSel1WP95){
+      eventData.SetLeadingElectronIsWP95(true);
+    }else{
+      eventData.SetLeadingElectronIsWP95(false);
+    }
+
+    // Electron ID 2
+    double isoTk2 = ElectronVector[1]->dr03TkSumPt()/ElectronVector[1]->pt();
+    double isoEcal2 = ElectronVector[1]->dr03EcalRecHitSumEt()/ElectronVector[1]->pt();
+    double isoHcal2 = ElectronVector[1]->dr03HcalTowerSumEt()/ElectronVector[1]->pt();
+
+    bool isoBarrel2WP95 = false;
+    bool isoEndCap2WP95 = false;
+    bool isolation2WP95 = false;
+    bool eleEndCap2WP95 = false;
+    bool eleBarrel2WP95 = false;
+    bool candSel2WP95 = false;
+    bool isoBarrel2WP80 = false;
+    bool isoEndCap2WP80 = false;
+    bool isolation2WP80 = false;
+    bool eleEndCap2WP80 = false;
+    bool eleBarrel2WP80 = false;
+    bool candSel2WP80 = false;
+
+    //Isolation Barrel
+    if ((fabs(ElectronVector[1]->eta()) <= 1.4442) ){
+      if (isoTk2<0.15 && isoEcal2<2.0 && isoHcal2<0.12) isoBarrel2WP95 = true;
+      if (isoTk2<0.09 && isoEcal2<0.07 && isoHcal2<0.10) isoBarrel2WP80 = true;
+    }
+
+    // Isolation Endcap
+    if ((fabs(ElectronVector[1]->eta()) >= 1.5660) && (fabs(ElectronVector[1]->eta()) <= 2.5)){
+      if (isoTk2<0.08 && isoEcal2<0.06 && isoHcal2<0.05) isoEndCap2WP95 = true;
+      if (isoTk2<0.04 && isoEcal2<0.05 && isoHcal2<0.025) isoEndCap2WP80 = true;
+    }
+
+    if ((isoEndCap2WP95 || isoBarrel2WP95)) isolation2WP95 = true;
+    if ((isoEndCap2WP80 || isoBarrel2WP80)) isolation2WP80 = true;
+
+    // Quality criteria Barrel
+    if ((fabs(ElectronVector[1]->eta()) <= 1.4442) ){
+      if (InnerHits2 <= 1 && fabs(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && ElectronVector[1]->sigmaIetaIeta() < 0.01 && ElectronVector[1]->hadronicOverEm() < 0.15 ) eleBarrel2WP95 = true;
+      if (InnerHits2 <= 0 && (fabs(ElectronVector[1]->convDcot()) >= 0.02 || fabs(ElectronVector[1]->convDist()) >= 0.02 ) && fabs(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.004 && fabs(ElectronVector[1]->deltaPhiSuperClusterTrackAtVtx()) < 0.06 && ElectronVector[1]->sigmaIetaIeta() < 0.01 && ElectronVector[1]->hadronicOverEm() < 0.04 ) eleBarrel2WP80 = true;
+    }
+
+    // Quality criteria Endcap
+    if ((fabs(ElectronVector[1]->eta()) >= 1.5660) && (fabs(ElectronVector[1]->eta()) <= 2.5)){
+      if (InnerHits2 <= 1 && fabs(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.01 && ElectronVector[1]->sigmaIetaIeta() < 0.03 && ElectronVector[1]->hadronicOverEm() < 0.07) eleEndCap2WP95 = true;
+      if (InnerHits2 <= 0 && (fabs(ElectronVector[1]->convDcot()) >= 0.02 || fabs(ElectronVector[1]->convDist()) >= 0.02 ) && fabs(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(ElectronVector[1]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && ElectronVector[1]->sigmaIetaIeta() < 0.03 && ElectronVector[1]->hadronicOverEm() < 0.025) eleEndCap2WP80 = true;
+    }
+    if ((eleEndCap2WP95 || eleBarrel2WP95)) candSel2WP95 = true;
+    if ((eleEndCap2WP80 || eleBarrel2WP80)) candSel2WP80 = true;
+
+    if(isolation2WP80 && candSel2WP80){
+      eventData.SetSecondElectronIsWP80(true);
+    }else{
+      eventData.SetSecondElectronIsWP80(false);
+    }
+    if(isolation2WP95 && candSel2WP95){
+      eventData.SetSecondElectronIsWP95(true);
+    }else{
+      eventData.SetSecondElectronIsWP95(false);
+    }
+
+
   }
   else {
     eventData.SetDiElectronMass(-999.);
@@ -418,6 +533,8 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetLeadingElectronDist(-999.);
     eventData.SetLeadingElectronInnerHits(-999.);
     eventData.SetLeadingElectronHE(-999.);
+    eventData.SetLeadingElectronIsWP80(false);
+    eventData.SetLeadingElectronIsWP95(false);
     eventData.SetSecondElectronDeltaPhiTkClu(-999.);
     eventData.SetSecondElectronDeltaEtaTkClu(-999.);
     eventData.SetSecondElectronSigmaIeIe(-999.);
@@ -425,6 +542,8 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetSecondElectronDist(-999.);
     eventData.SetSecondElectronInnerHits(-999.);
     eventData.SetSecondElectronHE(-999.);
+    eventData.SetSecondElectronIsWP80(false);
+    eventData.SetSecondElectronIsWP95(false);
 
   }
 }
@@ -2383,6 +2502,119 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "H/E, electron2: " << PatElectronVector[1]->hadronicOverEm() << std::endl;
       std::cout << "" << std::endl;
     }
+
+    // Electron ID 1
+    double isoTk1 = PatElectronVector[0]->dr03TkSumPt()/PatElectronVector[0]->pt();
+    double isoEcal1 = PatElectronVector[0]->dr03EcalRecHitSumEt()/PatElectronVector[0]->pt();
+    double isoHcal1 = PatElectronVector[0]->dr03HcalTowerSumEt()/PatElectronVector[0]->pt();
+    bool isoBarrel1WP95 = false;
+    bool isoEndCap1WP95 = false;
+    bool isolation1WP95 = false;
+    bool eleEndCap1WP95 = false;
+    bool eleBarrel1WP95 = false;
+    bool candSel1WP95 = false;
+    bool isoBarrel1WP80 = false;
+    bool isoEndCap1WP80 = false;
+    bool isolation1WP80 = false;
+    bool eleEndCap1WP80 = false;
+    bool eleBarrel1WP80 = false;
+    bool candSel1WP80 = false;
+
+    //Isolation Barrel
+    if ((fabs(PatElectronVector[0]->eta()) <= 1.4442) ){
+      if (isoTk1<0.15 && isoEcal1<2.0 && isoHcal1<0.12) isoBarrel1WP95 = true;
+      if (isoTk1<0.09 && isoEcal1<0.07 && isoHcal1<0.10) isoBarrel1WP80 = true;
+    }
+    // Isolation Endcap
+    if ((fabs(PatElectronVector[0]->eta()) >= 1.5660) && (fabs(PatElectronVector[0]->eta()) <= 2.5)){
+      if (isoTk1<0.08 && isoEcal1<0.06 && isoHcal1<0.05) isoEndCap1WP95 = true;
+      if (isoTk1<0.04 && isoEcal1<0.05 && isoHcal1<0.025) isoEndCap1WP80 = true;
+    }
+    if ((isoEndCap1WP95 || isoBarrel1WP95)) isolation1WP95 = true;
+    if ((isoEndCap1WP80 || isoBarrel1WP80)) isolation1WP80 = true;
+
+    // Quality criteria Barrel
+    if ((fabs(PatElectronVector[0]->eta()) <= 1.4442) ){
+      if (InnerHits1 <= 1 && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && PatElectronVector[0]->sigmaIetaIeta() < 0.01 && PatElectronVector[0]->hadronicOverEm() < 0.15 ) eleBarrel1WP95 = true;
+      if (InnerHits1 <= 0 && (fabs(PatElectronVector[0]->convDcot()) >= 0.02 || fabs(PatElectronVector[0]->convDist()) >= 0.02 ) && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.004 && fabs(PatElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.06 && PatElectronVector[0]->sigmaIetaIeta() < 0.01 && PatElectronVector[0]->hadronicOverEm() < 0.04 ) eleBarrel1WP80 = true;
+    }
+
+    // Quality criteria Endcap
+    if ((fabs(PatElectronVector[0]->eta()) >= 1.5660) && (fabs(PatElectronVector[0]->eta()) <= 2.5)){
+      if (InnerHits1 <= 1 && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.01 && PatElectronVector[0]->sigmaIetaIeta() < 0.03 && PatElectronVector[0]->hadronicOverEm() < 0.07) eleEndCap1WP95 = true;
+      if (InnerHits1 <= 0 && (fabs(PatElectronVector[0]->convDcot()) >= 0.02 || fabs(PatElectronVector[0]->convDist()) >= 0.02 ) && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(PatElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && PatElectronVector[0]->sigmaIetaIeta() < 0.03 && PatElectronVector[0]->hadronicOverEm() < 0.025) eleEndCap1WP80 = true;
+    }
+    if ((eleEndCap1WP95 || eleBarrel1WP95)) candSel1WP95 = true;
+    if ((eleEndCap1WP80 || eleBarrel1WP80)) candSel1WP80 = true;
+    if(isolation1WP80 && candSel1WP80){
+      eventData.SetPatElectron1IsWP80(true);
+    }else{
+      eventData.SetPatElectron1IsWP80(false);
+    }
+    if(isolation1WP95 && candSel1WP95){
+      eventData.SetPatElectron1IsWP95(true);
+    }else{
+      eventData.SetPatElectron1IsWP95(false);
+    }
+
+
+    // Electron ID 2
+    double isoTk2 = PatElectronVector[1]->dr03TkSumPt()/PatElectronVector[1]->pt();
+    double isoEcal2 = PatElectronVector[1]->dr03EcalRecHitSumEt()/PatElectronVector[1]->pt();
+    double isoHcal2 = PatElectronVector[1]->dr03HcalTowerSumEt()/PatElectronVector[1]->pt();
+
+    bool isoBarrel2WP95 = false;
+    bool isoEndCap2WP95 = false;
+    bool isolation2WP95 = false;
+    bool eleEndCap2WP95 = false;
+    bool eleBarrel2WP95 = false;
+    bool candSel2WP95 = false;
+    bool isoBarrel2WP80 = false;
+    bool isoEndCap2WP80 = false;
+    bool isolation2WP80 = false;
+    bool eleEndCap2WP80 = false;
+    bool eleBarrel2WP80 = false;
+    bool candSel2WP80 = false;
+
+    //Isolation Barrel
+    if ((fabs(PatElectronVector[1]->eta()) <= 1.4442) ){
+      if (isoTk2<0.15 && isoEcal2<2.0 && isoHcal2<0.12) isoBarrel2WP95 = true;
+      if (isoTk2<0.09 && isoEcal2<0.07 && isoHcal2<0.10) isoBarrel2WP80 = true;
+    }
+    // Isolation Endcap
+    if ((fabs(PatElectronVector[1]->eta()) >= 1.5660) && (fabs(PatElectronVector[1]->eta()) <= 2.5)){
+      if (isoTk2<0.08 && isoEcal2<0.06 && isoHcal2<0.05) isoEndCap2WP95 = true;
+      if (isoTk2<0.04 && isoEcal2<0.05 && isoHcal2<0.025) isoEndCap2WP80 = true;
+    }
+
+    if ((isoEndCap2WP95 || isoBarrel2WP95)) isolation2WP95 = true;
+    if ((isoEndCap2WP80 || isoBarrel2WP80)) isolation2WP80 = true;
+
+    // Quality criteria Barrel
+    if ((fabs(PatElectronVector[1]->eta()) <= 1.4442) ){
+      if (InnerHits2 <= 1 && fabs(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && PatElectronVector[1]->sigmaIetaIeta() < 0.01 && PatElectronVector[1]->hadronicOverEm() < 0.15 ) eleBarrel2WP95 = true;
+      if (InnerHits2 <= 0 && (fabs(PatElectronVector[1]->convDcot()) >= 0.02 || fabs(PatElectronVector[1]->convDist()) >= 0.02 ) && fabs(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.004 && fabs(PatElectronVector[1]->deltaPhiSuperClusterTrackAtVtx()) < 0.06 && PatElectronVector[1]->sigmaIetaIeta() < 0.01 && PatElectronVector[1]->hadronicOverEm() < 0.04 ) eleBarrel2WP80 = true;
+    }
+
+    // Quality criteria Endcap
+    if ((fabs(PatElectronVector[1]->eta()) >= 1.5660) && (fabs(PatElectronVector[1]->eta()) <= 2.5)){
+      if (InnerHits2 <= 1 && fabs(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.01 && PatElectronVector[1]->sigmaIetaIeta() < 0.03 && PatElectronVector[1]->hadronicOverEm() < 0.07) eleEndCap2WP95 = true;
+      if (InnerHits2 <= 0 && (fabs(PatElectronVector[1]->convDcot()) >= 0.02 || fabs(PatElectronVector[1]->convDist()) >= 0.02 ) && fabs(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(PatElectronVector[1]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && PatElectronVector[1]->sigmaIetaIeta() < 0.03 && PatElectronVector[1]->hadronicOverEm() < 0.025) eleEndCap2WP80 = true;
+    }
+    if ((eleEndCap2WP95 || eleBarrel2WP95)) candSel2WP95 = true;
+    if ((eleEndCap2WP80 || eleBarrel2WP80)) candSel2WP80 = true;
+
+    if(isolation2WP80 && candSel2WP80){
+      eventData.SetPatElectron2IsWP80(true);
+    }else{
+      eventData.SetPatElectron2IsWP80(false);
+    }
+    if(isolation2WP95 && candSel2WP95){
+      eventData.SetPatElectron2IsWP95(true);
+    }else{
+      eventData.SetPatElectron2IsWP95(false);
+    }
+
   }
   else{
     eventData.SetPatElectron1Pt(-999.);
@@ -2422,6 +2654,8 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron1Dist(-999.);
     eventData.SetPatElectron1InnerHits(-999.);
     eventData.SetPatElectron1HE(-999.);
+    eventData.SetPatElectron1IsWP80(false);
+    eventData.SetPatElectron1IsWP95(false);
     eventData.SetPatElectron2DeltaPhiTkClu(-999.);
     eventData.SetPatElectron2DeltaEtaTkClu(-999.);
     eventData.SetPatElectron2SigmaIeIe(-999.);
@@ -2429,6 +2663,8 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron2Dist(-999.);
     eventData.SetPatElectron2InnerHits(-999.);
     eventData.SetPatElectron2HE(-999.);
+    eventData.SetPatElectron2IsWP80(false);
+    eventData.SetPatElectron2IsWP95(false);
   }
 
 }

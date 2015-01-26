@@ -440,16 +440,16 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
     double isoHcal1 = ElectronVector[0]->dr03HcalTowerSumEt()/ElectronVector[0]->pt();
     bool isoBarrel1WP95 = false;
     bool isoEndCap1WP95 = false;
-    bool isolationWP95 = false;
+    bool isolation1WP95 = false;
     bool eleEndCap1WP95 = false;
     bool eleBarrel1WP95 = false;
-    bool candSelWP95 = false;
+    bool candSel1WP95 = false;
     bool isoBarrel1WP80 = false;
     bool isoEndCap1WP80 = false;
-    bool isolationWP80 = false;
+    bool isolation1WP80 = false;
     bool eleEndCap1WP80 = false;
     bool eleBarrel1WP80 = false;
-    bool candSelWP80 = false;
+    bool candSel1WP80 = false;
 
     //Isolation Barrel
     if ((fabs(ElectronVector[0]->eta()) <= 1.4442) ){
@@ -463,8 +463,8 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
       if (isoTk1<0.04 && isoEcal1<0.05 && isoHcal1<0.025) isoEndCap1WP80 = true;
     }
 
-    if ((isoEndCap1WP95 || isoBarrel1WP95)) isolationWP95 = true;
-    if ((isoEndCap1WP80 || isoBarrel1WP80)) isolationWP80 = true;
+    if ((isoEndCap1WP95 || isoBarrel1WP95)) isolation1WP95 = true;
+    if ((isoEndCap1WP80 || isoBarrel1WP80)) isolation1WP80 = true;
 
     // Quality criteria Barrel
     if ((fabs(ElectronVector[0]->eta()) <= 1.4442) ){
@@ -478,16 +478,16 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
       if (InnerHits1 <= 0 && (fabs(ElectronVector[0]->convDcot()) >= 0.02 || fabs(ElectronVector[0]->convDist()) >= 0.02 ) && fabs(ElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(ElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && ElectronVector[0]->sigmaIetaIeta() < 0.03 && ElectronVector[0]->hadronicOverEm() < 0.025) eleEndCap1WP80 = true;
     }
 
-    if ((eleEndCap1WP95 || eleBarrel1WP95)) candSelWP95 = true;
-    if ((eleEndCap1WP80 || eleBarrel1WP80)) candSelWP80 = true;
+    if ((eleEndCap1WP95 || eleBarrel1WP95)) candSel1WP95 = true;
+    if ((eleEndCap1WP80 || eleBarrel1WP80)) candSel1WP80 = true;
 
-    if(isolationWP80 && candSelWP80){
+    if(isolation1WP80 && candSel1WP80){
       eventData.SetLeadingElectronIsWP80(true);
     }else{
       eventData.SetLeadingElectronIsWP80(false);
     }
 
-    if(isolationWP95 && candSelWP95){
+    if(isolation1WP95 && candSel1WP95){
       eventData.SetLeadingElectronIsWP95(true);
     }else{
       eventData.SetLeadingElectronIsWP95(false);
@@ -2262,16 +2262,16 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     double isoHcal1 = PatElectronVector[0]->dr03HcalTowerSumEt()/PatElectronVector[0]->pt();
     bool isoBarrel1WP95 = false;
     bool isoEndCap1WP95 = false;
-    bool isolationWP95 = false;
+    bool isolation1WP95 = false;
     bool eleEndCap1WP95 = false;
     bool eleBarrel1WP95 = false;
-    bool candSelWP95 = false;
+    bool candSel1WP95 = false;
     bool isoBarrel1WP80 = false;
     bool isoEndCap1WP80 = false;
-    bool isolationWP80 = false;
+    bool isolation1WP80 = false;
     bool eleEndCap1WP80 = false;
     bool eleBarrel1WP80 = false;
-    bool candSelWP80 = false;
+    bool candSel1WP80 = false;
 
     //Isolation Barrel
     if ((fabs(PatElectronVector[0]->eta()) <= 1.4442) ){
@@ -2285,8 +2285,8 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
       if (isoTk1<0.04 && isoEcal1<0.05 && isoHcal1<0.025) isoEndCap1WP80 = true;
     }
 
-    if ((isoEndCap1WP95 || isoBarrel1WP95)) isolationWP95 = true;
-    if ((isoEndCap1WP80 || isoBarrel1WP80)) isolationWP80 = true;
+    if ((isoEndCap1WP95 || isoBarrel1WP95)) isolation1WP95 = true;
+    if ((isoEndCap1WP80 || isoBarrel1WP80)) isolation1WP80 = true;
 
     // Quality criteria Barrel
     if ((fabs(PatElectronVector[0]->eta()) <= 1.4442) ){
@@ -2300,16 +2300,16 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
       if (InnerHits1 <= 0 && (fabs(PatElectronVector[0]->convDcot()) >= 0.02 || fabs(PatElectronVector[0]->convDist()) >= 0.02 ) && fabs(PatElectronVector[0]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(PatElectronVector[0]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && PatElectronVector[0]->sigmaIetaIeta() < 0.03 && PatElectronVector[0]->hadronicOverEm() < 0.025) eleEndCap1WP80 = true;
     }
 
-    if ((eleEndCap1WP95 || eleBarrel1WP95)) candSelWP95 = true;
-    if ((eleEndCap1WP80 || eleBarrel1WP80)) candSelWP80 = true;
+    if ((eleEndCap1WP95 || eleBarrel1WP95)) candSel1WP95 = true;
+    if ((eleEndCap1WP80 || eleBarrel1WP80)) candSel1WP80 = true;
 
-    if(isolationWP80 && candSelWP80){
+    if(isolation1WP80 && candSel1WP80){
       eventData.SetPatElectron1IsWP80(true);
     }else{
       eventData.SetPatElectron1IsWP80(false);
     }
 
-    if(isolationWP95 && candSelWP95){
+    if(isolation1WP95 && candSel1WP95){
       eventData.SetPatElectron1IsWP95(true);
     }else{
       eventData.SetPatElectron1IsWP95(false);
