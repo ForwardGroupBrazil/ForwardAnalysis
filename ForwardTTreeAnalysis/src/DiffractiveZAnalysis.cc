@@ -488,7 +488,6 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
       eventData.SetSecondElectronIsWP95(false);
     }
 
-
   }
   else {
     eventData.SetDiElectronMass(-999.);
@@ -553,7 +552,7 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
 
 void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug = true;
+  bool debug = false;
   MuonVector.clear();
 
   edm::Handle<reco::MuonCollection> muons;
@@ -677,12 +676,13 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
       if(!MuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
       if(!MuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << MuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
       std::cout << "Muon 1, Matched Stations: " << MuonVector[0]->numberOfMatchedStations() << std::endl;
-      if(!MuonVector[1]->innerTrack().isNull()){ 
+      if(!MuonVector[0]->innerTrack().isNull()){ 
 	std::cout << "Muon 1, dxy: " << MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
 	std::cout << "Muon 1, Number of Valid Pixel Hits: " << MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
       }
       std::cout << "Muon 1, Is Global Muon? " << MuonVector[0]->isGlobalMuon() << std::endl;
       std::cout << "Muon 1, Is Tracker Muon? " << MuonVector[0]->isTrackerMuon() << std::endl;
+
       if(!MuonVector[1]->track().isNull()) std::cout << "Muon 2, Tracker Hits: " << MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
       if(!MuonVector[1]->globalTrack().isNull()) std::cout << "Muon 2, Chi2/ndof: " << MuonVector[1]->globalTrack()->normalizedChi2() << std::endl;
       std::cout << "Muon 2, Matched Stations: " << MuonVector[1]->numberOfMatchedStations() << std::endl;
@@ -772,6 +772,7 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     eventData.SetSecondMuonMatchedStations(MuonVector[1]->numberOfMatchedStations());
     eventData.SetSecondMuonIsGlobal(MuonVector[1]->isGlobalMuon());
     eventData.SetSecondMuonIsTracker(MuonVector[1]->isTrackerMuon());
+
   }
   else{
     eventData.SetDiMuonMass(-999.);
@@ -2213,7 +2214,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       if(!PatMuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
       if(!PatMuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << PatMuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
       std::cout << "Muon 1, Matched Stations: " << PatMuonVector[0]->numberOfMatchedStations() << std::endl;
-      if(!PatMuonVector[1]->innerTrack().isNull()){
+      if(!PatMuonVector[0]->innerTrack().isNull()){
 	std::cout << "Muon 1, dxy: " << PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
 	std::cout << "Muon 1, Number of Valid Pixel Hits: " << PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
       }

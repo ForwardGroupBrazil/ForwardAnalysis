@@ -634,7 +634,7 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
       if(!MuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
       if(!MuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << MuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
       std::cout << "Muon 1, Matched Stations: " << MuonVector[0]->numberOfMatchedStations() << std::endl;
-      if(!PatMuonVector[1]->innerTrack().isNull()){
+      if(!PatMuonVector[0]->innerTrack().isNull()){
 	std::cout << "Muon 1, dxy: " << MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
 	std::cout << "Muon 1, Number of Valid Pixel Hits: " << MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
       }
@@ -2078,7 +2078,7 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
       if(!PatMuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << PatMuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
       if(!PatMuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << PatMuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
       std::cout << "Muon 1, Matched Stations: " << PatMuonVector[0]->numberOfMatchedStations() << std::endl;
-      if(!PatMuonVector[1]->innerTrack().isNull()){
+      if(!PatMuonVector[0]->innerTrack().isNull()){
 	std::cout << "Muon 1, dxy: " << PatMuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
 	std::cout << "Muon 1, Number of Valid Pixel Hits: " << PatMuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
       }
