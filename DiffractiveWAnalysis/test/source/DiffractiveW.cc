@@ -58,6 +58,10 @@ void DiffractiveW::LoadFile(std::string fileinput, std::string processinput){
 
 void DiffractiveW::CleanVariables(){
 
+  leptoneta = -999.;
+  leptonpt = -999.;
+  leptonphi = -999.;
+  deltaphi = -999.;
   bosonWMass = -999.;
   bosonWEta = -999.;
   bosonWPt = -999.;
@@ -105,18 +109,19 @@ void DiffractiveW::CreateHistos(std::string type){
   std::string step4 = "step4"; 
   std::string step5 = "step5";
   std::string step6 = "step6"; 
-  std::string step7 = "NGapCMS";
-  std::string step8 = "PGapCMS";
-  std::string step9 = "NGapCMSAndCASTOR";
-  std::string step10 = "PGapCMSAndCastorActivity";
-  std::string step11 = "NGapCMSAndWKinP";
-  std::string step12 = "PGapCMSAndWKinN";
-  std::string step13 = "NGapCMSAndCASTORAndWKinP";
-  std::string step14 = "PGapCMSAndCastorActivityAndWKinN";
-  std::string step15 = "NGapCASTOR";
-  std::string step16 = "NGapCASTORAndWKinP";
-  std::string step17 = "PGapCMSAndCASTOR";
-  std::string step18 = "PGapCMSAndCASTORAndWKinP";
+  std::string step7 = "step7";
+  std::string step8 = "NGapCMS";
+  std::string step9 = "PGapCMS";
+  std::string step10 = "NGapCMSAndCASTOR";
+  std::string step11 = "PGapCMSAndCastorActivity";
+  std::string step12 = "NGapCMSAndWKinP";
+  std::string step13 = "PGapCMSAndWKinN";
+  std::string step14 = "NGapCMSAndCASTORAndWKinP";
+  std::string step15 = "PGapCMSAndCastorActivityAndWKinN";
+  std::string step16 = "NGapCASTOR";
+  std::string step17 = "NGapCASTORAndWKinP";
+  std::string step18 = "PGapCMSAndCASTOR";
+  std::string step19 = "PGapCMSAndCASTORAndWKinP";
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -137,6 +142,7 @@ void DiffractiveW::CreateHistos(std::string type){
   Folders.push_back(step16);
   Folders.push_back(step17);
   Folders.push_back(step18);
+  Folders.push_back(step19);
 
   int nloop;
 
@@ -172,6 +178,14 @@ void DiffractiveW::CreateHistos(std::string type){
     m_hVector_LeadingLeptonDeltaPhiTkClu.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonSigmaIeIe.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonHE.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonPt.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonEta.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_DeltaPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonDxy.push_back( std::vector<TH1F*>() );
+    m_hVector_LeadingLeptonDz.push_back( std::vector<TH1F*>() );
+    m_hVector_METPt.push_back( std::vector<TH1F*>() );
+    m_hVector_METPhi.push_back( std::vector<TH1F*>() );
 
     // Detector
     m_hVector_sumEHFplus.push_back( std::vector<TH1F*>() );
@@ -204,7 +218,6 @@ void DiffractiveW::CreateHistos(std::string type){
     m_hVector_CastorMultiplicityVsLumi.push_back( std::vector<TH2F*>() );
     m_hVector_SectorVsTotalCastorEnergy.push_back( std::vector<TH2F*>() );
     m_hVector_SectorVsTotalCastorEnergyTProf.push_back( std::vector<TProfile*>() );
-
 
     // Event Information
     m_hVector_lumi.push_back( std::vector<TH1F*>() );
@@ -315,6 +328,39 @@ void DiffractiveW::CreateHistos(std::string type){
       sprintf(name,"LeadingLeptonHE_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_LeadingLeptonHE = new TH1F(name,"Leading Lepton; HE; N events",100,0,1);
       m_hVector_LeadingLeptonHE[j].push_back(histo_LeadingLeptonHE);
+
+      sprintf(name,"LeadingLeptonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonPt = new TH1F(name,"Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_LeadingLeptonPt[j].push_back(histo_LeadingLeptonPt);
+
+      sprintf(name,"LeadingLeptonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonEta = new TH1F(name,"#eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_LeadingLeptonEta[j].push_back(histo_LeadingLeptonEta);
+
+      sprintf(name,"LeadingLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonPhi = new TH1F(name,"#phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_LeadingLeptonPhi[j].push_back(histo_LeadingLeptonPhi);
+
+      sprintf(name,"DeltaPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DeltaPhi = new TH1F(name,"#Delta#phi Distribution; #Delta#phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_DeltaPhi[j].push_back(histo_DeltaPhi);
+
+      sprintf(name,"LeadingLeptonDz_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonDz = new TH1F(name,"dz Distribution; dz [mm]; N events",200,-50,50);
+      m_hVector_LeadingLeptonDz[j].push_back(histo_LeadingLeptonDz);
+
+      sprintf(name,"LeadingLeptonDxy_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_LeadingLeptonDxy = new TH1F(name,"dxy Distribution; dxy [mm]; N events",200,-50,50);
+      m_hVector_LeadingLeptonDxy[j].push_back(histo_LeadingLeptonDxy);
+
+      sprintf(name,"METPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_METPt = new TH1F(name,"Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_METPt[j].push_back(histo_METPt);
+
+      sprintf(name,"METPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_METPhi = new TH1F(name,"#phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_METPhi[j].push_back(histo_METPhi);
+
 
 
       // Detector
@@ -452,7 +498,7 @@ void DiffractiveW::CreateHistos(std::string type){
       sprintf(name,"vertex_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_vertex = new TH1F(name,"Number of Vertex; # Vertex; N events",25,0,25);
       m_hVector_vertex[j].push_back(histo_vertex);
-      
+
       sprintf(name,"pileup_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_pu = new TH1F(name,"Pile Up; # pile up; N events",25,0,25);
       m_hVector_pu[j].push_back(histo_pu);
@@ -561,6 +607,15 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_LeadingLeptonDeltaPhiTkClu[index].at(pileup)->Fill(DeltaPhiTkClu1,totalweight);
   m_hVector_LeadingLeptonSigmaIeIe[index].at(pileup)->Fill(sigmaIeIe1,totalweight);
   m_hVector_LeadingLeptonHE[index].at(pileup)->Fill(HE1,totalweight);
+  m_hVector_LeadingLeptonPt[index].at(pileup)->Fill(leptonpt,totalweight);
+  m_hVector_LeadingLeptonPhi[index].at(pileup)->Fill(leptonphi,totalweight);
+  m_hVector_LeadingLeptonEta[index].at(pileup)->Fill(leptoneta,totalweight);
+  m_hVector_DeltaPhi[index].at(pileup)->Fill(deltaphi,totalweight);
+  m_hVector_LeadingLeptonDxy[index].at(pileup)->Fill(eventdiffW->GetLeadingMuonDxy(),totalweight);
+  m_hVector_LeadingLeptonDz[index].at(pileup)->Fill(eventdiffW->GetLeadingMuonDz(),totalweight);
+  m_hVector_METPt[index].at(pileup)->Fill(eventdiffW->GetMETPt(),totalweight);
+  m_hVector_METPhi[index].at(pileup)->Fill(eventdiffW->GetMETPhi(),totalweight);
+
 
   // Detector
   m_hVector_sumEHFplus[index].at(pileup)->Fill(eventdiffW->GetSumEHFPlus(),totalweight);
@@ -678,6 +733,14 @@ void DiffractiveW::SaveHistos(std::string type,std::string typesel){
       m_hVector_LeadingLeptonDeltaPhiTkClu[j].at(i)->Write();
       m_hVector_LeadingLeptonSigmaIeIe[j].at(i)->Write();
       m_hVector_LeadingLeptonHE[j].at(i)->Write();
+      m_hVector_LeadingLeptonPt[j].at(i)->Write();
+      m_hVector_LeadingLeptonEta[j].at(i)->Write();
+      m_hVector_LeadingLeptonPhi[j].at(i)->Write();
+      m_hVector_DeltaPhi[j].at(i)->Write();
+      m_hVector_LeadingLeptonDxy[j].at(i)->Write();
+      m_hVector_LeadingLeptonDz[j].at(i)->Write();
+      m_hVector_METPt[j].at(i)->Write();
+      m_hVector_METPhi[j].at(i)->Write();
 
       // Detector Folder
       foldersFile[1]->cd();
@@ -990,6 +1053,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     bool isoBarrel1 = false;
     bool isoEndCap1 = false;
     bool isolation = false;
+    bool nocosmic = false;
     bool WKinN = false;
     bool WKinP = false;
     bool acceptEvt = false;
@@ -1153,12 +1217,17 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       selStatus = "Reco::Electron";
 
       bosonWMass = eventdiffW->GetBosonElectronMass();
+      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetLeadingElectronPt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(eventdiffW->GetLeadingElectronPhi()-eventdiffW->GetMETPhi())));
       bosonWEta = eventdiffW->GetLeadingElectronEta();
       bosonWPhi = eventdiffW->GetLeadingElectronPhi();
       bosonWPt = eventdiffW->GetLeadingElectronPt();
       bosonWCharge = eventdiffW->GetLeadingElectronCharge();
       NMuons = eventdiffW->GetMuonsN();
       NElectrons = eventdiffW->GetElectronsN();
+      leptoneta = eventdiffW->GetLeadingElectronEta();
+      leptonphi = eventdiffW->GetLeadingElectronPhi();
+      leptonpt = eventdiffW->GetLeadingElectronPt();
+      deltaphi = eventdiffW->GetLeadingElectronPhi()-eventdiffW->GetMETPhi();
 
       isoTk1 = eventdiffW->GetLeadingElectronTkDr03()/eventdiffW->GetLeadingElectronPt();
       isoEcal1 = eventdiffW->GetLeadingElectronEcalDr03()/eventdiffW->GetLeadingElectronPt();
@@ -1177,10 +1246,10 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	AEcastor = (eventdiffW->GetSumEHFMinus() - sumCastorEnergy)/(eventdiffW->GetSumEHFMinus() + sumCastorEnergy);
       }
 
-      if (eventdiffW->GetLeadingElectronPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt && eventdiffW->GetLeadingMuonPt()<10) presel = true;
+      if (eventdiffW->GetLeadingElectronPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
 
-      if(NElectrons==1) acceptEvt = true;
+      if(NElectrons==1 && NMuons==0) acceptEvt = true;
 
       //Isolation Electron
       if ((fabs (eventdiffW->GetLeadingElectronEta()) <= 1.4442) ){
@@ -1219,22 +1288,31 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       selStatus = "Reco::Muon";
 
       bosonWMass = eventdiffW->GetBosonMuonMass();
+      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetLeadingMuonPt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(eventdiffW->GetLeadingMuonPhi()-eventdiffW->GetMETPhi())));
       bosonWEta = eventdiffW->GetLeadingMuonEta();
       bosonWPhi = eventdiffW->GetLeadingMuonPhi();
       bosonWPt = eventdiffW->GetLeadingMuonPt();
       bosonWCharge = eventdiffW->GetLeadingMuonCharge();
       NMuons = eventdiffW->GetMuonsN();
       NElectrons = eventdiffW->GetElectronsN();
-      isoRec = eventdiffW->GetLeadingMuonSumPtR03();
+      //isoRec = eventdiffW->GetLeadingMuonSumPtR03();
+      isoRec = eventdiffW->GetLeadingMuonrelIsoDr03();
+      leptoneta = eventdiffW->GetLeadingMuonEta();
+      leptonphi = eventdiffW->GetLeadingMuonPhi();
+      leptonpt = eventdiffW->GetLeadingMuonPt();
+      deltaphi = eventdiffW->GetLeadingMuonPhi()-eventdiffW->GetMETPhi();
 
-      if(NMuons ==1) acceptEvt = true;
 
-      if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt && eventdiffW->GetLeadingElectronPt()<10) presel = true;
+      if(NMuons == 1 && NElectrons == 0) acceptEvt = true;
+
+      if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
-      if (isoRec < 3) { 
+      if(isoRec < 0.1 && isoRec > -10.){ 
 	isolation = true;
-	candSel = true;
       }
+
+      if (eventdiffW->GetLeadingMuonDxy() < 2.) nocosmic = true;
+      if (eventdiffW->GetLeadingMuonIsGood()) candSel = true;    
 
       if (eventdiffW->GetLeadingMuonEta()>0.) WKinP = true;
       if (eventdiffW->GetLeadingMuonEta()<0.) WKinN = true;
@@ -1251,12 +1329,17 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       selStatus = "Pat::Electron";
 
       bosonWMass = eventdiffW->GetPatBosonElectronMass();
+      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetPatElectron1Pt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(eventdiffW->GetPatElectron1Phi()-eventdiffW->GetMETPhi())));
       bosonWEta = eventdiffW->GetPatElectron1Eta();
       bosonWPhi = eventdiffW->GetPatElectron1Phi();
       bosonWPt = eventdiffW->GetPatElectron1Pt();
       bosonWCharge = eventdiffW->GetPatMuon1Charge();
       NMuons = eventdiffW->GetPatNMuon();
       NElectrons = eventdiffW->GetPatNElectron();
+      leptoneta = eventdiffW->GetPatElectron1Eta();
+      leptonphi = eventdiffW->GetPatElectron1Phi();
+      leptonpt = eventdiffW->GetPatElectron1Pt();
+      deltaphi = eventdiffW->GetPatElectron1Phi()-eventdiffW->GetMETPhi();
 
       isoTk1 = eventdiffW->GetPatElectron1TkDr03()/eventdiffW->GetPatElectron1Pt();
       isoEcal1 = eventdiffW->GetPatElectron1EcalDr03()/eventdiffW->GetPatElectron1Pt();
@@ -1269,10 +1352,10 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       sigmaIeIe1 = eventdiffW->GetPatElectron1SigmaIeIe();
       HE1 = eventdiffW->GetPatElectron1HE();
 
-      if (eventdiffW->GetPatElectron1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt && eventdiffW->GetPatMuon1Pt()<10) presel = true;
+      if (eventdiffW->GetPatElectron1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
 
-      if(NElectrons==1) acceptEvt = true;
+      if(NElectrons==1 && NMuons==0) acceptEvt = true;
 
       //Isolation Electron
       if ((fabs (eventdiffW->GetPatElectron1Eta()) <= 1.4442) ){
@@ -1310,6 +1393,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if(typesel == "PatMuon"){
       selStatus = "Pat::Muon";
 
+      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetPatMuon1Pt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(eventdiffW->GePatMuon1Phi()-eventdiffW->GetMETPhi())));
       bosonWMass = eventdiffW->GetPatBosonMuonMass();
       bosonWEta = eventdiffW->GetPatMuon1Eta();
       bosonWPhi = eventdiffW->GetPatMuon1Phi();
@@ -1317,13 +1401,18 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       bosonWCharge = eventdiffW->GetPatMuon1Charge();
       NMuons = eventdiffW->GetPatNMuon();
       NElectrons = eventdiffW->GetPatNElectron();
-      isoRec = eventdiffW->GetPatMuon1SumPtR03();
+      isoRec = eventdiffW->GetLeadingMuonrelIsoDr03();
+      //isoRec = eventdiffW->GetPatMuon1SumPtR03();
+      leptoneta = eventdiffW->GetPatMuon1Eta();
+      leptonphi = eventdiffW->GetPatMuon1Phi();
+      leptonpt = eventdiffW->GetPatMuon1Pt();
+      deltaphi = eventdiffW->GetPatMuon1Phi()-eventdiffW->GetMETPhi();
 
-      if(NMuons ==1) acceptEvt = true;
+      if(NMuons ==1 && NElectrons == 0) acceptEvt = true;
 
-      if (eventdiffW->GetPatMuon1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt && eventdiffW->GetPatElectron1Pt()<10) presel = true;
+      if (eventdiffW->GetPatMuon1Pt() > lepton1pt && eventdiffW->GetPatMETPt() > lepton2pt) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
-      if (isoRec < 3) {
+      if (isoRec < 0.1 && isoRec > -10.) {
 	candSel = true;
 	isolation = true;
       }
@@ -1404,45 +1493,46 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	  FillHistos(1,pileup,totalcommon);
 	} 
 	if(trigger && vertex) FillHistos(2,pileup,totalcommon);
-        if(trigger && vertex && presel) FillHistos(3,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation) FillHistos(4,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel) FillHistos(5,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt) {
-	  FillHistos(6,pileup,totalcommon);
+	if(trigger && vertex && presel) FillHistos(3,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic) FillHistos(4,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation) FillHistos(5,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel) FillHistos(6,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt) {
+	  FillHistos(7,pileup,totalcommon);
 	  fOutW->cd();
 	  troutW->SetWeight(totalcommon);
 	  troutW->Fill();
 	}
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln) FillHistos(7,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp) FillHistos(8,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln && castorgap) FillHistos(9,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castoractivity) FillHistos(10,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln && WKinP){
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffseln) FillHistos(8,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp) FillHistos(9,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffseln && castorgap) FillHistos(10,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castoractivity) FillHistos(11,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffseln && WKinP){
 	  outstring << "HF- Gap, W Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-	  FillHistos(11,pileup,totalcommon);
-	}
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && WKinN){
-	  outstring << "HF+ Gap, W Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	  FillHistos(12,pileup,totalcommon);
 	}
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln && castorgap && WKinP) FillHistos(13,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castoractivity && WKinN) FillHistos(14,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && castorgap){
-	  FillHistos(15,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && WKinN){
+	  outstring << "HF+ Gap, W Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	  FillHistos(13,pileup,totalcommon);
+	}
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffseln && castorgap && WKinP) FillHistos(14,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castoractivity && WKinN) FillHistos(15,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && castorgap){
+	  FillHistos(16,pileup,totalcommon);
 	  fOutCASTOR->cd();
 	  troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && castorgap && WKinP){
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && castorgap && WKinP){
 	  outstring << "CASTOR Gap, W Candidate: " << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-	  FillHistos(16,pileup,totalcommon);
+	  FillHistos(17,pileup,totalcommon);
 	  fOut->cd();
 	  trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
 
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castorgap) FillHistos(17,pileup,totalcommon);
-	if(trigger && vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castorgap && WKinP) FillHistos(18,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castorgap && WKinP) FillHistos(19,pileup,totalcommon);
 
       }
 
@@ -1450,37 +1540,38 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	--totalT;
 	FillHistos(0,pileup,totalcommon);
 	if(vertex) FillHistos(2,pileup,totalcommon);
-        if(vertex && presel) FillHistos(3,pileup,totalcommon);
-	if(vertex && presel && isolation) FillHistos(4,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel) FillHistos(5,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt) {
-	  FillHistos(6,pileup,totalcommon);
+	if(vertex && presel) FillHistos(3,pileup,totalcommon);
+	if(vertex && presel && nocosmic) FillHistos(4,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation) FillHistos(5,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel) FillHistos(6,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt) {
+	  FillHistos(7,pileup,totalcommon);
 	  fOutW->cd();
 	  troutW->SetWeight(totalcommon);
 	  troutW->Fill();
 	}
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln) FillHistos(7,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp) FillHistos(8,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln && castorgap) FillHistos(9,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castoractivity) FillHistos(10,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln && WKinP) FillHistos(11,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && WKinN) FillHistos(12,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffseln && castorgap && WKinP) FillHistos(13,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castoractivity && WKinN) FillHistos(14,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && castorgap){ 
-	  FillHistos(15,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffseln) FillHistos(8,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp) FillHistos(9,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffseln && castorgap) FillHistos(10,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castoractivity) FillHistos(11,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffseln && WKinP) FillHistos(12,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && WKinN) FillHistos(13,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffseln && castorgap && WKinP) FillHistos(14,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castoractivity && WKinN) FillHistos(15,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && castorgap){ 
+	  FillHistos(16,pileup,totalcommon);
 	  fOutCASTOR->cd();
 	  troutCASTOR->SetWeight(totalcommon);
 	  troutCASTOR->Fill();
 	}
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && castorgap && WKinP){
-	  FillHistos(16,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && castorgap && WKinP){
+	  FillHistos(17,pileup,totalcommon);
 	  fOut->cd();
 	  trout->SetWeight(totalcommon);
 	  trout->Fill();
 	}
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castorgap) FillHistos(17,pileup,totalcommon);
-	if(vertex && presel && isolation && candSel && dimass && acceptEvt && diffselp && castorgap && WKinP) FillHistos(18,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castorgap && WKinP) FillHistos(19,pileup,totalcommon);
       }
 
       else{

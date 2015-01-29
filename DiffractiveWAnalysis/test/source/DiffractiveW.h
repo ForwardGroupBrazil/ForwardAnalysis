@@ -45,6 +45,11 @@ class DiffractiveW {
   int pileup;
   double totalweight;
 
+  double leptonpt;
+  double leptoneta;
+  double leptonphi;
+  double deltaphi;
+  
   double bosonWMass;
   double bosonWEta;
   double bosonWPhi;
@@ -152,6 +157,14 @@ class DiffractiveW {
   std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDeltaPhiTkClu;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonSigmaIeIe;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonHE;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonPt;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonEta;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_DeltaPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDxy;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDz;
+  std::vector<std::vector<TH1F*> > m_hVector_METPt;
+  std::vector<std::vector<TH1F*> > m_hVector_METPhi;
 
   // Detector
   std::vector<std::vector<TH1F*> > m_hVector_sumEHFplus;
