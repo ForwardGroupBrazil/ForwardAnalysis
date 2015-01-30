@@ -333,7 +333,7 @@ class DiffractiveWEvent {
     void SetPatElectron1IsWP95(bool fpatElectron1IsWP95)    {patElectron1IsWP95_ = fpatElectron1IsWP95;}
     void SetPatElectron1IsWP80(bool fpatElectron1IsWP80)    {patElectron1IsWP80_ = fpatElectron1IsWP80;}
 
-    int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
+    int GetHLTPath(int idx) const { return hltTrigResults_[idx]; }
     double GetBosonElectronMass() const {return BosonElectronMass_;}
     double GetBosonElectronPt() const {return BosonElectronPt_;}
     double GetBosonElectronEta() const {return BosonElectronEta_;}
@@ -349,19 +349,19 @@ class DiffractiveWEvent {
     const LorentzVector& GetLeadingElectronP4() const {return LeadingElectronP4_;}
     int GetLeadingElectronCharge() const {return LeadingElectronCharge_;}
     int GetElectronsN() const {return ElectronsN_;}
-    double GetLeadingElectronTkDr03() const  {return LeadingElectronTkDr03_;}
-    double GetLeadingElectronEcalDr03() const  {return LeadingElectronEcalDr03_;}
-    double GetLeadingElectronHcalDr03() const  {return LeadingElectronHcalDr03_;}
+    double GetLeadingElectronTkDr03() const {return LeadingElectronTkDr03_;}
+    double GetLeadingElectronEcalDr03() const {return LeadingElectronEcalDr03_;}
+    double GetLeadingElectronHcalDr03() const {return LeadingElectronHcalDr03_;}
 
-    double GetLeadingElectronTkDr04() const  {return LeadingElectronTkDr04_;}
-    double GetLeadingElectronEcalDr04() const  {return LeadingElectronEcalDr04_;}
-    double GetLeadingElectronHcalDr04() const  {return LeadingElectronHcalDr04_;}
+    double GetLeadingElectronTkDr04() const {return LeadingElectronTkDr04_;}
+    double GetLeadingElectronEcalDr04() const {return LeadingElectronEcalDr04_;}
+    double GetLeadingElectronHcalDr04() const {return LeadingElectronHcalDr04_;}
 
     double GetLeadingElectronrelIsoDr03() const {return LeadingElectronrelIsoDr03_;}
     double GetLeadingElectronrelIsoDr04() const {return LeadingElectronrelIsoDr04_;}
 
-    bool GetLeadingElectronIsWP95() const   {return LeadingElectronIsWP95_;}
-    bool GetLeadingElectronIsWP80() const   {return LeadingElectronIsWP80_;}
+    bool GetLeadingElectronIsWP95() const {return LeadingElectronIsWP95_;}
+    bool GetLeadingElectronIsWP80() const {return LeadingElectronIsWP80_;}
 
     double GetLeadingMuonPt() const {return LeadingMuonPt_;}
     double GetLeadingMuonEta() const {return LeadingMuonEta_;}
@@ -380,15 +380,15 @@ class DiffractiveWEvent {
     double GetLeadingMuonrelIsoDr03() const {return LeadingMuonrelIsoDr03_;}
     double GetLeadingMuonrelIsoDr05() const {return LeadingMuonrelIsoDr05_;}
 
-    double GetLeadingMuonTrackerHits() const   {return LeadingMuonTrackerHits_;}
-    double GetLeadingMuonPixelHits() const   {return LeadingMuonPixelHits_;}
-    double GetLeadingMuonNormalizedChi2() const   {return LeadingMuonNormalizedChi2_;}
-    double GetLeadingMuonMatchedStations() const   {return LeadingMuonMatchedStations_;}
-    double GetLeadingMuonDxy() const    {return LeadingMuonDxy_;}
-    double GetLeadingMuonDz() const    {return LeadingMuonDz_;}
-    bool GetLeadingMuonIsGlobal() const   {return LeadingMuonIsGlobal_;}
-    bool GetLeadingMuonIsTracker() const   {return LeadingMuonIsTracker_;}
-    bool GetLeadingMuonIsGood() const   {return LeadingMuonIsGood_;}
+    double GetLeadingMuonTrackerHits() const {return LeadingMuonTrackerHits_;}
+    double GetLeadingMuonPixelHits() const {return LeadingMuonPixelHits_;}
+    double GetLeadingMuonNormalizedChi2() const {return LeadingMuonNormalizedChi2_;}
+    double GetLeadingMuonMatchedStations() const {return LeadingMuonMatchedStations_;}
+    double GetLeadingMuonDxy() const {return LeadingMuonDxy_;}
+    double GetLeadingMuonDz() const {return LeadingMuonDz_;}
+    bool GetLeadingMuonIsGlobal() const {return LeadingMuonIsGlobal_;}
+    bool GetLeadingMuonIsTracker() const {return LeadingMuonIsTracker_;}
+    bool GetLeadingMuonIsGood() const {return LeadingMuonIsGood_;}
 
     double GetVertexMultiplicity(int i) const { return VertexMultiplicity_[i]; }
     double GetVertexChiNorm(int i) const { return VertexChiNorm_[i]; }
@@ -445,53 +445,53 @@ class DiffractiveWEvent {
     double GetBosonElectronMassPF() const {return BosonElectronMassPF_;}
     double GetBosonMuonMassPF() const {return BosonMuonMassPF_;}
 
-    double GetSumEHFPlus()    const {return SumEHFPlus_;}
-    double GetSumEHF_SPlus()    const {return SumEHF_SPlus_;}
-    double GetSumEHF_LPlus()    const {return SumEHF_LPlus_;}
-    double GetSumEtHFPlus()    const {return SumEtHFPlus_;}
+    double GetSumEHFPlus() const {return SumEHFPlus_;}
+    double GetSumEHF_SPlus() const {return SumEHF_SPlus_;}
+    double GetSumEHF_LPlus() const {return SumEHF_LPlus_;}
+    double GetSumEtHFPlus() const {return SumEtHFPlus_;}
 
-    double GetSumEHFMinus()    const {return SumEHFMinus_;}
-    double GetSumEHF_SMinus()    const {return SumEHF_SMinus_;}
-    double GetSumEHF_LMinus()    const {return SumEHF_LMinus_;}
-    double GetSumEtHFMinus()    const {return SumEtHFMinus_;}
+    double GetSumEHFMinus() const {return SumEHFMinus_;}
+    double GetSumEHF_SMinus() const {return SumEHF_SMinus_;}
+    double GetSumEHF_LMinus() const {return SumEHF_LMinus_;}
+    double GetSumEtHFMinus() const {return SumEtHFMinus_;}
 
-    double GetSumEHEPlus()    const {return SumEHEPlus_;}
-    double GetSumEtHEPlus()    const {return SumEtHEPlus_;}
-    double GetSumEHEMinus()    const {return SumEHEMinus_;}
-    double GetSumEtHEMinus()    const {return SumEtHEMinus_;}
+    double GetSumEHEPlus() const {return SumEHEPlus_;}
+    double GetSumEtHEPlus() const {return SumEtHEPlus_;}
+    double GetSumEHEMinus() const {return SumEHEMinus_;}
+    double GetSumEtHEMinus() const {return SumEtHEMinus_;}
 
-    double GetSumEHBPlus()    const {return SumEHBPlus_;}
-    double GetSumEtHBPlus()    const {return SumEtHBPlus_;}
-    double GetSumEHBMinus()    const {return SumEHBMinus_;}
-    double GetSumEtHBMinus()    const {return SumEtHBMinus_;}
+    double GetSumEHBPlus() const {return SumEHBPlus_;}
+    double GetSumEtHBPlus() const {return SumEtHBPlus_;}
+    double GetSumEHBMinus() const {return SumEHBMinus_;}
+    double GetSumEtHBMinus() const {return SumEtHBMinus_;}
 
-    double GetSumEEEPlus()    const {return SumEEEPlus_;}
-    double GetSumEtEEPlus()    const {return SumEtEEPlus_;}
-    double GetSumEEEMinus()    const {return SumEEEMinus_;}
-    double GetSumEtEEMinus()    const {return SumEtEEMinus_;}
+    double GetSumEEEPlus() const {return SumEEEPlus_;}
+    double GetSumEtEEPlus() const {return SumEtEEPlus_;}
+    double GetSumEEEMinus() const {return SumEEEMinus_;}
+    double GetSumEtEEMinus() const {return SumEtEEMinus_;}
 
-    double GetSumEEBPlus()    const {return SumEEBPlus_;}
-    double GetSumEtEBPlus()    const {return SumEtEBPlus_;}
-    double GetSumEEBMinus()    const {return SumEEBMinus_;}
-    double GetSumEtEBMinus()    const {return SumEtEBMinus_;}
+    double GetSumEEBPlus() const {return SumEEBPlus_;}
+    double GetSumEtEBPlus() const {return SumEtEBPlus_;}
+    double GetSumEEBMinus() const {return SumEEBMinus_;}
+    double GetSumEtEBMinus() const {return SumEtEBMinus_;}
 
-    double GetEpluspzCalo()    const {return EPZCaloPlus_;}
-    double GetEminuspzCalo()    const {return EPZCaloMinus_;}
-    double GetEtExpoPlusCalo()    const {return EtEtaCaloPlus_;}
-    double GetEtExpoPlusMinus()    const {return EtEtaCaloMinus_;}
+    double GetEpluspzCalo() const {return EPZCaloPlus_;}
+    double GetEminuspzCalo() const {return EPZCaloMinus_;}
+    double GetEtExpoPlusCalo() const {return EtEtaCaloPlus_;}
+    double GetEtExpoPlusMinus() const {return EtEtaCaloMinus_;}
 
-    double GetEtaCaloMax()    const {return EtaCaloMax_;}
-    double GetEtaCaloMin()    const {return EtaCaloMin_;}
+    double GetEtaCaloMax() const {return EtaCaloMax_;}
+    double GetEtaCaloMin() const {return EtaCaloMin_;}
     double GetLrgCalo() const { return lrgCalo_;}
 
-    int GetMultiplicityHFPlus()    const {return MultiplicityHFPlus_;}
-    int GetMultiplicityHEPlus()    const {return MultiplicityHEPlus_;}
-    int GetMultiplicityEEPlus()    const {return MultiplicityEEPlus_;}
-    int GetMultiplicityHFMinus()    const {return MultiplicityHFMinus_;}
-    int GetMultiplicityHEMinus()    const {return MultiplicityHEMinus_;}
-    int GetMultiplicityEEMinus()    const {return MultiplicityEEMinus_;}
+    int GetMultiplicityHFPlus() const {return MultiplicityHFPlus_;}
+    int GetMultiplicityHEPlus() const {return MultiplicityHEPlus_;}
+    int GetMultiplicityEEPlus() const {return MultiplicityEEPlus_;}
+    int GetMultiplicityHFMinus() const {return MultiplicityHFMinus_;}
+    int GetMultiplicityHEMinus() const {return MultiplicityHEMinus_;}
+    int GetMultiplicityEEMinus() const {return MultiplicityEEMinus_;}
 
-    int GetVertex()    const {return Vertex_;}   
+    int GetVertex() const {return Vertex_;}   
     double GetMxPFMinus() const { return mxpfminus_;}
     double GetMxPFPlus() const { return mxpfplus_;}
     double GetMx2PFMinus() const { return mx2pfminus_;}
@@ -547,15 +547,15 @@ class DiffractiveWEvent {
     double GetPatMuon1relIsoDr05() const {return patMuon1relIsoDr05_;}
     double GetPatMuon1relIso() const {return patMuon1relIso_;}
 
-    double GetPatMuon1TrackerHits() const   {return patMuon1TrackerHits_;}
-    double GetPatMuon1PixelHits() const   {return patMuon1PixelHits_;}
-    double GetPatMuon1NormalizedChi2() const   {return patMuon1NormalizedChi2_;}
-    double GetPatMuon1MatchedStations() const   {return patMuon1MatchedStations_;}
-    double GetPatMuon1Dxy() const    {return patMuon1Dxy_;}
-    double GetPatMuon1Dz() const    {return patMuon1Dz_;}
-    bool GetPatMuon1IsGlobal() const   {return patMuon1IsGlobal_;}
-    bool GetPatMuon1IsTracker() const   {return patMuon1IsTracker_;}
-    bool GetPatMuon1IsGood() const   {return patMuon1IsGood_;}
+    double GetPatMuon1TrackerHits() const {return patMuon1TrackerHits_;}
+    double GetPatMuon1PixelHits() const {return patMuon1PixelHits_;}
+    double GetPatMuon1NormalizedChi2() const {return patMuon1NormalizedChi2_;}
+    double GetPatMuon1MatchedStations() const {return patMuon1MatchedStations_;}
+    double GetPatMuon1Dxy() const {return patMuon1Dxy_;}
+    double GetPatMuon1Dz() const {return patMuon1Dz_;}
+    bool GetPatMuon1IsGlobal() const {return patMuon1IsGlobal_;}
+    bool GetPatMuon1IsTracker() const {return patMuon1IsTracker_;}
+    bool GetPatMuon1IsGood() const {return patMuon1IsGood_;}
 
     double GetPatBosonMuonMass() const {return patBosonMuonMass_;}
     double GetPatBosonMuonPt() const {return patBosonMuonPt_;}
@@ -570,19 +570,19 @@ class DiffractiveWEvent {
     double GetPatElectron1Et() const {return patElectron1Et_;}
     const LorentzVector& GetPatElectron1P4() const {return patElectron1P4_;}
 
-    double GetPatElectron1TkDr03() const  {return patElectron1TkDr03_;}    
-    double GetPatElectron1EcalDr03() const  {return patElectron1EcalDr03_;}
-    double GetPatElectron1HcalDr03() const  {return patElectron1HcalDr03_;}
+    double GetPatElectron1TkDr03() const {return patElectron1TkDr03_;}    
+    double GetPatElectron1EcalDr03() const {return patElectron1EcalDr03_;}
+    double GetPatElectron1HcalDr03() const {return patElectron1HcalDr03_;}
 
-    double GetPatElectron1TkDr04() const  {return patElectron1TkDr04_;}
-    double GetPatElectron1EcalDr04() const  {return patElectron1EcalDr04_;}
-    double GetPatElectron1HcalDr04() const  {return patElectron1HcalDr04_;}
+    double GetPatElectron1TkDr04() const {return patElectron1TkDr04_;}
+    double GetPatElectron1EcalDr04() const {return patElectron1EcalDr04_;}
+    double GetPatElectron1HcalDr04() const {return patElectron1HcalDr04_;}
 
     double GetPatElectron1relIsoDr03() const {return patElectron1relIsoDr03_;}
     double GetPatElectron1relIsoDr04() const {return patElectron1relIsoDr04_;}
 
-    bool GetPatElectron1IsWP95() const   {return patElectron1IsWP95_;}
-    bool GetPatElectron1IsWP80() const   {return patElectron1IsWP80_;}
+    bool GetPatElectron1IsWP95() const {return patElectron1IsWP95_;}
+    bool GetPatElectron1IsWP80() const {return patElectron1IsWP80_;}
 
     double GetPatBosonElectronMass() const {return patBosonElectronMass_;}
     double GetPatBosonElectronPt() const {return patBosonElectronPt_;}
@@ -602,20 +602,20 @@ class DiffractiveWEvent {
     int GetCastorBadChannels(int i) const { return CastorBadChannels_[i]; }
     int GetCastorNumberBadChannels() const { return CastorNumberBadChannels_;}
 
-    int GetTracksNonConeMuon03()    const {return TracksNonConeMuon03_;}
-    int GetTracksNonConeElectron03()    const {return TracksNonConeElectron03_;}
-    int GetTracksNonConepatMuon03()    const {return TracksNonConepatMuon03_;}
-    int GetTracksNonConepatElectron03()    const {return TracksNonConepatElectron03_;}
+    int GetTracksNonConeMuon03() const {return TracksNonConeMuon03_;}
+    int GetTracksNonConeElectron03() const {return TracksNonConeElectron03_;}
+    int GetTracksNonConepatMuon03() const {return TracksNonConepatMuon03_;}
+    int GetTracksNonConepatElectron03() const {return TracksNonConepatElectron03_;}
 
-    int GetTracksNonConeMuon04()    const {return TracksNonConeMuon04_;}
-    int GetTracksNonConeElectron04()    const {return TracksNonConeElectron04_;}
-    int GetTracksNonConepatMuon04()    const {return TracksNonConepatMuon04_;}
-    int GetTracksNonConepatElectron04()    const {return TracksNonConepatElectron04_;}
+    int GetTracksNonConeMuon04() const {return TracksNonConeMuon04_;}
+    int GetTracksNonConeElectron04() const {return TracksNonConeElectron04_;}
+    int GetTracksNonConepatMuon04() const {return TracksNonConepatMuon04_;}
+    int GetTracksNonConepatElectron04() const {return TracksNonConepatElectron04_;}
 
-    int GetTracksNonConeMuon05()    const {return TracksNonConeMuon05_;}
-    int GetTracksNonConeElectron05()    const {return TracksNonConeElectron05_;}
-    int GetTracksNonConepatMuon05()    const {return TracksNonConepatMuon05_;}
-    int GetTracksNonConepatElectron05()    const {return TracksNonConepatElectron05_;}
+    int GetTracksNonConeMuon05() const {return TracksNonConeMuon05_;}
+    int GetTracksNonConeElectron05() const {return TracksNonConeElectron05_;}
+    int GetTracksNonConepatMuon05() const {return TracksNonConepatMuon05_;}
+    int GetTracksNonConepatElectron05() const {return TracksNonConepatElectron05_;}
 
     double GetLeadingElectronDeltaPhiTkClu() const {return LeadingElectronDeltaPhiTkClu_;}
     double GetLeadingElectronDeltaEtaTkClu() const {return LeadingElectronDeltaEtaTkClu_;}
