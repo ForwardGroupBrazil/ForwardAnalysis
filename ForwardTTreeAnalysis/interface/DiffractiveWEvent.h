@@ -89,6 +89,58 @@ class DiffractiveWEvent {
     void SetLeadingMuonIsTracker(bool fLeadingMuonIsTracker)    {LeadingMuonIsTracker_ = fLeadingMuonIsTracker;}
     void SetLeadingMuonIsGood(bool fLeadingMuonIsGood)    {LeadingMuonIsGood_ = fLeadingMuonIsGood;}
 
+    void SetSecondElectronPt(double fSecondElectronPt)    { SecondElectronPt_     = fSecondElectronPt;}
+    void SetSecondElectronEta(double fSecondElectronEta)  { SecondElectronEta_     = fSecondElectronEta;}
+    void SetSecondElectronPhi(double fSecondElectronPhi)  { SecondElectronPhi_    = fSecondElectronPhi;}
+    void SetSecondElectronP4(LorentzVector fSecondElectronP4)    { SecondElectronP4_     = fSecondElectronP4;}
+    void SetSecondElectronCharge(int fSecondElectronCharge)  { SecondElectronCharge_     = fSecondElectronCharge;}
+
+    void SetSecondElectronTkDr03(double fSecondElectronTkDr03)    {SecondElectronTkDr03_ = fSecondElectronTkDr03;}
+    void SetSecondElectronEcalDr03(double fSecondElectronEcalDr03)    {SecondElectronEcalDr03_ = fSecondElectronEcalDr03;}
+    void SetSecondElectronHcalDr03(double fSecondElectronHcalDr03)    {SecondElectronHcalDr03_ = fSecondElectronHcalDr03;}
+
+    void SetSecondElectronTkDr04(double fSecondElectronTkDr04)    {SecondElectronTkDr04_ = fSecondElectronTkDr04;}
+    void SetSecondElectronEcalDr04(double fSecondElectronEcalDr04)    {SecondElectronEcalDr04_ = fSecondElectronEcalDr04;}
+    void SetSecondElectronHcalDr04(double fSecondElectronHcalDr04)    {SecondElectronHcalDr04_ = fSecondElectronHcalDr04;}
+
+    void SetSecondElectronrelIsoDr03(double fSecondElectronrelIsoDr03)    {SecondElectronrelIsoDr03_ = fSecondElectronrelIsoDr03;}
+    void SetSecondElectronrelIsoDr04(double fSecondElectronrelIsoDr04)    {SecondElectronrelIsoDr04_ = fSecondElectronrelIsoDr04;}
+
+    void SetSecondElectronDeltaPhiTkClu(double fSecondElectronDeltaPhiTkClu)    {SecondElectronDeltaPhiTkClu_ = fSecondElectronDeltaPhiTkClu;}
+    void SetSecondElectronDeltaEtaTkClu(double fSecondElectronDeltaEtaTkClu)    {SecondElectronDeltaEtaTkClu_ = fSecondElectronDeltaEtaTkClu;}
+    void SetSecondElectronSigmaIeIe(double fSecondElectronSigmaIeIe)    {SecondElectronSigmaIeIe_ = fSecondElectronSigmaIeIe;}
+    void SetSecondElectronDCot(double fSecondElectronDCot)    {SecondElectronDCot_ = fSecondElectronDCot;}
+    void SetSecondElectronDist(double fSecondElectronDist)    {SecondElectronDist_ = fSecondElectronDist;}
+    void SetSecondElectronInnerHits(double fSecondElectronInnerHits)    {SecondElectronInnerHits_ = fSecondElectronInnerHits;}
+    void SetSecondElectronHE(double fSecondElectronHE)    {SecondElectronHE_ = fSecondElectronHE;}
+    void SetSecondElectronIsWP95(bool fSecondElectronIsWP95)    {SecondElectronIsWP95_ = fSecondElectronIsWP95;}
+    void SetSecondElectronIsWP80(bool fSecondElectronIsWP80)    {SecondElectronIsWP80_ = fSecondElectronIsWP80;}
+
+    void SetSecondMuonPt(double fSecondMuonPt)    { SecondMuonPt_     = fSecondMuonPt;}
+    void SetSecondMuonEta(double fSecondMuonEta)  { SecondMuonEta_     = fSecondMuonEta;}
+    void SetSecondMuonPhi(double fSecondMuonPhi)  { SecondMuonPhi_    = fSecondMuonPhi;}
+    void SetSecondMuonP4(LorentzVector fSecondMuonP4)    { SecondMuonP4_     = fSecondMuonP4;}
+    void SetSecondMuonCharge(int fSecondMuonCharge)  { SecondMuonCharge_     = fSecondMuonCharge;}
+
+    void SetSecondMuonSumPtR03(double fSecondMuonSumPtR03)    {SecondMuonSumPtR03_ = fSecondMuonSumPtR03;}
+    void SetSecondMuonEmEtR03(double fSecondMuonEmEtR03)    {SecondMuonEmEtR03_ = fSecondMuonEmEtR03;}
+    void SetSecondMuonHadEtR03(double fSecondMuonHadEtR03)    {SecondMuonHadEtR03_ = fSecondMuonHadEtR03;}
+    void SetSecondMuonSumPtR05(double fSecondMuonSumPtR05)    {SecondMuonSumPtR05_ = fSecondMuonSumPtR05;}
+    void SetSecondMuonEmEtR05(double fSecondMuonEmEtR05)    {SecondMuonEmEtR05_ = fSecondMuonEmEtR05;}
+    void SetSecondMuonHadEtR05(double fSecondMuonHadEtR05)    {SecondMuonHadEtR05_ = fSecondMuonHadEtR05;}
+
+    void SetSecondMuonrelIsoDr03(double fSecondMuonrelIsoDr03)    {SecondMuonrelIsoDr03_ = fSecondMuonrelIsoDr03;}
+    void SetSecondMuonrelIsoDr05(double fSecondMuonrelIsoDr05)    {SecondMuonrelIsoDr05_ = fSecondMuonrelIsoDr05;}
+    void SetSecondMuonTrackerHits(double fSecondMuonTrackerHits)    {SecondMuonTrackerHits_ = fSecondMuonTrackerHits;}
+    void SetSecondMuonPixelHits(double fSecondMuonPixelHits)    {SecondMuonPixelHits_ = fSecondMuonPixelHits;}
+    void SetSecondMuonNormalizedChi2(double fSecondMuonNormalizedChi2)    {SecondMuonNormalizedChi2_ = fSecondMuonNormalizedChi2;}
+    void SetSecondMuonMatchedStations(double fSecondMuonMatchedStations)    {SecondMuonMatchedStations_ = fSecondMuonMatchedStations;}
+    void SetSecondMuonDxy(double fSecondMuonDxy)    {SecondMuonDxy_ = fSecondMuonDxy;}
+    void SetSecondMuonDz(double fSecondMuonDz)    {SecondMuonDz_ = fSecondMuonDz;}
+    void SetSecondMuonIsGlobal(bool fSecondMuonIsGlobal)    {SecondMuonIsGlobal_ = fSecondMuonIsGlobal;}
+    void SetSecondMuonIsTracker(bool fSecondMuonIsTracker)    {SecondMuonIsTracker_ = fSecondMuonIsTracker;}
+    void SetSecondMuonIsGood(bool fSecondMuonIsGood)    {SecondMuonIsGood_ = fSecondMuonIsGood;}
+
     void SetVertexMultiplicity(const std::vector<double>& fVertexMultiplicity) { VertexMultiplicity_ = fVertexMultiplicity; }
     void SetVertexChiNorm(const std::vector<double>& fVertexChiNorm) { VertexChiNorm_ = fVertexChiNorm; }
     void SetVertexNDOF(const std::vector<double>& fVertexNDOF) { VertexNDOF_ = fVertexNDOF; }
@@ -280,10 +332,65 @@ class DiffractiveWEvent {
     void SetPatElectron1relIsoDr03(double fpatElectron1relIsoDr03)    {patElectron1relIsoDr03_ = fpatElectron1relIsoDr03;}
     void SetPatElectron1relIsoDr04(double fpatElectron1relIsoDr04)    {patElectron1relIsoDr04_ = fpatElectron1relIsoDr04;}
 
+    void SetPatElectron2relIsoDr03(double fpatElectron2relIsoDr03)    {patElectron2relIsoDr03_ = fpatElectron2relIsoDr03;}
+    void SetPatElectron2relIsoDr04(double fpatElectron2relIsoDr04)    {patElectron2relIsoDr04_ = fpatElectron2relIsoDr04;}
+
     void SetPatBosonElectronMass(double fpatBosonElectronMass) { patBosonElectronMass_ = fpatBosonElectronMass;}
     void SetPatBosonElectronPt(double fpatBosonElectronPt) { patBosonElectronPt_ = fpatBosonElectronPt;}
     void SetPatBosonElectronEta(double fpatBosonElectronEta) { patBosonElectronEta_ = fpatBosonElectronEta;}
     void SetPatBosonElectronPhi(double fpatBosonElectronPhi) { patBosonElectronPhi_ = fpatBosonElectronPhi;}
+
+    void SetPatMuon2Pt(double fpatMuon2Pt)    {patMuon2Pt_ = fpatMuon2Pt;}
+    void SetPatMuon2Charge(int fpatMuon2Charge)    {patMuon2Charge_ = fpatMuon2Charge;}
+    void SetPatMuon2Phi(double fpatMuon2Phi)    {patMuon2Phi_ = fpatMuon2Phi;}
+    void SetPatMuon2Eta(double fpatMuon2Eta)    {patMuon2Eta_ = fpatMuon2Eta;}
+    void SetPatMuon2Et(double fpatMuon2Et)    {patMuon2Et_ = fpatMuon2Et;}
+    void SetPatMuon2P4(LorentzVector fpatMuon2P4)    {patMuon2P4_ = fpatMuon2P4;}
+
+    void SetPatMuon2SumPtR03(double fpatMuon2SumPtR03)    {patMuon2SumPtR03_ = fpatMuon2SumPtR03;}
+    void SetPatMuon2EmEtR03(double fpatMuon2EmEtR03)    {patMuon2EmEtR03_ = fpatMuon2EmEtR03;}
+    void SetPatMuon2HadEtR03(double fpatMuon2HadEtR03)    {patMuon2HadEtR03_ = fpatMuon2HadEtR03;}
+    void SetPatMuon2SumPtR05(double fpatMuon2SumPtR05)    {patMuon2SumPtR05_ = fpatMuon2SumPtR05;}
+    void SetPatMuon2EmEtR05(double fpatMuon2EmEtR05)    {patMuon2EmEtR05_ = fpatMuon2EmEtR05;}
+    void SetPatMuon2HadEtR05(double fpatMuon2HadEtR05)    {patMuon2HadEtR05_ = fpatMuon2HadEtR05;}
+
+    void SetPatMuon2relIsoDr03(double fpatMuon2relIsoDr03)    {patMuon2relIsoDr03_ = fpatMuon2relIsoDr03;}
+    void SetPatMuon2relIsoDr05(double fpatMuon2relIsoDr05)    {patMuon2relIsoDr05_ = fpatMuon2relIsoDr05;}
+    void SetPatMuon2relIso(double fpatMuon2relIso)    {patMuon2relIso_ = fpatMuon2relIso;}
+
+    void SetPatMuon2TrackerHits(double fpatMuon2TrackerHits)    {patMuon2TrackerHits_ = fpatMuon2TrackerHits;}
+    void SetPatMuon2PixelHits(double fpatMuon2PixelHits)    {patMuon2PixelHits_ = fpatMuon2PixelHits;}
+    void SetPatMuon2NormalizedChi2(double fpatMuon2NormalizedChi2)    {patMuon2NormalizedChi2_ = fpatMuon2NormalizedChi2;}
+    void SetPatMuon2MatchedStations(double fpatMuon2MatchedStations)    {patMuon2MatchedStations_ = fpatMuon2MatchedStations;}
+    void SetPatMuon2Dxy(double fpatMuon2Dxy)    {patMuon2Dxy_ = fpatMuon2Dxy;}
+    void SetPatMuon2Dz(double fpatMuon2Dz)    {patMuon2Dz_ = fpatMuon2Dz;}
+    void SetPatMuon2IsGlobal(bool fpatMuon2IsGlobal)    {patMuon2IsGlobal_ = fpatMuon2IsGlobal;}
+    void SetPatMuon2IsTracker(bool fpatMuon2IsTracker)    {patMuon2IsTracker_ = fpatMuon2IsTracker;}
+    void SetPatMuon2IsGood(bool fpatMuon2IsGood)    {patMuon2IsGood_ = fpatMuon2IsGood;}
+
+    void SetPatElectron2Pt(double fpatElectron2Pt)    {patElectron2Pt_ = fpatElectron2Pt;}
+    void SetPatElectron2Charge(int fpatElectron2Charge)    {patElectron2Charge_ = fpatElectron2Charge;}
+    void SetPatElectron2Phi(double fpatElectron2Phi)    {patElectron2Phi_ = fpatElectron2Phi;}
+    void SetPatElectron2Eta(double fpatElectron2Eta)    {patElectron2Eta_ = fpatElectron2Eta;}
+    void SetPatElectron2Et(double fpatElectron2Et)    {patElectron2Et_ = fpatElectron2Et;}
+    void SetPatElectron2P4(LorentzVector fpatElectron2P4)    {patElectron2P4_ = fpatElectron2P4;}
+
+    void SetPatElectron2TkDr03(double fpatElectron2TkDr03)    {patElectron2TkDr03_ = fpatElectron2TkDr03;}
+    void SetPatElectron2EcalDr03(double fpatElectron2EcalDr03)    {patElectron2EcalDr03_ = fpatElectron2EcalDr03;}
+    void SetPatElectron2HcalDr03(double fpatElectron2HcalDr03)    {patElectron2HcalDr03_ = fpatElectron2HcalDr03;}
+
+    void SetPatElectron2TkDr04(double fpatElectron2TkDr04)    {patElectron2TkDr04_ = fpatElectron2TkDr04;}
+    void SetPatElectron2EcalDr04(double fpatElectron2EcalDr04)    {patElectron2EcalDr04_ = fpatElectron2EcalDr04;}
+    void SetPatElectron2HcalDr04(double fpatElectron2HcalDr04)    {patElectron2HcalDr04_ = fpatElectron2HcalDr04;}
+    void SetPatElectron2DeltaPhiTkClu(double fpatElectron2DeltaPhiTkClu)    {patElectron2DeltaPhiTkClu_ = fpatElectron2DeltaPhiTkClu;}
+    void SetPatElectron2DeltaEtaTkClu(double fpatElectron2DeltaEtaTkClu)    {patElectron2DeltaEtaTkClu_ = fpatElectron2DeltaEtaTkClu;}
+    void SetPatElectron2SigmaIeIe(double fpatElectron2SigmaIeIe)    {patElectron2SigmaIeIe_ = fpatElectron2SigmaIeIe;}
+    void SetPatElectron2DCot(double fpatElectron2DCot)    {patElectron2DCot_ = fpatElectron2DCot;}
+    void SetPatElectron2Dist(double fpatElectron2Dist)    {patElectron2Dist_ = fpatElectron2Dist;}
+    void SetPatElectron2InnerHits(double fpatElectron2InnerHits)    {patElectron2InnerHits_ = fpatElectron2InnerHits;}
+    void SetPatElectron2HE(double fpatElectron2HE)    {patElectron2HE_ = fpatElectron2HE;}
+    void SetPatElectron2IsWP95(bool fpatElectron2IsWP95)    {patElectron2IsWP95_ = fpatElectron2IsWP95;}
+    void SetPatElectron2IsWP80(bool fpatElectron2IsWP80)    {patElectron2IsWP80_ = fpatElectron2IsWP80;}
 
     void SetCastorTowerEnergy(const std::vector<double>& fCastorTowerEnergy) { CastorTowerEnergy_ = fCastorTowerEnergy; }
     void SetCastorModule1Energy(const std::vector<double>& fCastorModule1Energy) { CastorModule1Energy_ = fCastorModule1Energy; }
@@ -298,20 +405,35 @@ class DiffractiveWEvent {
     void SetEachTowerEnergy(const std::vector<double>& fEachTowerEnergy) { EachTowerEnergy_ = fEachTowerEnergy; }
     void SetEachTowerCounter(int fEachTowerCounter)    {EachTowerCounter_ = fEachTowerCounter;}
 
-    void SetTracksNonConeMuon03(int fTracksNonConeMuon03)    {TracksNonConeMuon03_ = fTracksNonConeMuon03;}
-    void SetTracksNonConeElectron03(int fTracksNonConeElectron03)    {TracksNonConeElectron03_ = fTracksNonConeElectron03;}
-    void SetTracksNonConepatMuon03(int fTracksNonConepatMuon03)    {TracksNonConepatMuon03_ = fTracksNonConepatMuon03;}
-    void SetTracksNonConepatElectron03(int fTracksNonConepatElectron03)    {TracksNonConepatElectron03_ = fTracksNonConepatElectron03;}
+    void SetTracksNonConeLeadingMuonR03(int fTracksNonConeLeadingMuonR03)    {TracksNonConeLeadingMuonR03_ = fTracksNonConeLeadingMuonR03;}
+    void SetTracksNonConeLeadingElectronR03(int fTracksNonConeLeadingElectronR03)    {TracksNonConeLeadingElectronR03_ = fTracksNonConeLeadingElectronR03;}
+    void SetTracksNonConePatMuon1R03(int fTracksNonConePatMuon1R03)    {TracksNonConePatMuon1R03_ = fTracksNonConePatMuon1R03;}
+    void SetTracksNonConePatElectron1R03(int fTracksNonConePatElectron1R03)    {TracksNonConePatElectron1R03_ = fTracksNonConePatElectron1R03;}
 
-    void SetTracksNonConeMuon04(int fTracksNonConeMuon04)    {TracksNonConeMuon04_ = fTracksNonConeMuon04;}
-    void SetTracksNonConeElectron04(int fTracksNonConeElectron04)    {TracksNonConeElectron04_ = fTracksNonConeElectron04;}
-    void SetTracksNonConepatMuon04(int fTracksNonConepatMuon04)    {TracksNonConepatMuon04_ = fTracksNonConepatMuon04;}
-    void SetTracksNonConepatElectron04(int fTracksNonConepatElectron04)    {TracksNonConepatElectron04_ = fTracksNonConepatElectron04;}
+    void SetTracksNonConeLeadingMuonR04(int fTracksNonConeLeadingMuonR04)    {TracksNonConeLeadingMuonR04_ = fTracksNonConeLeadingMuonR04;}
+    void SetTracksNonConeLeadingElectronR04(int fTracksNonConeLeadingElectronR04)    {TracksNonConeLeadingElectronR04_ = fTracksNonConeLeadingElectronR04;}
+    void SetTracksNonConePatMuon1R04(int fTracksNonConePatMuon1R04)    {TracksNonConePatMuon1R04_ = fTracksNonConePatMuon1R04;}
+    void SetTracksNonConePatElectron1R04(int fTracksNonConePatElectron1R04)    {TracksNonConePatElectron1R04_ = fTracksNonConePatElectron1R04;}
 
-    void SetTracksNonConeMuon05(int fTracksNonConeMuon05)    {TracksNonConeMuon05_ = fTracksNonConeMuon05;}
-    void SetTracksNonConeElectron05(int fTracksNonConeElectron05)    {TracksNonConeElectron05_ = fTracksNonConeElectron05;}
-    void SetTracksNonConepatMuon05(int fTracksNonConepatMuon05)    {TracksNonConepatMuon05_ = fTracksNonConepatMuon05;}
-    void SetTracksNonConepatElectron05(int fTracksNonConepatElectron05)    {TracksNonConepatElectron05_ = fTracksNonConepatElectron05;}
+    void SetTracksNonConeLeadingMuonR05(int fTracksNonConeLeadingMuonR05)    {TracksNonConeLeadingMuonR05_ = fTracksNonConeLeadingMuonR05;}
+    void SetTracksNonConeLeadingElectronR05(int fTracksNonConeLeadingElectronR05)    {TracksNonConeLeadingElectronR05_ = fTracksNonConeLeadingElectronR05;}
+    void SetTracksNonConePatMuon1R05(int fTracksNonConePatMuon1R05)    {TracksNonConePatMuon1R05_ = fTracksNonConePatMuon1R05;}
+    void SetTracksNonConePatElectron1R05(int fTracksNonConePatElectron1R05)    {TracksNonConePatElectron1R05_ = fTracksNonConePatElectron1R05;}
+
+    void SetTracksNonConeSecondMuonR03(int fTracksNonConeSecondMuonR03)    {TracksNonConeSecondMuonR03_ = fTracksNonConeSecondMuonR03;}
+    void SetTracksNonConeSecondElectronR03(int fTracksNonConeSecondElectronR03)    {TracksNonConeSecondElectronR03_ = fTracksNonConeSecondElectronR03;}
+    void SetTracksNonConePatMuon2R03(int fTracksNonConePatMuon2R03)    {TracksNonConePatMuon2R03_ = fTracksNonConePatMuon2R03;}
+    void SetTracksNonConePatElectron2R03(int fTracksNonConePatElectron2R03)    {TracksNonConePatElectron2R03_ = fTracksNonConePatElectron2R03;}
+
+    void SetTracksNonConeSecondMuonR04(int fTracksNonConeSecondMuonR04)    {TracksNonConeSecondMuonR04_ = fTracksNonConeSecondMuonR04;}
+    void SetTracksNonConeSecondElectronR04(int fTracksNonConeSecondElectronR04)    {TracksNonConeSecondElectronR04_ = fTracksNonConeSecondElectronR04;}
+    void SetTracksNonConePatMuon2R04(int fTracksNonConePatMuon2R04)    {TracksNonConePatMuon2R04_ = fTracksNonConePatMuon2R04;}
+    void SetTracksNonConePatElectron2R04(int fTracksNonConePatElectron2R04)    {TracksNonConePatElectron2R04_ = fTracksNonConePatElectron2R04;}
+
+    void SetTracksNonConeSecondMuonR05(int fTracksNonConeSecondMuonR05)    {TracksNonConeSecondMuonR05_ = fTracksNonConeSecondMuonR05;}
+    void SetTracksNonConeSecondElectronR05(int fTracksNonConeSecondElectronR05)    {TracksNonConeSecondElectronR05_ = fTracksNonConeSecondElectronR05;}
+    void SetTracksNonConePatMuon2R05(int fTracksNonConePatMuon2R05)    {TracksNonConePatMuon2R05_ = fTracksNonConePatMuon2R05;}
+    void SetTracksNonConePatElectron2R05(int fTracksNonConePatElectron2R05)    {TracksNonConePatElectron2R05_ = fTracksNonConePatElectron2R05;}
 
     void SetLeadingElectronDeltaPhiTkClu(double fLeadingElectronDeltaPhiTkClu)    {LeadingElectronDeltaPhiTkClu_ = fLeadingElectronDeltaPhiTkClu;}
     void SetLeadingElectronDeltaEtaTkClu(double fLeadingElectronDeltaEtaTkClu)    {LeadingElectronDeltaEtaTkClu_ = fLeadingElectronDeltaEtaTkClu;}
@@ -368,7 +490,6 @@ class DiffractiveWEvent {
     double GetLeadingMuonPhi() const {return LeadingMuonPhi_;}
     const LorentzVector& GetLeadingMuonP4() const {return LeadingMuonP4_;}
     int GetLeadingMuonCharge() const {return LeadingMuonCharge_;}
-    int GetMuonsN() const {return MuonsN_;}
 
     double GetLeadingMuonSumPtR03() const {return LeadingMuonSumPtR03_;}
     double GetLeadingMuonEmEtR03() const {return LeadingMuonEmEtR03_;}
@@ -380,6 +501,7 @@ class DiffractiveWEvent {
     double GetLeadingMuonrelIsoDr03() const {return LeadingMuonrelIsoDr03_;}
     double GetLeadingMuonrelIsoDr05() const {return LeadingMuonrelIsoDr05_;}
 
+    int GetMuonsN() const {return MuonsN_;}
     double GetLeadingMuonTrackerHits() const {return LeadingMuonTrackerHits_;}
     double GetLeadingMuonPixelHits() const {return LeadingMuonPixelHits_;}
     double GetLeadingMuonNormalizedChi2() const {return LeadingMuonNormalizedChi2_;}
@@ -389,6 +511,59 @@ class DiffractiveWEvent {
     bool GetLeadingMuonIsGlobal() const {return LeadingMuonIsGlobal_;}
     bool GetLeadingMuonIsTracker() const {return LeadingMuonIsTracker_;}
     bool GetLeadingMuonIsGood() const {return LeadingMuonIsGood_;}
+
+    double GetSecondElectronPt() const {return SecondElectronPt_;}
+    double GetSecondElectronEta() const {return SecondElectronEta_;}
+    double GetSecondElectronPhi() const {return SecondElectronPhi_;}
+    const LorentzVector& GetSecondElectronP4() const {return SecondElectronP4_;}
+    int GetSecondElectronCharge() const {return SecondElectronCharge_;}
+    double GetSecondElectronTkDr03() const {return SecondElectronTkDr03_;}
+    double GetSecondElectronEcalDr03() const {return SecondElectronEcalDr03_;}
+    double GetSecondElectronHcalDr03() const {return SecondElectronHcalDr03_;}
+
+    double GetSecondElectronTkDr04() const {return SecondElectronTkDr04_;}
+    double GetSecondElectronEcalDr04() const {return SecondElectronEcalDr04_;}
+    double GetSecondElectronHcalDr04() const {return SecondElectronHcalDr04_;}
+
+    double GetSecondElectronrelIsoDr03() const {return SecondElectronrelIsoDr03_;}
+    double GetSecondElectronrelIsoDr04() const {return SecondElectronrelIsoDr04_;}
+
+    bool GetSecondElectronIsWP95() const {return SecondElectronIsWP95_;}
+    bool GetSecondElectronIsWP80() const {return SecondElectronIsWP80_;}
+
+    double GetSecondElectronDeltaPhiTkClu() const {return SecondElectronDeltaPhiTkClu_;}
+    double GetSecondElectronDeltaEtaTkClu() const {return SecondElectronDeltaEtaTkClu_;}
+    double GetSecondElectronSigmaIeIe() const {return SecondElectronSigmaIeIe_;}
+    double GetSecondElectronDCot() const {return SecondElectronDCot_;}
+    double GetSecondElectronDist() const {return SecondElectronDist_;}
+    double GetSecondElectronInnerHits() const {return SecondElectronInnerHits_;}
+    double GetSecondElectronHE() const {return SecondElectronHE_;}
+
+    double GetSecondMuonPt() const {return SecondMuonPt_;}
+    double GetSecondMuonEta() const {return SecondMuonEta_;}
+    double GetSecondMuonPhi() const {return SecondMuonPhi_;}
+    const LorentzVector& GetSecondMuonP4() const {return SecondMuonP4_;}
+    int GetSecondMuonCharge() const {return SecondMuonCharge_;}
+
+    double GetSecondMuonSumPtR03() const {return SecondMuonSumPtR03_;}
+    double GetSecondMuonEmEtR03() const {return SecondMuonEmEtR03_;}
+    double GetSecondMuonHadEtR03() const {return SecondMuonHadEtR03_;}
+    double GetSecondMuonSumPtR05() const {return SecondMuonSumPtR05_;}
+    double GetSecondMuonEmEtR05() const {return SecondMuonEmEtR05_;}
+    double GetSecondMuonHadEtR05() const {return SecondMuonHadEtR05_;}
+
+    double GetSecondMuonrelIsoDr03() const {return SecondMuonrelIsoDr03_;}
+    double GetSecondMuonrelIsoDr05() const {return SecondMuonrelIsoDr05_;}
+
+    double GetSecondMuonTrackerHits() const {return SecondMuonTrackerHits_;}
+    double GetSecondMuonPixelHits() const {return SecondMuonPixelHits_;}
+    double GetSecondMuonNormalizedChi2() const {return SecondMuonNormalizedChi2_;}
+    double GetSecondMuonMatchedStations() const {return SecondMuonMatchedStations_;}
+    double GetSecondMuonDxy() const {return SecondMuonDxy_;}
+    double GetSecondMuonDz() const {return SecondMuonDz_;}
+    bool GetSecondMuonIsGlobal() const {return SecondMuonIsGlobal_;}
+    bool GetSecondMuonIsTracker() const {return SecondMuonIsTracker_;}
+    bool GetSecondMuonIsGood() const {return SecondMuonIsGood_;}
 
     double GetVertexMultiplicity(int i) const { return VertexMultiplicity_[i]; }
     double GetVertexChiNorm(int i) const { return VertexChiNorm_[i]; }
@@ -589,6 +764,63 @@ class DiffractiveWEvent {
     double GetPatBosonElectronEta() const {return patBosonElectronEta_;}
     double GetPatBosonElectronPhi() const {return patBosonElectronPhi_;}
 
+    double GetPatMuon2Pt() const {return patMuon2Pt_;}
+    int GetPatMuon2Charge() const {return patMuon2Charge_;}
+    double GetPatMuon2Phi() const {return patMuon2Phi_;}
+    double GetPatMuon2Eta() const {return patMuon2Eta_;}
+    double GetPatMuon2Et() const {return patMuon2Et_;}
+    const LorentzVector& GetPatMuon2P4() const {return patMuon2P4_;}
+
+    double GetPatMuon2SumPtR03() const {return patMuon2SumPtR03_;}
+    double GetPatMuon2EmEtR03() const {return patMuon2EmEtR03_;}
+    double GetPatMuon2HadEtR03() const {return patMuon2HadEtR03_;}
+    double GetPatMuon2SumPtR05() const {return patMuon2SumPtR05_;}
+    double GetPatMuon2EmEtR05() const {return patMuon2EmEtR05_;}
+    double GetPatMuon2HadEtR05() const {return patMuon2HadEtR05_;}
+
+    double GetPatMuon2relIsoDr03() const {return patMuon2relIsoDr03_;}
+    double GetPatMuon2relIsoDr05() const {return patMuon2relIsoDr05_;}
+    double GetPatMuon2relIso() const {return patMuon2relIso_;}
+
+    double GetPatMuon2TrackerHits() const {return patMuon2TrackerHits_;}
+    double GetPatMuon2PixelHits() const {return patMuon2PixelHits_;}
+    double GetPatMuon2NormalizedChi2() const {return patMuon2NormalizedChi2_;}
+    double GetPatMuon2MatchedStations() const {return patMuon2MatchedStations_;}
+    double GetPatMuon2Dxy() const {return patMuon2Dxy_;}
+    double GetPatMuon2Dz() const {return patMuon2Dz_;}
+    bool GetPatMuon2IsGlobal() const {return patMuon2IsGlobal_;}
+    bool GetPatMuon2IsTracker() const {return patMuon2IsTracker_;}
+    bool GetPatMuon2IsGood() const {return patMuon2IsGood_;}
+
+    double GetPatElectron2Pt() const {return patElectron2Pt_;}
+    int GetPatElectron2Charge() const {return patElectron2Charge_;}
+    double GetPatElectron2Phi() const {return patElectron2Phi_;}
+    double GetPatElectron2Eta() const {return patElectron2Eta_;}
+    double GetPatElectron2Et() const {return patElectron2Et_;}
+    const LorentzVector& GetPatElectron2P4() const {return patElectron2P4_;}
+
+    double GetPatElectron2TkDr03() const {return patElectron2TkDr03_;}
+    double GetPatElectron2EcalDr03() const {return patElectron2EcalDr03_;}
+    double GetPatElectron2HcalDr03() const {return patElectron2HcalDr03_;}
+
+    double GetPatElectron2TkDr04() const {return patElectron2TkDr04_;}
+    double GetPatElectron2EcalDr04() const {return patElectron2EcalDr04_;}
+    double GetPatElectron2HcalDr04() const {return patElectron2HcalDr04_;}
+
+    double GetPatElectron2relIsoDr03() const {return patElectron2relIsoDr03_;}
+    double GetPatElectron2relIsoDr04() const {return patElectron2relIsoDr04_;}
+
+    bool GetPatElectron2IsWP95() const {return patElectron2IsWP95_;}
+    bool GetPatElectron2IsWP80() const {return patElectron2IsWP80_;}
+
+    double GetPatElectron2DeltaPhiTkClu() const {return patElectron2DeltaPhiTkClu_;}
+    double GetPatElectron2DeltaEtaTkClu() const {return patElectron2DeltaEtaTkClu_;}
+    double GetPatElectron2SigmaIeIe() const {return patElectron2SigmaIeIe_;}
+    double GetPatElectron2DCot() const {return patElectron2DCot_;}
+    double GetPatElectron2Dist() const {return patElectron2Dist_;}
+    double GetPatElectron2InnerHits() const {return patElectron2InnerHits_;}
+    double GetPatElectron2HE() const {return patElectron2HE_;}
+
     double GetEachTowerEta(int i) const { return EachTowerEta_[i]; }
     double GetEachTowerEnergy(int i) const { return EachTowerEnergy_[i]; }
     int GetEachTowerCounter() const {return EachTowerCounter_;}
@@ -602,20 +834,35 @@ class DiffractiveWEvent {
     int GetCastorBadChannels(int i) const { return CastorBadChannels_[i]; }
     int GetCastorNumberBadChannels() const { return CastorNumberBadChannels_;}
 
-    int GetTracksNonConeMuon03() const {return TracksNonConeMuon03_;}
-    int GetTracksNonConeElectron03() const {return TracksNonConeElectron03_;}
-    int GetTracksNonConepatMuon03() const {return TracksNonConepatMuon03_;}
-    int GetTracksNonConepatElectron03() const {return TracksNonConepatElectron03_;}
+    int GetTracksNonConeLeadingMuonR03() const {return TracksNonConeLeadingMuonR03_;}
+    int GetTracksNonConeLeadingElectronR03() const {return TracksNonConeLeadingElectronR03_;}
+    int GetTracksNonConePatMuon1R03() const {return TracksNonConePatMuon1R03_;}
+    int GetTracksNonConePatElectron1R03() const {return TracksNonConePatElectron1R03_;}
 
-    int GetTracksNonConeMuon04() const {return TracksNonConeMuon04_;}
-    int GetTracksNonConeElectron04() const {return TracksNonConeElectron04_;}
-    int GetTracksNonConepatMuon04() const {return TracksNonConepatMuon04_;}
-    int GetTracksNonConepatElectron04() const {return TracksNonConepatElectron04_;}
+    int GetTracksNonConeLeadingMuonR04() const {return TracksNonConeLeadingMuonR04_;}
+    int GetTracksNonConeLeadingElectronR04() const {return TracksNonConeLeadingElectronR04_;}
+    int GetTracksNonConePatMuon1R04() const {return TracksNonConePatMuon1R04_;}
+    int GetTracksNonConePatElectron1R04() const {return TracksNonConePatElectron1R04_;}
 
-    int GetTracksNonConeMuon05() const {return TracksNonConeMuon05_;}
-    int GetTracksNonConeElectron05() const {return TracksNonConeElectron05_;}
-    int GetTracksNonConepatMuon05() const {return TracksNonConepatMuon05_;}
-    int GetTracksNonConepatElectron05() const {return TracksNonConepatElectron05_;}
+    int GetTracksNonConeLeadingMuonR05() const {return TracksNonConeLeadingMuonR05_;}
+    int GetTracksNonConeLeadingElectronR05() const {return TracksNonConeLeadingElectronR05_;}
+    int GetTracksNonConePatMuon1R05() const {return TracksNonConePatMuon1R05_;}
+    int GetTracksNonConePatElectron1R05() const {return TracksNonConePatElectron1R05_;}
+
+    int GetTracksNonConeSecondMuonR03() const {return TracksNonConeSecondMuonR03_;}
+    int GetTracksNonConeSecondElectronR03() const {return TracksNonConeSecondElectronR03_;}
+    int GetTracksNonConePatMuon2R03() const {return TracksNonConePatMuon2R03_;}
+    int GetTracksNonConePatElectron2R03() const {return TracksNonConePatElectron2R03_;}
+
+    int GetTracksNonConeSecondMuonR04() const {return TracksNonConeSecondMuonR04_;}
+    int GetTracksNonConeSecondElectronR04() const {return TracksNonConeSecondElectronR04_;}
+    int GetTracksNonConePatMuon2R04() const {return TracksNonConePatMuon2R04_;}
+    int GetTracksNonConePatElectron2R04() const {return TracksNonConePatElectron2R04_;}
+
+    int GetTracksNonConeSecondMuonR05() const {return TracksNonConeSecondMuonR05_;}
+    int GetTracksNonConeSecondElectronR05() const {return TracksNonConeSecondElectronR05_;}
+    int GetTracksNonConePatMuon2R05() const {return TracksNonConePatMuon2R05_;}
+    int GetTracksNonConePatElectron2R05() const {return TracksNonConePatElectron2R05_;}
 
     double GetLeadingElectronDeltaPhiTkClu() const {return LeadingElectronDeltaPhiTkClu_;}
     double GetLeadingElectronDeltaEtaTkClu() const {return LeadingElectronDeltaEtaTkClu_;}
@@ -708,6 +955,58 @@ class DiffractiveWEvent {
     bool LeadingMuonIsGlobal_;
     bool LeadingMuonIsTracker_;
     bool LeadingMuonIsGood_;
+
+    double SecondElectronPt_;
+    double SecondElectronEta_;
+    double SecondElectronPhi_;
+    LorentzVector SecondElectronP4_;
+    int SecondElectronCharge_;
+
+    double SecondElectronTkDr03_;
+    double SecondElectronEcalDr03_;
+    double SecondElectronHcalDr03_;
+
+    double SecondElectronTkDr04_;
+    double SecondElectronEcalDr04_;
+    double SecondElectronHcalDr04_;
+
+    double SecondElectronrelIsoDr03_;
+    double SecondElectronrelIsoDr04_;
+
+    double SecondElectronDeltaPhiTkClu_;
+    double SecondElectronDeltaEtaTkClu_;
+    double SecondElectronSigmaIeIe_;
+    double SecondElectronDCot_;
+    double SecondElectronDist_;
+    double SecondElectronInnerHits_;
+    double SecondElectronHE_;
+    bool SecondElectronIsWP95_;
+    bool SecondElectronIsWP80_;
+
+    double SecondMuonPt_;
+    double SecondMuonEta_;
+    double SecondMuonPhi_;
+    LorentzVector SecondMuonP4_;
+    int SecondMuonCharge_;
+
+    double SecondMuonSumPtR03_;
+    double SecondMuonEmEtR03_;
+    double SecondMuonHadEtR03_;
+    double SecondMuonSumPtR05_;
+    double SecondMuonEmEtR05_;
+    double SecondMuonHadEtR05_;
+
+    double SecondMuonrelIsoDr03_;
+    double SecondMuonrelIsoDr05_;
+    double SecondMuonTrackerHits_;
+    double SecondMuonPixelHits_;
+    double SecondMuonNormalizedChi2_;
+    double SecondMuonMatchedStations_;
+    double SecondMuonDxy_;
+    double SecondMuonDz_;
+    bool SecondMuonIsGlobal_;
+    bool SecondMuonIsTracker_;
+    bool SecondMuonIsGood_;
 
     std::vector<double> VertexMultiplicity_;
     std::vector<double> VertexChiNorm_;
@@ -911,20 +1210,92 @@ class DiffractiveWEvent {
     double patElectron1relIsoDr03_;
     double patElectron1relIsoDr04_;
 
-    int TracksNonConeMuon03_;
-    int TracksNonConeElectron03_;
-    int TracksNonConepatMuon03_;
-    int TracksNonConepatElectron03_;
+    double patMuon2Pt_;
+    int patMuon2Charge_;
+    double patMuon2Phi_;
+    double patMuon2Eta_;
+    double patMuon2Et_;
+    LorentzVector patMuon2P4_;
 
-    int TracksNonConeMuon04_;
-    int TracksNonConeElectron04_;
-    int TracksNonConepatMuon04_;
-    int TracksNonConepatElectron04_;
+    double patMuon2SumPtR03_;
+    double patMuon2EmEtR03_;
+    double patMuon2HadEtR03_;
+    double patMuon2SumPtR05_;
+    double patMuon2EmEtR05_;
+    double patMuon2HadEtR05_;
 
-    int TracksNonConeMuon05_;
-    int TracksNonConeElectron05_;
-    int TracksNonConepatMuon05_;
-    int TracksNonConepatElectron05_;
+    double patMuon2relIsoDr03_;
+    double patMuon2relIsoDr05_;
+    double patMuon2relIso_;
+
+    double patMuon2TrackerHits_;
+    double patMuon2PixelHits_;
+    double patMuon2NormalizedChi2_;
+    double patMuon2MatchedStations_;
+    double patMuon2Dxy_;
+    double patMuon2Dz_;
+    bool patMuon2IsGlobal_;
+    bool patMuon2IsTracker_;
+    bool patMuon2IsGood_;
+
+
+    double patElectron2Pt_;
+    int patElectron2Charge_;
+    double patElectron2Phi_;
+    double patElectron2Eta_;
+    double patElectron2Et_;
+    LorentzVector patElectron2P4_;
+
+    double patElectron2TkDr03_;
+    double patElectron2EcalDr03_;
+    double patElectron2HcalDr03_;
+
+    double patElectron2TkDr04_;
+    double patElectron2EcalDr04_;
+    double patElectron2HcalDr04_;
+
+    double patElectron2relIsoDr03_;
+    double patElectron2relIsoDr04_;
+
+    double patElectron2DeltaPhiTkClu_;
+    double patElectron2DeltaEtaTkClu_;
+    double patElectron2SigmaIeIe_;
+    double patElectron2DCot_;
+    double patElectron2Dist_;
+    double patElectron2InnerHits_;
+    double patElectron2HE_;
+    bool patElectron2IsWP95_;
+    bool patElectron2IsWP80_;
+
+    int TracksNonConeLeadingMuonR03_;
+    int TracksNonConeLeadingElectronR03_;
+    int TracksNonConePatMuon1R03_;
+    int TracksNonConePatElectron1R03_;
+
+    int TracksNonConeLeadingMuonR04_;
+    int TracksNonConeLeadingElectronR04_;
+    int TracksNonConePatMuon1R04_;
+    int TracksNonConePatElectron1R04_;
+
+    int TracksNonConeLeadingMuonR05_;
+    int TracksNonConeLeadingElectronR05_;
+    int TracksNonConePatMuon1R05_;
+    int TracksNonConePatElectron1R05_;
+
+    int TracksNonConeSecondMuonR03_;
+    int TracksNonConeSecondElectronR03_;
+    int TracksNonConePatMuon2R03_;
+    int TracksNonConePatElectron2R03_;
+
+    int TracksNonConeSecondMuonR04_;
+    int TracksNonConeSecondElectronR04_;
+    int TracksNonConePatMuon2R04_;
+    int TracksNonConePatElectron2R04_;
+
+    int TracksNonConeSecondMuonR05_;
+    int TracksNonConeSecondElectronR05_;
+    int TracksNonConePatMuon2R05_;
+    int TracksNonConePatElectron2R05_;
 
     double LeadingElectronDeltaPhiTkClu_;
     double LeadingElectronDeltaEtaTkClu_;
