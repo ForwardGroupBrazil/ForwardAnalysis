@@ -32,6 +32,57 @@ void DiffractiveWEvent::reset(){
   BosonMuonPhi_ = -999.; 
   MuonsN_= -1;
 
+  SecondElectronPt_ = -999.;
+  SecondElectronEta_ = -999.;
+  SecondElectronPhi_ = -999.;
+  SecondElectronCharge_ = -999;
+
+
+  SecondElectronTkDr03_ = -999.;
+  SecondElectronEcalDr03_ = -999.;
+  SecondElectronHcalDr03_= -999.;
+
+  SecondElectronTkDr04_= -999.;
+  SecondElectronEcalDr04_= -999.;
+  SecondElectronHcalDr04_= -999.;
+
+  SecondElectronrelIsoDr03_= -999.;
+  SecondElectronrelIsoDr04_= -999.;
+
+  SecondElectronDeltaPhiTkClu_= -999.;
+  SecondElectronDeltaEtaTkClu_= -999.;
+  SecondElectronSigmaIeIe_= -999.;
+  SecondElectronDCot_= -999.;
+  SecondElectronDist_= -999.;
+  SecondElectronInnerHits_= -999.;
+  SecondElectronHE_= -999.;
+  SecondElectronIsWP95_= false;
+  SecondElectronIsWP80_= false;
+
+  SecondMuonPt_= -999.;
+  SecondMuonEta_= -999.;
+  SecondMuonPhi_= -999.;
+  SecondMuonCharge_= -999;
+
+  SecondMuonSumPtR03_= -999.;
+  SecondMuonEmEtR03_= -999.;
+  SecondMuonHadEtR03_= -999.;
+  SecondMuonSumPtR05_= -999.;
+  SecondMuonEmEtR05_= -999.;
+  SecondMuonHadEtR05_= -999.;
+
+  SecondMuonrelIsoDr03_= -999.;
+  SecondMuonrelIsoDr05_= -999.;
+  SecondMuonTrackerHits_= -999.;
+  SecondMuonPixelHits_= -999.;
+  SecondMuonNormalizedChi2_= -999.;
+  SecondMuonMatchedStations_= -999.;
+  SecondMuonDxy_= -999.;
+  SecondMuonDz_= -999.;
+  SecondMuonIsGlobal_= false;
+  SecondMuonIsTracker_ = false;
+  SecondMuonIsGood_ = false;
+
   VertexMultiplicity_.clear();
   VertexChiNorm_.clear();
   VertexNDOF_.clear();
@@ -224,6 +275,60 @@ void DiffractiveWEvent::reset(){
   patBosonElectronPhi_ = -999.;
   patBosonElectronEta_ = -999.;
 
+  patMuon2Pt_= -999.;
+  patMuon2Charge_= -999;
+  patMuon2Phi_= -999.;
+  patMuon2Eta_= -999.;
+  patMuon2Et_= -999.;
+
+  patMuon2SumPtR03_= -999.;
+  patMuon2EmEtR03_= -999.;
+  patMuon2HadEtR03_= -999.;
+  patMuon2SumPtR05_= -999.;
+  patMuon2EmEtR05_= -999.;
+  patMuon2HadEtR05_= -999.;
+
+  patMuon2relIsoDr03_= -999.;
+  patMuon2relIsoDr05_= -999.;
+  patMuon2relIso_= -999.;
+
+  patMuon2TrackerHits_= -999.;
+  patMuon2PixelHits_= -999.;
+  patMuon2NormalizedChi2_= -999.;
+  patMuon2MatchedStations_= -999.;
+  patMuon2Dxy_ = -999.;
+  patMuon2Dz_= -999.;
+  patMuon2IsGlobal_ = false;
+  patMuon2IsTracker_ = false;
+  patMuon2IsGood_ = false;
+
+  patElectron2Pt_= -999.;
+  patElectron2Charge_= -999;
+  patElectron2Phi_= -999.;
+  patElectron2Eta_= -999.;
+  patElectron2Et_= -999.;
+
+  patElectron2TkDr03_= -999.;
+  patElectron2EcalDr03_= -999.;
+  patElectron2HcalDr03_= -999.;
+
+  patElectron2TkDr04_= -999.;
+  patElectron2EcalDr04_= -999.;
+  patElectron2HcalDr04_= -999.;
+
+  patElectron2relIsoDr03_= -999.;
+  patElectron2relIsoDr04_= -999.;
+
+  patElectron2DeltaPhiTkClu_= -999.;
+  patElectron2DeltaEtaTkClu_= -999.;
+  patElectron2SigmaIeIe_= -999.;
+  patElectron2DCot_= -999.;
+  patElectron2Dist_= -999.;
+  patElectron2InnerHits_= -999.;
+  patElectron2HE_= -999.;
+  patElectron2IsWP95_= false;
+  patElectron2IsWP80_ = false;
+
   LeadingElectronTkDr03_=-999.;
   LeadingElectronEcalDr03_=-999.;
   LeadingElectronHcalDr03_=-999.;
@@ -254,20 +359,35 @@ void DiffractiveWEvent::reset(){
   LeadingMuonIsTracker_ = false;
   LeadingMuonIsGood_ = false;
 
-  TracksNonConeMuon03_ = -1;
-  TracksNonConeElectron03_ = -1;
-  TracksNonConepatMuon03_ = -1;
-  TracksNonConepatElectron03_ = -1;
+  TracksNonConeSecondMuonR03_=-1;
+  TracksNonConeSecondElectronR03_=-1;
+  TracksNonConePatMuon2R03_=-1;
+  TracksNonConePatElectron2R03_=-1;
 
-  TracksNonConeMuon04_ = -1;
-  TracksNonConeElectron04_ = -1;
-  TracksNonConepatMuon04_ = -1;
-  TracksNonConepatElectron04_ = -1;
+  TracksNonConeSecondMuonR04_=-1;
+  TracksNonConeSecondElectronR04_=-1;
+  TracksNonConePatMuon2R04_=-1;
+  TracksNonConePatElectron2R04_=-1;
 
-  TracksNonConeMuon05_ = -1;
-  TracksNonConeElectron05_ = -1;
-  TracksNonConepatMuon05_ = -1;
-  TracksNonConepatElectron05_ = -1;
+  TracksNonConeSecondMuonR05_=-1;
+  TracksNonConeSecondElectronR05_=-1;
+  TracksNonConePatMuon2R05_=-1;
+  TracksNonConePatElectron2R05_=-1;
+
+  TracksNonConeSecondMuonR03_=-1;
+  TracksNonConeSecondElectronR03_=-1;
+  TracksNonConePatMuon2R03_=-1;
+  TracksNonConePatElectron2R03_=-1;
+
+  TracksNonConeSecondMuonR04_=-1;
+  TracksNonConeSecondElectronR04_=-1;
+  TracksNonConePatMuon2R04_=-1;
+  TracksNonConePatElectron2R04_=-1;
+
+  TracksNonConeSecondMuonR05_=-1;
+  TracksNonConeSecondElectronR05_=-1;
+  TracksNonConePatMuon2R05_=-1;
+  TracksNonConePatElectron2R05_=-1;
 
   LeadingElectronDeltaPhiTkClu_ = -999.;
   LeadingElectronDeltaEtaTkClu_ = -999.;

@@ -342,7 +342,7 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
     double relIsoFirstElectronDr04 = (ElectronVector[0]->dr04TkSumPt()+ElectronVector[0]->dr04EcalRecHitSumEt()+ElectronVector[0]->dr04HcalTowerSumEt())/ElectronVector[0]->et();
     double InnerHits1 = ElectronVector[0]->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
 
-    // Dielectron Mass
+    // Dilepton Mass
     math::XYZTLorentzVector BosonElectronSystem(0.,0.,0.,0.);
     BosonElectronSystem += ElectronVector[0]->p4();
     BosonElectronSystem += NeutrinoVector[0]->p4();
@@ -382,9 +382,9 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
-    int goodTracksCount03 = 0;
-    int goodTracksCount04 = 0;
-    int goodTracksCount05 = 0;
+    int goodTracksCountLeadingElectronR03 = 0;
+    int goodTracksCountLeadingElectronR04 = 0;
+    int goodTracksCountLeadingElectronR05 = 0;
 
     // Tracks Outside Cone
     edm::View<reco::Track>::const_iterator track = trackColl.begin();
@@ -393,24 +393,24 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
     {
       if ((deltaR(track->eta(),track->phi(),ElectronVector[0]->eta(),ElectronVector[0]->phi()) > 0.3))
       {
-	goodTracksCount03++;
+	goodTracksCountLeadingElectronR03++;
       }
 
       if ((deltaR(track->eta(),track->phi(),ElectronVector[0]->eta(),ElectronVector[0]->phi()) > 0.4))
       {
-	goodTracksCount04++;
+	goodTracksCountLeadingElectronR04++;
       }
 
       if ((deltaR(track->eta(),track->phi(),ElectronVector[0]->eta(),ElectronVector[0]->phi()) > 0.5))
       {
-	goodTracksCount05++;
+	goodTracksCountLeadingElectronR05++;
       }
 
     }
 
-    eventData.SetTracksNonConeElectron03(goodTracksCount03);
-    eventData.SetTracksNonConeElectron04(goodTracksCount04);
-    eventData.SetTracksNonConeElectron05(goodTracksCount05);
+    eventData.SetTracksNonConeLeadingElectronR03(goodTracksCountLeadingElectronR03);
+    eventData.SetTracksNonConeLeadingElectronR04(goodTracksCountLeadingElectronR04);
+    eventData.SetTracksNonConeLeadingElectronR05(goodTracksCountLeadingElectronR05);
 
     if (debug){
       std::cout << ">>> Reco Electron" << std::endl;
@@ -528,6 +528,160 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
     eventData.SetLeadingElectronIsWP80(false);
 
   }
+
+  // Second Lepton Info
+  if(ElectronVector.size()>1){
+
+    double relIsoSecondElectronDr03 = (ElectronVector[1]->dr03TkSumPt()+ElectronVector[1]->dr03EcalRecHitSumEt()+ElectronVector[1]->dr03HcalTowerSumEt())/ElectronVector[1]->et();
+    double relIsoSecondElectronDr04 = (ElectronVector[1]->dr04TkSumPt()+ElectronVector[1]->dr04EcalRecHitSumEt()+ElectronVector[1]->dr04HcalTowerSumEt())/ElectronVector[1]->et();
+    double InnerHits2 = ElectronVector[1]->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+
+    eventData.SetSecondElectronPt(ElectronVector[1]->pt());
+    eventData.SetSecondElectronEta(ElectronVector[1]->eta());
+    eventData.SetSecondElectronPhi(ElectronVector[1]->phi());
+    eventData.SetSecondElectronCharge(ElectronVector[1]->charge());
+    eventData.SetSecondElectronP4(ElectronVector[1]->p4());
+    eventData.SetSecondElectronTkDr03(ElectronVector[1]->dr03TkSumPt());
+    eventData.SetSecondElectronEcalDr03(ElectronVector[1]->dr03EcalRecHitSumEt());
+    eventData.SetSecondElectronHcalDr03(ElectronVector[1]->dr03HcalTowerSumEt());
+    eventData.SetSecondElectronTkDr04(ElectronVector[1]->dr04TkSumPt());
+    eventData.SetSecondElectronEcalDr04(ElectronVector[1]->dr04EcalRecHitSumEt());
+    eventData.SetSecondElectronHcalDr04(ElectronVector[1]->dr04HcalTowerSumEt());
+    eventData.SetSecondElectronrelIsoDr03(relIsoSecondElectronDr03);
+    eventData.SetSecondElectronrelIsoDr04(relIsoSecondElectronDr04);
+    eventData.SetSecondElectronDeltaPhiTkClu(ElectronVector[1]->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetSecondElectronDeltaEtaTkClu(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetSecondElectronSigmaIeIe(ElectronVector[1]->sigmaIetaIeta());
+    eventData.SetSecondElectronDCot(ElectronVector[1]->convDcot());
+    eventData.SetSecondElectronDist(ElectronVector[1]->convDist());
+    eventData.SetSecondElectronInnerHits(InnerHits2);
+    eventData.SetSecondElectronHE(ElectronVector[1]->hadronicOverEm());
+
+    edm::Handle<edm::View<reco::Track> > trackHandle;
+    event.getByLabel(trackTag_,trackHandle);
+    const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+    int goodTracksCountSecondElectronR03 = 0;
+    int goodTracksCountSecondElectronR04 = 0;
+    int goodTracksCountSecondElectronR05 = 0;
+
+    // Tracks Outside Cone
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),ElectronVector[1]->eta(),ElectronVector[1]->phi()) > 0.3))
+      {
+	goodTracksCountSecondElectronR03++;
+      }
+      if ((deltaR(track->eta(),track->phi(),ElectronVector[1]->eta(),ElectronVector[1]->phi()) > 0.4))
+      {
+	goodTracksCountSecondElectronR04++;
+      }
+      if ((deltaR(track->eta(),track->phi(),ElectronVector[1]->eta(),ElectronVector[1]->phi()) > 0.5))
+      {
+	goodTracksCountSecondElectronR05++;
+      }
+    }
+    eventData.SetTracksNonConeSecondElectronR03(goodTracksCountSecondElectronR03);
+    eventData.SetTracksNonConeSecondElectronR04(goodTracksCountSecondElectronR04);
+    eventData.SetTracksNonConeSecondElectronR05(goodTracksCountSecondElectronR05);
+
+    if (debug){
+      std::cout << ">>> Reco Electron" << std::endl;
+      std::cout << "electron2 -> dr03 TK: " << ElectronVector[1]->dr03TkSumPt() << "| dr03 Ecal: " << ElectronVector[1]->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << ElectronVector[1]->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron2 -> dr04 TK: " << ElectronVector[1]->dr04TkSumPt() << "| dr04 Ecal: " << ElectronVector[1]->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << ElectronVector[1]->dr04HcalTowerSumEt() << std::endl;
+      std::cout << "Electron Isolation: " << relIsoSecondElectronDr03 << " | " << relIsoSecondElectronDr04 << std::endl;
+      std::cout << "N Electrons: " << ElectronVector.size() << std::endl;
+      std::cout << "Electron, pT 2: " << ElectronVector[1]->pt() << std::endl;
+      std::cout << "Electron, eta 2: " << ElectronVector[1]->eta() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron2: " << ElectronVector[1]->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron2: " << ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron2: " << ElectronVector[1]->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron2: " << ElectronVector[1]->convDcot() << std::endl;
+      std::cout << "Dist, electron2: " << ElectronVector[1]->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron2: " << ElectronVector[1]->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron2: " << ElectronVector[1]->hadronicOverEm() << std::endl;
+      std::cout << "" << std::endl;
+    }
+    double isoTk2 = ElectronVector[1]->dr03TkSumPt()/ElectronVector[1]->pt();
+    double isoEcal2 = ElectronVector[1]->dr03EcalRecHitSumEt()/ElectronVector[1]->pt();
+    double isoHcal1 = ElectronVector[1]->dr03HcalTowerSumEt()/ElectronVector[1]->pt();
+    bool isoBarrel2WP95 = false;
+    bool isoEndCap2WP95 = false;
+    bool isolation2WP95 = false;
+    bool eleEndCap2WP95 = false;
+    bool eleBarrel2WP95 = false;
+    bool candSel2WP95 = false;
+    bool isoBarrel2WP80 = false;
+    bool isoEndCap2WP80 = false;
+    bool isolation2WP80 = false;
+    bool eleEndCap2WP80 = false;
+    bool eleBarrel2WP80 = false;
+    bool candSel2WP80 = false;
+
+    //Isolation Barrel
+    if ((fabs(ElectronVector[1]->eta()) <= 1.4442) ){
+      if (isoTk2<0.15 && isoEcal2<2.0 && isoHcal1<0.12) isoBarrel2WP95 = true;
+      if (isoTk2<0.09 && isoEcal2<0.07 && isoHcal1<0.10) isoBarrel2WP80 = true;
+    }
+
+    // Isolation Endcap
+    if ((fabs(ElectronVector[1]->eta()) >= 1.5660) && (fabs(ElectronVector[1]->eta()) <= 2.5)){
+      if (isoTk2<0.08 && isoEcal2<0.06 && isoHcal1<0.05) isoEndCap2WP95 = true;
+      if (isoTk2<0.04 && isoEcal2<0.05 && isoHcal1<0.025) isoEndCap2WP80 = true;
+    }
+    if ((isoEndCap2WP95 || isoBarrel2WP95)) isolation2WP95 = true;
+    if ((isoEndCap2WP80 || isoBarrel2WP80)) isolation2WP80 = true;
+
+    // Quality criteria Barrel
+    if ((fabs(ElectronVector[1]->eta()) <= 1.4442) ){
+      if (InnerHits2 <= 1 && fabs(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && ElectronVector[1]->sigmaIetaIeta() < 0.01 && ElectronVector[1]->hadronicOverEm() < 0.15 ) eleBarrel2WP95 = true;
+      if (InnerHits2 <= 0 && (fabs(ElectronVector[1]->convDcot()) >= 0.02 || fabs(ElectronVector[1]->convDist()) >= 0.02 ) && fabs(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.004 && fabs(ElectronVector[1]->deltaPhiSuperClusterTrackAtVtx()) < 0.06 && ElectronVector[1]->sigmaIetaIeta() < 0.01 && ElectronVector[1]->hadronicOverEm() < 0.04 ) eleBarrel2WP80 = true;
+    }
+
+    // Quality criteria Endcap
+    if ((fabs(ElectronVector[1]->eta()) >= 1.5660) && (fabs(ElectronVector[1]->eta()) <= 2.5)){
+      if (InnerHits2 <= 1 && fabs(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.01 && ElectronVector[1]->sigmaIetaIeta() < 0.03 && ElectronVector[1]->hadronicOverEm() < 0.07) eleEndCap2WP95 = true;
+      if (InnerHits2 <= 0 && (fabs(ElectronVector[1]->convDcot()) >= 0.02 || fabs(ElectronVector[1]->convDist()) >= 0.02 ) && fabs(ElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(ElectronVector[1]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && ElectronVector[1]->sigmaIetaIeta() < 0.03 && ElectronVector[1]->hadronicOverEm() < 0.025) eleEndCap2WP80 = true;
+    }
+    if ((eleEndCap2WP95 || eleBarrel2WP95)) candSel2WP95 = true;
+    if ((eleEndCap2WP80 || eleBarrel2WP80)) candSel2WP80 = true;
+    if(isolation2WP80 && candSel2WP80){
+      eventData.SetSecondElectronIsWP80(true);
+    }else{
+      eventData.SetSecondElectronIsWP80(false);
+    }
+    if(isolation2WP95 && candSel2WP95){
+      eventData.SetSecondElectronIsWP95(true);
+    }else{
+      eventData.SetSecondElectronIsWP95(false);
+    }
+  }
+  else {
+    eventData.SetSecondElectronPt(-999.);
+    eventData.SetSecondElectronEta(-999.);
+    eventData.SetSecondElectronPhi(-999.);
+    eventData.SetSecondElectronCharge(-999);
+    eventData.SetSecondElectronTkDr03(-999.);
+    eventData.SetSecondElectronEcalDr03(-999.);
+    eventData.SetSecondElectronHcalDr03(-999.);
+    eventData.SetSecondElectronTkDr04(-999.);
+    eventData.SetSecondElectronEcalDr04(-999.);
+    eventData.SetSecondElectronHcalDr04(-999.);
+    eventData.SetSecondElectronrelIsoDr03(-999.);
+    eventData.SetSecondElectronrelIsoDr04(-999.);
+    eventData.SetSecondElectronDeltaPhiTkClu(-999.);
+    eventData.SetSecondElectronDeltaEtaTkClu(-999.);
+    eventData.SetSecondElectronSigmaIeIe(-999.);
+    eventData.SetSecondElectronDCot(-999.);
+    eventData.SetSecondElectronDist(-999.);
+    eventData.SetSecondElectronInnerHits(-999.);
+    eventData.SetSecondElectronHE(-999.);
+    eventData.SetSecondElectronIsWP95(false);
+    eventData.SetSecondElectronIsWP80(false);
+  }
+
 }
 
 // Fill Reco::Muon
@@ -597,9 +751,9 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
-    int goodTracksCount03 = 0;
-    int goodTracksCount04 = 0;
-    int goodTracksCount05 = 0;
+    int goodTracksCountLeadingMuonR03 = 0;
+    int goodTracksCountLeadingMuonR04 = 0;
+    int goodTracksCountLeadingMuonR05 = 0;
 
     // Tracks Outside Cone
     edm::View<reco::Track>::const_iterator track = trackColl.begin();
@@ -608,24 +762,24 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     {
       if ((deltaR(track->eta(),track->phi(),MuonVector[0]->eta(),MuonVector[0]->phi()) > 0.3))
       {
-	goodTracksCount03++;
+	goodTracksCountLeadingMuonR03++;
       }
 
       if ((deltaR(track->eta(),track->phi(),MuonVector[0]->eta(),MuonVector[0]->phi()) > 0.4))
       {
-	goodTracksCount04++;
+	goodTracksCountLeadingMuonR04++;
       }
 
       if ((deltaR(track->eta(),track->phi(),MuonVector[0]->eta(),MuonVector[0]->phi()) > 0.5))
       {
-	goodTracksCount05++;
+	goodTracksCountLeadingMuonR05++;
       }
 
     }
 
-    eventData.SetTracksNonConeMuon03(goodTracksCount03);
-    eventData.SetTracksNonConeMuon04(goodTracksCount04);
-    eventData.SetTracksNonConeMuon05(goodTracksCount05);
+    eventData.SetTracksNonConeLeadingMuonR03(goodTracksCountLeadingMuonR03);
+    eventData.SetTracksNonConeLeadingMuonR04(goodTracksCountLeadingMuonR04);
+    eventData.SetTracksNonConeLeadingMuonR05(goodTracksCountLeadingMuonR05);
 
     if (debug){
       std::cout << "NMuons: " << MuonVector.size() << std::endl;
@@ -658,7 +812,6 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     }else{
       eventData.SetLeadingMuonIsGood(false);
     }
-
 
     if(!MuonVector[0]->track().isNull()){
       eventData.SetLeadingMuonTrackerHits(MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement());
@@ -715,6 +868,138 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     eventData.SetLeadingMuonIsTracker(false);
     eventData.SetLeadingMuonIsGood(false);
   } 
+
+
+  // Second Muon
+  if(MuonVector.size()>1){
+
+    double muon2SumPtR03 = MuonVector[1]->isolationR03().sumPt;
+    double muon2EmEtR03 = MuonVector[1]->isolationR03().emEt;
+    double muon2HadEtR03 = MuonVector[1]->isolationR03().hadEt;
+    double muon2SumPtR05 = MuonVector[1]->isolationR05().sumPt;
+    double muon2EmEtR05 = MuonVector[1]->isolationR05().emEt;
+    double muon2HadEtR05 = MuonVector[1]->isolationR05().hadEt;
+
+    double relIsoSecondMuonDr03 = (muon2SumPtR03 + muon2EmEtR03 + muon2HadEtR03)/MuonVector[1]->pt();
+    double relIsoSecondMuonDr05 = (muon2SumPtR05 + muon2EmEtR05 + muon2HadEtR05)/MuonVector[1]->pt();
+
+    eventData.SetSecondMuonPt(MuonVector[1]->pt());
+    eventData.SetSecondMuonEta(MuonVector[1]->eta());
+    eventData.SetSecondMuonPhi(MuonVector[1]->phi());
+    eventData.SetSecondMuonCharge(MuonVector[1]->charge());
+    eventData.SetSecondMuonP4(MuonVector[1]->p4());
+    eventData.SetSecondMuonSumPtR03(muon2SumPtR03);
+    eventData.SetSecondMuonEmEtR03(muon2EmEtR03);
+    eventData.SetSecondMuonHadEtR03(muon2HadEtR03);
+    eventData.SetSecondMuonSumPtR05(muon2SumPtR05);
+    eventData.SetSecondMuonEmEtR05(muon2EmEtR05);
+    eventData.SetSecondMuonHadEtR05(muon2HadEtR05);
+    eventData.SetSecondMuonrelIsoDr03(relIsoSecondMuonDr03);
+    eventData.SetSecondMuonrelIsoDr05(relIsoSecondMuonDr05);
+
+    edm::Handle<edm::View<reco::Track> > trackHandle;
+    event.getByLabel(trackTag_,trackHandle);
+    const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+    int goodTracksCountSecondMuonR03 = 0;
+    int goodTracksCountSecondMuonR04 = 0;
+    int goodTracksCountSecondMuonR05 = 0;
+
+    // Tracks Outside Cone
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),MuonVector[1]->eta(),MuonVector[1]->phi()) > 0.3))
+      {
+	goodTracksCountSecondMuonR03++;
+      }
+      if ((deltaR(track->eta(),track->phi(),MuonVector[1]->eta(),MuonVector[1]->phi()) > 0.4))
+      {
+	goodTracksCountSecondMuonR04++;
+      }
+      if ((deltaR(track->eta(),track->phi(),MuonVector[1]->eta(),MuonVector[1]->phi()) > 0.5))
+      {
+	goodTracksCountSecondMuonR05++;
+      }
+    }
+    eventData.SetTracksNonConeSecondMuonR03(goodTracksCountSecondMuonR03);
+    eventData.SetTracksNonConeSecondMuonR04(goodTracksCountSecondMuonR04);
+    eventData.SetTracksNonConeSecondMuonR05(goodTracksCountSecondMuonR05);
+
+    if (debug){
+      std::cout << "NMuons: " << MuonVector.size() << std::endl;
+      std::cout << "Muon, pT 2: " << MuonVector[1]->pt() << std::endl;
+      std::cout << "Muon, eta 2: " << MuonVector[1]->eta() << std::endl;
+      if(!MuonVector[1]->track().isNull()) std::cout << "Muon 2, Tracker Hits: " << MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      if(!MuonVector[1]->globalTrack().isNull()) std::cout << "Muon 2, Chi2/ndof: " << MuonVector[1]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Muon 2, Matched Stations: " << MuonVector[1]->numberOfMatchedStations() << std::endl;
+      if(!PatMuonVector[1]->innerTrack().isNull()){
+	std::cout << "Muon 2, dxy: " << MuonVector[1]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+	std::cout << "Muon 2, Number of Valid Pixel Hits: " << MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      }
+
+    }
+    if(MuonVector[1]->isGlobalMuon() && MuonVector[1]->isTrackerMuon()){
+      if(!MuonVector[1]->globalTrack().isNull() && MuonVector[1]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
+	if(!MuonVector[1]->track().isNull() && MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
+	  if(!MuonVector[1]->innerTrack().isNull() && MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
+	    if(MuonVector[1]->numberOfMatchedStations() > 1 && MuonVector[1]->globalTrack()->normalizedChi2() < 10. && fabs(MuonVector[1]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
+	      eventData.SetSecondMuonIsGood(true);
+	    }
+	  }
+	}
+      }
+    }else{
+      eventData.SetSecondMuonIsGood(false);
+    }
+    if(!MuonVector[1]->track().isNull()){
+      eventData.SetSecondMuonTrackerHits(MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement());
+    }else{
+      eventData.SetSecondMuonTrackerHits(-999.);
+    }
+    if(!MuonVector[1]->innerTrack().isNull()){
+      eventData.SetSecondMuonPixelHits(MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits());
+      eventData.SetSecondMuonDxy(MuonVector[1]->innerTrack()->dxy(vertex->at(0).position()));
+      eventData.SetSecondMuonDz(MuonVector[1]->innerTrack()->dz(vertex->at(0).position()));
+    }else{
+      eventData.SetSecondMuonPixelHits(-999.);
+      eventData.SetSecondMuonDxy(-999.);
+      eventData.SetSecondMuonDz(-999.);
+    }
+    if(!MuonVector[1]->globalTrack().isNull()){
+      eventData.SetSecondMuonNormalizedChi2(MuonVector[1]->globalTrack()->normalizedChi2());
+    }else{
+      eventData.SetSecondMuonNormalizedChi2(-999.);
+    }
+    eventData.SetSecondMuonMatchedStations(MuonVector[1]->numberOfMatchedStations());
+    eventData.SetSecondMuonIsGlobal(MuonVector[1]->isGlobalMuon());
+    eventData.SetSecondMuonIsTracker(MuonVector[1]->isTrackerMuon());
+  }
+  else{
+    eventData.SetSecondMuonPt(-999.);
+    eventData.SetSecondMuonEta(-999.);
+    eventData.SetSecondMuonPhi(-999.);
+    eventData.SetSecondMuonCharge(-999);
+    eventData.SetSecondMuonSumPtR03(-999.);
+    eventData.SetSecondMuonEmEtR03(-999.);
+    eventData.SetSecondMuonHadEtR03(-999.);
+    eventData.SetSecondMuonSumPtR05(-999.);
+    eventData.SetSecondMuonEmEtR05(-999.);
+    eventData.SetSecondMuonHadEtR05(-999.);
+    eventData.SetSecondMuonrelIsoDr03(-999.);
+    eventData.SetSecondMuonrelIsoDr05(-999.);
+    eventData.SetSecondMuonTrackerHits(-999.);
+    eventData.SetSecondMuonPixelHits(-999.);
+    eventData.SetSecondMuonNormalizedChi2(-999.);
+    eventData.SetSecondMuonMatchedStations(-999.);
+    eventData.SetSecondMuonDxy(-999.);
+    eventData.SetSecondMuonDz(-999.);
+    eventData.SetSecondMuonIsGlobal(false);
+    eventData.SetSecondMuonIsTracker(false);
+    eventData.SetSecondMuonIsGood(false);
+  } 
+
 
 }
 
@@ -2036,9 +2321,9 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
-    int goodTracksCountm03= 0;
-    int goodTracksCountm04= 0;
-    int goodTracksCountm05= 0;
+    int goodTracksCountPatMuon1R03= 0;
+    int goodTracksCountPatMuon1R04= 0;
+    int goodTracksCountPatMuon1R05= 0;
 
     // Tracks Outside Cone
     edm::View<reco::Track>::const_iterator track = trackColl.begin();
@@ -2047,24 +2332,24 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     {
       if ((deltaR(track->eta(),track->phi(),PatMuonVector[0]->eta(),PatMuonVector[0]->phi()) > 0.3))
       {
-	goodTracksCountm03++;
+	goodTracksCountPatMuon1R03++;
       }
 
       if ((deltaR(track->eta(),track->phi(),PatMuonVector[0]->eta(),PatMuonVector[0]->phi()) > 0.4))
       {
-	goodTracksCountm04++;
+	goodTracksCountPatMuon1R04++;
       }
 
       if ((deltaR(track->eta(),track->phi(),PatMuonVector[0]->eta(),PatMuonVector[0]->phi()) > 0.5))
       {
-	goodTracksCountm05++;
+	goodTracksCountPatMuon1R05++;
       }
 
     }
 
-    eventData.SetTracksNonConepatMuon03(goodTracksCountm03);
-    eventData.SetTracksNonConepatMuon04(goodTracksCountm04);
-    eventData.SetTracksNonConepatMuon05(goodTracksCountm05);
+    eventData.SetTracksNonConePatMuon1R03(goodTracksCountPatMuon1R03);
+    eventData.SetTracksNonConePatMuon1R04(goodTracksCountPatMuon1R04);
+    eventData.SetTracksNonConePatMuon1R05(goodTracksCountPatMuon1R05);
 
     if (debug){
       std::cout << ">>> Pat Muon" << std::endl;
@@ -2162,12 +2447,156 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatBosonMuonPhi(-999.);
   } 
 
+  // Second Leading Muon
+  if(PatMuonVector.size()>1){
+    double muon2SumPtR03 = PatMuonVector[1]->isolationR03().sumPt;
+    double muon2EmEtR03 = PatMuonVector[1]->isolationR03().emEt;
+    double muon2HadEtR03 = PatMuonVector[1]->isolationR03().hadEt;
+    double muon2SumPtR05 = PatMuonVector[1]->isolationR05().sumPt;
+    double muon2EmEtR05 = PatMuonVector[1]->isolationR05().emEt;
+    double muon2HadEtR05 = PatMuonVector[1]->isolationR05().hadEt;
+
+    double relIsoSecondMuonDr03 = (muon2SumPtR03 + muon2EmEtR03 + muon2HadEtR03)/PatMuonVector[1]->pt();
+    double relIsoSecondMuonDr05 = (muon2SumPtR05 + muon2EmEtR05 + muon2HadEtR05)/PatMuonVector[1]->pt();
+    double relIsoSecondMuon = (PatMuonVector[1]->trackIso()+PatMuonVector[1]->ecalIso()+PatMuonVector[1]->hcalIso())/PatMuonVector[1]->pt();
+
+
+    eventData.SetPatMuon2Pt(PatMuonVector[1]->pt());
+    eventData.SetPatMuon2Charge(PatMuonVector[1]->charge());
+    eventData.SetPatMuon2Phi(PatMuonVector[1]->phi());
+    eventData.SetPatMuon2Eta(PatMuonVector[1]->eta());
+    eventData.SetPatMuon2Et(PatMuonVector[1]->et());
+    eventData.SetPatMuon2SumPtR03(muon2SumPtR03);
+    eventData.SetPatMuon2EmEtR03(muon2EmEtR03);
+    eventData.SetPatMuon2HadEtR03(muon2HadEtR03);
+    eventData.SetPatMuon2SumPtR05(muon2SumPtR05);
+    eventData.SetPatMuon2EmEtR05(muon2EmEtR05);
+    eventData.SetPatMuon2HadEtR05(muon2HadEtR05);
+    eventData.SetPatMuon2relIsoDr03(relIsoSecondMuonDr03);
+    eventData.SetPatMuon2relIsoDr05(relIsoSecondMuonDr05);
+    eventData.SetPatMuon2relIso(relIsoSecondMuon);
+
+    edm::Handle<edm::View<reco::Track> > trackHandle;
+    event.getByLabel(trackTag_,trackHandle);
+    const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+    int goodTracksCountPatMuon2R03= 0;
+    int goodTracksCountPatMuon2R04= 0;
+    int goodTracksCountPatMuon2R05= 0;
+
+    // Tracks Outside Cone
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),PatMuonVector[1]->eta(),PatMuonVector[1]->phi()) > 0.3))
+      {
+	goodTracksCountPatMuon2R03++;
+      }
+      if ((deltaR(track->eta(),track->phi(),PatMuonVector[1]->eta(),PatMuonVector[1]->phi()) > 0.4))
+      {
+	goodTracksCountPatMuon2R04++;
+      }
+      if ((deltaR(track->eta(),track->phi(),PatMuonVector[1]->eta(),PatMuonVector[1]->phi()) > 0.5))
+      {
+	goodTracksCountPatMuon2R05++;
+      }
+    }
+    eventData.SetTracksNonConePatMuon2R03(goodTracksCountPatMuon2R03);
+    eventData.SetTracksNonConePatMuon2R04(goodTracksCountPatMuon2R04);
+    eventData.SetTracksNonConePatMuon2R05(goodTracksCountPatMuon2R05);
+
+    if (debug){
+      std::cout << ">>> Pat Muon" << std::endl;
+      std::cout<<"Muon2 -> 0.3 Radion Rel Iso: "<<relIsoSecondMuonDr03<<" sumPt "<<muon2SumPtR03<<" emEt "<<muon2EmEtR03<<" hadEt "<<muon2HadEtR03<<std::endl;
+      std::cout<<"Muon2 -> 0.5 Radion Rel Iso: "<<relIsoSecondMuonDr05<<" sumPt "<<muon2SumPtR05<<" emEt "<<muon2EmEtR05<<" hadEt "<<muon2HadEtR05<<std::endl;
+      std::cout << "Muon2 -> trackIso(): " << PatMuonVector[1]->trackIso() << " | Muon2 -> ecalIso(): " << PatMuonVector[1]->ecalIso() << " | Muon2 -> hcalIso(): " << PatMuonVector[1]->hcalIso() << " | PatMuonVector[1]->Iso(): " << relIsoSecondMuon << std::endl;
+      std::cout << "NSize: " << muons->size() << std::endl;
+      std::cout << "Muon, pT 2: " << PatMuonVector[1]->pt() << std::endl;
+      std::cout << "Muon, eta 2: " << PatMuonVector[1]->eta() << std::endl;
+      std::cout << "Muon, p4() 2: " << PatMuonVector[1]->p4() << std::endl;
+      if(!PatMuonVector[1]->track().isNull()) std::cout << "Muon 2, Tracker Hits: " << PatMuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
+      if(!PatMuonVector[1]->globalTrack().isNull()) std::cout << "Muon 2, Chi2/ndof: " << PatMuonVector[1]->globalTrack()->normalizedChi2() << std::endl;
+      std::cout << "Muon 2, Matched Stations: " << PatMuonVector[1]->numberOfMatchedStations() << std::endl;
+      if(!PatMuonVector[1]->innerTrack().isNull()){
+	std::cout << "Muon 2, dxy: " << PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
+	std::cout << "Muon 2, Number of Valid Pixel Hits: " << PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
+      }
+      std::cout << "Matched Stations: " << PatMuonVector[1]->numberOfMatchedStations() << std::endl;
+      std::cout << "Is Global Muon? " << PatMuonVector[1]->isGlobalMuon() << std::endl;
+      std::cout << "Is Tracker Muon? " << PatMuonVector[1]->isTrackerMuon() << std::endl;
+      std::cout << "" << std::endl;
+    }
+
+    if(PatMuonVector[1]->isGlobalMuon() && PatMuonVector[1]->isTrackerMuon()){
+      if(!PatMuonVector[1]->globalTrack().isNull() && PatMuonVector[1]->globalTrack()->hitPattern().numberOfValidMuonHits()>0){
+	if(!PatMuonVector[1]->track().isNull() && PatMuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() > 10){
+	  if(!PatMuonVector[1]->innerTrack().isNull() && PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() > 0){
+	    if(PatMuonVector[1]->numberOfMatchedStations() > 1 && PatMuonVector[1]->globalTrack()->normalizedChi2() < 10. && fabs(PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position())) < 0.2){
+	      eventData.SetPatMuon2IsGood(true);
+	    }
+	  }
+	}
+      }
+    }else{
+      eventData.SetPatMuon2IsGood(false);
+    }
+    if(!PatMuonVector[1]->track().isNull()){
+      eventData.SetPatMuon2TrackerHits(PatMuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement());
+    }else{
+      eventData.SetPatMuon2TrackerHits(-999.);
+    }
+    if(!PatMuonVector[1]->innerTrack().isNull()){
+      eventData.SetPatMuon2PixelHits(PatMuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits());
+      eventData.SetPatMuon2Dxy(PatMuonVector[1]->innerTrack()->dxy(vertex->at(0).position()));
+      eventData.SetPatMuon2Dz(PatMuonVector[1]->innerTrack()->dz(vertex->at(0).position()));
+    }else{
+      eventData.SetPatMuon2PixelHits(-999.);
+      eventData.SetPatMuon2Dxy(-999.);
+      eventData.SetPatMuon2Dz(-999.);
+    }
+    if(!PatMuonVector[1]->globalTrack().isNull()){
+      eventData.SetPatMuon2NormalizedChi2(PatMuonVector[1]->globalTrack()->normalizedChi2());
+    }else{
+      eventData.SetPatMuon2NormalizedChi2(-999.);
+    }
+    eventData.SetPatMuon2MatchedStations(PatMuonVector[1]->numberOfMatchedStations());
+    eventData.SetPatMuon2IsGlobal(PatMuonVector[1]->isGlobalMuon());
+    eventData.SetPatMuon2IsTracker(PatMuonVector[1]->isTrackerMuon());
+  }
+  else {
+    eventData.SetPatMuon2Pt(-999.);
+    eventData.SetPatMuon2Charge(-999);
+    eventData.SetPatMuon2Phi(-999.);
+    eventData.SetPatMuon2Eta(-999.);
+    eventData.SetPatMuon2Et(-999.);
+    eventData.SetPatMuon2SumPtR03(-999.);
+    eventData.SetPatMuon2EmEtR03(-999.);
+    eventData.SetPatMuon2HadEtR03(-999.);
+    eventData.SetPatMuon2SumPtR05(-999.);
+    eventData.SetPatMuon2EmEtR05(-999.);
+    eventData.SetPatMuon2HadEtR05(-999.);
+    eventData.SetPatMuon2relIsoDr03(-999.);
+    eventData.SetPatMuon2relIsoDr05(-999.);
+    eventData.SetPatMuon2relIso(-999.);
+    eventData.SetPatMuon2TrackerHits(-999.);
+    eventData.SetPatMuon2PixelHits(-999.);
+    eventData.SetPatMuon2NormalizedChi2(-999.);
+    eventData.SetPatMuon2MatchedStations(-999.);
+    eventData.SetPatMuon2Dxy(-999.);
+    eventData.SetPatMuon2Dz(-999.);
+    eventData.SetPatMuon2IsGlobal(false);
+    eventData.SetPatMuon2IsTracker(false);
+    eventData.SetPatMuon2IsGood(false);
+  } 
+
+  // Leading Electron
   if(PatElectronVector.size()>0){
     double relIsoFirstElectronDr03 = (PatElectronVector[0]->dr03TkSumPt()+PatElectronVector[0]->dr03EcalRecHitSumEt()+PatElectronVector[0]->dr03HcalTowerSumEt())/PatElectronVector[0]->et();
     double relIsoFirstElectronDr04 = (PatElectronVector[0]->dr04TkSumPt()+PatElectronVector[0]->dr04EcalRecHitSumEt()+PatElectronVector[0]->dr04HcalTowerSumEt())/PatElectronVector[0]->et();
     double InnerHits1 = PatElectronVector[0]->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
 
-    // Dielectron Mass
+    // Dilepton Mass
     math::XYZTLorentzVector BosonPatElectronSystem(0.,0.,0.,0.);
     BosonPatElectronSystem += PatElectronVector[0]->p4();
     BosonPatElectronSystem += PatNeutrinoVector[0]->p4();
@@ -2203,9 +2632,9 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
-    int goodTracksCounte03 = 0;
-    int goodTracksCounte04 = 0;
-    int goodTracksCounte05 = 0;
+    int goodTracksCountPatElectron1R03 = 0;
+    int goodTracksCountPatElectron1R04 = 0;
+    int goodTracksCountPatElectron1R05 = 0;
 
     // Tracks Outside Cone
     edm::View<reco::Track>::const_iterator track = trackColl.begin();
@@ -2215,24 +2644,24 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
 
       if ((deltaR(track->eta(),track->phi(),PatElectronVector[0]->eta(),PatElectronVector[0]->phi()) > 0.3))
       {
-	goodTracksCounte03++;
+	goodTracksCountPatElectron1R03++;
       }
 
       if ((deltaR(track->eta(),track->phi(),PatElectronVector[0]->eta(),PatElectronVector[0]->phi()) > 0.4))
       {
-	goodTracksCounte04++;
+	goodTracksCountPatElectron1R04++;
       }
 
       if ((deltaR(track->eta(),track->phi(),PatElectronVector[0]->eta(),PatElectronVector[0]->phi()) > 0.5))
       {
-	goodTracksCounte05++;
+	goodTracksCountPatElectron1R05++;
       }
 
     }
 
-    eventData.SetTracksNonConepatElectron03(goodTracksCounte03);
-    eventData.SetTracksNonConepatElectron04(goodTracksCounte04);
-    eventData.SetTracksNonConepatElectron05(goodTracksCounte05);
+    eventData.SetTracksNonConePatElectron1R03(goodTracksCountPatElectron1R03);
+    eventData.SetTracksNonConePatElectron1R04(goodTracksCountPatElectron1R04);
+    eventData.SetTracksNonConePatElectron1R05(goodTracksCountPatElectron1R05);
 
     if (debug) {
       std::cout << ">>> Pat Electron" << std::endl;
@@ -2260,6 +2689,7 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     double isoTk1 = PatElectronVector[0]->dr03TkSumPt()/PatElectronVector[0]->pt();
     double isoEcal1 = PatElectronVector[0]->dr03EcalRecHitSumEt()/PatElectronVector[0]->pt();
     double isoHcal1 = PatElectronVector[0]->dr03HcalTowerSumEt()/PatElectronVector[0]->pt();
+
     bool isoBarrel1WP95 = false;
     bool isoEndCap1WP95 = false;
     bool isolation1WP95 = false;
@@ -2343,6 +2773,161 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatElectron1HE(-999.);
     eventData.SetPatElectron1IsWP80(false);
     eventData.SetPatElectron1IsWP95(false);
+    eventData.SetPatNElectron(-999);
+  }
+
+  // Second Electron
+  if(PatElectronVector.size()>1){
+    double relIsoSecondElectronDr03 = (PatElectronVector[1]->dr03TkSumPt()+PatElectronVector[1]->dr03EcalRecHitSumEt()+PatElectronVector[1]->dr03HcalTowerSumEt())/PatElectronVector[1]->et();
+    double relIsoSecondElectronDr04 = (PatElectronVector[1]->dr04TkSumPt()+PatElectronVector[1]->dr04EcalRecHitSumEt()+PatElectronVector[1]->dr04HcalTowerSumEt())/PatElectronVector[1]->et();
+    double InnerHits2 = PatElectronVector[1]->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+
+    // Fill Electron Variables
+    eventData.SetPatElectron2Pt(PatElectronVector[1]->pt());
+    eventData.SetPatElectron2Charge(PatElectronVector[1]->charge());
+    eventData.SetPatElectron2Phi(PatElectronVector[1]->phi());
+    eventData.SetPatElectron2Eta(PatElectronVector[1]->eta());
+    eventData.SetPatElectron2Et(PatElectronVector[1]->et());
+    eventData.SetPatElectron2TkDr03(PatElectronVector[1]->dr03TkSumPt());
+    eventData.SetPatElectron2EcalDr03(PatElectronVector[1]->dr03EcalRecHitSumEt());
+    eventData.SetPatElectron2HcalDr03(PatElectronVector[1]->dr03HcalTowerSumEt());
+    eventData.SetPatElectron2TkDr04(PatElectronVector[1]->dr04TkSumPt());
+    eventData.SetPatElectron2EcalDr04(PatElectronVector[1]->dr04EcalRecHitSumEt());
+    eventData.SetPatElectron2HcalDr04(PatElectronVector[1]->dr04HcalTowerSumEt());
+    eventData.SetPatElectron2relIsoDr03(relIsoSecondElectronDr03);
+    eventData.SetPatElectron2relIsoDr04(relIsoSecondElectronDr04);
+    eventData.SetPatElectron2DeltaPhiTkClu(PatElectronVector[1]->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetPatElectron2DeltaEtaTkClu(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetPatElectron2SigmaIeIe(PatElectronVector[1]->sigmaIetaIeta());
+    eventData.SetPatElectron2DCot(PatElectronVector[1]->convDcot());
+    eventData.SetPatElectron2Dist(PatElectronVector[1]->convDist());
+    eventData.SetPatElectron2InnerHits(InnerHits2);
+    eventData.SetPatElectron2HE(PatElectronVector[1]->hadronicOverEm());
+
+    edm::Handle<edm::View<reco::Track> > trackHandle;
+    event.getByLabel(trackTag_,trackHandle);
+    const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+    int goodTracksCountPatElectron2R03 = 0;
+    int goodTracksCountPatElectron2R04 = 0;
+    int goodTracksCountPatElectron2R05 = 0;
+
+    // Tracks Outside Cone
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),PatElectronVector[1]->eta(),PatElectronVector[1]->phi()) > 0.3))
+      {
+	goodTracksCountPatElectron2R03++;
+      }
+      if ((deltaR(track->eta(),track->phi(),PatElectronVector[1]->eta(),PatElectronVector[1]->phi()) > 0.4))
+      {
+	goodTracksCountPatElectron2R04++;
+      }
+      if ((deltaR(track->eta(),track->phi(),PatElectronVector[1]->eta(),PatElectronVector[1]->phi()) > 0.5))
+      {
+	goodTracksCountPatElectron2R05++;
+      }
+    }
+    eventData.SetTracksNonConePatElectron2R03(goodTracksCountPatElectron2R03);
+    eventData.SetTracksNonConePatElectron2R04(goodTracksCountPatElectron2R04);
+    eventData.SetTracksNonConePatElectron2R05(goodTracksCountPatElectron2R05);
+
+    if (debug) {
+      std::cout << ">>> Pat Electron" << std::endl;
+      std::cout << "electron2 -> dr03 TK: " << PatElectronVector[1]->dr03TkSumPt() << "| dr03 Ecal: " << PatElectronVector[1]->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << PatElectronVector[1]->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron2 -> dr04 TK: " << PatElectronVector[1]->dr04TkSumPt() << "| dr04 Ecal: " << PatElectronVector[1]->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << PatElectronVector[1]->dr04HcalTowerSumEt() << std::endl;
+      std::cout << "Electron, pT 2: " << PatElectronVector[1]->pt() << std::endl;
+      std::cout << "Electron, eta 2: " << PatElectronVector[1]->eta() << std::endl;
+      std::cout << "electron2, p4() 2: " << PatElectronVector[1]->p4() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron2: " << PatElectronVector[1]->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron2: " << PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron2: " << PatElectronVector[1]->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron2: " << PatElectronVector[1]->convDcot() << std::endl;
+      std::cout << "Dist, electron2: " << PatElectronVector[1]->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron2: " << PatElectronVector[1]->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron2: " << PatElectronVector[1]->hadronicOverEm() << std::endl;
+      std::cout << "" << std::endl;
+    }
+    double isoTk2 = PatElectronVector[1]->dr03TkSumPt()/PatElectronVector[1]->pt();
+    double isoEcal2 = PatElectronVector[1]->dr03EcalRecHitSumEt()/PatElectronVector[1]->pt();
+    double isoHcal2 = PatElectronVector[1]->dr03HcalTowerSumEt()/PatElectronVector[1]->pt();
+
+    bool isoBarrel2WP95 = false;
+    bool isoEndCap2WP95 = false;
+    bool isolation2WP95 = false;
+    bool eleEndCap2WP95 = false;
+    bool eleBarrel2WP95 = false;
+    bool candSel2WP95 = false;
+    bool isoBarrel2WP80 = false;
+    bool isoEndCap2WP80 = false;
+    bool isolation2WP80 = false;
+    bool eleEndCap2WP80 = false;
+    bool eleBarrel2WP80 = false;
+    bool candSel2WP80 = false;
+
+    //Isolation Barrel
+    if ((fabs(PatElectronVector[1]->eta()) <= 1.4442) ){
+      if (isoTk2<0.15 && isoEcal2<2.0 && isoHcal2<0.12) isoBarrel2WP95 = true;
+      if (isoTk2<0.09 && isoEcal2<0.07 && isoHcal2<0.10) isoBarrel2WP80 = true;
+    }
+    // Isolation Endcap
+    if ((fabs(PatElectronVector[1]->eta()) >= 1.5660) && (fabs(PatElectronVector[1]->eta()) <= 2.5)){
+      if (isoTk2<0.08 && isoEcal2<0.06 && isoHcal2<0.05) isoEndCap2WP95 = true;
+      if (isoTk2<0.04 && isoEcal2<0.05 && isoHcal2<0.025) isoEndCap2WP80 = true;
+    }
+    if ((isoEndCap2WP95 || isoBarrel2WP95)) isolation2WP95 = true;
+    if ((isoEndCap2WP80 || isoBarrel2WP80)) isolation2WP80 = true;
+
+    // Quality criteria Barrel
+    if ((fabs(PatElectronVector[1]->eta()) <= 1.4442) ){
+      if (InnerHits2 <= 1 && fabs(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && PatElectronVector[1]->sigmaIetaIeta() < 0.01 && PatElectronVector[1]->hadronicOverEm() < 0.15 ) eleBarrel2WP95 = true;
+      if (InnerHits2 <= 0 && (fabs(PatElectronVector[1]->convDcot()) >= 0.02 || fabs(PatElectronVector[1]->convDist()) >= 0.02 ) && fabs(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.004 && fabs(PatElectronVector[1]->deltaPhiSuperClusterTrackAtVtx()) < 0.06 && PatElectronVector[1]->sigmaIetaIeta() < 0.01 && PatElectronVector[1]->hadronicOverEm() < 0.04 ) eleBarrel2WP80 = true;
+    }
+
+    // Quality criteria Endcap
+    if ((fabs(PatElectronVector[1]->eta()) >= 1.5660) && (fabs(PatElectronVector[1]->eta()) <= 2.5)){
+      if (InnerHits2 <= 1 && fabs(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.01 && PatElectronVector[1]->sigmaIetaIeta() < 0.03 && PatElectronVector[1]->hadronicOverEm() < 0.07) eleEndCap2WP95 = true;
+      if (InnerHits2 <= 0 && (fabs(PatElectronVector[1]->convDcot()) >= 0.02 || fabs(PatElectronVector[1]->convDist()) >= 0.02 ) && fabs(PatElectronVector[1]->deltaEtaSuperClusterTrackAtVtx()) < 0.007 && fabs(PatElectronVector[1]->deltaPhiSuperClusterTrackAtVtx()) < 0.03 && PatElectronVector[1]->sigmaIetaIeta() < 0.03 && PatElectronVector[1]->hadronicOverEm() < 0.025) eleEndCap2WP80 = true;
+    }
+    if ((eleEndCap2WP95 || eleBarrel2WP95)) candSel2WP95 = true;
+    if ((eleEndCap2WP80 || eleBarrel2WP80)) candSel2WP80 = true;
+
+    if(isolation2WP80 && candSel2WP80){
+      eventData.SetPatElectron2IsWP80(true);
+    }else{
+      eventData.SetPatElectron2IsWP80(false);
+    }
+    if(isolation2WP95 && candSel2WP95){
+      eventData.SetPatElectron2IsWP95(true);
+    }else{
+      eventData.SetPatElectron2IsWP95(false);
+    }
+  }
+  else{
+    eventData.SetPatElectron2Pt(-999.);
+    eventData.SetPatElectron2Charge(-999);
+    eventData.SetPatElectron2Phi(-999.);
+    eventData.SetPatElectron2Eta(-999.);
+    eventData.SetPatElectron2Et(-999.);
+    eventData.SetPatElectron2TkDr03(-999.);
+    eventData.SetPatElectron2EcalDr03(-999.);
+    eventData.SetPatElectron2HcalDr03(-999.);
+    eventData.SetPatElectron2TkDr04(-999.);
+    eventData.SetPatElectron2EcalDr04(-999.);
+    eventData.SetPatElectron2HcalDr04(-999.);
+    eventData.SetPatElectron2relIsoDr03(-999.);
+    eventData.SetPatElectron2relIsoDr04(-999.);
+    eventData.SetPatElectron2DeltaPhiTkClu(-999.);
+    eventData.SetPatElectron2DeltaEtaTkClu(-999.);
+    eventData.SetPatElectron2SigmaIeIe(-999.);
+    eventData.SetPatElectron2DCot(-999.);
+    eventData.SetPatElectron2Dist(-999.);
+    eventData.SetPatElectron2InnerHits(-999.);
+    eventData.SetPatElectron2HE(-999.);
+    eventData.SetPatElectron2IsWP80(false);
+    eventData.SetPatElectron2IsWP95(false);
   }
 
 }
