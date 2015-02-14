@@ -327,20 +327,35 @@ void DiffractiveZEvent::reset(){
   SecondMuonIsTracker_ = false;
   SecondMuonIsGood_ = false;
 
-  TracksNonConeMuon03_ = -1;
-  TracksNonConeElectron03_ = -1;
-  TracksNonConepatMuon03_ = -1;
-  TracksNonConepatElectron03_ = -1;
+  TracksNonConeSecondMuonR03_=-1;
+  TracksNonConeSecondElectronR03_=-1;
+  TracksNonConePatMuon2R03_=-1;
+  TracksNonConePatElectron2R03_=-1;
 
-  TracksNonConeMuon04_ = -1;
-  TracksNonConeElectron04_ = -1;
-  TracksNonConepatMuon04_ = -1;
-  TracksNonConepatElectron04_ = -1;
+  TracksNonConeSecondMuonR04_=-1;
+  TracksNonConeSecondElectronR04_=-1;
+  TracksNonConePatMuon2R04_=-1;
+  TracksNonConePatElectron2R04_=-1;
 
-  TracksNonConeMuon05_ = -1;
-  TracksNonConeElectron05_ = -1;
-  TracksNonConepatMuon05_ = -1;
-  TracksNonConepatElectron05_ = -1;
+  TracksNonConeSecondMuonR05_=-1;
+  TracksNonConeSecondElectronR05_=-1;
+  TracksNonConePatMuon2R05_=-1;
+  TracksNonConePatElectron2R05_=-1;
+
+  TracksNonConeSecondMuonR03_=-1;
+  TracksNonConeSecondElectronR03_=-1;
+  TracksNonConePatMuon2R03_=-1;
+  TracksNonConePatElectron2R03_=-1;
+
+  TracksNonConeSecondMuonR04_=-1;
+  TracksNonConeSecondElectronR04_=-1;
+  TracksNonConePatMuon2R04_=-1;
+  TracksNonConePatElectron2R04_=-1;
+
+  TracksNonConeSecondMuonR05_=-1;
+  TracksNonConeSecondElectronR05_=-1;
+  TracksNonConePatMuon2R05_=-1;
+  TracksNonConePatElectron2R05_=-1;
 
   LeadingElectronDeltaPhiTkClu_ = -999.;
   LeadingElectronDeltaEtaTkClu_ = -999.;

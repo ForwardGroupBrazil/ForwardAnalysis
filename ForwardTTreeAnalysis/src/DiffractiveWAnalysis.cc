@@ -527,6 +527,10 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
     eventData.SetLeadingElectronIsWP95(false);
     eventData.SetLeadingElectronIsWP80(false);
 
+    eventData.SetTracksNonConeLeadingElectronR03(-999.);
+    eventData.SetTracksNonConeLeadingElectronR04(-999.);
+    eventData.SetTracksNonConeLeadingElectronR05(-999.);
+
   }
 
   // Second Lepton Info
@@ -680,6 +684,10 @@ void DiffractiveWAnalysis::fillElectronsInfo(DiffractiveWEvent& eventData, const
     eventData.SetSecondElectronHE(-999.);
     eventData.SetSecondElectronIsWP95(false);
     eventData.SetSecondElectronIsWP80(false);
+    eventData.SetTracksNonConeSecondElectronR03(-999);
+    eventData.SetTracksNonConeSecondElectronR04(-999);
+    eventData.SetTracksNonConeSecondElectronR05(-999);
+
   }
 
 }
@@ -847,17 +855,14 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     eventData.SetLeadingMuonEta(-999.);
     eventData.SetLeadingMuonPhi(-999.);
     eventData.SetLeadingMuonCharge(-999);
-
     eventData.SetLeadingMuonSumPtR03(-999.);
     eventData.SetLeadingMuonEmEtR03(-999.);
     eventData.SetLeadingMuonHadEtR03(-999.);
     eventData.SetLeadingMuonSumPtR05(-999.);
     eventData.SetLeadingMuonEmEtR05(-999.);
     eventData.SetLeadingMuonHadEtR05(-999.);
-
     eventData.SetLeadingMuonrelIsoDr03(-999.);
     eventData.SetLeadingMuonrelIsoDr05(-999.);
-
     eventData.SetLeadingMuonTrackerHits(-999.);
     eventData.SetLeadingMuonPixelHits(-999.);
     eventData.SetLeadingMuonNormalizedChi2(-999.);
@@ -867,6 +872,9 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     eventData.SetLeadingMuonIsGlobal(false);
     eventData.SetLeadingMuonIsTracker(false);
     eventData.SetLeadingMuonIsGood(false);
+    eventData.SetTracksNonConeLeadingMuonR03(-999);
+    eventData.SetTracksNonConeLeadingMuonR04(-999);
+    eventData.SetTracksNonConeLeadingMuonR05(-999);
   } 
 
 
@@ -998,6 +1006,9 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
     eventData.SetSecondMuonIsGlobal(false);
     eventData.SetSecondMuonIsTracker(false);
     eventData.SetSecondMuonIsGood(false);
+    eventData.SetTracksNonConeSecondMuonR03(-999);
+    eventData.SetTracksNonConeSecondMuonR04(-999);
+    eventData.SetTracksNonConeSecondMuonR05(-999);
   } 
 
 
@@ -1262,7 +1273,6 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
     eventData.SetEtExpoMinusGen(et_expo_minus_gen);
 
   }else{
-
     eventData.SetEtaMaxGen(-999.);
     eventData.SetEtaMinGen(-999.);
     eventData.SetMxGenMinus(-999.);
@@ -1273,7 +1283,6 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
     eventData.SetEminuspzGen(-999.);
     eventData.SetEtExpoPlusGen(-999.);
     eventData.SetEtExpoMinusGen(-999.);
-
   }
 
   if(genVector.size()>1){
@@ -2445,6 +2454,9 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatBosonMuonPt(-999.);
     eventData.SetPatBosonMuonEta(-999.);
     eventData.SetPatBosonMuonPhi(-999.);
+    eventData.SetTracksNonConePatMuon1R03(-999);
+    eventData.SetTracksNonConePatMuon1R04(-999);
+    eventData.SetTracksNonConePatMuon1R05(-999);
   } 
 
   // Second Leading Muon
@@ -2588,6 +2600,9 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatMuon2IsGlobal(false);
     eventData.SetPatMuon2IsTracker(false);
     eventData.SetPatMuon2IsGood(false);
+    eventData.SetTracksNonConePatMuon2R03(-999.);
+    eventData.SetTracksNonConePatMuon2R04(-999.);
+    eventData.SetTracksNonConePatMuon2R05(-999.);
   } 
 
   // Leading Electron
@@ -2774,6 +2789,9 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatElectron1IsWP80(false);
     eventData.SetPatElectron1IsWP95(false);
     eventData.SetPatNElectron(-999);
+    eventData.SetTracksNonConePatElectron1R03(-999.);
+    eventData.SetTracksNonConePatElectron1R04(-999.);
+    eventData.SetTracksNonConePatElectron1R05(-999.);
   }
 
   // Second Electron
@@ -2928,6 +2946,9 @@ void DiffractiveWAnalysis::fillWPat(DiffractiveWEvent& eventData, const edm::Eve
     eventData.SetPatElectron2HE(-999.);
     eventData.SetPatElectron2IsWP80(false);
     eventData.SetPatElectron2IsWP95(false);
+    eventData.SetTracksNonConePatElectron2R03(-999.);
+    eventData.SetTracksNonConePatElectron2R04(-999.);
+    eventData.SetTracksNonConePatElectron2R05(-999.);
   }
 
 }
