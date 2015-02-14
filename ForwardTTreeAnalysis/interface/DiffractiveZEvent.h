@@ -360,20 +360,35 @@ class DiffractiveZEvent {
     void SetEachTowerEnergy(const std::vector<double>& fEachTowerEnergy) { EachTowerEnergy_ = fEachTowerEnergy; }
     void SetEachTowerCounter(int fEachTowerCounter)    {EachTowerCounter_ = fEachTowerCounter;}
 
-    void SetTracksNonConeMuon03(int fTracksNonConeMuon03)    {TracksNonConeMuon03_ = fTracksNonConeMuon03;}
-    void SetTracksNonConeElectron03(int fTracksNonConeElectron03)    {TracksNonConeElectron03_ = fTracksNonConeElectron03;}
-    void SetTracksNonConepatMuon03(int fTracksNonConepatMuon03)    {TracksNonConepatMuon03_ = fTracksNonConepatMuon03;}
-    void SetTracksNonConepatElectron03(int fTracksNonConepatElectron03)    {TracksNonConepatElectron03_ = fTracksNonConepatElectron03;}
+    void SetTracksNonConeLeadingMuonR03(int fTracksNonConeLeadingMuonR03)    {TracksNonConeLeadingMuonR03_ = fTracksNonConeLeadingMuonR03;}
+    void SetTracksNonConeLeadingElectronR03(int fTracksNonConeLeadingElectronR03)    {TracksNonConeLeadingElectronR03_ = fTracksNonConeLeadingElectronR03;}
+    void SetTracksNonConePatMuon1R03(int fTracksNonConePatMuon1R03)    {TracksNonConePatMuon1R03_ = fTracksNonConePatMuon1R03;}
+    void SetTracksNonConePatElectron1R03(int fTracksNonConePatElectron1R03)    {TracksNonConePatElectron1R03_ = fTracksNonConePatElectron1R03;}
 
-    void SetTracksNonConeMuon04(int fTracksNonConeMuon04)    {TracksNonConeMuon04_ = fTracksNonConeMuon04;}
-    void SetTracksNonConeElectron04(int fTracksNonConeElectron04)    {TracksNonConeElectron04_ = fTracksNonConeElectron04;}
-    void SetTracksNonConepatMuon04(int fTracksNonConepatMuon04)    {TracksNonConepatMuon04_ = fTracksNonConepatMuon04;}
-    void SetTracksNonConepatElectron04(int fTracksNonConepatElectron04)    {TracksNonConepatElectron04_ = fTracksNonConepatElectron04;}
+    void SetTracksNonConeLeadingMuonR04(int fTracksNonConeLeadingMuonR04)    {TracksNonConeLeadingMuonR04_ = fTracksNonConeLeadingMuonR04;}
+    void SetTracksNonConeLeadingElectronR04(int fTracksNonConeLeadingElectronR04)    {TracksNonConeLeadingElectronR04_ = fTracksNonConeLeadingElectronR04;}
+    void SetTracksNonConePatMuon1R04(int fTracksNonConePatMuon1R04)    {TracksNonConePatMuon1R04_ = fTracksNonConePatMuon1R04;}
+    void SetTracksNonConePatElectron1R04(int fTracksNonConePatElectron1R04)    {TracksNonConePatElectron1R04_ = fTracksNonConePatElectron1R04;}
 
-    void SetTracksNonConeMuon05(int fTracksNonConeMuon05)    {TracksNonConeMuon05_ = fTracksNonConeMuon05;}
-    void SetTracksNonConeElectron05(int fTracksNonConeElectron05)    {TracksNonConeElectron05_ = fTracksNonConeElectron05;}
-    void SetTracksNonConepatMuon05(int fTracksNonConepatMuon05)    {TracksNonConepatMuon05_ = fTracksNonConepatMuon05;}
-    void SetTracksNonConepatElectron05(int fTracksNonConepatElectron05)    {TracksNonConepatElectron05_ = fTracksNonConepatElectron05;}
+    void SetTracksNonConeLeadingMuonR05(int fTracksNonConeLeadingMuonR05)    {TracksNonConeLeadingMuonR05_ = fTracksNonConeLeadingMuonR05;}
+    void SetTracksNonConeLeadingElectronR05(int fTracksNonConeLeadingElectronR05)    {TracksNonConeLeadingElectronR05_ = fTracksNonConeLeadingElectronR05;}
+    void SetTracksNonConePatMuon1R05(int fTracksNonConePatMuon1R05)    {TracksNonConePatMuon1R05_ = fTracksNonConePatMuon1R05;}
+    void SetTracksNonConePatElectron1R05(int fTracksNonConePatElectron1R05)    {TracksNonConePatElectron1R05_ = fTracksNonConePatElectron1R05;}
+
+    void SetTracksNonConeSecondMuonR03(int fTracksNonConeSecondMuonR03)    {TracksNonConeSecondMuonR03_ = fTracksNonConeSecondMuonR03;}
+    void SetTracksNonConeSecondElectronR03(int fTracksNonConeSecondElectronR03)    {TracksNonConeSecondElectronR03_ = fTracksNonConeSecondElectronR03;}
+    void SetTracksNonConePatMuon2R03(int fTracksNonConePatMuon2R03)    {TracksNonConePatMuon2R03_ = fTracksNonConePatMuon2R03;}
+    void SetTracksNonConePatElectron2R03(int fTracksNonConePatElectron2R03)    {TracksNonConePatElectron2R03_ = fTracksNonConePatElectron2R03;}
+
+    void SetTracksNonConeSecondMuonR04(int fTracksNonConeSecondMuonR04)    {TracksNonConeSecondMuonR04_ = fTracksNonConeSecondMuonR04;}
+    void SetTracksNonConeSecondElectronR04(int fTracksNonConeSecondElectronR04)    {TracksNonConeSecondElectronR04_ = fTracksNonConeSecondElectronR04;}
+    void SetTracksNonConePatMuon2R04(int fTracksNonConePatMuon2R04)    {TracksNonConePatMuon2R04_ = fTracksNonConePatMuon2R04;}
+    void SetTracksNonConePatElectron2R04(int fTracksNonConePatElectron2R04)    {TracksNonConePatElectron2R04_ = fTracksNonConePatElectron2R04;}
+
+    void SetTracksNonConeSecondMuonR05(int fTracksNonConeSecondMuonR05)    {TracksNonConeSecondMuonR05_ = fTracksNonConeSecondMuonR05;}
+    void SetTracksNonConeSecondElectronR05(int fTracksNonConeSecondElectronR05)    {TracksNonConeSecondElectronR05_ = fTracksNonConeSecondElectronR05;}
+    void SetTracksNonConePatMuon2R05(int fTracksNonConePatMuon2R05)    {TracksNonConePatMuon2R05_ = fTracksNonConePatMuon2R05;}
+    void SetTracksNonConePatElectron2R05(int fTracksNonConePatElectron2R05)    {TracksNonConePatElectron2R05_ = fTracksNonConePatElectron2R05;}
 
     void SetLeadingElectronDeltaPhiTkClu(double fLeadingElectronDeltaPhiTkClu)    {LeadingElectronDeltaPhiTkClu_ = fLeadingElectronDeltaPhiTkClu;}
     void SetLeadingElectronDeltaEtaTkClu(double fLeadingElectronDeltaEtaTkClu)    {LeadingElectronDeltaEtaTkClu_ = fLeadingElectronDeltaEtaTkClu;}
@@ -754,20 +769,35 @@ class DiffractiveZEvent {
     int GetCastorBadChannels(int i) const { return CastorBadChannels_[i]; }
     int GetCastorNumberBadChannels() const { return CastorNumberBadChannels_;}
 
-    int GetTracksNonConeMuon03() const {return TracksNonConeMuon03_;}
-    int GetTracksNonConeElectron03() const {return TracksNonConeElectron03_;}
-    int GetTracksNonConepatMuon03() const {return TracksNonConepatMuon03_;}
-    int GetTracksNonConepatElectron03() const {return TracksNonConepatElectron03_;}
+    int GetTracksNonConeLeadingMuonR03() const {return TracksNonConeLeadingMuonR03_;}
+    int GetTracksNonConeLeadingElectronR03() const {return TracksNonConeLeadingElectronR03_;}
+    int GetTracksNonConePatMuon1R03() const {return TracksNonConePatMuon1R03_;}
+    int GetTracksNonConePatElectron1R03() const {return TracksNonConePatElectron1R03_;}
 
-    int GetTracksNonConeMuon04() const {return TracksNonConeMuon04_;}
-    int GetTracksNonConeElectron04() const {return TracksNonConeElectron04_;}
-    int GetTracksNonConepatMuon04() const {return TracksNonConepatMuon04_;}
-    int GetTracksNonConepatElectron04() const {return TracksNonConepatElectron04_;}
+    int GetTracksNonConeLeadingMuonR04() const {return TracksNonConeLeadingMuonR04_;}
+    int GetTracksNonConeLeadingElectronR04() const {return TracksNonConeLeadingElectronR04_;}
+    int GetTracksNonConePatMuon1R04() const {return TracksNonConePatMuon1R04_;}
+    int GetTracksNonConePatElectron1R04() const {return TracksNonConePatElectron1R04_;}
 
-    int GetTracksNonConeMuon05() const {return TracksNonConeMuon05_;}
-    int GetTracksNonConeElectron05() const {return TracksNonConeElectron05_;}
-    int GetTracksNonConepatMuon05() const {return TracksNonConepatMuon05_;}
-    int GetTracksNonConepatElectron05() const {return TracksNonConepatElectron05_;}
+    int GetTracksNonConeLeadingMuonR05() const {return TracksNonConeLeadingMuonR05_;}
+    int GetTracksNonConeLeadingElectronR05() const {return TracksNonConeLeadingElectronR05_;}
+    int GetTracksNonConePatMuon1R05() const {return TracksNonConePatMuon1R05_;}
+    int GetTracksNonConePatElectron1R05() const {return TracksNonConePatElectron1R05_;}
+
+    int GetTracksNonConeSecondMuonR03() const {return TracksNonConeSecondMuonR03_;}
+    int GetTracksNonConeSecondElectronR03() const {return TracksNonConeSecondElectronR03_;}
+    int GetTracksNonConePatMuon2R03() const {return TracksNonConePatMuon2R03_;}
+    int GetTracksNonConePatElectron2R03() const {return TracksNonConePatElectron2R03_;}
+
+    int GetTracksNonConeSecondMuonR04() const {return TracksNonConeSecondMuonR04_;}
+    int GetTracksNonConeSecondElectronR04() const {return TracksNonConeSecondElectronR04_;}
+    int GetTracksNonConePatMuon2R04() const {return TracksNonConePatMuon2R04_;}
+    int GetTracksNonConePatElectron2R04() const {return TracksNonConePatElectron2R04_;}
+
+    int GetTracksNonConeSecondMuonR05() const {return TracksNonConeSecondMuonR05_;}
+    int GetTracksNonConeSecondElectronR05() const {return TracksNonConeSecondElectronR05_;}
+    int GetTracksNonConePatMuon2R05() const {return TracksNonConePatMuon2R05_;}
+    int GetTracksNonConePatElectron2R05() const {return TracksNonConePatElectron2R05_;}
 
     double GetLeadingElectronDeltaPhiTkClu() const {return LeadingElectronDeltaPhiTkClu_;}
     double GetLeadingElectronDeltaEtaTkClu() const {return LeadingElectronDeltaEtaTkClu_;}
@@ -1147,20 +1177,35 @@ class DiffractiveZEvent {
     double patElectron2relIsoDr03_;
     double patElectron2relIsoDr04_;
 
-    int TracksNonConeMuon03_;
-    int TracksNonConeElectron03_;
-    int TracksNonConepatMuon03_;
-    int TracksNonConepatElectron03_;
+    int TracksNonConeLeadingMuonR03_;
+    int TracksNonConeLeadingElectronR03_;
+    int TracksNonConePatMuon1R03_;
+    int TracksNonConePatElectron1R03_;
 
-    int TracksNonConeMuon04_;
-    int TracksNonConeElectron04_;
-    int TracksNonConepatMuon04_;
-    int TracksNonConepatElectron04_;
+    int TracksNonConeLeadingMuonR04_;
+    int TracksNonConeLeadingElectronR04_;
+    int TracksNonConePatMuon1R04_;
+    int TracksNonConePatElectron1R04_;
 
-    int TracksNonConeMuon05_;
-    int TracksNonConeElectron05_;
-    int TracksNonConepatMuon05_;
-    int TracksNonConepatElectron05_;
+    int TracksNonConeLeadingMuonR05_;
+    int TracksNonConeLeadingElectronR05_;
+    int TracksNonConePatMuon1R05_;
+    int TracksNonConePatElectron1R05_;
+
+    int TracksNonConeSecondMuonR03_;
+    int TracksNonConeSecondElectronR03_;
+    int TracksNonConePatMuon2R03_;
+    int TracksNonConePatElectron2R03_;
+
+    int TracksNonConeSecondMuonR04_;
+    int TracksNonConeSecondElectronR04_;
+    int TracksNonConePatMuon2R04_;
+    int TracksNonConePatElectron2R04_;
+
+    int TracksNonConeSecondMuonR05_;
+    int TracksNonConeSecondElectronR05_;
+    int TracksNonConePatMuon2R05_;
+    int TracksNonConePatElectron2R05_;
 
     double LeadingElectronDeltaPhiTkClu_;
     double LeadingElectronDeltaEtaTkClu_;
