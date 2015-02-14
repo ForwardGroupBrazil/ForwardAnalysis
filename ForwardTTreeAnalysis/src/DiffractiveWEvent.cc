@@ -423,6 +423,17 @@ void DiffractiveWEvent::reset(){
   fpatmetpx_ = -999.;
   fpatmetpy_ = -999.;
 
+  dvtxmuon_ = -999.;
+  dvtxmuonZ_ = -999.;
+  dvtxelectron_ = -999.;
+  dvtxelectronZ_ = -999.;
+  dmuonelectron_ = -999.;
+  dmuonelectronZ_ = -999.;
+  dmuons_ = -999.;
+  dmuonsZ_ = -999.;
+  delectrons_ = -999.;
+  delectronsZ_ = -999.;
+
   //ZDCdigifC_.clear();
 
 }

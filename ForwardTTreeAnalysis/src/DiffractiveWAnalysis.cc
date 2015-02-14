@@ -3285,7 +3285,7 @@ void DiffractiveWAnalysis::fillZDC(DiffractiveWEvent& eventData, const edm::Even
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void DiffractiveWAnalysis::VertexAssociation(DiffractiveWEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug = true;
+  bool debug = false;
   VertexVector.clear();
 
   std::vector<double> dvtxmuonVector;
@@ -3401,48 +3401,74 @@ void DiffractiveWAnalysis::VertexAssociation(DiffractiveWEvent& eventData, const
   std::stable_sort(delectronsZVector.begin(), delectronsZVector.end());
 
   if(dvtxmuonVector.size()>0){
-    for (unsigned int i=0;i<dvtxmuonVector.size();i++){
-      if(debug){ 
+    eventData.SetDVtxMuon(dvtxmuonVector[0]);
+    eventData.SetDVtxMuonZ(dvtxmuonZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<dvtxmuonVector.size();i++){
 	std::cout << "Distance vtx and muon highest pT: " << dvtxmuonVector[i] << " cm" << std::endl;
 	std::cout << "Distance vtx and muon highest pT, Z: " << dvtxmuonZVector[i] << " cm" << std::endl;
       }
     }
+  }else{
+    eventData.SetDVtxMuon(-999.);
+    eventData.SetDVtxMuonZ(-999.);
   }
 
   if(dvtxelectronVector.size()>0){
-    for (unsigned int i=0;i<dvtxelectronVector.size();i++){
-      if(debug){
+    eventData.SetDVtxElectron(dvtxelectronVector[0]);
+    eventData.SetDVtxElectronZ(dvtxelectronZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<dvtxelectronVector.size();i++){
 	std::cout << "Distance vtx and electron highest pT: " << dvtxelectronVector[i] << " cm" << std::endl;
 	std::cout << "Distance vtx and electron highest pT, Z: " << dvtxelectronZVector[i] << " cm" << std::endl;
       }
     }
+  }else{
+    eventData.SetDVtxElectron(-999.);
+    eventData.SetDVtxElectronZ(-999.);
   }
 
   if(dmuonelectronVector.size()>0){
-    for (unsigned int i=0;i<dmuonelectronVector.size();i++){
-      if(debug){
+    eventData.SetDMuonElectron(dmuonelectronVector[0]);
+    eventData.SetDMuonElectronZ(dmuonelectronZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<dmuonelectronVector.size();i++){
 	std::cout << "Distance muon and electron highest pT: " << dmuonelectronVector[i] << " cm" << std::endl;
 	std::cout << "Distance muon and electron highest pT, Z: " << dmuonelectronZVector[i] << " cm" << std::endl;
       }
     }
+  }else{
+    eventData.SetDMuonElectron(-999.);
+    eventData.SetDMuonElectronZ(-999.);
   }
 
   if(dmuonsVector.size()>0){
-    for (unsigned int i=0;i<dmuonsVector.size();i++){
-      if(debug){
-        std::cout << "Distance muon highest and muon second highest pT: " << dmuonsVector[i] << " cm" << std::endl;
-        std::cout << "Distance muon highest and muon second highest pT, Z: " << dmuonsZVector[i] << " cm" << std::endl;
+    eventData.SetDMuons(dmuonsVector[0]);
+    eventData.SetDMuonsZ(dmuonsZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<dmuonsVector.size();i++){
+	std::cout << "Distance muon highest and muon second highest pT: " << dmuonsVector[i] << " cm" << std::endl;
+	std::cout << "Distance muon highest and muon second highest pT, Z: " << dmuonsZVector[i] << " cm" << std::endl;
       }
     }
+  }else{
+    eventData.SetDMuons(-999.);
+    eventData.SetDMuonsZ(-999.);
   }
 
   if(delectronsVector.size()>0){
-    for (unsigned int i=0;i<delectronsVector.size();i++){
-      if(debug){
-        std::cout << "Distance electron highest and electron second highest pT: " << delectronsVector[i] << " cm" << std::endl;
-        std::cout << "Distance electron highest and electron second highest pT, Z: " << delectronsZVector[i] << " cm" << std::endl;
+    eventData.SetDElectrons(delectronsVector[0]);
+    eventData.SetDElectronsZ(delectronsZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<delectronsVector.size();i++){
+
+	std::cout << "Distance electron highest and electron second highest pT: " << delectronsVector[i] << " cm" << std::endl;
+	std::cout << "Distance electron highest and electron second highest pT, Z: " << delectronsZVector[i] << " cm" << std::endl;
       }
     }
+  }else{
+    eventData.SetDElectrons(-999.);
+    eventData.SetDElectronsZ(-999.);
   }
 
 }
