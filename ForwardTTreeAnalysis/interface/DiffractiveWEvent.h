@@ -455,6 +455,17 @@ class DiffractiveWEvent {
     void SetPatElectron1IsWP95(bool fpatElectron1IsWP95)    {patElectron1IsWP95_ = fpatElectron1IsWP95;}
     void SetPatElectron1IsWP80(bool fpatElectron1IsWP80)    {patElectron1IsWP80_ = fpatElectron1IsWP80;}
 
+    void SetDVtxMuon(double fdvtxmuon) { dvtxmuon_ = fdvtxmuon;}
+    void SetDVtxMuonZ(double fdvtxmuonZ) { dvtxmuonZ_ = fdvtxmuonZ;}
+    void SetDVtxElectron(double fdvtxelectron) { dvtxelectron_ = fdvtxelectron;}
+    void SetDVtxElectronZ(double fdvtxelectronZ) { dvtxelectronZ_ = fdvtxelectronZ;}
+    void SetDMuonElectron(double fdmuonelectron) { dmuonelectron_ = fdmuonelectron;}
+    void SetDMuonElectronZ(double fdmuonelectronZ) { dmuonelectronZ_ = fdmuonelectronZ;}
+    void SetDMuons(double fdmuons) { dmuons_ = fdmuons;}
+    void SetDMuonsZ(double fdmuonsZ) { dmuonsZ_ = fdmuonsZ;}
+    void SetDElectrons(double fdelectrons) { delectrons_ = fdelectrons;}
+    void SetDElectronsZ(double fdelectronsZ) { delectronsZ_ = fdelectronsZ;}
+
     int GetHLTPath(int idx) const { return hltTrigResults_[idx]; }
     double GetBosonElectronMass() const {return BosonElectronMass_;}
     double GetBosonElectronPt() const {return BosonElectronPt_;}
@@ -896,6 +907,17 @@ class DiffractiveWEvent {
     double GetPatMETpy() const {return fpatmetpy_;}
     const LorentzVector& GetPatMETP4() const {return fpatmetp4_;}
 
+    double GetDVtxMuon() const {return dvtxmuon_;}
+    double GetDVtxMuonZ() const {return dvtxmuonZ_;}
+    double GetDVtxElectron() const {return dvtxelectron_;}
+    double GetDVtxElectronZ() const {return dvtxelectronZ_;}
+    double GetDMuonElectron() const {return dmuonelectron_;}
+    double GetDMuonElectronZ() const {return dmuonelectronZ_;}
+    double GetDMuons() const {return dmuons_;}
+    double GetDMuonsZ() const {return dmuonsZ_;}
+    double GetDElectrons() const {return delectrons_;}
+    double GetDElectronsZ() const {return delectronsZ_;}
+
   private:
     friend class diffractiveWAnalysis::DiffractiveWAnalysis;
 
@@ -1332,6 +1354,17 @@ class DiffractiveWEvent {
     double fpatmetpx_;
     double fpatmetpy_;
     LorentzVector fpatmetp4_;
+
+    double dvtxmuon_;
+    double dvtxmuonZ_;
+    double dvtxelectron_;
+    double dvtxelectronZ_;
+    double dmuonelectron_;
+    double dmuonelectronZ_;
+    double dmuons_;
+    double dmuonsZ_;
+    double delectrons_;
+    double delectronsZ_;
 
 };
 
