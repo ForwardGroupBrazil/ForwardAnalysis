@@ -1418,9 +1418,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       deltaetaleptons = fabs(eventdiffZ->GetLeadingElectronEta() - eventdiffZ->GetSecondElectronEta());
       deltaphileptons = fabs(eventdiffZ->GetLeadingElectronPhi() - eventdiffZ->GetSecondElectronPhi());
       deltaptleptons = fabs(eventdiffZ->GetLeadingElectronPt() - eventdiffZ->GetSecondElectronPt());
-      cone03tracks = eventdiffZ->GetTracksNonConeElectron03();
-      cone04tracks = eventdiffZ->GetTracksNonConeElectron04();
-      cone05tracks = eventdiffZ->GetTracksNonConeElectron05();
+      cone03tracks = eventdiffZ->GetTracksNonConeLeadingElectronR03()+eventdiffZ->GetTracksNonConeSecondElectronR03();
+      cone04tracks = eventdiffZ->GetTracksNonConeLeadingElectronR04()+eventdiffZ->GetTracksNonConeSecondElectronR04();
+      cone05tracks = eventdiffZ->GetTracksNonConeLeadingElectronR05()+eventdiffZ->GetTracksNonConeSecondElectronR05();
 
       double totalASumCastor = eventdiffZ->GetSumEHFMinus() + sumCastorEnergy;
       if(totalASumCastor > 0.){
@@ -1500,9 +1500,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       deltaetaleptons = fabs(eventdiffZ->GetLeadingMuonEta() - eventdiffZ->GetSecondMuonEta());
       deltaphileptons = fabs(eventdiffZ->GetLeadingMuonPhi() - eventdiffZ->GetSecondMuonPhi());
       deltaptleptons = fabs(eventdiffZ->GetLeadingMuonPt() - eventdiffZ->GetSecondMuonPt());
-      cone03tracks = eventdiffZ->GetTracksNonConeMuon03();
-      cone04tracks = eventdiffZ->GetTracksNonConeMuon04();
-      cone05tracks = eventdiffZ->GetTracksNonConeMuon05();
+      cone03tracks = eventdiffZ->GetTracksNonConeLeadingMuonR03()+eventdiffZ->GetTracksNonConeSecondMuonR03();
+      cone04tracks = eventdiffZ->GetTracksNonConeLeadingMuonR04()+eventdiffZ->GetTracksNonConeSecondMuonR04();
+      cone05tracks = eventdiffZ->GetTracksNonConeLeadingMuonR05()+eventdiffZ->GetTracksNonConeSecondMuonR05();
 
       if (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
@@ -1561,9 +1561,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       deltaetaleptons = fabs(eventdiffZ->GetPatElectron1Eta() - eventdiffZ->GetPatElectron2Eta());
       deltaphileptons = fabs(eventdiffZ->GetPatElectron1Phi() - eventdiffZ->GetPatElectron2Phi());
       deltaptleptons = fabs(eventdiffZ->GetPatElectron1Pt() - eventdiffZ->GetPatElectron2Pt());
-      cone03tracks = eventdiffZ->GetTracksNonConepatElectron03();
-      cone04tracks = eventdiffZ->GetTracksNonConepatElectron04();
-      cone05tracks = eventdiffZ->GetTracksNonConepatElectron05();
+      cone03tracks = eventdiffZ->GetTracksNonConePatElectron1R03()+eventdiffZ->GetTracksNonConePatElectron2R03();
+      cone04tracks = eventdiffZ->GetTracksNonConePatElectron1R04()+eventdiffZ->GetTracksNonConePatElectron2R04();
+      cone05tracks = eventdiffZ->GetTracksNonConePatElectron1R05()+eventdiffZ->GetTracksNonConePatElectron2R05();
 
       if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) charge = true;
@@ -1638,9 +1638,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       deltaetaleptons = fabs(eventdiffZ->GetPatMuon1Eta() - eventdiffZ->GetPatMuon2Eta());
       deltaphileptons = fabs(eventdiffZ->GetPatMuon1Phi() - eventdiffZ->GetPatMuon2Phi());
       deltaptleptons = fabs(eventdiffZ->GetPatMuon1Pt() - eventdiffZ->GetPatMuon2Pt());
-      cone03tracks = eventdiffZ->GetTracksNonConepatMuon03();
-      cone04tracks = eventdiffZ->GetTracksNonConepatMuon04();
-      cone05tracks = eventdiffZ->GetTracksNonConepatMuon05();
+      cone03tracks = eventdiffZ->GetTracksNonConePatMuon1R03()+eventdiffZ->GetTracksNonConePatMuon2R03();
+      cone04tracks = eventdiffZ->GetTracksNonConePatMuon1R04()+eventdiffZ->GetTracksNonConePatMuon2R04();
+      cone05tracks = eventdiffZ->GetTracksNonConePatMuon1R05()+eventdiffZ->GetTracksNonConePatMuon2R05();
 
       if (eventdiffZ->GetPatMuon1Pt() > lepton1pt && eventdiffZ->GetPatMuon2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) charge = true;
