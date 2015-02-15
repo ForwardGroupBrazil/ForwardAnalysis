@@ -342,19 +342,19 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_LeadingLeptonPhi[j].push_back(histo_LeadingLeptonPhi);
 
       sprintf(name,"DeltaPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_DeltaPhi = new TH1F(name,"#Delta#phi Distribution; #Delta#phi [rad]; N events",60,-3.3,3.3);
+      TH1F *histo_DeltaPhi = new TH1F(name,"#Delta#phi Distribution; #Delta#phi [rad]; N events",60,0.,3.3);
       m_hVector_DeltaPhi[j].push_back(histo_DeltaPhi);
 
       sprintf(name,"LeadingLeptonDz_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingLeptonDz = new TH1F(name,"dz Distribution; dz [mm]; N events",200,-50,50);
+      TH1F *histo_LeadingLeptonDz = new TH1F(name,"dz Distribution; dz [mm]; N events",200,0.,0.05);
       m_hVector_LeadingLeptonDz[j].push_back(histo_LeadingLeptonDz);
 
       sprintf(name,"LeadingLeptonDxy_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingLeptonDxy = new TH1F(name,"dxy Distribution; dxy [mm]; N events",200,-50,50);
+      TH1F *histo_LeadingLeptonDxy = new TH1F(name,"dxy Distribution; dxy [mm]; N events",200,0.,0.05);
       m_hVector_LeadingLeptonDxy[j].push_back(histo_LeadingLeptonDxy);
 
       sprintf(name,"METPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_METPt = new TH1F(name,"Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1F *histo_METPt = new TH1F(name,"Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0.,1000.);
       m_hVector_METPt[j].push_back(histo_METPt);
 
       sprintf(name,"METPhi_%s_%s",tag,Folders.at(j).c_str());
@@ -610,9 +610,9 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_LeadingLeptonPt[index].at(pileup)->Fill(leptonpt,totalweight);
   m_hVector_LeadingLeptonPhi[index].at(pileup)->Fill(leptonphi,totalweight);
   m_hVector_LeadingLeptonEta[index].at(pileup)->Fill(leptoneta,totalweight);
-  m_hVector_DeltaPhi[index].at(pileup)->Fill(deltaphi,totalweight);
-  m_hVector_LeadingLeptonDxy[index].at(pileup)->Fill(eventdiffW->GetLeadingMuonDxy(),totalweight);
-  m_hVector_LeadingLeptonDz[index].at(pileup)->Fill(eventdiffW->GetLeadingMuonDz(),totalweight);
+  m_hVector_DeltaPhi[index].at(pileup)->Fill(fabs(deltaphi),totalweight);
+  m_hVector_LeadingLeptonDxy[index].at(pileup)->Fill(fabs(eventdiffW->GetLeadingMuonDxy()),totalweight);
+  m_hVector_LeadingLeptonDz[index].at(pileup)->Fill(fabs(eventdiffW->GetLeadingMuonDz()),totalweight);
   m_hVector_METPt[index].at(pileup)->Fill(eventdiffW->GetMETPt(),totalweight);
   m_hVector_METPhi[index].at(pileup)->Fill(eventdiffW->GetMETPhi(),totalweight);
 
@@ -1303,7 +1303,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       deltaphi = eventdiffW->GetLeadingMuonPhi()-eventdiffW->GetMETPhi();
 
 
-      if(NMuons == 1 && NElectrons == 0) acceptEvt = true;
+      if(NMuons == 1) acceptEvt = true;
 
       if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
@@ -1311,7 +1311,24 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	isolation = true;
       }
 
-      if (eventdiffW->GetLeadingMuonDxy() < 2.) nocosmic = true;
+      bool debugmethod = false;
+      if(debugmethod){
+	std::cout << "IsWP80? " << eventdiffW->GetLeadingElectronIsWP80() << std::endl;
+	std::cout << "IsWP95? " << eventdiffW->GetLeadingElectronIsWP95() << std::endl; 
+	std::cout << "PT: " << eventdiffW->GetLeadingMuonPt() << std::endl;
+	std::cout << "Tracker: " << eventdiffW->GetLeadingMuonTrackerHits() << std::endl;
+	std::cout << "Pixel: " << eventdiffW->GetLeadingMuonPixelHits() << std::endl;
+	std::cout << "Chi2: " << eventdiffW->GetLeadingMuonNormalizedChi2() <<std::endl;
+	std::cout << "Matched Stations: " << eventdiffW->GetLeadingMuonMatchedStations() << std::endl;
+	std::cout << "Is Tracker? " << eventdiffW->GetLeadingMuonIsTracker() << std::endl;
+	std::cout << "Is Global? " << eventdiffW->GetLeadingMuonIsGlobal() << std::endl;
+	std::cout << "Dxy: " << eventdiffW->GetLeadingMuonDxy() << std::endl;
+	std::cout << "Dz: " << eventdiffW->GetLeadingMuonDz() << std::endl;
+	std::cout << "Good? " << eventdiffW->GetLeadingMuonIsGood() << std::endl;
+	std::cout << "RelIso: " << eventdiffW->GetLeadingMuonrelIsoDr05() << std::endl;
+      } 
+
+      if (fabs(eventdiffW->GetLeadingMuonDxy() < 0.02)) nocosmic = true;
       if (eventdiffW->GetLeadingMuonIsGood()) candSel = true;    
 
       if (eventdiffW->GetLeadingMuonEta()>0.) WKinP = true;
