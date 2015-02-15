@@ -159,6 +159,7 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
     fillCastorDebug(eventData,event,setup);
   }
   if (RunZDC_) fillZDC(eventData,event,setup);
+  VertexAssociation(eventData,event,setup);
 }
 
 // Fill Trigger
@@ -3098,6 +3099,202 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
   }
 
 }
+
+//
+// Fill Vertex Lepton Association
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DiffractiveZAnalysis::VertexAssociation(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  bool debug = false;
+  VertexVector.clear();
+
+  std::vector<double> dvtxmuonVector;
+  std::vector<double> dvtxelectronVector;
+  std::vector<double> dvtxmuonZVector;
+  std::vector<double> dvtxelectronZVector;
+  std::vector<double> dmuonelectronVector;
+  std::vector<double> dmuonelectronZVector;
+  std::vector<double> dmuonsVector;
+  std::vector<double> dmuonsZVector;
+  std::vector<double> delectronsVector;
+  std::vector<double> delectronsZVector;
+
+  dvtxmuonVector.clear();
+  dvtxelectronVector.clear();
+  dvtxmuonZVector.clear();
+  dvtxelectronZVector.clear();
+  dmuonelectronVector.clear();
+  dmuonelectronZVector.clear();
+  dmuonsVector.clear();
+  dmuonsZVector.clear();
+  delectronsVector.clear();
+  delectronsZVector.clear();
+
+  edm::Handle<reco::VertexCollection>  vertex;
+  event.getByLabel(PVtxCollectionTag_, vertex);
+
+  int vertexsize = vertex->size();
+  int itVertex;
+
+  if(vertex->size()>0){
+    for(itVertex=0; itVertex < vertexsize; ++itVertex){
+      const reco::Vertex* vertexAll = &((*vertex)[itVertex]);
+      VertexVector.push_back(vertexAll);
+    }
+  }
+
+  // Sorting Vector
+  std::sort(VertexVector.begin(), VertexVector.end(), orderVZ());
+
+  if(VertexVector.size()>0){
+    for (unsigned int i=0;i<VertexVector.size();i++){
+      if(debug) std::cout << "Vertex Position (x,y,z): (" << VertexVector[i]->x() << ", " << VertexVector[i]->y() << ", " << VertexVector[i]->z() << ") cm" << std::endl;
+    }
+  }
+
+  if(MuonVector.size()>0){
+    for (unsigned int i=0;i<MuonVector.size();i++){
+      if(debug) std::cout << "Muon Position (x,y,z): (" << MuonVector[i]->vx() << ", " << MuonVector[i]->vy() << ", " << MuonVector[i]->vz() << ") cm" << std::endl;
+    }
+  }
+
+  if(ElectronVector.size()>0){
+    for (unsigned int i=0;i<ElectronVector.size();i++){
+      if(debug) std::cout << "Electron Position (x,y,z): (" << ElectronVector[i]->vx() << ", " << ElectronVector[i]->vy() << ", " << ElectronVector[i]->vz() << ") cm" << std::endl;
+    }
+  }
+
+
+  if(VertexVector.size()>0 && MuonVector.size()>0){
+    for (unsigned int i=0;i<VertexVector.size();i++){
+      if(debug) std::cout << "Delta(Vertex - Muon Highest pT), vertex position (x,y,z): (" << VertexVector[i]->x()-MuonVector[0]->vx() << ", " << VertexVector[i]->y()-MuonVector[0]->vy() << ", " << VertexVector[i]->z()-MuonVector[0]->vz() << ") cm" << std::endl;
+      double dvtxMuon = TMath::Sqrt(TMath::Power(VertexVector[i]->x()-MuonVector[0]->vx(),2)+TMath::Power(VertexVector[i]->y()-MuonVector[0]->vy(),2)+TMath::Power(VertexVector[i]->z()-MuonVector[0]->vz(),2));
+      double dvtxMuonZ = fabs(VertexVector[i]->z()-MuonVector[0]->vz());
+      dvtxmuonVector.push_back(dvtxMuon);
+      dvtxmuonZVector.push_back(dvtxMuonZ);
+    }
+  }
+
+  if(VertexVector.size()>0 && ElectronVector.size()>0){
+    for (unsigned int i=0;i<VertexVector.size();i++){
+      if (debug) std::cout << "Delta(Vertex - Electron Highest pT), vertex position (x,y,z): (" << VertexVector[i]->x()-ElectronVector[0]->vx() << ", " << VertexVector[i]->y()-ElectronVector[0]->vy() << ", " << VertexVector[i]->z()-ElectronVector[0]->vz() << ") cm" << std::endl;
+      double dvtxElectron = TMath::Sqrt(TMath::Power(VertexVector[i]->x()-ElectronVector[0]->vx(),2)+TMath::Power(VertexVector[i]->y()-ElectronVector[0]->vy(),2)+TMath::Power(VertexVector[i]->z()-ElectronVector[0]->vz(),2));
+      double dvtxElectronZ = fabs(VertexVector[i]->z()-ElectronVector[0]->vz());
+      dvtxelectronVector.push_back(dvtxElectron);
+      dvtxelectronZVector.push_back(dvtxElectronZ);
+    }
+  }
+
+  if(MuonVector.size()>0 && ElectronVector.size()>0){
+    if (debug) std::cout << "Delta(Muon Highest pT - Electron Highest pT), position (x,y,z): (" << MuonVector[0]->vx()-ElectronVector[0]->vx() << ", " << MuonVector[0]->vy()-ElectronVector[0]->vy() << ", " << MuonVector[0]->vz()-ElectronVector[0]->vz() << ") cm" << std::endl;
+    double dmuonelectron = TMath::Sqrt(TMath::Power(MuonVector[0]->vx()-ElectronVector[0]->vx(),2)+TMath::Power(MuonVector[0]->vy()-ElectronVector[0]->vy(),2)+TMath::Power(MuonVector[0]->vz()-ElectronVector[0]->vz(),2));
+    double dmuonelectronZ = fabs(MuonVector[0]->vz()-ElectronVector[0]->vz());
+    dmuonelectronVector.push_back(dmuonelectron);
+    dmuonelectronZVector.push_back(dmuonelectronZ);
+  }
+
+  if(MuonVector.size()>1){
+    if (debug) std::cout << "Delta(Muon Highest pT - Muon Second Highest pT), position (x,y,z): (" << MuonVector[0]->vx()-MuonVector[1]->vx() << ", " << MuonVector[0]->vy()-MuonVector[1]->vy() << ", " << MuonVector[0]->vz()-MuonVector[1]->vz() << ") cm" << std::endl;
+    double dmuons = TMath::Sqrt(TMath::Power(MuonVector[0]->vx()-MuonVector[1]->vx(),2)+TMath::Power(MuonVector[0]->vy()-MuonVector[1]->vy(),2)+TMath::Power(MuonVector[0]->vz()-MuonVector[1]->vz(),2));
+    double dmuonsZ = fabs(MuonVector[0]->vz()-MuonVector[1]->vz());
+    dmuonsVector.push_back(dmuons);
+    dmuonsZVector.push_back(dmuonsZ);
+  }
+
+  if(ElectronVector.size()>1){
+    if (debug) std::cout << "Delta(Electron Highest pT - Electron Second Highest pT), position (x,y,z): (" << ElectronVector[0]->vx()-ElectronVector[1]->vx() << ", " << ElectronVector[0]->vy()-ElectronVector[1]->vy() << ", " << ElectronVector[0]->vz()-ElectronVector[1]->vz() << ") cm" << std::endl;
+    double delectrons = TMath::Sqrt(TMath::Power(ElectronVector[0]->vx()-ElectronVector[1]->vx(),2)+TMath::Power(ElectronVector[0]->vy()-ElectronVector[1]->vy(),2)+TMath::Power(ElectronVector[0]->vz()-ElectronVector[1]->vz(),2));
+    double delectronsZ = fabs(ElectronVector[0]->vz()-ElectronVector[1]->vz());
+    delectronsVector.push_back(delectrons);
+    delectronsZVector.push_back(delectronsZ);
+  }
+
+  std::stable_sort(dvtxmuonVector.begin(), dvtxmuonVector.end());
+  std::stable_sort(dvtxelectronVector.begin(), dvtxelectronVector.end());
+  std::stable_sort(dvtxmuonZVector.begin(), dvtxmuonZVector.end());
+  std::stable_sort(dvtxelectronZVector.begin(), dvtxelectronZVector.end());
+  std::stable_sort(dmuonelectronVector.begin(), dmuonelectronVector.end());
+  std::stable_sort(dmuonelectronZVector.begin(), dmuonelectronZVector.end());
+  std::stable_sort(dmuonsVector.begin(), dmuonsVector.end());
+  std::stable_sort(dmuonsZVector.begin(), dmuonsZVector.end());
+  std::stable_sort(delectronsVector.begin(), delectronsVector.end());
+  std::stable_sort(delectronsZVector.begin(), delectronsZVector.end());
+
+  if(dvtxmuonVector.size()>0){
+    eventData.SetDVtxMuon(dvtxmuonVector[0]);
+    eventData.SetDVtxMuonZ(dvtxmuonZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<dvtxmuonVector.size();i++){
+	std::cout << "Distance vtx and muon highest pT: " << dvtxmuonVector[i] << " cm" << std::endl;
+	std::cout << "Distance vtx and muon highest pT, Z: " << dvtxmuonZVector[i] << " cm" << std::endl;
+      }
+    }
+  }else{
+    eventData.SetDVtxMuon(-999.);
+    eventData.SetDVtxMuonZ(-999.);
+  }
+
+  if(dvtxelectronVector.size()>0){
+    eventData.SetDVtxElectron(dvtxelectronVector[0]);
+    eventData.SetDVtxElectronZ(dvtxelectronZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<dvtxelectronVector.size();i++){
+	std::cout << "Distance vtx and electron highest pT: " << dvtxelectronVector[i] << " cm" << std::endl;
+	std::cout << "Distance vtx and electron highest pT, Z: " << dvtxelectronZVector[i] << " cm" << std::endl;
+      }
+    }
+  }else{
+    eventData.SetDVtxElectron(-999.);
+    eventData.SetDVtxElectronZ(-999.);
+  }
+
+  if(dmuonelectronVector.size()>0){
+    eventData.SetDMuonElectron(dmuonelectronVector[0]);
+    eventData.SetDMuonElectronZ(dmuonelectronZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<dmuonelectronVector.size();i++){
+	std::cout << "Distance muon and electron highest pT: " << dmuonelectronVector[i] << " cm" << std::endl;
+	std::cout << "Distance muon and electron highest pT, Z: " << dmuonelectronZVector[i] << " cm" << std::endl;
+      }
+    }
+  }else{
+    eventData.SetDMuonElectron(-999.);
+    eventData.SetDMuonElectronZ(-999.);
+  }
+
+  if(dmuonsVector.size()>0){
+    eventData.SetDMuons(dmuonsVector[0]);
+    eventData.SetDMuonsZ(dmuonsZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<dmuonsVector.size();i++){
+	std::cout << "Distance muon highest and muon second highest pT: " << dmuonsVector[i] << " cm" << std::endl;
+	std::cout << "Distance muon highest and muon second highest pT, Z: " << dmuonsZVector[i] << " cm" << std::endl;
+      }
+    }
+  }else{
+    eventData.SetDMuons(-999.);
+    eventData.SetDMuonsZ(-999.);
+  }
+
+  if(delectronsVector.size()>0){
+    eventData.SetDElectrons(delectronsVector[0]);
+    eventData.SetDElectronsZ(delectronsZVector[0]);
+    if(debug){
+      for (unsigned int i=0;i<delectronsVector.size();i++){
+
+	std::cout << "Distance electron highest and electron second highest pT: " << delectronsVector[i] << " cm" << std::endl;
+	std::cout << "Distance electron highest and electron second highest pT, Z: " << delectronsZVector[i] << " cm" << std::endl;
+      }
+    }
+  }else{
+    eventData.SetDElectrons(-999.);
+    eventData.SetDElectronsZ(-999.);
+  }
+
+}
+
+// Templates
+////////////
 
 template <class T, class W>
 math::XYZTLorentzVector DiffractiveZAnalysis::DiSystem(T obj1, W obj2){

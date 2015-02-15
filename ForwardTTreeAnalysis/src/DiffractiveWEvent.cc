@@ -409,19 +409,21 @@ void DiffractiveWEvent::reset(){
   patElectron1IsWP95_ = false;
   patElectron1IsWP80_ = false;
 
-  fmetPt_ = -999.;
-  fmetPhi_ = -999.;
-  fmetEt_ = -999.;
-  fmetSumEt_ = -999.;
-  fmetpx_ = -999.;
-  fmetpy_ = -999.;
+  metPt_ = -999.;
+  metPhi_ = -999.;
+  metEt_ = -999.;
+  metSumEt_ = -999.;
+  metpx_ = -999.;
+  metpy_ = -999.;
+  metsigma_ = -999.;
 
-  fpatmetPt_ = -999.;
-  fpatmetPhi_ = -999.;
-  fpatmetEt_ = -999.;
-  fpatmetSumEt_ = -999.;
-  fpatmetpx_ = -999.;
-  fpatmetpy_ = -999.;
+  patmetPt_ = -999.;
+  patmetPhi_ = -999.;
+  patmetEt_ = -999.;
+  patmetSumEt_ = -999.;
+  patmetpx_ = -999.;
+  patmetpy_ = -999.;
+  patmetsigma_ = -999.;
 
   dvtxmuon_ = -999.;
   dvtxmuonZ_ = -999.;

@@ -273,7 +273,7 @@ void DiffractiveWAnalysis::fillMETInfo(DiffractiveWEvent& eventData, const edm::
     // Sorting Vector
     std::sort(NeutrinoVector.begin(), NeutrinoVector.end(), orderPT());
     for (unsigned int i=0;i<NeutrinoVector.size();i++){
-      if (debug) std::cout << "reco::pfMET[" << i << "]\t\t---> pT [GeV]: " << NeutrinoVector[i]->pt() << " | eT [GeV]: " << NeutrinoVector[i]->et() << " | sum eT [GeV]: " << NeutrinoVector[i]->sumEt() << " | eta: " << NeutrinoVector[i]->eta() << " | phi: " << NeutrinoVector[i]->phi() << " | px [GeV]: " << NeutrinoVector[i]->px() << " | py [GeV]: " << NeutrinoVector[i]->py() << " | P4() [GeV]: " << NeutrinoVector[i]->p4()  << std::endl;
+      if (debug) std::cout << "reco::pfMET[" << i << "]\t\t---> pT [GeV]: " << NeutrinoVector[i]->pt() << " | eT [GeV]: " << NeutrinoVector[i]->et() << " | sum eT [GeV]: " << NeutrinoVector[i]->sumEt() << " | eta: " << NeutrinoVector[i]->eta() << " | phi: " << NeutrinoVector[i]->phi() << " | px [GeV]: " << NeutrinoVector[i]->px() << " | py [GeV]: " << NeutrinoVector[i]->py() << " | P4() [GeV]: " << NeutrinoVector[i]->p4()  << " | significance: " << NeutrinoVector[i]->significance() << std::endl;
     }
     eventData.SetMETPt(NeutrinoVector[0]->pt());
     eventData.SetMETPhi(NeutrinoVector[0]->phi());
@@ -282,6 +282,7 @@ void DiffractiveWAnalysis::fillMETInfo(DiffractiveWEvent& eventData, const edm::
     eventData.SetMETpx(NeutrinoVector[0]->px());
     eventData.SetMETpy(NeutrinoVector[0]->py());
     eventData.SetMETP4(NeutrinoVector[0]->p4());
+    eventData.SetMETsigma(NeutrinoVector[0]->significance());
   }else{
     eventData.SetMETPt(-999.);
     eventData.SetMETPhi(-999.);
@@ -289,13 +290,14 @@ void DiffractiveWAnalysis::fillMETInfo(DiffractiveWEvent& eventData, const edm::
     eventData.SetMETSumEt(-999.);
     eventData.SetMETpx(-999.);
     eventData.SetMETpy(-999.);
+    eventData.SetMETsigma(-999);
   }
 
   if(PatNeutrinoVector.size()>0){
     // Sorting Vector
     std::sort(PatNeutrinoVector.begin(), PatNeutrinoVector.end(), orderPT());
     for (unsigned int i=0;i<PatNeutrinoVector.size();i++){
-      if (debug) std::cout << "pat::MET[" << i << "]\t\t---> pT [GeV]: " << PatNeutrinoVector[i]->pt() << " | eT [GeV]: " << PatNeutrinoVector[i]->et() << " | sum eT [GeV]: " << PatNeutrinoVector[i]->sumEt() << " | eta: " << PatNeutrinoVector[i]->eta() << " | phi: " << PatNeutrinoVector[i]->phi() << " | px [GeV]: " << PatNeutrinoVector[i]->px() << " | py [GeV]: " << PatNeutrinoVector[i]->py() << " | P4() [GeV]: " << PatNeutrinoVector[i]->p4()  << std::endl;
+      if (debug) std::cout << "pat::MET[" << i << "]\t\t---> pT [GeV]: " << PatNeutrinoVector[i]->pt() << " | eT [GeV]: " << PatNeutrinoVector[i]->et() << " | sum eT [GeV]: " << PatNeutrinoVector[i]->sumEt() << " | eta: " << PatNeutrinoVector[i]->eta() << " | phi: " << PatNeutrinoVector[i]->phi() << " | px [GeV]: " << PatNeutrinoVector[i]->px() << " | py [GeV]: " << PatNeutrinoVector[i]->py() << " | P4() [GeV]: " << PatNeutrinoVector[i]->p4() << " | significance: " << NeutrinoVector[i]->significance() << std::endl;
     }
     eventData.SetPatMETPt(PatNeutrinoVector[0]->pt());
     eventData.SetPatMETPhi(PatNeutrinoVector[0]->phi());
@@ -304,6 +306,7 @@ void DiffractiveWAnalysis::fillMETInfo(DiffractiveWEvent& eventData, const edm::
     eventData.SetPatMETpx(PatNeutrinoVector[0]->px());
     eventData.SetPatMETpy(PatNeutrinoVector[0]->py());
     eventData.SetPatMETP4(PatNeutrinoVector[0]->p4());
+    eventData.SetPatMETsigma(PatNeutrinoVector[0]->significance());
   }else{
     eventData.SetPatMETPt(-999.);
     eventData.SetPatMETPhi(-999.);
@@ -311,6 +314,7 @@ void DiffractiveWAnalysis::fillMETInfo(DiffractiveWEvent& eventData, const edm::
     eventData.SetPatMETSumEt(-999.);
     eventData.SetPatMETpx(-999.);
     eventData.SetPatMETpy(-999.);
+    eventData.SetPatMETsigma(-999.);
   }
 
 }
