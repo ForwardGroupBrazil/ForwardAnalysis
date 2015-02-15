@@ -68,6 +68,7 @@ namespace diffractiveZAnalysis {
       void fillCastor(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillCastorDebug(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillZDC(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void VertexAssociation(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       template <class T, class W>
 	math::XYZTLorentzVector DiSystem(T obj1, W obj2);
@@ -121,6 +122,7 @@ namespace diffractiveZAnalysis {
       std::vector<const reco::GenParticle*> genCMSVector;
       std::vector<const reco::GenParticle*> genProtonVector;
       std::vector<const CaloTower*> towerVector;
+      std::vector<const reco::Vertex*> VertexVector;
 
       TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
       TH1F *CastorChannelHisto_;
@@ -151,6 +153,15 @@ namespace diffractiveZAnalysis {
 	  inline bool operator() (T vec1, W vec2)
 	  {
 	    return (fabs(vec1->pz()) > fabs(vec2->pz()));
+	  }
+      };
+
+      struct orderVZ
+      {
+	template <class T, class W>
+	  inline bool operator() (T vec1, W vec2)
+	  {
+	    return (fabs(vec1->z()) > fabs(vec2->z()));
 	  }
       };
 

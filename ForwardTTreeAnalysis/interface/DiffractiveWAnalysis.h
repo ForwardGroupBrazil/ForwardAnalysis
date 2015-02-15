@@ -35,9 +35,6 @@
 #include "DataFormats/METReco/interface/PFMETFwd.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 
-#include "DataFormats/VertexReco/interface/VertexFwd.h"
-#include "DataFormats/VertexReco/interface/Vertex.h"
-
 #include <vector>
 #include <string>
 #include <map>

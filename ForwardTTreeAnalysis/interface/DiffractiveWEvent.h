@@ -29,21 +29,23 @@ class DiffractiveWEvent {
     void SetBosonMuonEta(double fBosonMuonEta) { BosonMuonEta_ = fBosonMuonEta;}
     void SetBosonMuonPhi(double fBosonMuonPhi) { BosonMuonPhi_ = fBosonMuonPhi;}
 
-    void SetMETPt(double fmetPt)    {fmetPt_ = fmetPt;}
-    void SetMETPhi(double fmetPhi)    {fmetPhi_ = fmetPhi;}
-    void SetMETEt(double fmetEt)    {fmetEt_ = fmetEt;}
-    void SetMETSumEt(double fmetSumEt)    {fmetSumEt_ = fmetSumEt;}
-    void SetMETpx(double fmetpx)    {fmetpx_ = fmetpx;}
-    void SetMETpy(double fmetpy)    {fmetpy_ = fmetpy;}
-    void SetMETP4(LorentzVector fmetp4)    {fmetp4_     = fmetp4;}
+    void SetMETPt(double fmetPt)    {metPt_ = fmetPt;}
+    void SetMETPhi(double fmetPhi)    {metPhi_ = fmetPhi;}
+    void SetMETEt(double fmetEt)    {metEt_ = fmetEt;}
+    void SetMETSumEt(double fmetSumEt)    {metSumEt_ = fmetSumEt;}
+    void SetMETpx(double fmetpx)    {metpx_ = fmetpx;}
+    void SetMETpy(double fmetpy)    {metpy_ = fmetpy;}
+    void SetMETP4(LorentzVector fmetp4)    {metp4_     = fmetp4;}
+    void SetMETsigma(double fmetsigma)    {metsigma_     = fmetsigma;}
 
-    void SetPatMETPt(double fpatmetPt)    {fpatmetPt_ = fpatmetPt;}
-    void SetPatMETPhi(double fpatmetPhi)    {fpatmetPhi_ = fpatmetPhi;}
-    void SetPatMETEt(double fpatmetEt)    {fpatmetEt_ = fpatmetEt;}
-    void SetPatMETSumEt(double fpatmetSumEt)    {fpatmetSumEt_ = fpatmetSumEt;}
-    void SetPatMETpx(double fpatmetpx)    {fpatmetpx_ = fpatmetpx;}
-    void SetPatMETpy(double fpatmetpy)    {fpatmetpy_ = fpatmetpy;}
-    void SetPatMETP4(LorentzVector fpatmetp4)    {fpatmetp4_     = fpatmetp4;}
+    void SetPatMETPt(double fpatmetPt)    {patmetPt_ = fpatmetPt;}
+    void SetPatMETPhi(double fpatmetPhi)    {patmetPhi_ = fpatmetPhi;}
+    void SetPatMETEt(double fpatmetEt)    {patmetEt_ = fpatmetEt;}
+    void SetPatMETSumEt(double fpatmetSumEt)    {patmetSumEt_ = fpatmetSumEt;}
+    void SetPatMETpx(double fpatmetpx)    {patmetpx_ = fpatmetpx;}
+    void SetPatMETpy(double fpatmetpy)    {patmetpy_ = fpatmetpy;}
+    void SetPatMETP4(LorentzVector fpatmetp4)    {patmetp4_     = fpatmetp4;}
+    void SetPatMETsigma(double fpatmetsigma)    {patmetsigma_     = fpatmetsigma;}
 
     void SetLeadingElectronPt(double fLeadingElectronPt)    { LeadingElectronPt_     = fLeadingElectronPt;}
     void SetLeadingElectronEta(double fLeadingElectronEta)  { LeadingElectronEta_     = fLeadingElectronEta;}
@@ -468,6 +470,7 @@ class DiffractiveWEvent {
 
     int GetHLTPath(int idx) const { return hltTrigResults_[idx]; }
     double GetBosonElectronMass() const {return BosonElectronMass_;}
+	
     double GetBosonElectronPt() const {return BosonElectronPt_;}
     double GetBosonElectronEta() const {return BosonElectronEta_;}
     double GetBosonElectronPhi() const {return BosonElectronPhi_;}
@@ -891,21 +894,23 @@ class DiffractiveWEvent {
     double GetPatElectron1InnerHits() const {return patElectron1InnerHits_;}
     double GetPatElectron1HE() const {return patElectron1HE_;}
 
-    double GetMETPt() const {return fmetPt_;}
-    double GetMETPhi() const {return fmetPhi_;}
-    double GetMETEt() const {return fmetEt_;}
-    double GetMETSumEt() const {return fmetSumEt_;}
-    double GetMETpx() const {return fmetpx_;}
-    double GetMETpy() const {return fmetpy_;}
-    const LorentzVector& GetMETP4() const {return fmetp4_;}
+    double GetMETPt() const {return metPt_;}
+    double GetMETPhi() const {return metPhi_;}
+    double GetMETEt() const {return metEt_;}
+    double GetMETSumEt() const {return metSumEt_;}
+    double GetMETpx() const {return metpx_;}
+    double GetMETpy() const {return metpy_;}
+    const LorentzVector& GetMETP4() const {return metp4_;}
+    double GetMETsigma() const {return metsigma_;}
 
-    double GetPatMETPt() const {return fpatmetPt_;}
-    double GetPatMETPhi() const {return fpatmetPhi_;}
-    double GetPatMETEt() const {return fpatmetEt_;}
-    double GetPatMETSumEt() const {return fpatmetSumEt_;}
-    double GetPatMETpx() const {return fpatmetpx_;}
-    double GetPatMETpy() const {return fpatmetpy_;}
-    const LorentzVector& GetPatMETP4() const {return fpatmetp4_;}
+    double GetPatMETPt() const {return patmetPt_;}
+    double GetPatMETPhi() const {return patmetPhi_;}
+    double GetPatMETEt() const {return patmetEt_;}
+    double GetPatMETSumEt() const {return patmetSumEt_;}
+    double GetPatMETpx() const {return patmetpx_;}
+    double GetPatMETpy() const {return patmetpy_;}
+    const LorentzVector& GetPatMETP4() const {return patmetp4_;}
+    double GetPatMETsigma() const {return patmetsigma_;}
 
     double GetDVtxMuon() const {return dvtxmuon_;}
     double GetDVtxMuonZ() const {return dvtxmuonZ_;}
@@ -1339,21 +1344,23 @@ class DiffractiveWEvent {
     bool patElectron1IsWP95_;
     bool patElectron1IsWP80_;
 
-    double fmetPt_;
-    double fmetPhi_;
-    double fmetEt_;
-    double fmetSumEt_;
-    double fmetpx_;
-    double fmetpy_;
-    LorentzVector fmetp4_;
+    double metPt_;
+    double metPhi_;
+    double metEt_;
+    double metSumEt_;
+    double metpx_;
+    double metpy_;
+    LorentzVector metp4_;
+    double metsigma_;
 
-    double fpatmetPt_;
-    double fpatmetPhi_;
-    double fpatmetEt_;
-    double fpatmetSumEt_;
-    double fpatmetpx_;
-    double fpatmetpy_;
-    LorentzVector fpatmetp4_;
+    double patmetPt_;
+    double patmetPhi_;
+    double patmetEt_;
+    double patmetSumEt_;
+    double patmetpx_;
+    double patmetpy_;
+    LorentzVector patmetp4_;
+    double patmetsigma_;
 
     double dvtxmuon_;
     double dvtxmuonZ_;

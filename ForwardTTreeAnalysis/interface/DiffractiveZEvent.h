@@ -430,6 +430,17 @@ class DiffractiveZEvent {
     void SetPatElectron2IsWP95(bool fpatElectron2IsWP95) {patElectron2IsWP95_ = fpatElectron2IsWP95;}
     void SetPatElectron2IsWP80(bool fpatElectron2IsWP80) {patElectron2IsWP80_ = fpatElectron2IsWP80;}
 
+    void SetDVtxMuon(double fdvtxmuon) { dvtxmuon_ = fdvtxmuon;}
+    void SetDVtxMuonZ(double fdvtxmuonZ) { dvtxmuonZ_ = fdvtxmuonZ;}
+    void SetDVtxElectron(double fdvtxelectron) { dvtxelectron_ = fdvtxelectron;}
+    void SetDVtxElectronZ(double fdvtxelectronZ) { dvtxelectronZ_ = fdvtxelectronZ;}
+    void SetDMuonElectron(double fdmuonelectron) { dmuonelectron_ = fdmuonelectron;}
+    void SetDMuonElectronZ(double fdmuonelectronZ) { dmuonelectronZ_ = fdmuonelectronZ;}
+    void SetDMuons(double fdmuons) { dmuons_ = fdmuons;}
+    void SetDMuonsZ(double fdmuonsZ) { dmuonsZ_ = fdmuonsZ;}
+    void SetDElectrons(double fdelectrons) { delectrons_ = fdelectrons;}
+    void SetDElectronsZ(double fdelectronsZ) { delectronsZ_ = fdelectronsZ;}
+
     int GetHLTPath(int idx) const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
     double GetDiElectronPt() const {return DiElectronPt_;}
@@ -839,6 +850,17 @@ class DiffractiveZEvent {
     bool GetPatElectron2IsWP95() const {return patElectron2IsWP95_;}
     bool GetPatElectron2IsWP80() const {return patElectron2IsWP80_;}
 
+    double GetDVtxMuon() const {return dvtxmuon_;}
+    double GetDVtxMuonZ() const {return dvtxmuonZ_;}
+    double GetDVtxElectron() const {return dvtxelectron_;}
+    double GetDVtxElectronZ() const {return dvtxelectronZ_;}
+    double GetDMuonElectron() const {return dmuonelectron_;}
+    double GetDMuonElectronZ() const {return dmuonelectronZ_;}
+    double GetDMuons() const {return dmuons_;}
+    double GetDMuonsZ() const {return dmuonsZ_;}
+    double GetDElectrons() const {return delectrons_;}
+    double GetDElectronsZ() const {return delectronsZ_;}
+
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
 
@@ -1244,21 +1266,16 @@ class DiffractiveZEvent {
     bool patElectron2IsWP95_;
     bool patElectron2IsWP80_;
 
-    double fmetPt_;
-    double fmetPhi_;
-    double fmetEt_;
-    double fmetSumEt_;
-    double fmetpx_;
-    double fmetpy_;
-    LorentzVector fmetp4_;
-
-    double fpatmetPt_;
-    double fpatmetPhi_;
-    double fpatmetEt_;
-    double fpatmetSumEt_;
-    double fpatmetpx_;
-    double fpatmetpy_;
-    LorentzVector fpatmetp4_;
+    double dvtxmuon_;
+    double dvtxmuonZ_;
+    double dvtxelectron_;
+    double dvtxelectronZ_;
+    double dmuonelectron_;
+    double dmuonelectronZ_;
+    double dmuons_;
+    double dmuonsZ_;
+    double delectrons_;
+    double delectronsZ_;
 
 };
 
