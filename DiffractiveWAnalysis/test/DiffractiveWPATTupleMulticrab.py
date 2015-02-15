@@ -40,7 +40,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 100
+config.NumberOfEvents = -1
 
 #
 # Define Options to Run
@@ -384,7 +384,7 @@ from ForwardAnalysis.ForwardTTreeAnalysis.PFCandInfo_cfi import PFCandInfo
 #
 ######################################################################################
 
-process.diffractiveWFilter = cms.EDFilter("diffractiveWFilter",
+process.diffractiveWFilter = cms.EDFilter("diffractiveWFilterSimple",
                              muonTag = cms.untracked.InputTag("muons"),
                              electronTag = cms.untracked.InputTag("gsfElectrons"),
                              metTag = cms.untracked.InputTag("pfMet"),
@@ -519,5 +519,3 @@ else:
        print(">> No Trigger.")
        process.analysis_diffractiveDiffractiveWAnalysisPATTriggerInfoTTree_step = cms.Path(
        process.analysisSequences + process.diffractiveWFilter + process.eventSelection + process.diffractiveWAnalysisTTree)
-
-
