@@ -40,7 +40,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 100
+config.NumberOfEvents = -1
 
 #
 # Define Options to Run
@@ -55,7 +55,7 @@ if options.Run == "data_MuonP1":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu9','HLT_Mu9_v*','HLT_DoubleMu3'
+  triggerlist = 'HLT_ZeroBias','HLT_Mu5','HLT_Mu7','HLT_Mu9','HLT_Mu9_v*','HLT_DoubleMu3'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
@@ -70,7 +70,7 @@ elif options.Run == "data_MuonP2":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu15','HLT_Mu15_v*','HLT_DoubleMu5_v*'
+  triggerlist = 'HLT_ZeroBias','HLT_Mu5','HLT_Mu5_v*','HLT_Mu7','HLT_Mu7_v*','HLT_Mu13','HLT_Mu13_v*','HLT_Mu15','HLT_Mu15_v*','HLT_DoubleMu5_v*'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
@@ -85,7 +85,7 @@ elif options.Run == "data_ElectronP1":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2'
+  triggerlist = 'HLT_ZeroBias','HLT_L1SingleEG2','HLT_Ele10_LW_L1R','HLT_Ele10_SW_L1R','HLT_Ele10_LW_L1R_v*','HLT_Ele10_SW_L1R_v*','HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
@@ -100,7 +100,7 @@ elif options.Run == "data_ElectronP2":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2' 
+  triggerlist = 'HLT_ZeroBias','HLT_L1SingleEG2','HLT_Ele10_LW_L1R','HLT_Ele10_SW_L1R','HLT_Ele10_LW_L1R_v*','HLT_Ele10_SW_L1R_v*','HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2' 
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
@@ -195,7 +195,7 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/DyToMuMu.root'
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/PomwigWRECO42X.root'
 
 else:
     config.l1Paths = (l1list)
