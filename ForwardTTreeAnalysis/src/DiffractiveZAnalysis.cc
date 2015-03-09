@@ -130,6 +130,13 @@ void DiffractiveZAnalysis::setTFileService(){
     m_hVector_histo_castor_channels.push_back(histo_castor_channels);
   }
 
+  if(RunMC_){
+    TFileDirectory genDir = fs->mkdir("Generator");
+    hParticlesEta_ = genDir.make<TH1F>("ParticlesEta","; #eta; # Events",1000,-15.,15.);
+    hParticlesPt_ =genDir.make<TH1F>("ParticlesPt","; P_{T} [GeV]; # Events",5000,0.,5000.);
+    hParticlesPhi_ =genDir.make<TH1F>("ParticlesPhi","; #phi [rad]; # Events",100,-4.,4.);
+  }
+
 }
 
 DiffractiveZAnalysis::~DiffractiveZAnalysis(){}
@@ -1016,6 +1023,16 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
 	genCMSVector.push_back(genAll);      
       }
 
+    }
+  }
+
+  if (RunMC_){
+    if(genVector.size()>0){
+      for(unsigned int i=0;i<genVector.size();i++){
+	hParticlesEta_->Fill(genVector[i]->eta());
+	hParticlesPhi_->Fill(genVector[i]->phi());
+	hParticlesPt_->Fill(genVector[i]->pt());
+      }
     }
   }
 
@@ -3169,7 +3186,7 @@ void DiffractiveZAnalysis::VertexAssociation(DiffractiveZEvent& eventData, const
     for (unsigned int i=0;i<VertexVector.size();i++){
       if(debug) std::cout << "Delta(Vertex - Muon Highest pT), vertex position (x,y,z): (" << VertexVector[i]->x()-MuonVector[0]->vx() << ", " << VertexVector[i]->y()-MuonVector[0]->vy() << ", " << VertexVector[i]->z()-MuonVector[0]->vz() << ") cm" << std::endl;
       double dvtxMuon = TMath::Sqrt(TMath::Power(VertexVector[i]->x()-MuonVector[0]->vx(),2)+TMath::Power(VertexVector[i]->y()-MuonVector[0]->vy(),2)+TMath::Power(VertexVector[i]->z()-MuonVector[0]->vz(),2));
-      double dvtxMuonZ = fabs(VertexVector[i]->z()-MuonVector[0]->vz());
+      double dvtxMuonZ = VertexVector[i]->z()-MuonVector[0]->vz();
       dvtxmuonVector.push_back(dvtxMuon);
       dvtxmuonZVector.push_back(dvtxMuonZ);
     }
@@ -3179,7 +3196,7 @@ void DiffractiveZAnalysis::VertexAssociation(DiffractiveZEvent& eventData, const
     for (unsigned int i=0;i<VertexVector.size();i++){
       if (debug) std::cout << "Delta(Vertex - Electron Highest pT), vertex position (x,y,z): (" << VertexVector[i]->x()-ElectronVector[0]->vx() << ", " << VertexVector[i]->y()-ElectronVector[0]->vy() << ", " << VertexVector[i]->z()-ElectronVector[0]->vz() << ") cm" << std::endl;
       double dvtxElectron = TMath::Sqrt(TMath::Power(VertexVector[i]->x()-ElectronVector[0]->vx(),2)+TMath::Power(VertexVector[i]->y()-ElectronVector[0]->vy(),2)+TMath::Power(VertexVector[i]->z()-ElectronVector[0]->vz(),2));
-      double dvtxElectronZ = fabs(VertexVector[i]->z()-ElectronVector[0]->vz());
+      double dvtxElectronZ = VertexVector[i]->z()-ElectronVector[0]->vz();
       dvtxelectronVector.push_back(dvtxElectron);
       dvtxelectronZVector.push_back(dvtxElectronZ);
     }
@@ -3188,7 +3205,7 @@ void DiffractiveZAnalysis::VertexAssociation(DiffractiveZEvent& eventData, const
   if(MuonVector.size()>0 && ElectronVector.size()>0){
     if (debug) std::cout << "Delta(Muon Highest pT - Electron Highest pT), position (x,y,z): (" << MuonVector[0]->vx()-ElectronVector[0]->vx() << ", " << MuonVector[0]->vy()-ElectronVector[0]->vy() << ", " << MuonVector[0]->vz()-ElectronVector[0]->vz() << ") cm" << std::endl;
     double dmuonelectron = TMath::Sqrt(TMath::Power(MuonVector[0]->vx()-ElectronVector[0]->vx(),2)+TMath::Power(MuonVector[0]->vy()-ElectronVector[0]->vy(),2)+TMath::Power(MuonVector[0]->vz()-ElectronVector[0]->vz(),2));
-    double dmuonelectronZ = fabs(MuonVector[0]->vz()-ElectronVector[0]->vz());
+    double dmuonelectronZ = MuonVector[0]->vz()-ElectronVector[0]->vz();
     dmuonelectronVector.push_back(dmuonelectron);
     dmuonelectronZVector.push_back(dmuonelectronZ);
   }
@@ -3196,7 +3213,7 @@ void DiffractiveZAnalysis::VertexAssociation(DiffractiveZEvent& eventData, const
   if(MuonVector.size()>1){
     if (debug) std::cout << "Delta(Muon Highest pT - Muon Second Highest pT), position (x,y,z): (" << MuonVector[0]->vx()-MuonVector[1]->vx() << ", " << MuonVector[0]->vy()-MuonVector[1]->vy() << ", " << MuonVector[0]->vz()-MuonVector[1]->vz() << ") cm" << std::endl;
     double dmuons = TMath::Sqrt(TMath::Power(MuonVector[0]->vx()-MuonVector[1]->vx(),2)+TMath::Power(MuonVector[0]->vy()-MuonVector[1]->vy(),2)+TMath::Power(MuonVector[0]->vz()-MuonVector[1]->vz(),2));
-    double dmuonsZ = fabs(MuonVector[0]->vz()-MuonVector[1]->vz());
+    double dmuonsZ = MuonVector[0]->vz()-MuonVector[1]->vz();
     dmuonsVector.push_back(dmuons);
     dmuonsZVector.push_back(dmuonsZ);
   }
@@ -3204,7 +3221,7 @@ void DiffractiveZAnalysis::VertexAssociation(DiffractiveZEvent& eventData, const
   if(ElectronVector.size()>1){
     if (debug) std::cout << "Delta(Electron Highest pT - Electron Second Highest pT), position (x,y,z): (" << ElectronVector[0]->vx()-ElectronVector[1]->vx() << ", " << ElectronVector[0]->vy()-ElectronVector[1]->vy() << ", " << ElectronVector[0]->vz()-ElectronVector[1]->vz() << ") cm" << std::endl;
     double delectrons = TMath::Sqrt(TMath::Power(ElectronVector[0]->vx()-ElectronVector[1]->vx(),2)+TMath::Power(ElectronVector[0]->vy()-ElectronVector[1]->vy(),2)+TMath::Power(ElectronVector[0]->vz()-ElectronVector[1]->vz(),2));
-    double delectronsZ = fabs(ElectronVector[0]->vz()-ElectronVector[1]->vz());
+    double delectronsZ = ElectronVector[0]->vz()-ElectronVector[1]->vz();
     delectronsVector.push_back(delectrons);
     delectronsZVector.push_back(delectronsZ);
   }

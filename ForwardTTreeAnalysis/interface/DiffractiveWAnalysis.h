@@ -139,6 +139,7 @@ namespace diffractiveWAnalysis {
       TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
       TH1F *CastorChannelHisto_;
       TH1F *histo_castor_channels;
+      TH1F *hParticlesEta_, *hParticlesPhi_, *hParticlesPt_;
       std::vector<TH1F*> m_hVector_histo_castor_channels;
 
       struct orderPT
@@ -170,11 +171,11 @@ namespace diffractiveWAnalysis {
 
       struct orderVZ
       {
-        template <class T, class W>
-          inline bool operator() (T vec1, W vec2)
-          {
-            return (fabs(vec1->z()) > fabs(vec2->z()));
-          }
+	template <class T, class W>
+	  inline bool operator() (T vec1, W vec2)
+	  {
+	    return (fabs(vec1->z()) > fabs(vec2->z()));
+	  }
       };
 
   };

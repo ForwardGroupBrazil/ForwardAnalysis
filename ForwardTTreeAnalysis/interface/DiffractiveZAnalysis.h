@@ -127,6 +127,7 @@ namespace diffractiveZAnalysis {
       TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
       TH1F *CastorChannelHisto_;
       TH1F *histo_castor_channels;
+      TH1F *hParticlesEta_, *hParticlesPhi_, *hParticlesPt_;
       std::vector<TH1F*> m_hVector_histo_castor_channels;
 
       struct orderPT
