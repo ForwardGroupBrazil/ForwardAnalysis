@@ -370,36 +370,6 @@ process.triggerAnalysisTTree = cms.EDAnalyzer("EventInfoTriggerTTree",
 
 process.triggerAnalysisTTree.TriggerAnalysis.hltPaths = config.hltPaths
 
-if options.condition=="A":
-     print("")
-     print(">>>> RunA Castor Conditions")
-     print("")
-     process.triggerAnalysisTTree.TriggerAnalysis.RunA = True
-     process.triggerAnalysisTTree.TriggerAnalysis.RunB = False
-
-elif options.condition=="B":
-     print("")
-     print(">>>> RunB Castor Conditions")
-     print("")
-     process.triggerAnalysisTTree.TriggerAnalysis.RunA = False
-     process.triggerAnalysisTTree.TriggerAnalysis.RunB = True
-else:
-     print("")
-     print(">>>> Full Castor")
-     print("")
-     process.triggerAnalysisTTree.TriggerAnalysis.RunA = False
-     process.triggerAnalysisTTree.TriggerAnalysis.RunB = False 
-
-if config.runOnMC:
-     process.triggerAnalysisTTree.TriggerAnalysis.RunMC = True
-     process.triggerAnalysisTTree.TriggerAnalysis.fCGeVCastor = 0.9375
-     process.triggerAnalysisTTree.TriggerAnalysis.castorHitsTag = "castorreco"
-
-else:
-     process.triggerAnalysisTTree.TriggerAnalysis.RunMC = False
-     process.triggerAnalysisTTree.TriggerAnalysis.fCGeVCastor = 0.015
-     process.triggerAnalysisTTree.TriggerAnalysis.castorHitsTag = "castorRecHitCorrector"
-
 #
 # Define MC Access
 #
