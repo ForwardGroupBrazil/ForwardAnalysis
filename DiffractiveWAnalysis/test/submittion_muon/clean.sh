@@ -1,3 +1,3 @@
 #/bin/bash
 
-rm -rf Muon2010_Castor_p* Dy* Pow* multicrab_* *.history *.pyc  SingleDiffractive_*
+rm -rf multicrab_* *.history *.pyc Electron2010* Dy* Pom* SingleZtoEE*

@@ -1,0 +1,55 @@
+<flags CXXFLAGS="-g -O0"/>
+<bin   file="source/EffMacro.cc" name="EffMacroCom">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>
+<bin   file="source/Purity.cc" name="PurityCom">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>
+<bin   file="source/EffMacroFWDTrigger.cc" name="EffMacroFWDTriggerCom">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>
+<bin   file="source/EffMacroDijetsTrigger.cc" name="EffMacroDijetsTriggerCom">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>
+<bin   file="source/TriggerEff.cc" name="TriggerEffCom">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>
+<bin   file="source/mcPU_Distributions.cc" name="mcPU_Distributions">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>

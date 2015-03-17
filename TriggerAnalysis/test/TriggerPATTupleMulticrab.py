@@ -2,20 +2,20 @@
 
 '''
 >>-------------------------<<-
-Diffractive Z NTuple Producer
+Trigger NTuple Producer
 >>-------------------------<<
 
 Goal:
-Produce your diffractive Z ntuple. 
+Produce your trigger ntuple. 
 
 Usage:
-    cmsRun DiffractiveZPATTupleMultiple.py
+    cmsRun DiffractiveWPATTupleMultiple.py
 
 Example:
-    cmsRun DiffractiveZPATTupleMulticrab.py Run=data_MuonP1 condition=B
+    cmsRun TriggerPATTupleMulticrab.py Run=data_MuonP1 condition=B
 
 Optional arguments:
-    Run = data_MuonP1, data_MuonP2, data_ElectronP1, data_ElectronP2, MC_none, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU 
+    Run = data_MuonP1, data_MuonP2, data_ElectronP1, data_ElectronP2, MC_none, MC_none_W, MC_PU, MC_FlatWeight or MC_FlatWeight_and_PU 
     condition = A or B for Castor remove channels depending of Run. If any, no conditions.
 Authors: D. Figueiredo, R. Arciadiacono and N. Cartiglia
 '''
@@ -35,12 +35,12 @@ process = cms.Process("Analysis")
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
-config.outputTTreeFile = 'DiffractiveZDataPATTuple.root'
+config.outputTTreeFile = 'TriggerPATTuple.root'
 config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 100
+config.NumberOfEvents = 500
 
 #
 # Define Options to Run
@@ -55,12 +55,11 @@ if options.Run == "data_MuonP1":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu9','HLT_Mu9_v*','HLT_DoubleMu3'
+  triggerlist = 'HLT_ZeroBias','HLT_Mu5','HLT_Mu7','HLT_Mu9','HLT_Mu9_v*','HLT_DoubleMu3','HLT_Ele10_LW_L1R','HLT_Ele10_LW_L1R_v*','HLT_Ele10_SW_L1R','HLT_Ele10_SW_L1R_v*'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
-  config.sys = True
 
 elif options.Run == "data_MuonP2":
   print("")
@@ -70,12 +69,11 @@ elif options.Run == "data_MuonP2":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu15','HLT_Mu15_v*','HLT_DoubleMu5_v*'
+  triggerlist = 'HLT_ZeroBias','HLT_Mu5','HLT_Mu5_v*','HLT_Mu7','HLT_Mu7_v*','HLT_Mu13','HLT_Mu13_v*','HLT_Mu15','HLT_Mu15_v*','HLT_DoubleMu5_v*','HLT_Ele10_LW_L1R','HLT_Ele10_LW_L1R_v*','HLT_Ele10_SW_L1R','HLT_Ele10_SW_L1R_v*'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
-  config.sys = True
 
 elif options.Run == "data_ElectronP1":
   print("")
@@ -85,12 +83,11 @@ elif options.Run == "data_ElectronP1":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2'
+  triggerlist = 'HLT_ZeroBias','HLT_L1SingleEG2','HLT_Ele10_LW_L1R','HLT_Ele10_SW_L1R','HLT_Ele10_LW_L1R_v*','HLT_Ele10_SW_L1R_v*','HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2','HLT_Mu9','HLT_Mu9_v*','HLT_Mu15','HLT_Mu15_v*'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
-  config.sys = True
 
 elif options.Run == "data_ElectronP2":
   print("")
@@ -100,12 +97,11 @@ elif options.Run == "data_ElectronP2":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2' 
+  triggerlist = 'HLT_ZeroBias','HLT_L1SingleEG2','HLT_Ele10_LW_L1R','HLT_Ele10_SW_L1R','HLT_Ele10_LW_L1R_v*','HLT_Ele10_SW_L1R_v*','HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2','HLT_Mu9','HLT_Mu9_v*','HLT_Mu15','HLT_Mu15_v*'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
-  config.sys = True
 
 elif options.Run == "MC_FlatWeight_and_PU":
   print("")
@@ -120,7 +116,6 @@ elif options.Run == "MC_FlatWeight_and_PU":
   config.runOnMC = True
   config.runPUMC = True
   config.runGen = True
-  config.sys = False
 
 elif options.Run == "MC_FlatWeight":
   print("")
@@ -135,7 +130,6 @@ elif options.Run == "MC_FlatWeight":
   config.runOnMC = True
   config.runPUMC = False
   config.runGen = True
-  config.sys = False
 
 elif options.Run == "MC_PU":
   print("")
@@ -150,7 +144,6 @@ elif options.Run == "MC_PU":
   config.runOnMC = True
   config.runPUMC = True
   config.runGen = False
-  config.sys = False
 
 elif options.Run == "MC_none":
   print("")
@@ -165,7 +158,6 @@ elif options.Run == "MC_none":
   config.runOnMC = True
   config.runPUMC = False
   config.runGen = False
-  config.sys = False
 
 else:
   print("")
@@ -180,7 +172,6 @@ print("Run with MC: %s" % config.runOnMC)
 print("Run MC with Pile Up: %s" % config.runPUMC)
 print("Run MC with Flat Weight: %s" % config.runGen)
 print("Run with Trigger: %s" % config.TriggerOn)
-print("Run with Energy Scale: %s" % config.sys)
 if not config.runOnMC: 
    print("Data Global Tag: " + config.globalTagNameData)
 else:
@@ -195,7 +186,7 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/DyToMuMu.root'
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/WMuNuPythia6.root' # PomwigWRECO42X.root, WMuNuPythia6.root, QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_SL.root
 
 else:
     config.l1Paths = (l1list)
@@ -312,34 +303,43 @@ if not config.runOnMC:
          patMuons
     )
 
-else: 
+else:
     process.makePatElectrons = cms.Sequence(
          electronMatch *
          patElectrons
     )
-   
+
     process.makePatMuons = cms.Sequence(
          muonMatch*
          patMuons
     )
 
+
 #
-# PAT Isolation Variables
+# PAT MET Variables
 #
 ######################################################################################
 
-#from PhysicsTools.PatAlgos.tools.muonTools import *
-#addMuonUserIsolation(process)
+# load the coreTools of PAT
+from PhysicsTools.PatAlgos.tools.metTools import *
+addTcMET(process,'TC')
+addPfMET(process,'PF')
 
-#from PhysicsTools.PatAlgos.tools.electronTools import *
-#addElectronUserIsolation(process)
+
+from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+process.patpfMet = patMETs.clone(
+    metSource = cms.InputTag('pfMet'),
+    addMuonCorrections = cms.bool(False), #false
+    addGenMET    = cms.bool(False)
+)
+
 
 #
 # Open Common Modules
 #
 ######################################################################################
 
-process.load("ForwardAnalysis.DiffractiveZAnalysis.diffractiveZAnalysisSequences_cff")
+process.load("ForwardAnalysis.TriggerAnalysis.triggerAnalysisSequences_cff")
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
@@ -348,25 +348,8 @@ process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 #
 ######################################################################################
 
-from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
-from ForwardAnalysis.DiffractiveZAnalysis.DiffractiveZAnalysis_cfi import DiffractiveZAnalysis
+from ForwardAnalysis.TriggerAnalysis.TriggerAnalysis_cfi import TriggerAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.PFCandInfo_cfi import PFCandInfo
-
-#from ForwardAnalysis.ForwardTTreeAnalysis.PATTriggerInfo_cfi import PATTriggerInfo
-
-#PATTriggerInfo.L1AlgoBitName =  config.l1Paths 
-#PATTriggerInfo.HLTAlgoBitName = config.hltPaths
-#PATTriggerInfo.runALLTriggerPath = True
-
-#
-# Define Filter
-#
-######################################################################################
-
-process.diffractiveZFilter = cms.EDFilter("diffractiveZFilter",
-                             muonTag = cms.untracked.InputTag("muons"),
-                             electronTag = cms.untracked.InputTag("gsfElectrons")
-                             )
 
 
 #
@@ -374,58 +357,48 @@ process.diffractiveZFilter = cms.EDFilter("diffractiveZFilter",
 #
 ######################################################################################
 
-process.diffractiveZHLTFilter.HLTPaths = config.hltPaths
+process.triggerHLTFilter.HLTPaths = config.hltPaths
 
-process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffractiveZAnalysisTTree",
+process.triggerAnalysisTTree = cms.EDAnalyzer("EventInfoTriggerTTree",
         EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(not config.runOnMC),
                     RunWithMCPU = cms.untracked.bool(config.runPUMC),
                     RunWithWeightGen = cms.untracked.bool(config.runGen)
         ),
-        DiffractiveAnalysis = DiffractiveAnalysis,
-        DiffractiveZAnalysis = DiffractiveZAnalysis
+        TriggerAnalysis = TriggerAnalysis
         )
 
-process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
-process.diffractiveZAnalysisTTree.DiffractiveAnalysis.hltPath = ''
-process.diffractiveZAnalysisTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
-process.diffractiveZAnalysisTTree.DiffractiveAnalysis.vertexTag = "goodOfflinePrimaryVertices"
-process.diffractiveZAnalysisTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
-process.diffractiveZAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
-process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessCastorInfo = False
-process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessZDCInfo = False
+process.triggerAnalysisTTree.TriggerAnalysis.hltPaths = config.hltPaths
 
 if options.condition=="A":
      print("")
      print(">>>> RunA Castor Conditions")
      print("")
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = True
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = False
+     process.triggerAnalysisTTree.TriggerAnalysis.RunA = True
+     process.triggerAnalysisTTree.TriggerAnalysis.RunB = False
 
 elif options.condition=="B":
      print("")
      print(">>>> RunB Castor Conditions")
      print("")
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = True
+     process.triggerAnalysisTTree.TriggerAnalysis.RunA = False
+     process.triggerAnalysisTTree.TriggerAnalysis.RunB = True
 else:
      print("")
      print(">>>> Full Castor")
      print("")
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunA = False
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunB = False 
+     process.triggerAnalysisTTree.TriggerAnalysis.RunA = False
+     process.triggerAnalysisTTree.TriggerAnalysis.RunB = False 
 
 if config.runOnMC:
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = True
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.9375
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.castorHitsTag = "castorreco"
-     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.castorRecHitTag ="castorreco"
+     process.triggerAnalysisTTree.TriggerAnalysis.RunMC = True
+     process.triggerAnalysisTTree.TriggerAnalysis.fCGeVCastor = 0.9375
+     process.triggerAnalysisTTree.TriggerAnalysis.castorHitsTag = "castorreco"
 
 else:
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.015
-     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.castorHitsTag = "castorRecHitCorrector"
-     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.castorRecHitTag = "castorRecHitCorrector"
+     process.triggerAnalysisTTree.TriggerAnalysis.RunMC = False
+     process.triggerAnalysisTTree.TriggerAnalysis.fCGeVCastor = 0.015
+     process.triggerAnalysisTTree.TriggerAnalysis.castorHitsTag = "castorRecHitCorrector"
 
 #
 # Define MC Access
@@ -433,32 +406,11 @@ else:
 ######################################################################################
 
 if config.runOnMC:
-     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessMCInfo = True
      process.gen_step = cms.Path(process.genChargedParticles+
                               process.genProtonDissociative*process.edmNtupleMxGen+
                               process.genStableParticles*
                               process.etaMaxGen+process.etaMinGen*
                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
-
-else:
-     process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessMCInfo = False
-
-#
-# Clone Shifted Up and Down
-#
-######################################################################################
-
-process.diffractiveZAnalysisTTreePFShiftedUp = process.diffractiveZAnalysisTTree.clone()
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedUp"
-process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedUp"
-
-process.diffractiveZAnalysisTTreePFShiftedDown = process.diffractiveZAnalysisTTree.clone() 	 
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedDown" 	 
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedDown" 	 
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedDown" 	 
-process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedDown"
 
 #
 # Run Path. 
@@ -466,35 +418,15 @@ process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveZAnalysis.pfTag = "pfC
 #
 ######################################################################################
 
-process.pat_Producer = cms.Path(process.makePatElectrons + process.makePatMuons)
+process.pat_Producer = cms.Path(process.makePatElectrons + process.makePatMuons + process.patpfMet) # process.patpfMet do not work with data.
 process.castor_step = cms.Path(process.castorSequence)
 
-if config.sys:
-
-   print(">> With Energy Scale.")
-   if config.TriggerOn:
-       print(">> With Trigger.")
-       process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.diffractiveZFilter + process.eventSelectionHLT + 
-       process.diffractiveZAnalysisTTreePFShiftedUp + process.diffractiveZAnalysisTTreePFShiftedDown + process.diffractiveZAnalysisTTree)
-
-   else:
-       print(">> No Trigger.") 
-       process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.diffractiveZFilter + process.eventSelection +
-       process.diffractiveZAnalysisTTreePFShiftedUp + process.diffractiveZAnalysisTTreePFShiftedDown + process.diffractiveZAnalysisTTree)
+if config.TriggerOn:
+   print(">> With Trigger.")
+   process.triggerAnalysisTTree_step = cms.Path(
+   process.analysisSequences + process.eventSelectionHLT + process.triggerAnalysisTTree)
 
 else:
-
-   print(">> No Energy Scale.")
-   if config.TriggerOn:
-       print(">> With Trigger.")
-       process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.diffractiveZFilter + process.eventSelectionHLT + process.diffractiveZAnalysisTTree)
-
-   else:
-       print(">> No Trigger.")
-       process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.diffractiveZFilter + process.eventSelection + process.diffractiveZAnalysisTTree)
-
-
+   print(">> No Trigger.")
+   process.triggerAnalysisTTree_step = cms.Path(
+   process.analysisSequences + process.eventSelection + process.triggerAnalysisTTree)

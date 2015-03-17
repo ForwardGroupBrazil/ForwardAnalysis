@@ -49,7 +49,10 @@ class DiffractiveW {
   double leptoneta;
   double leptonphi;
   double deltaphi;
-  
+  double secondleptonpt;
+  double secondleptonphi;
+  double secondleptoneta;
+
   double bosonWMass;
   double bosonWEta;
   double bosonWPhi;
@@ -160,11 +163,23 @@ class DiffractiveW {
   std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonPt;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonEta;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondLeptonPt;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondLeptonEta;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondLeptonPhi;
   std::vector<std::vector<TH1F*> > m_hVector_DeltaPhi;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDxy;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingLeptonDz;
   std::vector<std::vector<TH1F*> > m_hVector_METPt;
+  std::vector<std::vector<TH1F*> > m_hVector_METSignificance;
   std::vector<std::vector<TH1F*> > m_hVector_METPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_DVtxMuon;
+  std::vector<std::vector<TH1F*> > m_hVector_DVtxMuonZ;
+  std::vector<std::vector<TH1F*> > m_hVector_DVtxElectron;
+  std::vector<std::vector<TH1F*> > m_hVector_DVtxElectronZ;
+  std::vector<std::vector<TH1F*> > m_hVector_DMuonElectron;
+  std::vector<std::vector<TH1F*> > m_hVector_DMuonElectronZ;
+  std::vector<std::vector<TH1F*> > m_hVector_DMuons;
+  std::vector<std::vector<TH1F*> > m_hVector_DElectrons;
 
   // Detector
   std::vector<std::vector<TH1F*> > m_hVector_sumEHFplus;
@@ -223,7 +238,7 @@ class DiffractiveW {
   std::vector<std::vector<TH1F*> > m_hVector_AEcastor;
   std::vector<std::vector<TH1F*> > m_hVector_etasignedHF;
   std::vector<std::vector<TH1F*> > m_hVector_etasignedCASTOR;
- 
+
   std::vector <std::string> Folders;
   TDirectory *foldersFile[4];
 

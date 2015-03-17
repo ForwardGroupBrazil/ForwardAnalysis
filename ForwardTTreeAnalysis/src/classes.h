@@ -2,6 +2,7 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveWEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/TriggerEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/HeavyFlavorEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
@@ -10,7 +11,6 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATHLTTrigger.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PFCandInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PFCand.h"
-
 
 /*DiffractiveEvent diffractiveEvent;
 ExclusiveDijetsEvent exclusiveDijetsEvent;
@@ -27,6 +27,7 @@ namespace {
       DiffractiveEvent diffractiveEvent;
       DiffractiveZEvent diffractiveZEvent;
       DiffractiveWEvent diffractiveWEvent;
+      TriggerEvent triggerEvent;
       ExclusiveDijetsEvent exclusiveDijetsEvent;
       DijetsTriggerEvent dijetsTriggerEvent;
       HeavyFlavorEvent heavyFlavorEvent;
@@ -42,6 +43,7 @@ namespace {
       edm::Wrapper<DiffractiveEvent> diffractiveEvent_wr;
       edm::Wrapper<DiffractiveZEvent> diffractiveZEvent_wr;
       edm::Wrapper<DiffractiveWEvent> diffractiveWEvent_wr;
+      edm::Wrapper<TriggerEvent> triggerEvent_wr;
       edm::Wrapper<ExclusiveDijetsEvent> exclusiveDijetsEvent_wr;
       edm::Wrapper<DijetsTriggerEvent> dijetsTriggerEvent_wr;
       edm::Wrapper<HeavyFlavorEvent> heavyFlavorEvent_wr;

@@ -809,7 +809,7 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
       if(!MuonVector[0]->track().isNull()) std::cout << "Muon 1, Tracker Hits: " << MuonVector[0]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
       if(!MuonVector[0]->globalTrack().isNull()) std::cout << "Muon 1, Chi2/ndof: " << MuonVector[0]->globalTrack()->normalizedChi2() << std::endl;
       std::cout << "Muon 1, Matched Stations: " << MuonVector[0]->numberOfMatchedStations() << std::endl;
-      if(!PatMuonVector[0]->innerTrack().isNull()){
+      if(!MuonVector[0]->innerTrack().isNull()){
 	std::cout << "Muon 1, dxy: " << MuonVector[0]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
 	std::cout << "Muon 1, Number of Valid Pixel Hits: " << MuonVector[0]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
       }
@@ -955,7 +955,7 @@ void DiffractiveWAnalysis::fillMuonsInfo(DiffractiveWEvent& eventData, const edm
       if(!MuonVector[1]->track().isNull()) std::cout << "Muon 2, Tracker Hits: " << MuonVector[1]->track()->hitPattern().trackerLayersWithMeasurement() << std::endl;
       if(!MuonVector[1]->globalTrack().isNull()) std::cout << "Muon 2, Chi2/ndof: " << MuonVector[1]->globalTrack()->normalizedChi2() << std::endl;
       std::cout << "Muon 2, Matched Stations: " << MuonVector[1]->numberOfMatchedStations() << std::endl;
-      if(!PatMuonVector[1]->innerTrack().isNull()){
+      if(!MuonVector[1]->innerTrack().isNull()){
 	std::cout << "Muon 2, dxy: " << MuonVector[1]->innerTrack()->dxy(vertex->at(0).position()) << std::endl;
 	std::cout << "Muon 2, Number of Valid Pixel Hits: " << MuonVector[1]->innerTrack()->hitPattern().numberOfValidPixelHits() << std::endl;
       }
@@ -3507,14 +3507,25 @@ math::XYZTLorentzVector DiffractiveWAnalysis::DiSystem(T obj1, W obj2){
 template <class T, class W>
 double DiffractiveWAnalysis::TransverseMass(T lepton, W met){
 
-  double tmass_=-999.;
-  double metT = sqrt(pow(met->px(),2) + pow(met->py(),2));
-  double lepT = sqrt(pow(lepton->px(),2) + pow(lepton->py(),2));
-  reco::Particle::LorentzVector TS = lepton->p4() + met->p4();
-  tmass_ = sqrt(pow(metT+lepT,2) - (TS.px()*TS.px()) - (TS.py()*TS.py()));
-  // Defense
-  if (!std::isfinite(tmass_)) {
-    tmass_ = -999.;
-  }
+  //double tmass_=-999.;
+ 
+  //double metT = sqrt(pow(met->px(),2) + pow(met->py(),2));
+  //double lepT = sqrt(pow(lepton->px(),2) + pow(lepton->py(),2));
+  //reco::Particle::LorentzVector TS = lepton->p4() + met->p4();
+  //tmass_ = sqrt(pow(metT+lepT,2) - (TS.px()*TS.px()) - (TS.py()*TS.py()));
+  
+  //Defense
+  //if (!std::isfinite(tmass_)) {
+  //   tmass_ = -999.;
+  //}
+
+  double w_et = met->et() + lepton->pt();
+  double w_px = met->px() + lepton->px();
+  double w_py = met->py() + lepton->py();
+
+  double tmass_ = w_et*w_et - w_px*w_px - w_py*w_py;
+  tmass_ = (tmass_ > 0) ? sqrt(tmass_) : 0;
+
   return tmass_;
+
 }

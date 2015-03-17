@@ -181,11 +181,24 @@ void DiffractiveW::CreateHistos(std::string type){
     m_hVector_LeadingLeptonPt.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonEta.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonPt.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonEta.push_back( std::vector<TH1F*>() );
+    m_hVector_SecondLeptonPhi.push_back( std::vector<TH1F*>() );
     m_hVector_DeltaPhi.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonDxy.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingLeptonDz.push_back( std::vector<TH1F*>() );
     m_hVector_METPt.push_back( std::vector<TH1F*>() );
+    m_hVector_METSignificance.push_back( std::vector<TH1F*>() );
     m_hVector_METPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_DVtxMuon.push_back( std::vector<TH1F*>() );
+    m_hVector_DVtxMuonZ.push_back( std::vector<TH1F*>() );
+    m_hVector_DVtxElectron.push_back( std::vector<TH1F*>() );
+    m_hVector_DVtxElectronZ.push_back( std::vector<TH1F*>() );
+    m_hVector_DMuonElectron.push_back( std::vector<TH1F*>() );
+    m_hVector_DMuonElectronZ.push_back( std::vector<TH1F*>() );
+    m_hVector_DMuons.push_back( std::vector<TH1F*>() );
+    m_hVector_DElectrons.push_back( std::vector<TH1F*>() );
+
 
     // Detector
     m_hVector_sumEHFplus.push_back( std::vector<TH1F*>() );
@@ -353,14 +366,61 @@ void DiffractiveW::CreateHistos(std::string type){
       TH1F *histo_LeadingLeptonDxy = new TH1F(name,"dxy Distribution; dxy [mm]; N events",200,0.,0.05);
       m_hVector_LeadingLeptonDxy[j].push_back(histo_LeadingLeptonDxy);
 
+      sprintf(name,"SecondLeptonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonPt = new TH1F(name,"Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_SecondLeptonPt[j].push_back(histo_SecondLeptonPt);
+
+      sprintf(name,"SecondLeptonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonEta = new TH1F(name,"#eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_SecondLeptonEta[j].push_back(histo_SecondLeptonEta);
+
+      sprintf(name,"SecondLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_SecondLeptonPhi = new TH1F(name,"#phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_SecondLeptonPhi[j].push_back(histo_SecondLeptonPhi);
+
       sprintf(name,"METPt_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_METPt = new TH1F(name,"Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0.,1000.);
       m_hVector_METPt[j].push_back(histo_METPt);
+
+      sprintf(name,"METSignificance_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_METSignificance = new TH1F(name,"Significance Distribution; #sigma [GeV.c^{-1}]; N events",200,-500,500.);
+      m_hVector_METSignificance[j].push_back(histo_METSignificance);
 
       sprintf(name,"METPhi_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_METPhi = new TH1F(name,"#phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
       m_hVector_METPhi[j].push_back(histo_METPhi);
 
+      sprintf(name,"DVtxMuon_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DVtxMuon = new TH1F(name,"Distance Vertex - Leading Muon; d [cm]; N events",100,0.,1.);
+      m_hVector_DVtxMuon[j].push_back(histo_DVtxMuon);
+
+      sprintf(name,"DVtxMuonZ_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DVtxMuonZ = new TH1F(name,"Distance Z, Vertex - Leading Muon; d [cm]; N events",100,0.,1.);
+      m_hVector_DVtxMuonZ[j].push_back(histo_DVtxMuonZ);
+
+      sprintf(name,"DVtxElectron_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DVtxElectron = new TH1F(name,"Distance Vertex - Leading Electron; d [cm]; N events",100,0.,1.);
+      m_hVector_DVtxElectron[j].push_back(histo_DVtxElectron);
+
+      sprintf(name,"DVtxElectronZ_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DVtxElectronZ = new TH1F(name,"Distance Z, Vertex - Leading Electron; d [cm]; N events",100,0.,1.);
+      m_hVector_DVtxElectronZ[j].push_back(histo_DVtxElectronZ);
+
+      sprintf(name,"DMuonElectron_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DMuonElectron = new TH1F(name,"Distance Leading Muon - Leading Electron; d [cm]; N events",100,0.,1.);
+      m_hVector_DMuonElectron[j].push_back(histo_DMuonElectron);
+
+      sprintf(name,"DMuonElectronZ_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DMuonElectronZ = new TH1F(name,"Distance Z, Leading Muon - Leading Electron; d [cm]; N events",100,0.,1.);
+      m_hVector_DMuonElectronZ[j].push_back(histo_DMuonElectronZ);
+
+      sprintf(name,"DMuons_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DMuons = new TH1F(name,"Distance Leading and Second Leading Muon; d [cm]; N events",100,0,1.);
+      m_hVector_DMuons[j].push_back(histo_DMuons);
+
+      sprintf(name,"DElectrons_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_DElectrons = new TH1F(name,"Distance Leading and Second Leading Electron; d [cm]; N events",100,0.,1.);
+      m_hVector_DElectrons[j].push_back(histo_DElectrons);
 
 
       // Detector
@@ -613,9 +673,20 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_DeltaPhi[index].at(pileup)->Fill(fabs(deltaphi),totalweight);
   m_hVector_LeadingLeptonDxy[index].at(pileup)->Fill(fabs(eventdiffW->GetLeadingMuonDxy()),totalweight);
   m_hVector_LeadingLeptonDz[index].at(pileup)->Fill(fabs(eventdiffW->GetLeadingMuonDz()),totalweight);
+  m_hVector_SecondLeptonPt[index].at(pileup)->Fill(secondleptonpt,totalweight);
+  m_hVector_SecondLeptonPhi[index].at(pileup)->Fill(secondleptonphi,totalweight);
+  m_hVector_SecondLeptonEta[index].at(pileup)->Fill(secondleptoneta,totalweight);
   m_hVector_METPt[index].at(pileup)->Fill(eventdiffW->GetMETPt(),totalweight);
   m_hVector_METPhi[index].at(pileup)->Fill(eventdiffW->GetMETPhi(),totalweight);
-
+  m_hVector_METSignificance[index].at(pileup)->Fill(eventdiffW->GetMETsigma(),totalweight);
+  m_hVector_DVtxMuon[index].at(pileup)->Fill(eventdiffW->GetDVtxMuon(),totalweight);
+  m_hVector_DVtxMuonZ[index].at(pileup)->Fill(eventdiffW->GetDVtxMuonZ(),totalweight);
+  m_hVector_DVtxElectron[index].at(pileup)->Fill(eventdiffW->GetDVtxElectron(),totalweight);
+  m_hVector_DVtxElectronZ[index].at(pileup)->Fill(eventdiffW->GetDVtxElectronZ(),totalweight);
+  m_hVector_DMuonElectron[index].at(pileup)->Fill(eventdiffW->GetDMuonElectron(),totalweight);
+  m_hVector_DMuonElectronZ[index].at(pileup)->Fill(eventdiffW->GetDMuonElectronZ(),totalweight);
+  m_hVector_DMuons[index].at(pileup)->Fill(eventdiffW->GetDMuons(),totalweight);
+  m_hVector_DElectrons[index].at(pileup)->Fill(eventdiffW->GetDElectrons(),totalweight);
 
   // Detector
   m_hVector_sumEHFplus[index].at(pileup)->Fill(eventdiffW->GetSumEHFPlus(),totalweight);
@@ -739,8 +810,20 @@ void DiffractiveW::SaveHistos(std::string type,std::string typesel){
       m_hVector_DeltaPhi[j].at(i)->Write();
       m_hVector_LeadingLeptonDxy[j].at(i)->Write();
       m_hVector_LeadingLeptonDz[j].at(i)->Write();
+      m_hVector_SecondLeptonPt[j].at(i)->Write();
+      m_hVector_SecondLeptonEta[j].at(i)->Write();
+      m_hVector_SecondLeptonPhi[j].at(i)->Write();
       m_hVector_METPt[j].at(i)->Write();
+      m_hVector_METSignificance[j].at(i)->Write();
       m_hVector_METPhi[j].at(i)->Write();
+      m_hVector_DVtxMuon[j].at(i)->Write();
+      m_hVector_DVtxMuonZ[j].at(i)->Write();
+      m_hVector_DVtxElectron[j].at(i)->Write();
+      m_hVector_DVtxElectronZ[j].at(i)->Write();
+      m_hVector_DMuonElectron[j].at(i)->Write();
+      m_hVector_DMuonElectronZ[j].at(i)->Write();
+      m_hVector_DMuons[j].at(i)->Write();
+      m_hVector_DElectrons[j].at(i)->Write();
 
       // Detector Folder
       foldersFile[1]->cd();
@@ -1071,7 +1154,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       TriggerStatus = "trigger_all_electron";
     }
     else if (switchtrigger == "trigger_all_muon"){
-      if (eventdiffW->GetHLTPath(0) > 0|| eventdiffW->GetHLTPath(1) > 0) trigger = true;
+      if (eventdiffW->GetHLTPath(0) > 0 || eventdiffW->GetHLTPath(1) > 0) trigger = true;
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Muon accepted." << std::endl;
       TriggerStatus = "trigger_all_muon";
     }
@@ -1171,7 +1254,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
     sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiffW->GetSumEHFMinus();
 
-    if (eventdiff->GetNVertex() == nVertex) vertex = true;
+    if (eventdiff->GetNVertex() <= nVertex) vertex = true;
 
     if (gapseltype == "PF" || gapseltype == "pf"){
       etamax = eventdiffW->GetEtaMaxPF();
@@ -1301,11 +1384,13 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       leptonphi = eventdiffW->GetLeadingMuonPhi();
       leptonpt = eventdiffW->GetLeadingMuonPt();
       deltaphi = eventdiffW->GetLeadingMuonPhi()-eventdiffW->GetMETPhi();
-
+      secondleptoneta = eventdiffW->GetLeadingElectronEta();
+      secondleptonphi = eventdiffW->GetLeadingElectronPhi();
+      secondleptonpt = eventdiffW->GetLeadingElectronPt();
 
       if(NMuons == 1) acceptEvt = true;
 
-      if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt) presel = true;
+      if (eventdiffW->GetLeadingMuonPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt && eventdiffW->GetLeadingElectronPt() < 10.) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
       if(isoRec < 0.1 && isoRec > -10.){ 
 	isolation = true;
@@ -1512,9 +1597,9 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex) FillHistos(2,pileup,totalcommon);
 	if(trigger && vertex && presel) FillHistos(3,pileup,totalcommon);
 	if(trigger && vertex && presel && nocosmic) FillHistos(4,pileup,totalcommon);
-	if(trigger && vertex && presel && nocosmic && isolation) FillHistos(5,pileup,totalcommon);
-	if(trigger && vertex && presel && nocosmic && isolation && candSel) FillHistos(6,pileup,totalcommon);
-	if(trigger && vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt) {
+	if(trigger && vertex && presel && nocosmic && isolation && candSel) FillHistos(5,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && acceptEvt) FillHistos(6,pileup,totalcommon);
+	if(trigger && vertex && presel && nocosmic && isolation && candSel && acceptEvt && dimass) {
 	  FillHistos(7,pileup,totalcommon);
 	  fOutW->cd();
 	  troutW->SetWeight(totalcommon);
@@ -1559,9 +1644,9 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex) FillHistos(2,pileup,totalcommon);
 	if(vertex && presel) FillHistos(3,pileup,totalcommon);
 	if(vertex && presel && nocosmic) FillHistos(4,pileup,totalcommon);
-	if(vertex && presel && nocosmic && isolation) FillHistos(5,pileup,totalcommon);
-	if(vertex && presel && nocosmic && isolation && candSel) FillHistos(6,pileup,totalcommon);
-	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt) {
+	if(vertex && presel && nocosmic && isolation && candSel) FillHistos(5,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && acceptEvt) FillHistos(6,pileup,totalcommon);
+	if(vertex && presel && nocosmic && isolation && candSel && acceptEvt && dimass) {
 	  FillHistos(7,pileup,totalcommon);
 	  fOutW->cd();
 	  troutW->SetWeight(totalcommon);
