@@ -121,6 +121,8 @@ void TriggerAnalysis::fill(TriggerEvent& eventData, const edm::Event& event, con
   eventData.reset();
 
   fillTriggerInfo(eventData,event,setup);
+  fillVertexInfo(eventData,event,setup);
+  fillTrackInfo(eventData,event,setup);
   fillMETInfo(eventData,event,setup);
   fillMuonsInfo(eventData,event,setup);
   fillElectronsInfo(eventData,event,setup);
@@ -182,8 +184,49 @@ void TriggerAnalysis::fillTriggerInfo(TriggerEvent& eventData, const edm::Event&
 
 }
 
+// Fill Vertex
+//////////////
+
+void TriggerAnalysis::fillVertexInfo(TriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  // Access vertex collection
+  edm::Handle<edm::View<reco::Vertex> > vertexCollectionH;
+  event.getByLabel(PVtxCollectionTag_,vertexCollectionH);
+  const edm::View<reco::Vertex>& vtxColl = *(vertexCollectionH.product());
+
+  // Find number of good vertices
+  int nGoodVertices = 0;
+  for(edm::View<reco::Vertex>::const_iterator vtx = vtxColl.begin(); vtx != vtxColl.end(); ++vtx){
+    if(!vtx->isValid()) continue; // skip non-valid vertices
+    if(vtx->isFake()) continue; // skip vertex from beam spot
+    ++nGoodVertices;
+  }
+
+  eventData.SetNVertex(nGoodVertices);
+
+}
+
+// Fill Tracks
+//////////////
+
+void TriggerAnalysis::fillTrackInfo(TriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  // Access collection
+  edm::Handle<edm::View<reco::Track> > trackCollectionH;
+  event.getByLabel(trackTag_,trackCollectionH);
+  const edm::View<reco::Track>& trackColl = *(trackCollectionH.product());
+  int nTracks = 0;
+  edm::View<reco::Track>::const_iterator track = trackColl.begin();
+  edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+  for(; track != tracks_end; ++track){
+    ++nTracks;
+  }
+  eventData.SetMultiplicityTracks(nTracks);
+
+}
+
 // Fill MET
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////
 
 void TriggerAnalysis::fillMETInfo(TriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
