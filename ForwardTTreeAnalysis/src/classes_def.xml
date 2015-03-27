@@ -4,6 +4,7 @@
   <class name="DiffractiveZEvent"/>
   <class name="DiffractiveWEvent"/>
   <class name="TriggerEvent"/>
+  <class name="ZeroBiasEvent"/>
   <class name="ExclusiveDijetsEvent"/>
   <class name="DijetsTriggerEvent"/>
   <class name="HeavyFlavorEvent"/>
@@ -19,6 +20,7 @@
   <class name="edm::Wrapper<DiffractiveEvent>"/>
   <class name="edm::Wrapper<DiffractiveZEvent>"/>
   <class name="edm::Wrapper<DiffractiveWEvent>"/>
+  <class name="edm::Wrapper<ZeroBiasEvent>"/>
   <class name="edm::Wrapper<TriggerEvent>"/>
   <class name="edm::Wrapper<ExclusiveDijetsEvent>"/>
   <class name="edm::Wrapper<DijetsTriggerEvent>"/>

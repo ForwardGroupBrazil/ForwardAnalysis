@@ -7,7 +7,7 @@ print 'Run Analysis'
 print '@@@@@@@@@@@@'
 print ''
 
-os.system("./mcPU_Distributions \"/storage/dmf/uerj-1/Samples/DiffractiveW/25_january_2015/WtoMuNu/pythiaWtoMu.root\" \"puMC.root\" \"diffractiveWAnalysisTTree\" 25")
+os.system("./mcPU_Distributions \"/afs/cern.ch/user/d/dmf/private/uerj-1/Samples/DiffractiveZ/10_march_2015/ZtoEE/ZtoEE.root\" \"puMCZ.root\" \"diffractiveZAnalysisTTree\" 25")
 
 #----------------------------------------------------------->>>
 

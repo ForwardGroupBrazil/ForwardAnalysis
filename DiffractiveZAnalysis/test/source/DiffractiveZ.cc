@@ -1229,14 +1229,20 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool ZKinP = false;
 
     if (switchtrigger == "trigger_all_electron"){
-      if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffZ->GetHLTPath(0) > 0 ) triggerE_a = true;
+      /*if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffZ->GetHLTPath(0) > 0 ) triggerE_a = true;
       if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventdiffZ->GetHLTPath(1) > 0) triggerE_b = true;
       if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventdiffZ->GetHLTPath(2) > 0) triggerE_c = true;
       if ( (eventdiff->GetRunNumber() >= 144115 && eventdiff->GetRunNumber() <= 147145) && eventdiffZ->GetHLTPath(3) > 0) triggerE_d = true;
       if ( (eventdiff->GetRunNumber() >= 147146 && eventdiff->GetRunNumber() <= 148058) && eventdiffZ->GetHLTPath(4) > 0) triggerE_e = true;
       if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventdiffZ->GetHLTPath(5) > 0) triggerE_f = true;
       if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventdiffZ->GetHLTPath(6) > 0) triggerE_g = true;
-      if (triggerE_a || triggerE_b || triggerE_c || triggerE_d || triggerE_e || triggerE_f || triggerE_g) trigger = true;
+      if (triggerE_a || triggerE_b || triggerE_c || triggerE_d || triggerE_e || triggerE_f || triggerE_g) trigger = true;*/
+
+      if ( (eventdiff->GetRunNumber() >= 146698 && eventdiff->GetRunNumber() <= 148058) && eventdiffZ->GetHLTPath(10) > 0) triggerE_a = true;
+      if ( (eventdiff->GetRunNumber() >= 148822 && eventdiff->GetRunNumber() <= 149063) && eventdiffZ->GetHLTPath(11) > 0) triggerE_b = true;
+      if ( (eventdiff->GetRunNumber() >= 149181 && eventdiff->GetRunNumber() <= 149291) && eventdiffZ->GetHLTPath(12) > 0) triggerE_c = true;
+      if (triggerE_a || triggerE_b || triggerE_c) trigger = true;
+
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
@@ -1339,7 +1345,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiffZ->GetSumEHFMinus();
 
-    if (eventdiff->GetNVertex() == nVertex) vertex = true;
+    if (eventdiff->GetNVertex() <= nVertex) vertex = true;
 
     if (gapseltype == "PF" || gapseltype == "pf"){
       etamax = eventdiffZ->GetEtaMaxPF();
@@ -1430,7 +1436,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) charge = true;
       if (eventdiffZ->GetDiElectronMass() > 60. && eventdiffZ->GetDiElectronMass() < 110.) dimass = true;
-      if (eventdiffZ->GetElectronsN() > 1) nSel = true;
+      if (eventdiffZ->GetElectronsN() > 1 && eventdiffZ->GetMuonsN() < 1) nSel = true;
 
       //Isolation Electron
       if ((fabs (eventdiffZ->GetLeadingElectronEta()) <= 1.4442) ){
@@ -1507,7 +1513,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
       if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass = true;
-      if (eventdiffZ->GetMuonsN() > 1) nSel = true;
+      if (eventdiffZ->GetMuonsN() > 1 && eventdiffZ->GetElectronsN() < 1) nSel = true;
       if (isoRec1 < 3 && isoRec2 < 3 ) { 
 	isolation = true;
 	candSel = true;

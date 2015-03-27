@@ -5,6 +5,7 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveWAnalysis.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ZeroBiasAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/TriggerAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerAnalysis.h"
@@ -16,6 +17,7 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveWEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ZeroBiasEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/TriggerEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
@@ -113,3 +115,9 @@ typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
                                                    triggerAnalysis::TriggerAnalysis> EventInfoTriggerTTree;
 
 DEFINE_FWK_MODULE(EventInfoTriggerTTree);
+
+
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
+                                                   zerobiasAnalysis::ZeroBiasAnalysis> EventInfoZeroBiasAnalysisTTree;
+
+DEFINE_FWK_MODULE(EventInfoZeroBiasAnalysisTTree);

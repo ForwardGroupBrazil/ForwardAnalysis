@@ -1142,7 +1142,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     bool acceptEvt = false;
 
     if (switchtrigger == "trigger_all_electron"){
-      if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffW->GetHLTPath(0) > 0 ) triggerE_a = true;
+
+      /*if ( (eventdiff->GetRunNumber() >= 132440 && eventdiff->GetRunNumber() <= 137028) && eventdiffW->GetHLTPath(0) > 0 ) triggerE_a = true;
       if ( (eventdiff->GetRunNumber() >= 138564 && eventdiff->GetRunNumber() <= 140401) && eventdiffW->GetHLTPath(1) > 0) triggerE_b = true;
       if ( (eventdiff->GetRunNumber() >= 141956 && eventdiff->GetRunNumber() <= 144114) && eventdiffW->GetHLTPath(2) > 0) triggerE_c = true;
       if ( (eventdiff->GetRunNumber() >= 144115 && eventdiff->GetRunNumber() <= 147145) && eventdiffW->GetHLTPath(3) > 0) triggerE_d = true;
@@ -1150,6 +1151,13 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       if ( (eventdiff->GetRunNumber() >= 148103 && eventdiff->GetRunNumber() <= 149065) && eventdiffW->GetHLTPath(5) > 0) triggerE_f = true;
       if ( (eventdiff->GetRunNumber() >= 149180 && eventdiff->GetRunNumber() <= 149442) && eventdiffW->GetHLTPath(6) > 0) triggerE_g = true;
       if (triggerE_a || triggerE_b || triggerE_c || triggerE_d || triggerE_e || triggerE_f || triggerE_g) trigger = true;
+      */
+
+      if ( (eventdiff->GetRunNumber() >= 146698 && eventdiff->GetRunNumber() <= 148058) && eventdiffW->GetHLTPath(10) > 0) triggerE_a = true;
+      if ( (eventdiff->GetRunNumber() >= 148822 && eventdiff->GetRunNumber() <= 149063) && eventdiffW->GetHLTPath(11) > 0) triggerE_b = true;
+      if ( (eventdiff->GetRunNumber() >= 149181 && eventdiff->GetRunNumber() <= 149291) && eventdiffW->GetHLTPath(12) > 0) triggerE_c = true;
+      if (triggerE_a || triggerE_b || triggerE_c) trigger = true;
+
       if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
       TriggerStatus = "trigger_all_electron";
     }
@@ -1299,8 +1307,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
 
-      bosonWMass = eventdiffW->GetBosonElectronMass();
-      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetLeadingElectronPt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(eventdiffW->GetLeadingElectronPhi()-eventdiffW->GetMETPhi())));
+      //bosonWMass = eventdiffW->GetBosonElectronMass();
+      bosonWMass = TMath::Sqrt(2.*eventdiffW->GetLeadingElectronPt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(eventdiffW->GetLeadingElectronPhi()-eventdiffW->GetMETPhi())));
       bosonWEta = eventdiffW->GetLeadingElectronEta();
       bosonWPhi = eventdiffW->GetLeadingElectronPhi();
       bosonWPt = eventdiffW->GetLeadingElectronPt();
@@ -1323,6 +1331,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       sigmaIeIe1 = eventdiffW->GetLeadingElectronSigmaIeIe();
       HE1 = eventdiffW->GetLeadingElectronHE();
 
+      nocosmic = true;
+
       double totalASumCastor = eventdiffW->GetSumEHFMinus() + sumCastorEnergy;
 
       if(totalASumCastor > 0.){
@@ -1332,7 +1342,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffW->GetLeadingElectronPt() > lepton1pt && eventdiffW->GetMETPt() > lepton2pt) presel = true;
       if (bosonWMass > 60. && bosonWMass < 110.) dimass = true;
 
-      if(NElectrons==1 && NMuons==0) acceptEvt = true;
+      if(NElectrons==1) acceptEvt = true;
 
       //Isolation Electron
       if ((fabs (eventdiffW->GetLeadingElectronEta()) <= 1.4442) ){
@@ -1370,8 +1380,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if (typesel == "RecoMuon"){
       selStatus = "Reco::Muon";
 
-      bosonWMass = eventdiffW->GetBosonMuonMass();
-      //bosonWMass = TMath::Sqrt(2.*eventdiffW->GetLeadingMuonPt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(eventdiffW->GetLeadingMuonPhi()-eventdiffW->GetMETPhi())));
+      //bosonWMass = eventdiffW->GetBosonMuonMass();
+      bosonWMass = TMath::Sqrt(2.*eventdiffW->GetLeadingMuonPt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(eventdiffW->GetLeadingMuonPhi()-eventdiffW->GetMETPhi())));
       bosonWEta = eventdiffW->GetLeadingMuonEta();
       bosonWPhi = eventdiffW->GetLeadingMuonPhi();
       bosonWPt = eventdiffW->GetLeadingMuonPt();

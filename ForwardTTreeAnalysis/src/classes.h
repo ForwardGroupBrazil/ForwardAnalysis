@@ -3,6 +3,7 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveWEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/TriggerEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ZeroBiasEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/HeavyFlavorEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
@@ -27,6 +28,7 @@ namespace {
       DiffractiveEvent diffractiveEvent;
       DiffractiveZEvent diffractiveZEvent;
       DiffractiveWEvent diffractiveWEvent;
+      ZeroBiasEvent zerobiasEvent;
       TriggerEvent triggerEvent;
       ExclusiveDijetsEvent exclusiveDijetsEvent;
       DijetsTriggerEvent dijetsTriggerEvent;
@@ -43,6 +45,7 @@ namespace {
       edm::Wrapper<DiffractiveEvent> diffractiveEvent_wr;
       edm::Wrapper<DiffractiveZEvent> diffractiveZEvent_wr;
       edm::Wrapper<DiffractiveWEvent> diffractiveWEvent_wr;
+      edm::Wrapper<ZeroBiasEvent> zerobiasEvent_wr;
       edm::Wrapper<TriggerEvent> triggerEvent_wr;
       edm::Wrapper<ExclusiveDijetsEvent> exclusiveDijetsEvent_wr;
       edm::Wrapper<DijetsTriggerEvent> dijetsTriggerEvent_wr;
