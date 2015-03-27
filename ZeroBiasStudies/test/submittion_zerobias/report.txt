@@ -1,0 +1,52 @@
+multicrab running on Tue Mar 24 10:22:10 2015
+  working directory   /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/
+crab:  Version 2.11.1_patch1 running on Tue Mar 24 10:22:11 2015 CET (09:22:11 UTC)
+
+crab. Working options:
+	scheduler           remoteGlidein
+	job type            CMSSW
+	server              OFF
+	working directory   /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/ZeroBiasB_20_march_2015/
+
+crab:  PSN black list: TAPE,srm-cms.cern.ch,cmssrm.fnal.gov,T1_RU,T1_TW,cmseos.fnal.gov,cmsdca2.fnal.gov,T2_PK_NCP,T3_US_Vanderbilt_EC2
+crab:  --------------------
+Dataset: /MinimumBias/Run2010B-Apr21ReReco-v1/RECO
+Local output: /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/ZeroBiasB_20_march_2015/res/
+Total Events read: 20665848
+Total Files read: 2618
+Total Jobs : 2424
+Luminosity section summary file: /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/ZeroBiasB_20_march_2015/res/lumiSummary.json
+   # Jobs: Retrieved:2424
+
+----------------------------
+
+crab:  Summary file of input run and lumi to be analize with this task: /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/ZeroBiasB_20_march_2015/res//inputLumiSummaryOfTask.json
+
+crab:  Json file about the difference in run and lumi between the lumis in inputLumiSummaryOfTask.json and the lumis analyzed by your correctly terminated jobs in lumiSummary.json :
+/afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/ZeroBiasB_20_march_2015/res//task_missingLumiSummary.json
+
+Log file is /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/ZeroBiasB_20_march_2015/log/crab.log
+crab:  Version 2.11.1_patch1 running on Tue Mar 24 10:25:16 2015 CET (09:25:16 UTC)
+
+crab. Working options:
+	scheduler           remoteGlidein
+	job type            CMSSW
+	server              OFF
+	working directory   /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/MinBiasMC_20_march_2015/
+
+crab:  PSN black list: TAPE,srm-cms.cern.ch,cmssrm.fnal.gov,T1_RU,T1_TW,cmseos.fnal.gov,cmsdca2.fnal.gov,T2_PK_NCP,T3_US_Vanderbilt_EC2
+crab:  --------------------
+Dataset: /MinBias_TuneZ2star_HFshowerLibrary_7TeV_pythia6/Summer12-LowPU2010_DR42_PU_S0_START42_V17B-v2/AODSIM
+Local output: /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/MinBiasMC_20_march_2015/res/
+Total Events read: 18293000
+Total Files read: 4028
+Total Jobs : 3974
+Luminosity section summary file: /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/MinBiasMC_20_march_2015/res/lumiSummary.json
+   # Jobs: Running:258
+   # Jobs: Retrieved:3716
+
+----------------------------
+
+crab:  The summary file inputLumiSummaryOfTask.json about input run and lumi isn't created
+crab:  No Lumi file to compare
+Log file is /afs/cern.ch/user/d/dmf/private/uerj-1/CrabSubmit/ZeroBias_20_March_2015/MinBiasMC_20_march_2015/log/crab.log
