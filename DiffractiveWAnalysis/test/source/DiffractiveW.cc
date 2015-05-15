@@ -526,11 +526,11 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_SumEHFMin[j].push_back(histo_SumEHFMin);
 
       sprintf(name,"EnergyHFPlusVsCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_ET_Calos_p = new TH2F(name,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 6000, 0., 3000. );
+      TH2F *histo_ET_Calos_p = new TH2F(name,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 2000, 0., 1000. );
       m_hVector_etcalos_p[j].push_back(histo_ET_Calos_p);
 
       sprintf(name,"EnergyHFMinusVsCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_ET_Calos_n = new TH2F(name,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 6000, 0., 3000. );
+      TH2F *histo_ET_Calos_n = new TH2F(name,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 2000, 0., 1000. );
       m_hVector_etcalos_n[j].push_back(histo_ET_Calos_n);
 
       sprintf(name,"ECaloVsEta_%s_%s",tag,Folders.at(j).c_str());
@@ -546,7 +546,7 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_EnergyVsEtaBin1D[j].push_back(histo_EnergyVsEtaBin1D);
 
       sprintf(name,"sumECastorMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumECastorMinus = new TH1F(name,"Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
+      TH1F *histo_sumECastorMinus = new TH1F(name,"Castor Sum of Energy; Energy [GeV]; N events",2000,0,1000);
       m_hVector_sumECastorMinus[j].push_back(histo_sumECastorMinus);
 
       sprintf(name,"ECastorSector_%s_%s",tag,Folders.at(j).c_str());
@@ -562,15 +562,15 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_ECastorSectorBin1D[j].push_back(histo_ECastorSectorBin1D);
 
       sprintf(name,"EnergyHFPlusVsCastorTProf_%s_%s",tag,Folders.at(j).c_str());
-      TProfile *histo_EnergyHFPlusVsCastorTProf = new TProfile(name,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 0., 3000. );
+      TProfile *histo_EnergyHFPlusVsCastorTProf = new TProfile(name,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 0., 1000. );
       m_hVector_EnergyHFPlusVsCastorTProf[j].push_back(histo_EnergyHFPlusVsCastorTProf);
 
       sprintf(name,"EnergyHFMinusVsCastorTProf_%s_%s",tag,Folders.at(j).c_str());
-      TProfile *histo_EnergyHFMinusVsCastorTProf = new TProfile(name,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 0., 3000. );
+      TProfile *histo_EnergyHFMinusVsCastorTProf = new TProfile(name,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000, 0., 1000., 0., 1000. );
       m_hVector_EnergyHFMinusVsCastorTProf[j].push_back(histo_EnergyHFMinusVsCastorTProf);
 
       sprintf(name,"sumECastorAndSumHFMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumECastorAndHFMinus = new TH1F(name,"HF^{-} and Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
+      TH1F *histo_sumECastorAndHFMinus = new TH1F(name,"HF^{-} and Castor Sum of Energy; Energy [GeV]; N events",2000,0,1000);
       m_hVector_sumECastorAndHFMinus[j].push_back(histo_sumECastorAndHFMinus);
 
       sprintf(name,"CastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
@@ -590,19 +590,19 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_SectorVsTotalCastorEnergyTProf[j].push_back(histo_SectorVsTotalCastorEnergyTProf);
 
       sprintf(name,"sumEHFplusPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumEHFplusPF = new TH1F(name,"PF HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
+      TH1F *histo_sumEHFplusPF = new TH1F(name,"PF HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",1000,0,1000);
       m_hVector_sumEHFplusPF[j].push_back(histo_sumEHFplusPF);
 
       sprintf(name,"sumEHFminusPF_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_sumEHFminusPF = new TH1F(name,"PF HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",2000,0,2000);
+      TH1F *histo_sumEHFminusPF = new TH1F(name,"PF HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",1000,0,1000);
       m_hVector_sumEHFminusPF[j].push_back(histo_sumEHFminusPF);
 
       sprintf(name,"EPFVsTowerMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_EPFVsTowerMinus = new TH2F(name,"PF Energy Vs Tower Energy; #sum E_{PF^{-}} [GeV]; #sum E_{HF^{-}} [GeV]",2000,0,2000,2000,0,2000);
+      TH2F *histo_EPFVsTowerMinus = new TH2F(name,"PF Energy Vs Tower Energy; #sum E_{PF^{-}} [GeV]; #sum E_{HF^{-}} [GeV]",1000,0,1000,1000,0,1000);
       m_hVector_EPFVsTowerMinus[j].push_back(histo_EPFVsTowerMinus);
 
       sprintf(name,"EPFVsTowerPlus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_EPFVsTowerPlus = new TH2F(name,"PF Energy Vs Tower Energy; #sum E_{PF^{-}} [GeV]; #sum E_{HF^{-}} [GeV]",2000,0,2000,2000,0,2000);
+      TH2F *histo_EPFVsTowerPlus = new TH2F(name,"PF Energy Vs Tower Energy; #sum E_{PF^{-}} [GeV]; #sum E_{HF^{-}} [GeV]",1000,0,1000,1000,0,1000);
       m_hVector_EPFVsTowerPlus[j].push_back(histo_EPFVsTowerPlus);
 
 
@@ -741,19 +741,21 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_resCASTOREnergy[j].push_back(histo_resCASTOREnergy);
 
       sprintf(name,"correlHFEnergy_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlHFEnergy = new TH2F(name,"; #sum E_{HF, gen} [GeV]; #sum E_{HF} [GeV]",2000,0,2000,2000,0,2000);
+      TH2F *histo_correlHFEnergy = new TH2F(name,"; #sum E_{HF, gen} [GeV]; #sum E_{HF} [GeV]",1000,0,1000,1000,0,1000);
       m_hVector_correlHFEnergy[j].push_back(histo_correlHFEnergy);
 
       sprintf(name,"correlCASTOREnergy_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlCASTOREnergy = new TH2F(name,"; #sum E_{CASTOR, gen} [GeV]; #sum E_{CASTOR} [GeV]",6000,0,3000,6000,0,3000);
+      TH2F *histo_correlCASTOREnergy = new TH2F(name,"; #sum E_{CASTOR, gen} [GeV]; #sum E_{CASTOR} [GeV]",2000,0,1000,2000,0,1000);
       m_hVector_correlCASTOREnergy[j].push_back(histo_correlCASTOREnergy);
 
-      sprintf(name,"correlXiPlus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlXiPlus = new TH2F(name,"; log_{10}(#xi, gen); log_{10}(#xi, reco)",6000,-4,0,6000,-4,0);
+      char name2[300];
+      sprintf(name2,"correlXiPlus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlXiPlus = new TH2F(name2,"; log_{10}(#xi, gen); log_{10}(#xi, reco)",500,-4,0,500,-4,0);
       m_hVector_correlXiPlus[j].push_back(histo_correlXiPlus);
 
-      sprintf(name,"correlXiMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlXiMinus = new TH2F(name,"; log_{10}(#xi, gen); log_{10}(#xi, reco)",6000,-4,0,6000,-4,0);
+      char name3[300];
+      sprintf(name3,"correlXiMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlXiMinus = new TH2F(name3,"; log_{10}(#xi, gen); log_{10}(#xi, reco)",500,-4,0,500,-4,0);
       m_hVector_correlXiMinus[j].push_back(histo_correlXiMinus);
 
     }
@@ -893,7 +895,6 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_etasignedHF[index].at(pileup)->Fill(etasignedHF,totalweight);
   m_hVector_etasignedCASTOR[index].at(pileup)->Fill(etasignedCASTOR,totalweight);
 
-  /*
   // Generator
   m_hVector_genProtonMinusXi[index].at(pileup)->Fill(eventdiffW->GetXiGenMinus(),totalweight);
   m_hVector_genProtonPlusXi[index].at(pileup)->Fill(eventdiffW->GetXiGenPlus(),totalweight);
@@ -915,7 +916,6 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_correlCASTOREnergy[index].at(pileup)->Fill(eventdiffW->GetSumECastorMinusGen(),sumCastorEnergy,totalweight);
   m_hVector_correlXiPlus[index].at(pileup)->Fill(TMath::Log10(xigen),TMath::Log10(xigenplus),totalweight);
   m_hVector_correlXiMinus[index].at(pileup)->Fill(TMath::Log10(xigen),TMath::Log10(xigenminus),totalweight);
-   */
 
 }
 
@@ -1036,32 +1036,31 @@ void DiffractiveW::SaveHistos(std::string type,std::string typesel){
       m_hVector_etasignedHF[j].at(i)->Write();
       m_hVector_etasignedCASTOR[j].at(i)->Write();
 
-      /*
+
       // Generator Plots
       if (switchlumiweight =="mc_lumi_weight" || switchlumiweight == "mc_lumi_pu_weight"){
-      foldersFile[4]->cd();
-      m_hVector_genProtonMinusXi[j].at(i)->Write();
-      m_hVector_genProtonPlusXi[j].at(i)->Write();
-      m_hVector_genXiPlus[j].at(i)->Write();
-      m_hVector_genXiMinus[j].at(i)->Write();
-      m_hVector_genXi[j].at(i)->Write();
-      m_hVector_resLeadingLeptonPt[j].at(i)->Write();
-      m_hVector_resLeadingLeptonEta[j].at(i)->Write();
-      m_hVector_resLeadingLeptonPhi[j].at(i)->Write();
-      m_hVector_resMETPt[j].at(i)->Write();
-      m_hVector_resMETPhi[j].at(i)->Write();
-      m_hVector_resXiPlus[j].at(i)->Write();
-      m_hVector_resXiMinus[j].at(i)->Write();
-      m_hVector_resHFEnergy[j].at(i)->Write();
-      m_hVector_resHFEnergy[j].at(i)->Write();
-      m_hVector_resCASTOREnergy[j].at(i)->Write();
-      m_hVector_correlHFEnergy[j].at(i)->Write();
-      m_hVector_correlHFEnergy[j].at(i)->Write();
-      m_hVector_correlCASTOREnergy[j].at(i)->Write();
-      m_hVector_correlXiPlus[j].at(i)->Write();
-      m_hVector_correlXiMinus[j].at(i)->Write();
+	foldersFile[4]->cd();
+	m_hVector_genProtonMinusXi[j].at(i)->Write();
+	m_hVector_genProtonPlusXi[j].at(i)->Write();
+	m_hVector_genXiPlus[j].at(i)->Write();
+	m_hVector_genXiMinus[j].at(i)->Write();
+	m_hVector_genXi[j].at(i)->Write();
+	m_hVector_resLeadingLeptonPt[j].at(i)->Write();
+	m_hVector_resLeadingLeptonEta[j].at(i)->Write();
+	m_hVector_resLeadingLeptonPhi[j].at(i)->Write();
+	m_hVector_resMETPt[j].at(i)->Write();
+	m_hVector_resMETPhi[j].at(i)->Write();
+	m_hVector_resXiPlus[j].at(i)->Write();
+	m_hVector_resXiMinus[j].at(i)->Write();
+	m_hVector_resHFEnergy[j].at(i)->Write();
+	m_hVector_resHFEnergy[j].at(i)->Write();
+	m_hVector_resCASTOREnergy[j].at(i)->Write();
+	m_hVector_correlHFEnergy[j].at(i)->Write();
+	m_hVector_correlHFEnergy[j].at(i)->Write();
+	m_hVector_correlCASTOREnergy[j].at(i)->Write();
+	m_hVector_correlXiPlus[j].at(i)->Write();
+	m_hVector_correlXiMinus[j].at(i)->Write();
       }
-       */
 
     }
   }
