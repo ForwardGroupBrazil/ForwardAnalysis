@@ -57,57 +57,59 @@ void DetectorThreshold::CreateHistos(std::string type){
 
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
-    char name[300];
-    sprintf(name,"Tracks_%s",Folders.at(j).c_str());
-    TH1F *histo_Tracks = new TH1F(name,"Tracks Multiplicity; n Tracks; N events",50,0,150);
+    char name1[600];
+    sprintf(name1,"Tracks_%s",Folders.at(j).c_str());
+    TH1D *histo_Tracks = new TH1D(name1,"Tracks Multiplicity; n Tracks; N events",50,0,150);
     m_hVector_tracks.push_back(histo_Tracks);
 
-    sprintf(name,"vertex_%s",Folders.at(j).c_str());
-    TH1F *histo_vertex = new TH1F(name,"Number of Vertex; # Vertex; N events",25,0,25);
+    char name2[600];
+    sprintf(name2,"vertex_%s",Folders.at(j).c_str());
+    TH1D *histo_vertex = new TH1D(name2,"Number of Vertex; # Vertex; N events",25,0,25);
     m_hVector_vertex.push_back(histo_vertex);
 
-    sprintf(name,"RunNumber_%s",Folders.at(j).c_str());
-    TH1F *histo_RunNumber = new TH1F(name,"Run Number; Run Number; N Event",16000,134000,150000);
-    m_hVector_RunNumber.push_back(histo_RunNumber);
-
-    printf(name,"ETowerHFPlus_%s",Folders.at(j).c_str());
-    TH1F *histo_HFCaloPlus = new TH1F(name,"HF^{+} Tower Energy; Energy [GeV]; N events",6000,0,3000);
+    char name3[600];
+    sprintf(name3,"ETowerHFPlus_%s",Folders.at(j).c_str());
+    TH1D *histo_HFCaloPlus = new TH1D(name3,"HF^{+} Tower Energy; Energy [GeV]; N events",2000,0,1000);
     m_hVector_HFCaloPlus.push_back(histo_HFCaloPlus);
 
-    printf(name,"ETowerHFMinus_%s",Folders.at(j).c_str());
-    TH1F *histo_HFCaloMinus = new TH1F(name,"HF^{-} Tower Energy; Energy [GeV]; N events",6000,0,3000);
+    char name4[600];
+    sprintf(name4,"ETowerHFMinus_%s",Folders.at(j).c_str());
+    TH1D *histo_HFCaloMinus = new TH1D(name4,"HF^{-} Tower Energy; Energy [GeV]; N events",2000,0,1000);
     m_hVector_HFCaloMinus.push_back(histo_HFCaloMinus);
 
-    printf(name,"EpfHFPlus_%s",Folders.at(j).c_str());
-    TH1F *histo_HFpfPlus = new TH1F(name,"HF^{+} PF Energy; Energy [GeV]; N events",6000,0,3000);
+    char name5[600];
+    sprintf(name5,"EpfHFPlus_%s",Folders.at(j).c_str());
+    TH1D *histo_HFpfPlus = new TH1D(name5,"HF^{+} PF Energy; Energy [GeV]; N events",2000,0,1000);
     m_hVector_HFpfPlus.push_back(histo_HFpfPlus);
 
-    printf(name,"EpfHFMinus_%s",Folders.at(j).c_str());
-    TH1F *histo_HFpfMinus = new TH1F(name,"HF^{-} PF Energy; Energy [GeV]; N events",6000,0,3000);
+    char name6[600];
+    sprintf(name6,"EpfHFMinus_%s",Folders.at(j).c_str());
+    TH1D *histo_HFpfMinus = new TH1D(name6,"HF^{-} PF Energy; Energy [GeV]; N events",2000,0,1000);
     m_hVector_HFpfMinus.push_back(histo_HFpfMinus);
 
     for (int bs=0; bs<16; bs++){
-      m_hVector_SectorCastorEnergy.push_back( std::vector<TH1F*>() );
-      char castorname[300];
-      char subtitle[300];
+      m_hVector_SectorCastorEnergy.push_back( std::vector<TH1D*>() );
+      char castorname[600];
+      char subtitle[600];
       sprintf(castorname,"Sector%d_CastorSumEnergy_%s",bs+1,Folders.at(j).c_str());
       sprintf(subtitle,"#sum Energy, Castor Sector %d; #sum E_{modules 1,2,3,4,5} [GeV]; N events", bs+1);
-      TH1F *histo_SectorCastorEnergy = new TH1F(castorname,subtitle,200,-10,10);
+      TH1D *histo_SectorCastorEnergy = new TH1D(castorname,subtitle,200,-10,10);
       m_hVector_SectorCastorEnergy[bs].push_back(histo_SectorCastorEnergy);
 
     }
 
-    sprintf(name,"CastorSumOfEnergyForAllSectors_%s",Folders.at(j).c_str());
-    TH1F *histo_AllSectorsCastorEnergy = new TH1F(name,"Castor Sector: #sum Energy; #sum E_{modules 1,2,3,4,5} per sector [GeV]; N events",200,-10,10);
+    char name7[600];
+    sprintf(name7,"CastorSumOfEnergyForAllSectors_%s",Folders.at(j).c_str());
+    TH1D *histo_AllSectorsCastorEnergy = new TH1D(name7,"Castor Sector: #sum Energy; #sum E_{modules 1,2,3,4,5} per sector [GeV]; N events",200,-10,10);
     m_hVector_AllSectorsCastorEnergy.push_back(histo_AllSectorsCastorEnergy);
 
     for (int bs=0; bs<80; bs++){
-      m_hVector_ChannelCastorEnergy.push_back( std::vector<TH1F*>() );
-      char castornamecha[300];
-      char subtitlecha[300];
+      m_hVector_ChannelCastorEnergy.push_back( std::vector<TH1D*>() );
+      char castornamecha[600];
+      char subtitlecha[600];
       sprintf(castornamecha,"Channel%d_Energy_%s",bs+1,Folders.at(j).c_str());
       sprintf(subtitlecha,"#Castor Channel %d; #E_{Channel %d} [GeV]; N events", bs+1, bs+1);
-      TH1F *histo_ChannelCastorEnergy = new TH1F(castornamecha,subtitlecha,200,-1,1);
+      TH1D *histo_ChannelCastorEnergy = new TH1D(castornamecha,subtitlecha,200,-1,1);
       m_hVector_ChannelCastorEnergy[bs].push_back(histo_ChannelCastorEnergy);
     }
 
@@ -121,7 +123,6 @@ void DetectorThreshold::FillHistos(int index){
 
   m_hVector_tracks[index]->Fill(eventZeroBias->GetMultiplicityTracks());
   m_hVector_vertex[index]->Fill(eventZeroBias->GetNVertex());
-  m_hVector_RunNumber[index]->Fill(eventinfo->GetRunNumber());
 
   for (int i=0; i < eventZeroBias->GetNHFPlus(); i++){
     m_hVector_HFCaloPlus[index]->Fill(eventZeroBias->GetEHFPlus(i));
@@ -170,15 +171,15 @@ void DetectorThreshold::FillHistos(int index){
 void DetectorThreshold::SaveHistos(){
 
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
+
     m_hVector_tracks[j]->Write();
     m_hVector_vertex[j]->Write();
-    m_hVector_RunNumber[j]->Write();
     m_hVector_HFCaloPlus[j]->Write();
     m_hVector_HFCaloMinus[j]->Write();
     m_hVector_HFpfPlus[j]->Write();
     m_hVector_HFpfMinus[j]->Write();
-
     m_hVector_AllSectorsCastorEnergy[j]->Write();
+
     for (int id=0; id<16; id++){
       m_hVector_SectorCastorEnergy[id].at(j)->Write();
     }
@@ -318,7 +319,6 @@ void DetectorThreshold::Run(std::string filein_, std::string savehistofile_, std
     }
 
   }   
-
 
   outstring << "" << std::endl;
   outstring << "<< INPUTS >>" << std::endl;

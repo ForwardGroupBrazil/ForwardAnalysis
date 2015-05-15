@@ -171,7 +171,10 @@ void DiffractiveWAnalysis::fill(DiffractiveWEvent& eventData, const edm::Event& 
   fillTracksInfo(eventData,event,setup);
   fillDetectorVariables(eventData,event,setup);
   fillVariables(eventData,event,setup);
-  if (RunMC_) fillGenInfo(eventData,event,setup); 
+  if (RunMC_){
+    fillGenInfo(eventData,event,setup); 
+    MCMatch(eventData,event,setup);
+  }
   if (RunCastor_){
     fillCastor(eventData,event,setup);
     fillCastorDebug(eventData,event,setup);
@@ -1131,11 +1134,13 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
   bool debug = false;
 
   double sumECastorGen = 0.;
-  double sumECastorGenCMS = 0.;
 
   genVector.clear();
   genCMSVector.clear();
   genProtonVector.clear();
+  genElectronVector.clear();
+  genMuonVector.clear();
+  genNeutrinoVector.clear();
 
   // Fill Gen
   edm::Handle<reco::GenParticleCollection> genParticle;
@@ -1146,17 +1151,22 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
     for(itGen=0; itGen < gensize; ++itGen){
       const reco::GenParticle* genAll = &((*genParticle)[itGen]);
       if (genAll->status() != 1) continue;
-      if (genAll->pdgId() == 2212 && genAll->pz()>0.7*beamEnergy_) genProtonVector.push_back(genAll);  
+      if (fabs(genAll->pdgId()) == 13) genMuonVector.push_back(genAll);
+      if (fabs(genAll->pdgId()) == 11) genElectronVector.push_back(genAll);
+      if (fabs(genAll->pdgId()) == 12 || fabs(genAll->pdgId()) == 14) genNeutrinoVector.push_back(genAll);
+      if (genAll->pdgId() == 2212 && genAll->pz()>0.7*beamEnergy_) genProtonVector.push_back(genAll);
       if (fabs(genAll->pdgId()) == 2212) continue;
       if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGen+=genAll->energy();
       genVector.push_back(genAll);
-      if( ( (fabs(genAll->eta()) >= 2.866) && (fabs(genAll->eta()) < 3.152) ) || (fabs(genAll->eta()) >= 4.730) ) continue;
-      if ( ( fabs(genAll->eta()) <= 1.5 && genAll->energy() > energyPFThresholdBar_ ) ||
-	  (fabs(genAll->eta()) > 1.5 && fabs(genAll->eta()) <= 3 && genAll->energy() > energyPFThresholdEnd_) ||
-	  (fabs(genAll->eta()) > 3 && genAll->energy() >energyPFThresholdHF_) ) {
-	if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGenCMS+=genAll->energy();
-	genCMSVector.push_back(genAll);      
-      }
+      if( ( fabs(genAll->eta()) <= 2.866 && fabs(genAll->eta() > 3.152) ) || (fabs(genAll->eta()) <= 4.730)) genCMSVector.push_back(genAll);
+
+      //if( ( (fabs(genAll->eta()) >= 2.866) && (fabs(genAll->eta()) < 3.152) ) || (fabs(genAll->eta()) >= 4.730) ) continue;
+      /*if ( ( fabs(genAll->eta()) <= 1.5 && genAll->energy() > energyPFThresholdBar_ ) ||
+	(fabs(genAll->eta()) > 1.5 && fabs(genAll->eta()) <= 3 && genAll->energy() > energyPFThresholdEnd_) ||
+	(fabs(genAll->eta()) > 3 && genAll->energy() >energyPFThresholdHF_) ) {
+	genCMSVector.push_back(genAll);
+	}*/
+
     }
   }
 
@@ -1229,6 +1239,7 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
   // Gen Info
   math::XYZTLorentzVector SPlus(0.,0.,0.,0.);
   math::XYZTLorentzVector SMinus(0.,0.,0.,0.);
+  math::XYZTLorentzVector SAll(0.,0.,0.,0.);
 
   math::XYZTLorentzVector SPlusCMS(0.,0.,0.,0.);
   math::XYZTLorentzVector SMinusCMS(0.,0.,0.,0.);
@@ -1242,6 +1253,11 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
   double E_pz_minus_gen = 0.;
   double et_expo_plus_gen = 0.;
   double et_expo_minus_gen = 0.;
+
+  double E_pz_plus_gen_lim = 0.;
+  double E_pz_minus_gen_lim = 0.;
+  double et_expo_plus_gen_lim = 0.;
+  double et_expo_minus_gen_lim = 0.;
 
   double E_pz_plus_gen_CMS = 0.;
   double E_pz_minus_gen_CMS = 0.;
@@ -1257,10 +1273,19 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
       et_expo_plus_gen += genVector[i]->et()*pow(2.71,genVector[i]->eta());
       E_pz_minus_gen += genVector[i]->energy()-genVector[i]->pz();
       et_expo_minus_gen += genVector[i]->et()*pow(2.71,-genVector[i]->eta());
+      SAll += tmp;
       if(genVector[i]->eta()>0.){
 	SPlus+=tmp;
       }else{
 	SMinus+=tmp;
+      }
+      if( (genVector[i]->eta() <= 2.866 && genVector[i]->eta() > 3.152 ) || (genVector[i]->eta() <= 4.730) ){
+	E_pz_plus_gen_lim += genVector[i]->energy()+genVector[i]->pz();
+	et_expo_plus_gen_lim += genVector[i]->et()*pow(2.71,genVector[i]->eta());
+      }
+      if( (genVector[i]->eta() >= -2.866 && genVector[i]->eta() < -3.152 ) || (genVector[i]->eta() >= -4.730) ){
+	E_pz_minus_gen_lim += genVector[i]->energy()-genVector[i]->pz();
+	et_expo_minus_gen_lim += genVector[i]->et()*pow(2.71,-genVector[i]->eta());
       }
     }
 
@@ -1272,16 +1297,22 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
 	}
       }
       std::cout << "\nReconstructed Variables Gen Info:" << std::endl;
-      std::cout << "Eta, Max: " << genVector[0]->eta() << std::endl;    
+      std::cout << "Eta, Max: " << genVector[0]->eta() << std::endl;
       std::cout << "Eta, Min: " << genVector[genVector.size()-1]->eta() << std::endl;
       std::cout << "PF Mass -: " << SMinus.M() << " [GeV]" << std::endl;
       std::cout << "PF Mass +: " << SPlus.M() << " [GeV]" << std::endl;
       std::cout << "PF Mass^2 -: " << SMinus.M2() << " [GeV]" << std::endl;
       std::cout << "PF Mass^2 +: " << SPlus.M2() << " [GeV]" << std::endl;
+      std::cout << "PF Mass: " << SAll.M() << " [GeV]" << std::endl;
+      std::cout << "PF Mass^2: " << SAll.M2() << " [GeV]" << std::endl;
       std::cout << "E + pz: " << E_pz_plus_gen << " [GeV]" << std::endl;
       std::cout << "E - pz: " << E_pz_minus_gen << " [GeV]" << std::endl;
       std::cout << "Et*exp(+eta): " << et_expo_plus_gen << " [GeV]" << std::endl;
       std::cout << "Et*exp(-eta): " << et_expo_minus_gen << " [GeV]" << std::endl;
+      std::cout << "E + pz, eta < 4.7: " << E_pz_plus_gen_lim << " [GeV]" << std::endl;
+      std::cout << "E - pz, eta > -4.7: " << E_pz_minus_gen_lim << " [GeV]" << std::endl;
+      std::cout << "Et*exp(+eta), eta < 4.7: " << et_expo_plus_gen_lim << " [GeV]" << std::endl;
+      std::cout << "Et*exp(-eta), eta > -4.7: " << et_expo_minus_gen_lim << " [GeV]" << std::endl;
     }
 
     eventData.SetEtaMaxGen(genVector[0]->eta());
@@ -1290,10 +1321,16 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
     eventData.SetMxGenPlus(SPlus.M());
     eventData.SetMx2GenMinus(SMinus.M2());
     eventData.SetMx2GenPlus(SPlus.M2());
+    eventData.SetMxGen(SAll.M());
+    eventData.SetMx2Gen(SAll.M2());
     eventData.SetEpluspzGen(E_pz_plus_gen);
     eventData.SetEminuspzGen(E_pz_minus_gen);
     eventData.SetEtExpoPlusGen(et_expo_plus_gen);
     eventData.SetEtExpoMinusGen(et_expo_minus_gen);
+    eventData.SetEpluspzGenLim(E_pz_plus_gen_lim);
+    eventData.SetEminuspzGenLim(E_pz_minus_gen_lim);
+    eventData.SetEtExpoPlusGenLim(et_expo_plus_gen_lim);
+    eventData.SetEtExpoMinusGenLim(et_expo_minus_gen_lim);
 
   }else{
     eventData.SetEtaMaxGen(-999.);
@@ -1302,10 +1339,16 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
     eventData.SetMxGenPlus(-999.);
     eventData.SetMx2GenMinus(-999.);
     eventData.SetMx2GenPlus(-999.);
+    eventData.SetMxGen(-999.);
+    eventData.SetMx2Gen(-999.);
     eventData.SetEpluspzGen(-999.);
     eventData.SetEminuspzGen(-999.);
     eventData.SetEtExpoPlusGen(-999.);
     eventData.SetEtExpoMinusGen(-999.);
+    eventData.SetEpluspzGenLim(-999.);
+    eventData.SetEminuspzGenLim(-999.);
+    eventData.SetEtExpoPlusGenLim(-999.);
+    eventData.SetEtExpoMinusGenLim(-999.);
   }
 
   if(genVector.size()>1){
@@ -1493,12 +1536,10 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
   if(debug){
     std::cout << "\nCastor Energy" << std::endl;
     std::cout << "All particles: " << sumECastorGen << " [GeV]" << std::endl;
-    std::cout << "CMS: " << sumECastorGenCMS << " [GeV]" << std::endl;
     std::cout << "" << std::endl;
   }
 
-  eventData.SetsumECastorMinusGen(sumECastorGen);
-  eventData.SetsumECastorMinusGenCMS(sumECastorGenCMS);
+  eventData.SetSumECastorMinusGen(sumECastorGen);
 
 }
 
@@ -1884,6 +1925,7 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 
   math::XYZTLorentzVector SPlusCMS(0.,0.,0.,0.);
   math::XYZTLorentzVector SMinusCMS(0.,0.,0.,0.);
+  math::XYZTLorentzVector SAllCMS(0.,0.,0.,0.);
 
   if(PFCandidates->size()>0){
     for(itPF=0; itPF < pfsize; ++itPF){
@@ -1912,12 +1954,15 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
       et_expo_plus += PFVector[i]->et()*pow(2.71,PFVector[i]->eta());
       E_pz_minus += PFVector[i]->energy()-PFVector[i]->pz();
       et_expo_minus += PFVector[i]->et()*pow(2.71,-PFVector[i]->eta());
+      SAllCMS+=tmp;
       if(PFVector[i]->eta()>0.){
 	SPlusCMS+=tmp;
       }else{
 	SMinusCMS+=tmp;
       }
     }
+    eventData.SetMxPF(SAllCMS.M());
+    eventData.SetMx2PF(SAllCMS.M2());
     eventData.SetMxPFMinus(SMinusCMS.M());
     eventData.SetMxPFPlus(SPlusCMS.M());
     eventData.SetMx2PFMinus(SMinusCMS.M2());
@@ -1927,6 +1972,8 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
     eventData.SetEtExpoPlusPF(et_expo_plus);
     eventData.SetEtExpoMinusPF(et_expo_minus);
   }else{
+    eventData.SetMxPF(-999.);
+    eventData.SetMx2PF(-999.);
     eventData.SetMxPFMinus(-999.);
     eventData.SetMxPFPlus(-999.);
     eventData.SetMx2PFMinus(-999.);
@@ -2002,6 +2049,11 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
       std::cout << "HF+ Energy from PF: " << PFHFEnergyPlus  << " [GeV]" << std::endl;
       std::cout << "HF- Energy from PF: " << PFHFEnergyMinus  << " [GeV]" << std::endl;
     }
+    eventData.SetSumEHFPlusPF(PFHFEnergyPlus);
+    eventData.SetSumEHFMinusPF(PFHFEnergyMinus);
+  }else{
+    eventData.SetSumEHFPlusPF(-999.);
+    eventData.SetSumEHFMinusPF(-999.);
   }
 
   bool WMuon=false;
@@ -2060,6 +2112,7 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
 
   math::XYZTLorentzVector SPlusCMSnow(0.,0.,0.,0.);
   math::XYZTLorentzVector SMinusCMSnow(0.,0.,0.,0.);
+  math::XYZTLorentzVector SAllCMSnow(0.,0.,0.,0.);
 
   // Computing PF Variables
   if(PFNoWVector.size()>0){
@@ -2069,12 +2122,15 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
       et_expo_plus_now += PFNoWVector[i]->et()*pow(2.71,PFNoWVector[i]->eta());
       E_pz_minus_now += PFNoWVector[i]->energy()-PFNoWVector[i]->pz();
       et_expo_minus_now += PFNoWVector[i]->et()*pow(2.71,-PFNoWVector[i]->eta());
+      SAllCMSnow+=tmp;
       if(PFNoWVector[i]->eta()>0.){
 	SPlusCMSnow+=tmp;
       }else{
 	SMinusCMSnow+=tmp;
       }
     }
+    eventData.SetMxPFNoW(SAllCMSnow.M());
+    eventData.SetMx2PFNoW(SAllCMSnow.M2());
     eventData.SetMxPFNoWMinus(SMinusCMSnow.M());
     eventData.SetMxPFNoWPlus(SPlusCMSnow.M());
     eventData.SetMx2PFNoWMinus(SMinusCMSnow.M2());
@@ -2084,6 +2140,8 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
     eventData.SetEtExpoPlusPFNoW(et_expo_plus_now);
     eventData.SetEtExpoMinusPFNoW(et_expo_minus_now);
   }else{
+     eventData.SetMxPFNoW(-999.);
+    eventData.SetMx2PFNoW(-999.);
     eventData.SetMxPFNoWMinus(-999.);
     eventData.SetMxPFNoWPlus(-999.);
     eventData.SetMx2PFNoWMinus(-999.);
@@ -3493,6 +3551,90 @@ void DiffractiveWAnalysis::VertexAssociation(DiffractiveWEvent& eventData, const
 
 }
 
+//
+// Fill MC Association
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DiffractiveWAnalysis::MCMatch(DiffractiveWEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  bool debug = false;
+
+  std::sort(genNeutrinoVector.begin(), genNeutrinoVector.end(), orderPT());
+  std::sort(genMuonVector.begin(), genMuonVector.end(), orderPT());
+  std::sort(genElectronVector.begin(), genElectronVector.end(), orderPT());
+  std::sort(NeutrinoVector.begin(),NeutrinoVector.end(),orderPT());
+  std::sort(MuonVector.begin(), MuonVector.end(), orderPT());
+  std::sort(ElectronVector.begin(), ElectronVector.end(), orderPT());
+
+  if(genMuonVector.size()>0 && MuonVector.size()>0){
+    if (deltaR(genMuonVector[0]->eta(),genMuonVector[0]->phi(),MuonVector[0]->eta(),MuonVector[0]->phi()) < 0.5){
+      if(debug){
+	std::cout << "<< Leading Muon Matched >>" << std::endl;
+	std::cout << "Reco, Muon[0] --> pT [GeV]: " << MuonVector[0]->pt() << " | eta: " << MuonVector[0]->eta() << " | phi: " << MuonVector[0]->phi() << std::endl;
+	std::cout << "Gen,  Muon[0] --> pT [GeV]: " << genMuonVector[0]->pt() << " | eta: " << genMuonVector[0]->eta() << " | phi: " << genMuonVector[0]->phi() << std::endl;
+	std::cout << "Acceptance, (RECO/GEN)_pT: " << MuonVector[0]->pt()/genMuonVector[0]->pt() <<  " | (RECO/GEN)_eta: " << MuonVector[0]->eta()/genMuonVector[0]->eta() << " | (RECO/GEN)_phi: " << MuonVector[0]->phi()/genMuonVector[0]->phi() << std::endl;
+      }
+      eventData.SetGenLeadingMuonPt(genMuonVector[0]->pt());
+      eventData.SetGenLeadingMuonEta(genMuonVector[0]->eta());
+      eventData.SetGenLeadingMuonPhi(genMuonVector[0]->phi());
+      eventData.SetGenLeadingMuonP4(genMuonVector[0]->p4());
+    }else{
+      eventData.SetGenLeadingMuonPt(-999.);
+      eventData.SetGenLeadingMuonEta(-999.);
+      eventData.SetGenLeadingMuonPhi(-999.);
+    }
+  }else{
+    eventData.SetGenLeadingMuonPt(-999.);
+    eventData.SetGenLeadingMuonEta(-999.);
+    eventData.SetGenLeadingMuonPhi(-999.);
+  }
+
+
+  if(genElectronVector.size()>0 && ElectronVector.size()>0){
+    if (deltaR(genElectronVector[0]->eta(),genElectronVector[0]->phi(),ElectronVector[0]->eta(),ElectronVector[0]->phi()) < 0.5){
+      if(debug){
+	std::cout << "<< Leading Electron Matched >>" << std::endl;
+	std::cout << "Reco, Electron[0] --> pT [GeV]: " << ElectronVector[0]->pt() << " | eta: " << ElectronVector[0]->eta() << " | phi: " << ElectronVector[0]->phi() << std::endl;
+	std::cout << "Gen,  Electron[0] --> pT [GeV]: " << genElectronVector[0]->pt() << " | eta: " << genElectronVector[0]->eta() << " | phi: " << genElectronVector[0]->phi() << std::endl;
+	std::cout << "Acceptance, (RECO/GEN)_pT: " << ElectronVector[0]->pt()/genElectronVector[0]->pt() <<  " | (RECO/GEN)_eta: " << ElectronVector[0]->eta()/genElectronVector[0]->eta() << " | (RECO/GEN)_phi: " << ElectronVector[0]->phi()/genElectronVector[0]->phi() << std::endl;
+      }
+      eventData.SetGenLeadingElectronPt(genElectronVector[0]->pt());
+      eventData.SetGenLeadingElectronEta(genElectronVector[0]->eta());
+      eventData.SetGenLeadingElectronPhi(genElectronVector[0]->phi());
+      eventData.SetGenLeadingElectronP4(genElectronVector[0]->p4());
+    }else{
+      eventData.SetGenLeadingElectronPt(-999.);
+      eventData.SetGenLeadingElectronEta(-999.);
+      eventData.SetGenLeadingElectronPhi(-999.);
+    }
+  }else{
+    eventData.SetGenLeadingElectronPt(-999.);
+    eventData.SetGenLeadingElectronEta(-999.);
+    eventData.SetGenLeadingElectronPhi(-999.);
+  }
+
+  if(genNeutrinoVector.size()>0 && NeutrinoVector.size()>0){
+
+    if(debug){
+      std::cout << "<< Neutrino Matched >>" << std::endl;
+      std::cout << "Reco, MET[0] --> pT [GeV]: " << NeutrinoVector[0]->pt() << " | px: " << NeutrinoVector[0]->px() << " | py: " << NeutrinoVector[0]->py() << " | phi: " << NeutrinoVector[0]->phi() << std::endl;
+      std::cout << "Gen,  Neutrino[0] --> pT [GeV]: " << genNeutrinoVector[0]->pt() << " | px: " << genNeutrinoVector[0]->px() << " | py: " << NeutrinoVector[0]->py() << " | phi: " << genNeutrinoVector[0]->phi() << std::endl;
+      std::cout << "Acceptance, (RECO/GEN)_pT: " << NeutrinoVector[0]->pt()/genNeutrinoVector[0]->pt() <<  " | (RECO/GEN)_px: " << NeutrinoVector[0]->px()/genNeutrinoVector[0]->px() << " | (RECO/GEN)_py: " << NeutrinoVector[0]->py()/genNeutrinoVector[0]->py() << " | (RECO/GEN)_phi: " << NeutrinoVector[0]->phi()/genNeutrinoVector[0]->phi() << std::endl;
+    }
+    eventData.SetGenNeutrinoPt(genNeutrinoVector[0]->pt());
+    eventData.SetGenNeutrinoPx(genNeutrinoVector[0]->px());
+    eventData.SetGenNeutrinoPx(genNeutrinoVector[0]->py());
+    eventData.SetGenNeutrinoPhi(genNeutrinoVector[0]->phi());
+    eventData.SetGenNeutrinoP4(genNeutrinoVector[0]->p4());
+  }else{
+    eventData.SetGenNeutrinoPt(-999.);
+    eventData.SetGenNeutrinoPx(-999.);
+    eventData.SetGenNeutrinoPy(-999.);
+    eventData.SetGenNeutrinoPhi(-999.);
+  }
+
+}
+
+
 // Templates
 ////////////
 
@@ -3508,12 +3650,12 @@ template <class T, class W>
 double DiffractiveWAnalysis::TransverseMass(T lepton, W met){
 
   //double tmass_=-999.;
- 
+
   //double metT = sqrt(pow(met->px(),2) + pow(met->py(),2));
   //double lepT = sqrt(pow(lepton->px(),2) + pow(lepton->py(),2));
   //reco::Particle::LorentzVector TS = lepton->p4() + met->p4();
   //tmass_ = sqrt(pow(metT+lepT,2) - (TS.px()*TS.px()) - (TS.py()*TS.py()));
-  
+
   //Defense
   //if (!std::isfinite(tmass_)) {
   //   tmass_ = -999.;

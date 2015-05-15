@@ -41,6 +41,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = 500
+config.particledraw = False
 
 #
 # Define Options to Run
@@ -491,6 +492,20 @@ process.diffractiveWAnalysisTTreePFShiftedDown.DiffractiveWAnalysis.pfTag = "pfC
 
 process.pat_Producer = cms.Path(process.makePatElectrons + process.makePatMuons + process.patpfMet) # process.patpfMet do not work with data.
 process.castor_step = cms.Path(process.castorSequence)
+
+process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+process.printTree = cms.EDAnalyzer("ParticleTreeDrawer",
+                                   src = cms.InputTag("genParticles"),
+                                   printP4 = cms.untracked.bool(False),
+                                   printPtEtaPhi = cms.untracked.bool(False),
+                                   printVertex = cms.untracked.bool(False),
+                                   printStatus = cms.untracked.bool(False),
+                                   printIndex = cms.untracked.bool(False),
+                                   status = cms.untracked.vint32( 3 )
+                                   )
+
+if config.particledraw:
+   process.PrintGen = cms.Path(process.printTree)
 
 if config.sys:
 

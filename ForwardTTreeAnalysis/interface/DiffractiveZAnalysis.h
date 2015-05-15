@@ -69,6 +69,7 @@ namespace diffractiveZAnalysis {
       void fillCastorDebug(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillZDC(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void VertexAssociation(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void MCMatch(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       template <class T, class W>
 	math::XYZTLorentzVector DiSystem(T obj1, W obj2);
@@ -121,6 +122,8 @@ namespace diffractiveZAnalysis {
       std::vector<const reco::GenParticle*> genVector;
       std::vector<const reco::GenParticle*> genCMSVector;
       std::vector<const reco::GenParticle*> genProtonVector;
+      std::vector<const reco::GenParticle*> genMuonVector;
+      std::vector<const reco::GenParticle*> genElectronVector;
       std::vector<const CaloTower*> towerVector;
       std::vector<const reco::Vertex*> VertexVector;
 

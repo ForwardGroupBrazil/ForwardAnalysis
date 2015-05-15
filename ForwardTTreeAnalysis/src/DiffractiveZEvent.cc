@@ -81,6 +81,13 @@ void DiffractiveZEvent::reset(){
   sumptgenleft_=-999.;
   sumptgenright_=-999.;
 
+  mxGen_ = -999.;
+  mx2Gen_ = -999.;
+  epluspzGenLim_ = -999.;
+  eminuspzGenLim_ = -999.;
+  etexpoplusGenLim_ = -999.;
+  etexpominusGenLim_ = -999.;
+
   mxgenminusCMS_=-999.;
   mxgenplusCMS_=-999.;
   mx2genminusCMS_=-999.;
@@ -96,7 +103,6 @@ void DiffractiveZEvent::reset(){
   eminuspzgenCMS_=-999.;
   etexpoplusgenCMS_=-999.;
   etexpominusgenCMS_=-999.;
-  sumECastorMinusGenCMS_=-999.;
   sumptgenleftCMS_=-999.;
   sumptgenrightCMS_=-999.;
 
@@ -404,6 +410,27 @@ void DiffractiveZEvent::reset(){
   dmuonsZ_ = -999.;
   delectrons_ = -999.;
   delectronsZ_ = -999.;
+
+  GenLeadingElectronPt_ = -999.;
+  GenLeadingElectronEta_ = -999.;
+  GenLeadingElectronPhi_ = -999.;
+  GenSecondElectronPt_ = -999.;
+  GenSecondElectronEta_ = -999.;
+  GenSecondElectronPhi_ = -999.;
+
+  GenLeadingMuonPt_ = -999.;
+  GenLeadingMuonEta_ = -999.;
+  GenLeadingMuonPhi_ = -999.;
+  GenSecondMuonPt_ = -999.;
+  GenSecondMuonEta_ = -999.;
+  GenSecondMuonPhi_ = -999.;
+
+  SumEHFPluspf_ = -999.;
+  SumEHFMinuspf_ = -999.;
+  mxpf_ = -999.;
+  mx2pf_ = -999.;
+  mxpfnoz_ = -999.;
+  mx2pfnoz_ = -999.;
 
   //ZDCdigifC_.clear();
 

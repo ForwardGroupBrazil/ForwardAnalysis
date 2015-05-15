@@ -73,18 +73,25 @@ class DiffractiveW {
   double HE1;
   double aSumE;
   double deltaeta;
-  double deltaetacastor;
   double etamin;
   double etamax;
+  double xi;
   double xiplus;
   double ximinus;
+  double xigen;
+  double xigenplus;
+  double xigenminus;
   double maxLRG;
+  double resLeadingPt;
+  double resLeadingEta;
+  double resLeadingPhi;
+  double resMETPt;
+  double resMETPhi;
 
   double sumCastorAndHFMinusEnergy;
   int SectorCastorHit;
   double castorthreshold;
   double channelsthreshold;
-  double etamin_;
   bool castoractivity;
   bool castorgap;
   double AEcastor;
@@ -118,7 +125,6 @@ class DiffractiveW {
   double bXiMinus;
   double betamax;
   double betamin;
-  double betamincastor;
   double betalimmin;
   double betalimmax;
 
@@ -212,6 +218,10 @@ class DiffractiveW {
   std::vector<std::vector<TH2F*> > m_hVector_CastorMultiplicityVsLumi;
   std::vector<std::vector<TH2F*> > m_hVector_SectorVsTotalCastorEnergy;
   std::vector<std::vector<TProfile*> > m_hVector_SectorVsTotalCastorEnergyTProf;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEHFplusPF;
+  std::vector<std::vector<TH1F*> > m_hVector_sumEHFminusPF;
+  std::vector<std::vector<TH2F*> > m_hVector_EPFVsTowerMinus;
+  std::vector<std::vector<TH2F*> > m_hVector_EPFVsTowerPlus;
 
   //Event Info
   std::vector<std::vector<TH1F*> > m_hVector_lumi;
@@ -219,19 +229,19 @@ class DiffractiveW {
   std::vector<std::vector<TH1F*> > m_hVector_vertex;
   std::vector<std::vector<TH1F*> > m_hVector_pu;
 
+
   // Diffraction
   std::vector<std::vector<TH1F*> > m_hVector_asumE;
   std::vector<std::vector<TH2F*> > m_hVector_multhf;
+  std::vector<std::vector<TH1F*> > m_hVector_minusnhf;
+  std::vector<std::vector<TH1F*> > m_hVector_plusnhf;
   std::vector<std::vector<TH1F*> > m_hVector_etamax;
   std::vector<std::vector<TH1F*> > m_hVector_etamin;
-  std::vector<std::vector<TH1F*> > m_hVector_etamincastor;
   std::vector<std::vector<TH1F*> > m_hVector_maxetagap;
   std::vector<std::vector<TH1F*> > m_hVector_SumPTMax;
   std::vector<std::vector<TH1F*> > m_hVector_SumPTMin;
   std::vector<std::vector<TH1F*> > m_hVector_absdeltaEta;
   std::vector<std::vector<TH1F*> > m_hVector_deltaEta;
-  std::vector<std::vector<TH1F*> > m_hVector_absdeltaEtaCastor;
-  std::vector<std::vector<TH1F*> > m_hVector_deltaEtaCastor;
   std::vector<std::vector<TH1F*> > m_hVector_XiPlus;
   std::vector<std::vector<TH1F*> > m_hVector_XiMinus;
   std::vector<std::vector<TH1F*> > m_hVector_Xi;
@@ -239,8 +249,28 @@ class DiffractiveW {
   std::vector<std::vector<TH1F*> > m_hVector_etasignedHF;
   std::vector<std::vector<TH1F*> > m_hVector_etasignedCASTOR;
 
+  // Generator
+  std::vector<std::vector<TH1F*> > m_hVector_genProtonMinusXi;
+  std::vector<std::vector<TH1F*> > m_hVector_genProtonPlusXi;
+  std::vector<std::vector<TH1F*> > m_hVector_genXiPlus;
+  std::vector<std::vector<TH1F*> > m_hVector_genXiMinus;
+  std::vector<std::vector<TH1F*> > m_hVector_genXi;
+  std::vector<std::vector<TH1F*> > m_hVector_resLeadingLeptonPt;
+  std::vector<std::vector<TH1F*> > m_hVector_resLeadingLeptonEta;
+  std::vector<std::vector<TH1F*> > m_hVector_resLeadingLeptonPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_resMETPt;
+  std::vector<std::vector<TH1F*> > m_hVector_resMETPhi;
+  std::vector<std::vector<TH1F*> > m_hVector_resXiPlus;
+  std::vector<std::vector<TH1F*> > m_hVector_resXiMinus;
+  std::vector<std::vector<TH1F*> > m_hVector_resHFEnergy;
+  std::vector<std::vector<TH1F*> > m_hVector_resCASTOREnergy;
+  std::vector<std::vector<TH2F*> > m_hVector_correlHFEnergy;
+  std::vector<std::vector<TH2F*> > m_hVector_correlCASTOREnergy;
+  std::vector<std::vector<TH2F*> > m_hVector_correlXiPlus;
+  std::vector<std::vector<TH2F*> > m_hVector_correlXiMinus;
+
   std::vector <std::string> Folders;
-  TDirectory *foldersFile[4];
+  TDirectory *foldersFile[5];
 
   public :
   DiffractiveW() {}

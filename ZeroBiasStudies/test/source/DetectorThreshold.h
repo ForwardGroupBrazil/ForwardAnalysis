@@ -34,17 +34,16 @@ class DetectorThreshold {
 
   double CastorEnergySector[16];
 
-  std::vector<TH1F*> m_hVector_tracks;
-  std::vector<TH1F*> m_hVector_vertex;
-  std::vector<TH1F*> m_hVector_RunNumber;
-  std::vector<TH1F*> m_hVector_AllSectorsCastorEnergy;
-  std::vector<TH1F*> m_hVector_HFCaloPlus;
-  std::vector<TH1F*> m_hVector_HFpfPlus;
-  std::vector<TH1F*> m_hVector_HFCaloMinus;
-  std::vector<TH1F*> m_hVector_HFpfMinus;
+  std::vector<TH1D*> m_hVector_tracks;
+  std::vector<TH1D*> m_hVector_vertex;
+  std::vector<TH1D*> m_hVector_AllSectorsCastorEnergy;
+  std::vector<TH1D*> m_hVector_HFCaloPlus;
+  std::vector<TH1D*> m_hVector_HFpfPlus;
+  std::vector<TH1D*> m_hVector_HFCaloMinus;
+  std::vector<TH1D*> m_hVector_HFpfMinus;
 
-  std::vector<std::vector<TH1F*> > m_hVector_SectorCastorEnergy;
-  std::vector<std::vector<TH1F*> > m_hVector_ChannelCastorEnergy;
+  std::vector<std::vector<TH1D*> > m_hVector_SectorCastorEnergy;
+  std::vector<std::vector<TH1D*> > m_hVector_ChannelCastorEnergy;
 
   std::vector <std::string> Folders;
 

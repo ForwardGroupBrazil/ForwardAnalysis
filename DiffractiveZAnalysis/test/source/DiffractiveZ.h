@@ -86,8 +86,6 @@ class DiffractiveZ {
   double isoRec1;
   double isoRec2;
   double deltaeta;
-  double deltaetacastor;
-  double etamin_;
   double etamin;
   double etamax;
   double xiplus;
@@ -133,7 +131,6 @@ class DiffractiveZ {
   double bXiMinus;
   double betamax;
   double betamin;
-  double betamincastor;
 
   std::string filein;
   std::string processname;
@@ -230,6 +227,8 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_sumEEEminus;
   std::vector<std::vector<TH1F*> > m_hVector_sumEEEplus;
   std::vector<std::vector<TH2F*> > m_hVector_multhf;
+  std::vector<std::vector<TH1F*> > m_hVector_minusnhf;
+  std::vector<std::vector<TH1F*> > m_hVector_plusnhf;
   std::vector<std::vector<TH2F*> > m_hVector_etcalos_p;
   std::vector<std::vector<TH2F*> > m_hVector_etcalos_n;
   std::vector<std::vector<TH2F*> > m_hVector_ECastorSector;
@@ -253,11 +252,8 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_XiPlus;
   std::vector<std::vector<TH1F*> > m_hVector_XiMinus;
   std::vector<std::vector<TH1F*> > m_hVector_Xi;
-  std::vector<std::vector<TH1F*> > m_hVector_etamincastor;
   std::vector<std::vector<TH1F*> > m_hVector_absdeltaEta;
   std::vector<std::vector<TH1F*> > m_hVector_deltaEta;
-  std::vector<std::vector<TH1F*> > m_hVector_absdeltaEtaCastor;
-  std::vector<std::vector<TH1F*> > m_hVector_deltaEtaCastor;
   std::vector<std::vector<TH1F*> > m_hVector_maxetagap;
   std::vector<std::vector<TH1F*> > m_hVector_LimPlusgap;
   std::vector<std::vector<TH1F*> > m_hVector_LimMinusgap;

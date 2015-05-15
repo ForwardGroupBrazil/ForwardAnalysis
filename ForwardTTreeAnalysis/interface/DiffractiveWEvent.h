@@ -172,9 +172,16 @@ class DiffractiveWEvent {
     void SetEminuspzGen(double feminuspzgen)    { eminuspzgen_     = feminuspzgen;}
     void SetEtExpoPlusGen(double fetexpoplusgen)    { etexpoplusgen_     = fetexpoplusgen;}
     void SetEtExpoMinusGen(double fetexpominusgen)    { etexpominusgen_     = fetexpominusgen;}
-    void SetsumECastorMinusGen(double fsumECastorMinusGen)    { sumECastorMinusGen_     = fsumECastorMinusGen;}
+    void SetSumECastorMinusGen(double fsumECastorMinusGen)    { sumECastorMinusGen_     = fsumECastorMinusGen;}
     void SetSumptGenLeft(double fsumptgenleft)    { sumptgenleft_     = fsumptgenleft;}
     void SetSumptGenRight(double fsumptgenright)    { sumptgenright_     = fsumptgenright;}
+
+    void SetEpluspzGenLim(double fepluspzGenLim)    { epluspzGenLim_     = fepluspzGenLim;}
+    void SetEminuspzGenLim(double feminuspzGenLim)    { eminuspzGenLim_     = feminuspzGenLim;}
+    void SetEtExpoPlusGenLim(double fetexpoplusGenLim)    { etexpoplusGenLim_     = fetexpoplusGenLim;}
+    void SetEtExpoMinusGenLim(double fetexpominusGenLim)    { etexpominusGenLim_     = fetexpominusGenLim;}
+    void SetMxGen(double fmxGen)    { mxGen_     = fmxGen;}
+    void SetMx2Gen(double fmx2Gen)    { mx2Gen_     = fmx2Gen;}
 
     void SetMxGenMinusCMS(double fmxgenminusCMS)    { mxgenminusCMS_     = fmxgenminusCMS;}
     void SetMxGenPlusCMS(double fmxgenplusCMS)    { mxgenplusCMS_     = fmxgenplusCMS;}
@@ -191,7 +198,6 @@ class DiffractiveWEvent {
     void SetEminuspzGenCMS(double feminuspzgenCMS)    { eminuspzgenCMS_     = feminuspzgenCMS;}
     void SetEtExpoPlusGenCMS(double fetexpoplusgenCMS)    { etexpoplusgenCMS_     = fetexpoplusgenCMS;}
     void SetEtExpoMinusGenCMS(double fetexpominusgenCMS)    { etexpominusgenCMS_     = fetexpominusgenCMS;}
-    void SetsumECastorMinusGenCMS(double fsumECastorMinusGenCMS)    { sumECastorMinusGenCMS_     = fsumECastorMinusGenCMS;}
     void SetSumptGenLeftCMS(double fsumptgenleftCMS)    { sumptgenleftCMS_     = fsumptgenleftCMS;}
     void SetSumptGenRightCMS(double fsumptgenrightCMS)    { sumptgenrightCMS_     = fsumptgenrightCMS;}
 
@@ -262,6 +268,10 @@ class DiffractiveWEvent {
     void SetMx2PFRight(double fmx2pfright)    { mx2pfright_     = fmx2pfright;}
     void SetSumptPFLeft(double fsumptpfleft)    { sumptpfleft_     = fsumptpfleft;}
     void SetSumptPFRight(double fsumptpfright)    { sumptpfright_     = fsumptpfright;}
+    void SetSumEHFPlusPF(double fSumEHFPluspf)    { SumEHFPluspf_ = fSumEHFPluspf;}
+    void SetSumEHFMinusPF(double fSumEHFMinuspf)    { SumEHFMinuspf_ = fSumEHFMinuspf;}
+    void SetMxPF(double fmxpf)    { mxpf_     = fmxpf;}
+    void SetMx2PF(double fmx2pf)    { mx2pf_     = fmx2pf;}
 
     void SetMxPFNoWMinus(double fmxpfnowminus)    { mxpfnowminus_     = fmxpfnowminus;} 
     void SetMxPFNoWPlus(double fmxpfnowplus)    { mxpfnowplus_     = fmxpfnowplus;}  
@@ -280,6 +290,8 @@ class DiffractiveWEvent {
     void SetMx2PFNoWRight(double fmx2pfnowright)    { mx2pfnowright_     = fmx2pfnowright;}
     void SetSumptPFNoWLeft(double fsumptpfnowleft)    { sumptpfnowleft_     = fsumptpfnowleft;}
     void SetSumptPFNoWRight(double fsumptpfnowright)    { sumptpfnowright_     = fsumptpfnowright;}
+    void SetMxPFNoW(double fmxpfnow)    { mxpfnow_     = fmxpfnow;}
+    void SetMx2PFNoW(double fmx2pfnow)    { mx2pfnow_     = fmx2pfnow;}
 
     void SetPatNMuon(int fpatNMuon)    {patNMuon_ = fpatNMuon;}
     void SetPatMuon1Pt(double fpatMuon1Pt)    {patMuon1Pt_ = fpatMuon1Pt;}
@@ -468,9 +480,25 @@ class DiffractiveWEvent {
     void SetDElectrons(double fdelectrons) { delectrons_ = fdelectrons;}
     void SetDElectronsZ(double fdelectronsZ) { delectronsZ_ = fdelectronsZ;}
 
+    void SetGenLeadingElectronPt(double fGenLeadingElectronPt)    { GenLeadingElectronPt_     = fGenLeadingElectronPt;}
+    void SetGenLeadingElectronEta(double fGenLeadingElectronEta)  { GenLeadingElectronEta_     = fGenLeadingElectronEta;}
+    void SetGenLeadingElectronPhi(double fGenLeadingElectronPhi)  { GenLeadingElectronPhi_    = fGenLeadingElectronPhi;}
+    void SetGenLeadingElectronP4(LorentzVector fGenLeadingElectronP4)    { GenLeadingElectronP4_     = fGenLeadingElectronP4;}
+
+    void SetGenLeadingMuonPt(double fGenLeadingMuonPt)    { GenLeadingMuonPt_     = fGenLeadingMuonPt;}
+    void SetGenLeadingMuonEta(double fGenLeadingMuonEta)  { GenLeadingMuonEta_     = fGenLeadingMuonEta;}
+    void SetGenLeadingMuonPhi(double fGenLeadingMuonPhi)  { GenLeadingMuonPhi_    = fGenLeadingMuonPhi;}
+    void SetGenLeadingMuonP4(LorentzVector fGenLeadingMuonP4)    { GenLeadingMuonP4_     = fGenLeadingMuonP4;}
+
+    void SetGenNeutrinoPt(double fGenNeutrinoPt)    { GenNeutrinoPt_     = fGenNeutrinoPt;}
+    void SetGenNeutrinoPhi(double fGenNeutrinoPhi)  { GenNeutrinoPhi_    = fGenNeutrinoPhi;}
+    void SetGenNeutrinoPx(double fGenNeutrinoPx)    { GenNeutrinoPx_     = fGenNeutrinoPx;}
+    void SetGenNeutrinoPy(double fGenNeutrinoPy)    { GenNeutrinoPy_     = fGenNeutrinoPy;}
+    void SetGenNeutrinoP4(LorentzVector fGenNeutrinoP4)    { GenNeutrinoP4_     = fGenNeutrinoP4;}
+
     int GetHLTPath(int idx) const { return hltTrigResults_[idx]; }
     double GetBosonElectronMass() const {return BosonElectronMass_;}
-	
+
     double GetBosonElectronPt() const {return BosonElectronPt_;}
     double GetBosonElectronEta() const {return BosonElectronEta_;}
     double GetBosonElectronPhi() const {return BosonElectronPhi_;}
@@ -608,9 +636,16 @@ class DiffractiveWEvent {
     double GetEminuspzGen() const { return eminuspzgen_;}
     double GetEtExpoPlusGen() const { return etexpoplusgen_;}
     double GetEtExpoMinusGen() const { return etexpominusgen_;}
-    double GetsumECastorMinusGen() const { return sumECastorMinusGen_;}
+    double GetSumECastorMinusGen() const { return sumECastorMinusGen_;}
     double GetSumptGenLeft() const { return sumptgenleft_;}
     double GetSumptGenRight() const { return sumptgenright_;}
+
+    double GetEpluspzGenLim() const { return epluspzGenLim_;}
+    double GetEminuspzGenLim() const { return eminuspzGenLim_;}
+    double GetEtExpoPlusGenLim() const { return etexpoplusGenLim_;}
+    double GetEtExpoMinusGenLim() const { return etexpominusGenLim_;}
+    double GetMxGen() const { return mxGen_;}
+    double GetMx2Gen() const { return mx2Gen_;}
 
     double GetMxGenMinusCMS() const { return mxgenminusCMS_;}
     double GetMxGenPlusCMS() const { return mxgenplusCMS_;}
@@ -627,7 +662,6 @@ class DiffractiveWEvent {
     double GetEminuspzGenCMS() const { return eminuspzgenCMS_;}
     double GetEtExpoPlusGenCMS() const { return etexpoplusgenCMS_;}
     double GetEtExpoMinusGenCMS() const { return etexpominusgenCMS_;}
-    double GetsumECastorMinusGenCMS() const { return sumECastorMinusGenCMS_;}
     double GetSumptGenLeftCMS() const { return sumptgenleftCMS_;}
     double GetSumptGenRightCMS() const { return sumptgenrightCMS_;}
 
@@ -698,6 +732,10 @@ class DiffractiveWEvent {
     double GetMx2PFRight() const { return mx2pfright_;}
     double GetSumptPFLeft() const { return sumptpfleft_;}
     double GetSumptPFRight() const { return sumptpfright_;}
+    double GetSumEHFPlusPF() const {return SumEHFPluspf_;}
+    double GetSumEHFMinusPF() const {return SumEHFMinuspf_;}
+    double GetMxPF() const { return mxpf_;}
+    double GetMx2PF() const { return mx2pf_;}
 
     double GetMxPFNoWMinus() const { return mxpfnowminus_;}
     double GetMxPFNoWPlus() const { return mxpfnowplus_;}
@@ -716,6 +754,8 @@ class DiffractiveWEvent {
     double GetMx2PFNoWRight() const { return mx2pfnowright_;}
     double GetSumptPFNoWLeft() const { return sumptpfnowleft_;}
     double GetSumptPFNoWRight() const { return sumptpfnowright_;}
+    double GetMxPFNoW() const { return mxpfnow_;}
+    double GetMx2PFNoW() const { return mx2pfnow_;}
 
     int GetPatNMuon() const {return patNMuon_;}
     double GetPatMuon1Pt() const {return patMuon1Pt_;}
@@ -923,6 +963,22 @@ class DiffractiveWEvent {
     double GetDElectrons() const {return delectrons_;}
     double GetDElectronsZ() const {return delectronsZ_;}
 
+    double GetGenLeadingElectronPt() const {return GenLeadingElectronPt_;}
+    double GetGenLeadingElectronEta() const {return GenLeadingElectronEta_;}
+    double GetGenLeadingElectronPhi() const {return GenLeadingElectronPhi_;}
+    const LorentzVector& GetGenLeadingElectronP4() const {return GenLeadingElectronP4_;}
+
+    double GetGenLeadingMuonPt() const {return GenLeadingMuonPt_;}
+    double GetGenLeadingMuonEta() const {return GenLeadingMuonEta_;}
+    double GetGenLeadingMuonPhi() const {return GenLeadingMuonPhi_;}
+    const LorentzVector& GetGenLeadingMuonP4() const {return GenLeadingMuonP4_;}
+
+    double GetGenNeutrinoPt() const {return GenNeutrinoPt_;}
+    double GetGenNeutrinoPhi() const {return GenNeutrinoPhi_;}
+    double GetGenNeutrinoPx() const {return GenNeutrinoPx_;}
+    double GetGenNeutrinoPy() const {return GenNeutrinoPy_;}    
+    const LorentzVector& GetGenNeutrinoP4() const {return GenNeutrinoP4_;}
+
   private:
     friend class diffractiveWAnalysis::DiffractiveWAnalysis;
 
@@ -1080,6 +1136,13 @@ class DiffractiveWEvent {
     double sumptgenleft_;
     double sumptgenright_;
 
+    double mxGen_;
+    double mx2Gen_;
+    double epluspzGenLim_;
+    double eminuspzGenLim_;
+    double etexpoplusGenLim_;
+    double etexpominusGenLim_;
+
     double mxgenminusCMS_;
     double mxgenplusCMS_;
     double mx2genminusCMS_;
@@ -1095,7 +1158,6 @@ class DiffractiveWEvent {
     double eminuspzgenCMS_;
     double etexpoplusgenCMS_;
     double etexpominusgenCMS_;
-    double sumECastorMinusGenCMS_;
     double sumptgenleftCMS_;
     double sumptgenrightCMS_;
 
@@ -1158,6 +1220,10 @@ class DiffractiveWEvent {
     double mx2pfright_;
     double sumptpfleft_;
     double sumptpfright_;
+    double SumEHFPluspf_;
+    double SumEHFMinuspf_;
+    double mxpf_;
+    double mx2pf_;
 
     double mxpfnowminus_;
     double mxpfnowplus_;
@@ -1176,9 +1242,10 @@ class DiffractiveWEvent {
     double mx2pfnowright_;
     double sumptpfnowleft_;
     double sumptpfnowright_;
+    double mxpfnow_;
+    double mx2pfnow_;
 
     int patNMuon_;
-
     double patMuon1Pt_;
     int patMuon1Charge_;
     double patMuon1Phi_;
@@ -1372,6 +1439,22 @@ class DiffractiveWEvent {
     double dmuonsZ_;
     double delectrons_;
     double delectronsZ_;
+
+    double GenLeadingElectronPt_;
+    double GenLeadingElectronEta_;
+    double GenLeadingElectronPhi_;
+    LorentzVector GenLeadingElectronP4_;
+
+    double GenLeadingMuonPt_;
+    double GenLeadingMuonEta_;
+    double GenLeadingMuonPhi_;
+    LorentzVector GenLeadingMuonP4_;
+
+    double GenNeutrinoPt_;
+    double GenNeutrinoPhi_;
+    double GenNeutrinoPx_;
+    double GenNeutrinoPy_;
+    LorentzVector GenNeutrinoP4_;
 
 };
 

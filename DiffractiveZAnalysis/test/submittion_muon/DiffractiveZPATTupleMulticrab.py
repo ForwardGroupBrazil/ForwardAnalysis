@@ -41,6 +41,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = -1
+config.particledraw = False
 
 #
 # Define Options to Run
@@ -195,7 +196,7 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/PomwigWRECO42X.root'
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/DyToMuMu.root'
 
 else:
     config.l1Paths = (l1list)
@@ -469,8 +470,21 @@ process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveZAnalysis.pfTag = "pfC
 process.pat_Producer = cms.Path(process.makePatElectrons + process.makePatMuons)
 process.castor_step = cms.Path(process.castorSequence)
 
-if config.sys:
+process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+process.printTree = cms.EDAnalyzer("ParticleTreeDrawer",
+                                   src = cms.InputTag("genParticles"),                                                                 
+                                   printP4 = cms.untracked.bool(False),
+                                   printPtEtaPhi = cms.untracked.bool(False),
+                                   printVertex = cms.untracked.bool(False),
+                                   printStatus = cms.untracked.bool(False),
+                                   printIndex = cms.untracked.bool(False),
+                                   status = cms.untracked.vint32( 3 )
+                                   )
 
+if config.particledraw:
+   process.PrintGen = cms.Path(process.printTree)
+
+if config.sys:
    print(">> With Energy Scale.")
    if config.TriggerOn:
        print(">> With Trigger.")
