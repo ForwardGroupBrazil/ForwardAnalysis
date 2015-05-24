@@ -139,6 +139,9 @@ namespace diffractiveWAnalysis {
       std::vector<const reco::GenParticle*> genNeutrinoVector;
       std::vector<const CaloTower*> towerVector;
       std::vector<const reco::Vertex*> VertexVector;
+      std::vector<double> particlesCastorPdgIdGen;
+      std::vector<double> particlesCastorEnergyGen;
+      std::vector<double> particlesCastorEtaGen;
 
       TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
       TH1F *CastorChannelHisto_;

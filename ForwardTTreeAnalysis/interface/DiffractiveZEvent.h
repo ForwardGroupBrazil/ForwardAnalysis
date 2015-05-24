@@ -140,6 +140,10 @@ class DiffractiveZEvent {
     void SetEtExpoPlusGen(double fetexpoplusgen)    { etexpoplusgen_     = fetexpoplusgen;}
     void SetEtExpoMinusGen(double fetexpominusgen)    { etexpominusgen_     = fetexpominusgen;}
     void SetSumECastorMinusGen(double fsumECastorMinusGen)    { sumECastorMinusGen_     = fsumECastorMinusGen;}
+    void SetCastorParticlesPDGidGen(const std::vector<double>& fcastorparticlespdgidgen) { castorparticlespdgidgen_ = fcastorparticlespdgidgen; }
+    void SetCastorParticlesEnergyGen(const std::vector<double>& fcastorparticlesenergygen) { castorparticlesenergygen_ = fcastorparticlesenergygen; }
+    void SetCastorParticlesEtaGen(const std::vector<double>& fcastorparticlesetagen) { castorparticlesetagen_ = fcastorparticlesetagen; }
+    void SetCastorNParticlesGen(int fcastornparticlesgen)    {castornparticlesgen_ = fcastornparticlesgen;}
     void SetSumptGenLeft(double fsumptgenleft)    { sumptgenleft_     = fsumptgenleft;}
     void SetSumptGenRight(double fsumptgenright)    { sumptgenright_     = fsumptgenright;}
 
@@ -590,6 +594,11 @@ class DiffractiveZEvent {
     double GetEtExpoPlusGen() const { return etexpoplusgen_;}
     double GetEtExpoMinusGen() const { return etexpominusgen_;}
     double GetSumECastorMinusGen() const { return sumECastorMinusGen_;}
+    double GetCastorParticlesPDGidGen(int i) const { return castorparticlespdgidgen_[i]; }
+    double GetCastorParticlesEnergyGen(int i) const { return castorparticlesenergygen_[i]; }
+    double GetCastorParticlesEtaGen(int i) const { return castorparticlesetagen_[i]; }
+    int GetCastorNParticlesGen() const {return castornparticlesgen_;}
+
     double GetSumptGenLeft() const { return sumptgenleft_;}
     double GetSumptGenRight() const { return sumptgenright_;}
 
@@ -1059,6 +1068,10 @@ class DiffractiveZEvent {
     double etexpoplusgen_;
     double etexpominusgen_;
     double sumECastorMinusGen_;
+    std::vector<double> castorparticlesetagen_;
+    std::vector<double> castorparticlespdgidgen_;
+    std::vector<double> castorparticlesenergygen_;
+    int castornparticlesgen_;
     double sumptgenleft_;
     double sumptgenright_;
 

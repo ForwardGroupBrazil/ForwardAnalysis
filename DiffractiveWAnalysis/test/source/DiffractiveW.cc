@@ -105,8 +105,8 @@ void DiffractiveW::CleanVariables(){
 
 void DiffractiveW::CreateHistos(std::string type){
 
-  double binarrayplus[19] = {0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.,2.25,2.5,2.75,3.,3.25,3.5,3.75,4.,5.2,6.2};
-  double binarrayminus[19] = {-6.2,-5.2,-4.,-3.75,-3.5,-3.25,-3.,-2.75,-2.5,-2.25,-2.,-1.75,-1.5,-1.25,-1.,-0.75,-0.5,-0.25,0.};
+  //double binarrayplus[19] = {0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.,2.25,2.5,2.75,3.,3.25,3.5,3.75,4.,5.2,6.2};
+  //double binarrayminus[19] = {-6.2,-5.2,-4.,-3.75,-3.5,-3.25,-3.,-2.75,-2.5,-2.25,-2.,-1.75,-1.5,-1.25,-1.,-0.75,-0.5,-0.25,0.};
   double binarraydelta[15] = {0.,0.5,1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.,5.5,6.,7.,9.};
   double xi_bin[18]={0.0003,0.002,0.0045,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1};
 
@@ -130,6 +130,9 @@ void DiffractiveW::CreateHistos(std::string type){
   std::string step17 = "NGapCASTORAndWKinP";
   std::string step18 = "PGapCMSAndCASTOR";
   std::string step19 = "PGapCMSAndCASTORAndWKinP";
+  std::string step20 = "generator";
+  std::string step21 = "gencastorlow";
+  std::string step22 = "gencastorhigh";
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -151,6 +154,9 @@ void DiffractiveW::CreateHistos(std::string type){
   Folders.push_back(step17);
   Folders.push_back(step18);
   Folders.push_back(step19);
+  Folders.push_back(step20);
+  Folders.push_back(step21);
+  Folders.push_back(step22);
 
   int nloop;
 
@@ -256,6 +262,7 @@ void DiffractiveW::CreateHistos(std::string type){
     m_hVector_multhf.push_back( std::vector<TH2F*>() );
     m_hVector_minusnhf.push_back( std::vector<TH1F*>() );
     m_hVector_plusnhf.push_back( std::vector<TH1F*>() );
+    m_hVector_etaminimum.push_back( std::vector<TH1F*>() );
     m_hVector_etamax.push_back( std::vector<TH1F*>() );
     m_hVector_etamin.push_back( std::vector<TH1F*>() );
     m_hVector_maxetagap.push_back( std::vector<TH1F*>() );
@@ -289,6 +296,10 @@ void DiffractiveW::CreateHistos(std::string type){
     m_hVector_correlCASTOREnergy.push_back( std::vector<TH2F*>() );
     m_hVector_correlXiPlus.push_back( std::vector<TH2F*>() );
     m_hVector_correlXiMinus.push_back( std::vector<TH2F*>() );
+    m_hVector_correlRatioCastor.push_back( std::vector<TH2F*>() );
+    m_hVector_gensumECastorMinus.push_back( std::vector<TH1F*>() );
+    m_hVector_gensumEHFplus.push_back( std::vector<TH1F*>() );
+    m_hVector_gensumEHFminus.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -630,12 +641,18 @@ void DiffractiveW::CreateHistos(std::string type){
       TH1F *histo_aSumE = new TH1F(name,"Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",100,-2,2);
       m_hVector_asumE[j].push_back(histo_aSumE);
 
+      sprintf(name,"etaminimum_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_EtaMinimum = new TH1F(name,"; min(#eta_{max},-#eta_{min}); N events",20,-5,5);
+      m_hVector_etaminimum[j].push_back(histo_EtaMinimum);
+
       sprintf(name,"etamax_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_Etamax = new TH1F(name,"#eta_{max} Distribution; #eta; N events",18,binarrayplus);
+      //TH1F *histo_Etamax = new TH1F(name,"#eta_{max} Distribution; #eta; N events",18,binarrayplus);
+      TH1F *histo_Etamax = new TH1F(name,"#eta_{max} Distribution; #eta; N events",20,-5.,5.);
       m_hVector_etamax[j].push_back(histo_Etamax);
 
       sprintf(name,"etamin_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_Etamin = new TH1F(name,"#eta_{min} Distribution; #eta; N events",18,binarrayminus);
+      //TH1F *histo_Etamin = new TH1F(name,"#eta_{min} Distribution; #eta; N events",18,binarrayminus);
+      TH1F *histo_Etamin = new TH1F(name,"#eta_{min} Distribution; #eta; N events",20,-5.,5.);
       m_hVector_etamin[j].push_back(histo_Etamin);
 
       sprintf(name,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
@@ -701,43 +718,43 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_genXiPlus[j].push_back(histo_genXiPlus);
 
       sprintf(name,"genXi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_genXi = new TH1F(name,"#xi; #frac{M_{X}^2}{s}; N Event",17,xi_bin);
+      TH1F *histo_genXi = new TH1F(name,"#xi; #frac{M_{X}^{2}}{s}; N Event",17,xi_bin);
       m_hVector_genXi[j].push_back(histo_genXi);
 
       sprintf(name,"resLeadingLeptonPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resLeadingLeptonPt = new TH1F(name,"; #frac{P_{T}^{reco}}{P_{T}^{gen}}; N Event",40,0,2);
+      TH1F *histo_resLeadingLeptonPt = new TH1F(name,"; #frac{P_{T}^{reco}}{P_{T}^{gen}}; N Event",100,0.6,1.4);
       m_hVector_resLeadingLeptonPt[j].push_back(histo_resLeadingLeptonPt);
 
       sprintf(name,"resLeadingLeptonEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resLeadingLeptonEta = new TH1F(name,"; #frac{#eta^{reco}}{#eta^{gen}}; N Event",40,0,2);
+      TH1F *histo_resLeadingLeptonEta = new TH1F(name,"; #frac{#eta^{reco}}{#eta^{gen}}; N Event",100,0.996,1.005);
       m_hVector_resLeadingLeptonEta[j].push_back(histo_resLeadingLeptonEta);
 
       sprintf(name,"resLeadingLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resLeadingLeptonPhi = new TH1F(name,"; #frac{#phi^{reco}}{#phi^{gen}}; N Event",40,0,2);
+      TH1F *histo_resLeadingLeptonPhi = new TH1F(name,"; #frac{#phi^{reco}}{#phi^{gen}}; N Event",100,0.996,1.005);
       m_hVector_resLeadingLeptonPhi[j].push_back(histo_resLeadingLeptonPhi);
 
       sprintf(name,"resMETPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resMETPt = new TH1F(name,"; #frac{P_{T}^{reco}}{P_{T}^{gen}}; N Event",40,0,2);
+      TH1F *histo_resMETPt = new TH1F(name,"; #frac{P_{T}^{reco}}{P_{T}^{gen}}; N Event",100,0,2);
       m_hVector_resMETPt[j].push_back(histo_resMETPt);
 
       sprintf(name,"resMETPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resMETPhi = new TH1F(name,"; #frac{#phi^{reco}}{#phi^{gen}}; N Event",40,0,2);
+      TH1F *histo_resMETPhi = new TH1F(name,"; #frac{#phi^{reco}}{#phi^{gen}}; N Event",100,0,2);
       m_hVector_resMETPhi[j].push_back(histo_resMETPhi);
 
       sprintf(name,"resXiPlus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resXiPlus = new TH1F(name,"; #frac{(#xi^{gen}-#xi^{reco})}{#xi^{gen}}; N Event",15,-1,1);
+      TH1F *histo_resXiPlus = new TH1F(name,"; #frac{(#xi^{gen}-#xi^{reco})}{#xi^{gen}}; N Event",100,-6,6);
       m_hVector_resXiPlus[j].push_back(histo_resXiPlus);
 
       sprintf(name,"resXiMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resXiMinus = new TH1F(name,"; #frac{(#xi^{gen}-#xi^{reco})}{#xi^{gen}}; N Event",15,-1,1);
+      TH1F *histo_resXiMinus = new TH1F(name,"; #frac{(#xi^{gen}-#xi^{reco})}{#xi^{gen}}; N Event",100,-6,6);
       m_hVector_resXiMinus[j].push_back(histo_resXiMinus);
 
       sprintf(name,"resHFEnergy_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resHFEnergy = new TH1F(name,"; #frac{(#sum E_{HF,gen}-#sum E_{HF})}{sum E_{HF,gen}}; N Event",150,0,10);
+      TH1F *histo_resHFEnergy = new TH1F(name,"; #frac{#sum E_{HF}^{reco}}{#sum E_{HF}^{gen}}; N Event",200,0,20);
       m_hVector_resHFEnergy[j].push_back(histo_resHFEnergy);
 
       sprintf(name,"resCASTOREnergy_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_resCASTOREnergy = new TH1F(name,"; #frac{(#sum E_{CASTOR,gen}-#sum E_{CASTOR})}{sum E_{CASTOR,gen}}; N Event",150,0,10);
+      TH1F *histo_resCASTOREnergy = new TH1F(name,"; #frac{#sum E_{CASTOR}^{reco}}{#sum E_{CASTOR}^{gen}}; N Event",200,0,20);
       m_hVector_resCASTOREnergy[j].push_back(histo_resCASTOREnergy);
 
       sprintf(name,"correlHFEnergy_%s_%s",tag,Folders.at(j).c_str());
@@ -745,18 +762,32 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_correlHFEnergy[j].push_back(histo_correlHFEnergy);
 
       sprintf(name,"correlCASTOREnergy_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlCASTOREnergy = new TH2F(name,"; #sum E_{CASTOR, gen} [GeV]; #sum E_{CASTOR} [GeV]",2000,0,1000,2000,0,1000);
+      TH2F *histo_correlCASTOREnergy = new TH2F(name,"; #sum E_{CASTOR, gen} [GeV]; #sum E_{CASTOR} [GeV]",500,0,1500,1000,0,1000);
       m_hVector_correlCASTOREnergy[j].push_back(histo_correlCASTOREnergy);
 
-      char name2[300];
-      sprintf(name2,"correlXiPlus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlXiPlus = new TH2F(name2,"; log_{10}(#xi, gen); log_{10}(#xi, reco)",500,-4,0,500,-4,0);
+      sprintf(name,"correlXiPlus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlXiPlus = new TH2F(name,"; log_{10}(#xi^{+}_{gen}); log_{10}(#xi_{gen})",250,-4,0,250,-4,0);
       m_hVector_correlXiPlus[j].push_back(histo_correlXiPlus);
 
-      char name3[300];
-      sprintf(name3,"correlXiMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlXiMinus = new TH2F(name3,"; log_{10}(#xi, gen); log_{10}(#xi, reco)",500,-4,0,500,-4,0);
+      sprintf(name,"correlXiMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlXiMinus = new TH2F(name,"; log_{10}(#xi^{-}_{gen}); log_{10}(#xi_{gen})",250,-4,0,250,-4,0);
       m_hVector_correlXiMinus[j].push_back(histo_correlXiMinus);
+
+      sprintf(name,"correlRatioCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlRatioCastor = new TH2F(name,"; #frac{#sum E_{CASTOR}^{reco}}{#sum E_{CASTOR}^{gen}}; #sum E_{CASTOR}^{gen}",500,0,20,500,0,2000);
+      m_hVector_correlRatioCastor[j].push_back(histo_correlRatioCastor);
+
+      sprintf(name,"gensumEHFplus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_gensumEHFplus = new TH1F(name,"HF^{+} - Sum of Energy; #sum E_{HF^{+}, gen} [GeV]; N events",2000,0,2000);
+      m_hVector_gensumEHFplus[j].push_back(histo_gensumEHFplus);
+
+      sprintf(name,"gensumEHFminus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_gensumEHFminus = new TH1F(name,"HF^{-} - Sum of Energy; #sum E_{HF^{-}, gen} [GeV]; N events",2000,0,2000);
+      m_hVector_gensumEHFminus[j].push_back(histo_gensumEHFminus);
+
+      sprintf(name,"gensumECastorMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_gensumECastorMinus = new TH1F(name,"Castor Sum of Energy; Energy, gen [GeV]; N events",2000,0,1000);
+      m_hVector_gensumECastorMinus[j].push_back(histo_gensumECastorMinus);
 
     }
   }
@@ -866,16 +897,19 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_EPFVsTowerMinus[index].at(pileup)->Fill(eventdiffW->GetSumEHFMinusPF(),eventdiffW->GetSumEHFMinus(),totalweight);
   m_hVector_EPFVsTowerPlus[index].at(pileup)->Fill(eventdiffW->GetSumEHFPlusPF(),eventdiffW->GetSumEHFPlus(),totalweight);
 
-
   // Event Information
   m_hVector_lumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),totalweight);
   m_hVector_tracks[index].at(pileup)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
   m_hVector_vertex[index].at(pileup)->Fill(eventdiff->GetNVertex(),totalweight);
   m_hVector_pu[index].at(pileup)->Fill(eventinfo->GetNPileUpBx0(),totalweight);
 
-
   // Diffractive Variables
   m_hVector_asumE[index].at(pileup)->Fill(aSumE,totalweight);
+  if(fabs(etamin)>fabs(etamax)){
+    m_hVector_etaminimum[index].at(pileup)->Fill(etamax,totalweight);
+  }else{
+    m_hVector_etaminimum[index].at(pileup)->Fill(-1*etamin,totalweight);
+  }
   m_hVector_etamax[index].at(pileup)->Fill(etamax,totalweight);
   m_hVector_etamin[index].at(pileup)->Fill(etamin,totalweight);
   m_hVector_maxetagap[index].at(pileup)->Fill(fabs(maxLRG),totalweight);
@@ -896,26 +930,41 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
   m_hVector_etasignedCASTOR[index].at(pileup)->Fill(etasignedCASTOR,totalweight);
 
   // Generator
-  m_hVector_genProtonMinusXi[index].at(pileup)->Fill(eventdiffW->GetXiGenMinus(),totalweight);
-  m_hVector_genProtonPlusXi[index].at(pileup)->Fill(eventdiffW->GetXiGenPlus(),totalweight);
-  m_hVector_genXiPlus[index].at(pileup)->Fill(xigenplus,totalweight);
-  m_hVector_genXiMinus[index].at(pileup)->Fill(xigenminus,totalweight);
-  m_hVector_genXi[index].at(pileup)->Fill(xigen,totalweight);
-  m_hVector_resLeadingLeptonPt[index].at(pileup)->Fill(resLeadingPt,totalweight);
-  m_hVector_resLeadingLeptonEta[index].at(pileup)->Fill(resLeadingEta,totalweight);
-  m_hVector_resLeadingLeptonPhi[index].at(pileup)->Fill(resLeadingPhi,totalweight);
-  m_hVector_resMETPt[index].at(pileup)->Fill(resMETPt,totalweight);
-  m_hVector_resMETPhi[index].at(pileup)->Fill(resMETPhi,totalweight);
-  m_hVector_resXiPlus[index].at(pileup)->Fill((xigenplus-xiplus)/xigenplus,totalweight);
-  m_hVector_resXiMinus[index].at(pileup)->Fill((xigenminus-ximinus)/xigenminus,totalweight);
-  m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffW->GetSumEHFPlus()/eventdiff->GetSumEnergyHFPlusGen(),totalweight);
-  m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffW->GetSumEHFMinus()/eventdiff->GetSumEnergyHFMinusGen(),totalweight);
-  m_hVector_resCASTOREnergy[index].at(pileup)->Fill(sumCastorEnergy/eventdiffW->GetSumECastorMinusGen(),totalweight);
-  m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),eventdiffW->GetSumEHFPlus(),totalweight);
-  m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),eventdiffW->GetSumEHFMinus(),totalweight);
-  m_hVector_correlCASTOREnergy[index].at(pileup)->Fill(eventdiffW->GetSumECastorMinusGen(),sumCastorEnergy,totalweight);
-  m_hVector_correlXiPlus[index].at(pileup)->Fill(TMath::Log10(xigen),TMath::Log10(xigenplus),totalweight);
-  m_hVector_correlXiMinus[index].at(pileup)->Fill(TMath::Log10(xigen),TMath::Log10(xigenminus),totalweight);
+  if (switchlumiweight =="mc_lumi_weight" || switchlumiweight == "mc_lumi_pu_weight"){
+    m_hVector_genProtonMinusXi[index].at(pileup)->Fill(eventdiff->GetXiGenMinus(),totalweight);
+    m_hVector_genProtonPlusXi[index].at(pileup)->Fill(eventdiff->GetXiGenPlus(),totalweight);
+    m_hVector_genXiPlus[index].at(pileup)->Fill(xigenplus,totalweight);
+    m_hVector_genXiMinus[index].at(pileup)->Fill(xigenminus,totalweight);
+    m_hVector_genXi[index].at(pileup)->Fill(xigen,totalweight);
+    m_hVector_resLeadingLeptonPt[index].at(pileup)->Fill(resLeadingPt);
+    m_hVector_resLeadingLeptonEta[index].at(pileup)->Fill(resLeadingEta);
+    m_hVector_resLeadingLeptonPhi[index].at(pileup)->Fill(resLeadingPhi);
+    m_hVector_resMETPt[index].at(pileup)->Fill(resMETPt);
+    m_hVector_resMETPhi[index].at(pileup)->Fill(resMETPhi);
+    m_hVector_resXiPlus[index].at(pileup)->Fill((xigenplus-xiplus)/xigenplus);
+    m_hVector_resXiMinus[index].at(pileup)->Fill((xigenminus-ximinus)/xigenminus);
+    m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffW->GetSumEHFPlus()/eventdiff->GetSumEnergyHFPlusGen());
+    m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffW->GetSumEHFMinus()/eventdiff->GetSumEnergyHFMinusGen());
+    m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),eventdiffW->GetSumEHFPlus());
+    m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),eventdiffW->GetSumEHFMinus());
+    m_hVector_correlXiPlus[index].at(pileup)->Fill(TMath::Log10(xigenplus),TMath::Log10(xigen));
+    m_hVector_correlXiMinus[index].at(pileup)->Fill(TMath::Log10(xigenminus),TMath::Log10(xigen));
+
+    double sumGenCastorEnergy = 0.;
+    for (int k=0; k<eventdiffW->GetCastorNParticlesGen();k++){
+      if (eventdiffW->GetCastorParticlesEtaGen(k)<-4. && eventdiffW->GetCastorParticlesEtaGen(k)>-11.){
+	sumGenCastorEnergy += eventdiffW->GetCastorParticlesEnergyGen(k);
+      }
+    }
+
+    m_hVector_correlCASTOREnergy[index].at(pileup)->Fill(sumGenCastorEnergy,sumCastorEnergy);
+    m_hVector_correlRatioCastor[index].at(pileup)->Fill(sumCastorEnergy/sumGenCastorEnergy,sumGenCastorEnergy);
+    m_hVector_resCASTOREnergy[index].at(pileup)->Fill(sumCastorEnergy/sumGenCastorEnergy);
+    m_hVector_gensumEHFplus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),totalweight);
+    m_hVector_gensumEHFminus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),totalweight);
+    m_hVector_gensumECastorMinus[index].at(pileup)->Fill(sumGenCastorEnergy,totalweight);
+
+  }
 
 }
 
@@ -1022,6 +1071,7 @@ void DiffractiveW::SaveHistos(std::string type,std::string typesel){
       // Diffraction
       foldersFile[3]->cd();
       m_hVector_asumE[j].at(i)->Write();
+      m_hVector_etaminimum[j].at(i)->Write();
       m_hVector_etamax[j].at(i)->Write();
       m_hVector_etamin[j].at(i)->Write();
       m_hVector_maxetagap[j].at(i)->Write();
@@ -1053,13 +1103,15 @@ void DiffractiveW::SaveHistos(std::string type,std::string typesel){
 	m_hVector_resXiPlus[j].at(i)->Write();
 	m_hVector_resXiMinus[j].at(i)->Write();
 	m_hVector_resHFEnergy[j].at(i)->Write();
-	m_hVector_resHFEnergy[j].at(i)->Write();
 	m_hVector_resCASTOREnergy[j].at(i)->Write();
-	m_hVector_correlHFEnergy[j].at(i)->Write();
 	m_hVector_correlHFEnergy[j].at(i)->Write();
 	m_hVector_correlCASTOREnergy[j].at(i)->Write();
 	m_hVector_correlXiPlus[j].at(i)->Write();
 	m_hVector_correlXiMinus[j].at(i)->Write();
+	m_hVector_correlRatioCastor[j].at(i)->Write();
+	m_hVector_gensumEHFplus[j].at(i)->Write();
+	m_hVector_gensumEHFminus[j].at(i)->Write();
+	m_hVector_gensumECastorMinus[j].at(i)->Write();
       }
 
     }
@@ -1298,6 +1350,9 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     bool vertex = false;
     bool diffseln = false;
     bool diffselp = false;
+    bool generator = false;
+    bool gencastorlow = false;
+    bool gencastorhigh = false;
 
     bool presel = false;
     bool dimass = false;
@@ -1440,11 +1495,15 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     resMETPt = eventdiffW->GetMETPt()/eventdiffW->GetGenNeutrinoPt();
     resMETPhi = eventdiffW->GetMETPhi()/eventdiffW->GetGenNeutrinoPhi();
 
+    if(xigen < 0.05) generator = true;
+    if(eventdiffW->GetSumECastorMinusGen()<1) gencastorlow = true; 
+    if(eventdiffW->GetSumECastorMinusGen()>1) gencastorhigh = true;
+
     if (gapseltype == "PF" || gapseltype == "pf"){
       etamax = eventdiffW->GetEtaMaxPF();
       etamin = eventdiffW->GetEtaMinPF();
-      ximinus = eventdiffW->GetEminuspzPF()/sqrtS;
-      xiplus = eventdiffW->GetEpluspzPF()/sqrtS;
+      ximinus = 1.6*eventdiffW->GetEminuspzPF()/sqrtS; // 1.6 is the MC correction.
+      xiplus = 1.6*eventdiffW->GetEpluspzPF()/sqrtS;
       maxLRG = eventdiffW->GetLrgPF();
       if (etamax < 3. && etamax > -10.) diffselp = true; // avoid protection -999.
       if (etamin > -3.) diffseln = true; // avoid protection -999.
@@ -1452,8 +1511,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if(gapseltype == "CALO" || gapseltype == "calo"){
       etamax = eventdiffW->GetEtaCaloMax();
       etamin = eventdiffW->GetEtaCaloMin();
-      ximinus = eventdiffW->GetEminuspzCalo()/sqrtS;
-      xiplus = eventdiffW->GetEpluspzCalo()/sqrtS;
+      ximinus = 1.6*eventdiffW->GetEminuspzCalo()/sqrtS;
+      xiplus = 1.6*eventdiffW->GetEpluspzCalo()/sqrtS;
       maxLRG = eventdiffW->GetLrgCalo();
       if (eventdiffW->GetSumEHFMinus()==0.) diffseln = true;
       if (eventdiffW->GetSumEHFPlus()==0.) diffselp = true;
@@ -1469,9 +1528,9 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     //
     // Castor
     //
-    if(castoractivity){
-      etamin = -6.;
-    }
+    //if(castoractivity){
+    //etamin = -6.;
+    //}
 
     deltaeta = etamax - etamin;
 
@@ -1864,6 +1923,9 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 	}
 	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castorgap) FillHistos(18,pileup,totalcommon);
 	if(vertex && presel && nocosmic && isolation && candSel && dimass && acceptEvt && diffselp && castorgap && WKinP) FillHistos(19,pileup,totalcommon);
+	if(generator) FillHistos(20,pileup,totalcommon);
+	if(gencastorlow) FillHistos(21,pileup,totalcommon);
+	if(gencastorhigh) FillHistos(22,pileup,totalcommon);
       }
 
       else{

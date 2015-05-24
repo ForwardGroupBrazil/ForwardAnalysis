@@ -235,6 +235,7 @@ class DiffractiveW {
   std::vector<std::vector<TH2F*> > m_hVector_multhf;
   std::vector<std::vector<TH1F*> > m_hVector_minusnhf;
   std::vector<std::vector<TH1F*> > m_hVector_plusnhf;
+  std::vector<std::vector<TH1F*> > m_hVector_etaminimum;
   std::vector<std::vector<TH1F*> > m_hVector_etamax;
   std::vector<std::vector<TH1F*> > m_hVector_etamin;
   std::vector<std::vector<TH1F*> > m_hVector_maxetagap;
@@ -268,6 +269,10 @@ class DiffractiveW {
   std::vector<std::vector<TH2F*> > m_hVector_correlCASTOREnergy;
   std::vector<std::vector<TH2F*> > m_hVector_correlXiPlus;
   std::vector<std::vector<TH2F*> > m_hVector_correlXiMinus;
+  std::vector<std::vector<TH2F*> > m_hVector_correlRatioCastor;
+  std::vector<std::vector<TH1F*> > m_hVector_gensumEHFplus;
+  std::vector<std::vector<TH1F*> > m_hVector_gensumEHFminus;
+  std::vector<std::vector<TH1F*> > m_hVector_gensumECastorMinus;
 
   std::vector <std::string> Folders;
   TDirectory *foldersFile[5];

@@ -997,7 +997,6 @@ void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const ed
 void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   bool debug = false;
-
   double sumECastorGen = 0.;
 
   genVector.clear();
@@ -1005,6 +1004,9 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   genProtonVector.clear();
   genElectronVector.clear();
   genMuonVector.clear();
+  particlesCastorPdgIdGen.clear();
+  particlesCastorEnergyGen.clear();
+  particlesCastorEtaGen.clear();
 
   // Fill Gen
   edm::Handle<reco::GenParticleCollection> genParticle;
@@ -1017,8 +1019,14 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
       if (genAll->status() != 1) continue;
       if (fabs(genAll->pdgId()) == 13) genMuonVector.push_back(genAll);
       if (fabs(genAll->pdgId()) == 11) genElectronVector.push_back(genAll);
-      if (genAll->pdgId() == 2212 && genAll->pz()>0.7*beamEnergy_) genProtonVector.push_back(genAll);  
+      if (genAll->pdgId() == 2212 && fabs(genAll->pz())>0.7*beamEnergy_) genProtonVector.push_back(genAll);  
       if (fabs(genAll->pdgId()) == 2212) continue;
+      if (genAll->eta()<=-4.0 && genAll->eta()>=-11.){
+        if (debug) std::cout << "PDG Id, Castor acceptance: " << genAll->pdgId() << " | Energy: " << genAll->energy() << std::endl;
+        particlesCastorEtaGen.push_back(genAll->eta());
+        particlesCastorPdgIdGen.push_back(genAll->pdgId());
+        particlesCastorEnergyGen.push_back(genAll->energy());
+      }
       if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGen+=genAll->energy();
       genVector.push_back(genAll);
       if( ( fabs(genAll->eta()) <= 2.866 && fabs(genAll->eta() > 3.152) ) || (fabs(genAll->eta()) <= 4.730)) genCMSVector.push_back(genAll);
@@ -1032,6 +1040,11 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
 
     }
   }
+
+  eventData.SetCastorParticlesEtaGen(particlesCastorEtaGen);
+  eventData.SetCastorParticlesEnergyGen(particlesCastorEnergyGen);
+  eventData.SetCastorParticlesPDGidGen(particlesCastorPdgIdGen);
+  eventData.SetCastorNParticlesGen(particlesCastorEnergyGen.size());
 
   if (RunMC_){
     if(genVector.size()>0){

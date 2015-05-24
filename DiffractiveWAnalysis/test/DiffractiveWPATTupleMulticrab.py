@@ -196,7 +196,7 @@ print("")
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/WMuNuPythia6.root' # PomwigWRECO42X.root, WMuNuPythia6.root, QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_SL.root
+    config.inputFileName = 'root://eoscms.cern.ch//store/user/dmf/SamplesDebugCMSSW428/PomwigCMSSW428WMinus.root' # PomwigCMSSW428WMinus.root, WMuNuPythia6.root, QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_SL.root
 
 else:
     config.l1Paths = (l1list)

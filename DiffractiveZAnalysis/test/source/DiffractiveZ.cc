@@ -102,16 +102,27 @@ void DiffractiveZ::CleanVariables(){
   deltaeta = -999.;
   etamin = -999.;
   etamax = -999.;
+  xi = -999.;
   xiplus = -999.;
   ximinus = -999.;
+  xigen = -999.;
+  xigenplus = -999.;
+  xigenminus = -999.;
   maxLRG = -999.;
+  resLeadingPt = -999.;
+  resLeadingEta = -999.;
+  resLeadingPhi = -999.;
+  resSecondPt = -999.;
+  resSecondEta = -999.;
+  resSecondPhi = -999.;
+  sumGenCastorEnergy = 0.;
 
 }
 
 void DiffractiveZ::CreateHistos(std::string type){
 
-  double binarrayplus[19] = {0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.,2.25,2.5,2.75,3.,3.25,3.5,3.75,4.,5.2,6.2};
-  double binarrayminus[19] = {-6.2,-5.2,-4.,-3.75,-3.5,-3.25,-3.,-2.75,-2.5,-2.25,-2.,-1.75,-1.5,-1.25,-1.,-0.75,-0.5,-0.25,0.};
+  //double binarrayplus[19] = {0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.,2.25,2.5,2.75,3.,3.25,3.5,3.75,4.,5.2,6.2};
+  //double binarrayminus[19] = {-6.2,-5.2,-4.,-3.75,-3.5,-3.25,-3.,-2.75,-2.5,-2.25,-2.,-1.75,-1.5,-1.25,-1.,-0.75,-0.5,-0.25,0.};
   double binarraydelta[15] = {0.,0.5,1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.,5.5,6.,7.,9.};
   double xi_bin[18]={0.0003,0.002,0.0045,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1};
 
@@ -136,6 +147,9 @@ void DiffractiveZ::CreateHistos(std::string type){
   std::string step18 = "NGapCASTORAndZKinP";
   std::string step19 = "PGapCMSAndCASTOR";
   std::string step20 = "PGapCMSAndCASTORAndZKinP";
+  std::string step21 = "generator";
+  std::string step22 = "gencastorlow";
+  std::string step23 = "gencastorhigh";
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -158,6 +172,9 @@ void DiffractiveZ::CreateHistos(std::string type){
   Folders.push_back(step18);
   Folders.push_back(step19);
   Folders.push_back(step20);
+  Folders.push_back(step21);
+  Folders.push_back(step22);
+  Folders.push_back(step23);
 
   int nloop;
 
@@ -246,6 +263,8 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_EnergyEEPlusVsEnergyEEMinus.push_back( std::vector<TH2F*>() );
     m_hVector_sumEEEminus.push_back( std::vector<TH1F*>() );
     m_hVector_sumEEEplus.push_back( std::vector<TH1F*>() );
+    m_hVector_minusnhf.push_back( std::vector<TH1F*>() );
+    m_hVector_plusnhf.push_back( std::vector<TH1F*>() );
     m_hVector_multhf.push_back( std::vector<TH2F*>() );
     m_hVector_etcalos_p.push_back( std::vector<TH2F*>() );
     m_hVector_etcalos_n.push_back( std::vector<TH2F*>() );
@@ -259,6 +278,10 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_sumECastorMinus.push_back( std::vector<TH1F*>() );
     m_hVector_sumECastorMinusLow.push_back( std::vector<TH1F*>() );
     m_hVector_sumECastorAndHFMinus.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFplusPF.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFminusPF.push_back( std::vector<TH1F*>() );
+    m_hVector_EPFVsTowerMinus.push_back( std::vector<TH2F*>() );
+    m_hVector_EPFVsTowerPlus.push_back( std::vector<TH2F*>() );
 
     // Diffraction
     m_hVector_asumE.push_back( std::vector<TH1F*>() );
@@ -273,11 +296,39 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_maxetagap.push_back( std::vector<TH1F*>() );
     m_hVector_SumPTMax.push_back( std::vector<TH1F*>() );
     m_hVector_SumPTMin.push_back( std::vector<TH1F*>() );
+    m_hVector_etaminimum.push_back( std::vector<TH1F*>() );
     m_hVector_etamax.push_back( std::vector<TH1F*>() );
     m_hVector_etamin.push_back( std::vector<TH1F*>() );
     m_hVector_asumE.push_back( std::vector<TH1F*>() );
     m_hVector_EnergyHFPlusVsCastorTProf.push_back( std::vector<TProfile*>() );
     m_hVector_EnergyHFMinusVsCastorTProf.push_back( std::vector<TProfile*>() );
+
+    // Generator Studies
+    m_hVector_genProtonMinusXi.push_back( std::vector<TH1F*>() );
+    m_hVector_genProtonPlusXi.push_back( std::vector<TH1F*>() );
+    m_hVector_genXiPlus.push_back( std::vector<TH1F*>() );
+    m_hVector_genXiMinus.push_back( std::vector<TH1F*>() );
+    m_hVector_genXi.push_back( std::vector<TH1F*>() );
+    m_hVector_resLeadingLeptonPt.push_back( std::vector<TH1F*>() );
+    m_hVector_resLeadingLeptonEta.push_back( std::vector<TH1F*>() );
+    m_hVector_resLeadingLeptonPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_resSecondLeptonPt.push_back( std::vector<TH1F*>() );
+    m_hVector_resSecondLeptonEta.push_back( std::vector<TH1F*>() );
+    m_hVector_resSecondLeptonPhi.push_back( std::vector<TH1F*>() );
+    m_hVector_resXiPlus.push_back( std::vector<TH1F*>() );
+    m_hVector_resXiMinus.push_back( std::vector<TH1F*>() );
+    m_hVector_resXiPlusGen.push_back( std::vector<TH1F*>() );
+    m_hVector_resXiMinusGen.push_back( std::vector<TH1F*>() );
+    m_hVector_resHFEnergy.push_back( std::vector<TH1F*>() );
+    m_hVector_resCASTOREnergy.push_back( std::vector<TH1F*>() );
+    m_hVector_correlHFEnergy.push_back( std::vector<TH2F*>() );
+    m_hVector_correlCASTOREnergy.push_back( std::vector<TH2F*>() );
+    m_hVector_correlXiPlus.push_back( std::vector<TH2F*>() );
+    m_hVector_correlXiMinus.push_back( std::vector<TH2F*>() );
+    m_hVector_correlRatioCastor.push_back( std::vector<TH2F*>() );
+    m_hVector_gensumECastorMinus.push_back( std::vector<TH1F*>() );
+    m_hVector_gensumEHFplus.push_back( std::vector<TH1F*>() );
+    m_hVector_gensumEHFminus.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -630,18 +681,40 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_sumECastorMinusLow = new TH1F(name,"Castor Sum of Energy; Energy [GeV]; N events",1000,0.,500.);
       m_hVector_sumECastorMinusLow[j].push_back(histo_sumECastorMinusLow);
 
+      sprintf(name,"sumEHFplusPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFplusPF = new TH1F(name,"PF HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",1000,0,1000);
+      m_hVector_sumEHFplusPF[j].push_back(histo_sumEHFplusPF);
+
+      sprintf(name,"sumEHFminusPF_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFminusPF = new TH1F(name,"PF HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",1000,0,1000);
+      m_hVector_sumEHFminusPF[j].push_back(histo_sumEHFminusPF);
+
+      sprintf(name,"EPFVsTowerMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_EPFVsTowerMinus = new TH2F(name,"PF Energy Vs Tower Energy; #sum E_{PF^{-}} [GeV]; #sum E_{HF^{-}} [GeV]",1000,0,1000,1000,0,1000);
+      m_hVector_EPFVsTowerMinus[j].push_back(histo_EPFVsTowerMinus);
+
+      sprintf(name,"EPFVsTowerPlus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_EPFVsTowerPlus = new TH2F(name,"PF Energy Vs Tower Energy; #sum E_{PF^{-}} [GeV]; #sum E_{HF^{-}} [GeV]",1000,0,1000,1000,0,1000);
+      m_hVector_EPFVsTowerPlus[j].push_back(histo_EPFVsTowerPlus);
+
 
       // Diffraction
       sprintf(name,"aEnergy_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_aSumE = new TH1F(name,"Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",100,-2,2);
       m_hVector_asumE[j].push_back(histo_aSumE);
 
+      sprintf(name,"etaminimum_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_EtaMinimum = new TH1F(name,"; min(#eta_{max},-#eta_{min}); N events",20,-5,5);
+      m_hVector_etaminimum[j].push_back(histo_EtaMinimum);
+
       sprintf(name,"etamax_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_Etamax = new TH1F(name,"#eta_{max} Distribution; #eta; N events",18,binarrayplus);
+      //TH1F *histo_Etamax = new TH1F(name,"#eta_{max} Distribution; #eta; N events",18,binarrayplus);
+      TH1F *histo_Etamax = new TH1F(name,"#eta_{max} Distribution; #eta; N events",20,-5.,5.);
       m_hVector_etamax[j].push_back(histo_Etamax);
 
       sprintf(name,"etamin_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_Etamin = new TH1F(name,"#eta_{min} Distribution; #eta; N events",18,binarrayminus);
+      //TH1F *histo_Etamin = new TH1F(name,"#eta_{min} Distribution; #eta; N events",18,binarrayminus);
+      TH1F *histo_Etamin = new TH1F(name,"#eta_{min} Distribution; #eta; N events",20,-5.,5.);
       m_hVector_etamin[j].push_back(histo_Etamin);
 
       sprintf(name,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
@@ -687,6 +760,108 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name,"etasignedCASTOR_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_etasignedCASTOR = new TH1F(name,"Signed #eta_{l} Distribution; #tilde{#eta_{l}}; N events",100,-10.,10.);
       m_hVector_etasignedCASTOR[j].push_back(histo_etasignedCASTOR);
+
+
+      // Generator
+      sprintf(name,"genProtonMinusXi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_genProtonMinusXi = new TH1F(name,"#xi_{-}; #xi_{-}; N Event",17,xi_bin);
+      m_hVector_genProtonMinusXi[j].push_back(histo_genProtonMinusXi);
+
+      sprintf(name,"genProtonPlusXi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_genProtonPlusXi = new TH1F(name,"#xi_{+}; #xi_{+}; N Event",17,xi_bin);
+      m_hVector_genProtonPlusXi[j].push_back(histo_genProtonPlusXi);
+
+      sprintf(name,"genXiMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_genXiMinus = new TH1F(name,"#xi_{-}; #xi_{-}; N Event",17,xi_bin);
+      m_hVector_genXiMinus[j].push_back(histo_genXiMinus);
+
+      sprintf(name,"genXiPlus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_genXiPlus = new TH1F(name,"#xi_{+}; #xi_{+}; N Event",17,xi_bin);
+      m_hVector_genXiPlus[j].push_back(histo_genXiPlus);
+
+      sprintf(name,"genXi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_genXi = new TH1F(name,"#xi; #frac{M_{X}^{2}}{s}; N Event",17,xi_bin);
+      m_hVector_genXi[j].push_back(histo_genXi);
+
+      sprintf(name,"resLeadingLeptonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resLeadingLeptonPt = new TH1F(name,"; #frac{P_{T}^{reco}}{P_{T}^{gen}}; N Event",100,0.6,1.4);
+      m_hVector_resLeadingLeptonPt[j].push_back(histo_resLeadingLeptonPt);
+
+      sprintf(name,"resLeadingLeptonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resLeadingLeptonEta = new TH1F(name,"; #frac{#eta^{reco}}{#eta^{gen}}; N Event",100,0.996,1.005);
+      m_hVector_resLeadingLeptonEta[j].push_back(histo_resLeadingLeptonEta);
+
+      sprintf(name,"resLeadingLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resLeadingLeptonPhi = new TH1F(name,"; #frac{#phi^{reco}}{#phi^{gen}}; N Event",100,0.996,1.005);
+      m_hVector_resLeadingLeptonPhi[j].push_back(histo_resLeadingLeptonPhi);
+
+      sprintf(name,"resSecondLeptonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resSecondLeptonPt = new TH1F(name,"; #frac{P_{T}^{reco}}{P_{T}^{gen}}; N Event",100,0.6,1.4);
+      m_hVector_resSecondLeptonPt[j].push_back(histo_resSecondLeptonPt);
+
+      sprintf(name,"resSecondLeptonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resSecondLeptonEta = new TH1F(name,"; #frac{#eta^{reco}}{#eta^{gen}}; N Event",100,0.996,1.005);
+      m_hVector_resSecondLeptonEta[j].push_back(histo_resSecondLeptonEta);
+
+      sprintf(name,"resSecondLeptonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resSecondLeptonPhi = new TH1F(name,"; #frac{#phi^{reco}}{#phi^{gen}}; N Event",100,0.996,1.005);
+      m_hVector_resSecondLeptonPhi[j].push_back(histo_resSecondLeptonPhi);
+
+      sprintf(name,"resXiPlus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resXiPlus = new TH1F(name,"; #frac{(#xi^{gen}-#xi^{reco})}{#xi^{gen}}; N Event",100,-6,6);
+      m_hVector_resXiPlus[j].push_back(histo_resXiPlus);
+
+      sprintf(name,"resXiMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resXiMinus = new TH1F(name,"; #frac{(#xi^{gen}-#xi^{reco})}{#xi^{gen}}; N Event",100,-6,6);
+      m_hVector_resXiMinus[j].push_back(histo_resXiMinus);
+
+      sprintf(name,"resXiPlusGen_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resXiPlusGen = new TH1F(name,"; #frac{(#xi^{gen,+}-#xi^{gen})}{#xi^{gen,+}}; N Event",100,-6,6);
+      m_hVector_resXiPlusGen[j].push_back(histo_resXiPlusGen);
+
+      sprintf(name,"resXiMinusGen_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resXiMinusGen = new TH1F(name,"; #frac{(#xi^{gen,-}-#xi^{gen})}{#xi^{gen,-}}; N Event",100,-6,6);
+      m_hVector_resXiMinusGen[j].push_back(histo_resXiMinusGen);
+
+      sprintf(name,"resHFEnergy_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resHFEnergy = new TH1F(name,"; #frac{#sum E_{HF}^{reco}}{#sum E_{HF}^{gen}}; N Event",200,0,20);
+      m_hVector_resHFEnergy[j].push_back(histo_resHFEnergy);
+
+      sprintf(name,"resCASTOREnergy_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_resCASTOREnergy = new TH1F(name,"; #frac{#sum E_{CASTOR}^{reco}}{#sum E_{CASTOR}^{gen}}; N Event",200,0,20);
+      m_hVector_resCASTOREnergy[j].push_back(histo_resCASTOREnergy);
+
+      sprintf(name,"correlHFEnergy_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlHFEnergy = new TH2F(name,"; #sum E_{HF, gen} [GeV]; #sum E_{HF} [GeV]",1000,0,1000,1000,0,1000);
+      m_hVector_correlHFEnergy[j].push_back(histo_correlHFEnergy);
+
+      sprintf(name,"correlCASTOREnergy_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlCASTOREnergy = new TH2F(name,"; #sum E_{CASTOR, gen} [GeV]; #sum E_{CASTOR} [GeV]",500,0,1500,1000,0,1000);
+      m_hVector_correlCASTOREnergy[j].push_back(histo_correlCASTOREnergy);
+
+      sprintf(name,"correlXiPlus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlXiPlus = new TH2F(name,"; log_{10}(#xi^{+}_{gen}); log_{10}(#xi_{gen})",250,-4,0,250,-4,0);
+      m_hVector_correlXiPlus[j].push_back(histo_correlXiPlus);
+
+      sprintf(name,"correlXiMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlXiMinus = new TH2F(name,"; log_{10}(#xi^{-}_{gen}); log_{10}(#xi_{gen})",250,-4,0,250,-4,0);
+      m_hVector_correlXiMinus[j].push_back(histo_correlXiMinus);
+
+      sprintf(name,"correlRatioCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlRatioCastor = new TH2F(name,"; #frac{#sum E_{CASTOR}^{reco}}{#sum E_{CASTOR}^{gen}}; #sum E_{CASTOR}^{gen}",500,0,20,500,0,2000);
+      m_hVector_correlRatioCastor[j].push_back(histo_correlRatioCastor);
+
+      sprintf(name,"gensumEHFplus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_gensumEHFplus = new TH1F(name,"HF^{+} - Sum of Energy; #sum E_{HF^{+}, gen} [GeV]; N events",2000,0,2000);
+      m_hVector_gensumEHFplus[j].push_back(histo_gensumEHFplus);
+
+      sprintf(name,"gensumEHFminus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_gensumEHFminus = new TH1F(name,"HF^{-} - Sum of Energy; #sum E_{HF^{-}, gen} [GeV]; N events",2000,0,2000);
+      m_hVector_gensumEHFminus[j].push_back(histo_gensumEHFminus);
+
+      sprintf(name,"gensumECastorMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_gensumECastorMinus = new TH1F(name,"Castor Sum of Energy; Energy, gen [GeV]; N events",2000,0,1000);
+      m_hVector_gensumECastorMinus[j].push_back(histo_gensumECastorMinus);
 
     }
   }
@@ -811,11 +986,19 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_ECaloVsEta[index].at(pileup)->Fill(-6.,sumCastorEnergy,totalweight);
   m_hVector_ECaloVsEtaTProf[index].at(pileup)->Fill(-6.,sumCastorEnergy,totalweight);
   m_hVector_EnergyVsEtaBin1D[index].at(pileup)->Fill(-6.,sumCastorEnergy*totalweight);
+  m_hVector_sumEHFplusPF[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlusPF(),totalweight);
+  m_hVector_sumEHFminusPF[index].at(pileup)->Fill(eventdiffZ->GetSumEHFMinusPF(),totalweight);
+  m_hVector_EPFVsTowerMinus[index].at(pileup)->Fill(eventdiffZ->GetSumEHFMinusPF(),eventdiffZ->GetSumEHFMinus(),totalweight);
+  m_hVector_EPFVsTowerPlus[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlusPF(),eventdiffZ->GetSumEHFPlus(),totalweight);
 
-
-  // Diffration
+  // Diffraction
   m_hVector_asumE[index].at(pileup)->Fill(aSumE,totalweight);
   m_hVector_AEcastor[index].at(pileup)->Fill(AEcastor,totalweight);
+  if(fabs(etamin)>fabs(etamax)){
+    m_hVector_etaminimum[index].at(pileup)->Fill(etamax,totalweight);
+  }else{
+    m_hVector_etaminimum[index].at(pileup)->Fill(-1*etamin,totalweight);
+  }
   m_hVector_etamin[index].at(pileup)->Fill(etamin,totalweight);
   m_hVector_etamax[index].at(pileup)->Fill(etamax,totalweight);
   m_hVector_maxetagap[index].at(pileup)->Fill(fabs(maxLRG),totalweight);
@@ -834,6 +1017,38 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_Xi[index].at(pileup)->Fill(ximinus,totalweight);
   m_hVector_etasignedHF[index].at(pileup)->Fill(etasignedHF,totalweight);
   m_hVector_etasignedCASTOR[index].at(pileup)->Fill(etasignedCASTOR,totalweight);
+
+  // Generator
+  if (switchlumiweight =="mc_lumi_weight" || switchlumiweight == "mc_lumi_pu_weight"){
+    m_hVector_genProtonMinusXi[index].at(pileup)->Fill(eventdiff->GetXiGenMinus(),totalweight);
+    m_hVector_genProtonPlusXi[index].at(pileup)->Fill(eventdiff->GetXiGenPlus(),totalweight);
+    m_hVector_genXiPlus[index].at(pileup)->Fill(xigenplus,totalweight);
+    m_hVector_genXiMinus[index].at(pileup)->Fill(xigenminus,totalweight);
+    m_hVector_genXi[index].at(pileup)->Fill(xigen,totalweight);
+    m_hVector_resLeadingLeptonPt[index].at(pileup)->Fill(resLeadingPt);
+    m_hVector_resLeadingLeptonEta[index].at(pileup)->Fill(resLeadingEta);
+    m_hVector_resLeadingLeptonPhi[index].at(pileup)->Fill(resLeadingPhi);
+    m_hVector_resSecondLeptonPt[index].at(pileup)->Fill(resSecondPt);
+    m_hVector_resSecondLeptonEta[index].at(pileup)->Fill(resSecondEta);
+    m_hVector_resSecondLeptonPhi[index].at(pileup)->Fill(resSecondPhi);
+    m_hVector_resXiPlus[index].at(pileup)->Fill((xigenplus-xiplus)/xigenplus);
+    m_hVector_resXiMinus[index].at(pileup)->Fill((xigenminus-ximinus)/xigenminus);
+    m_hVector_resXiPlusGen[index].at(pileup)->Fill((xigenminus-xigen)/xigenplus);
+    m_hVector_resXiMinusGen[index].at(pileup)->Fill((xigenminus-xigen)/xigenminus);
+    m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffZ->GetSumEHFPlus()/eventdiff->GetSumEnergyHFPlusGen());
+    m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffZ->GetSumEHFMinus()/eventdiff->GetSumEnergyHFMinusGen());
+    m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),eventdiffZ->GetSumEHFPlus());
+    m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),eventdiffZ->GetSumEHFMinus());
+    m_hVector_correlXiPlus[index].at(pileup)->Fill(TMath::Log10(xigenplus),TMath::Log10(xigen));
+    m_hVector_correlXiMinus[index].at(pileup)->Fill(TMath::Log10(xigenminus),TMath::Log10(xigen));
+
+    m_hVector_correlCASTOREnergy[index].at(pileup)->Fill(sumGenCastorEnergy,sumCastorEnergy);
+    m_hVector_correlRatioCastor[index].at(pileup)->Fill(sumCastorEnergy/sumGenCastorEnergy,sumGenCastorEnergy);
+    m_hVector_resCASTOREnergy[index].at(pileup)->Fill(sumCastorEnergy/sumGenCastorEnergy);
+    m_hVector_gensumEHFplus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),totalweight);
+    m_hVector_gensumEHFminus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),totalweight);
+    m_hVector_gensumECastorMinus[index].at(pileup)->Fill(sumGenCastorEnergy,totalweight);
+  }
 
 }
 
@@ -945,6 +1160,7 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
       foldersFile[3]->cd();
       m_hVector_asumE[j].at(i)->Write();
       m_hVector_AEcastor[j].at(i)->Write();
+      m_hVector_etaminimum[j].at(i)->Write();
       m_hVector_etasignedHF[j].at(i)->Write();
       m_hVector_etasignedCASTOR[j].at(i)->Write();
       m_hVector_XiPlus[j].at(i)->Write();
@@ -958,6 +1174,36 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
       m_hVector_etamax[j].at(i)->Write();
       m_hVector_etamin[j].at(i)->Write();
       m_hVector_asumE[j].at(i)->Write();
+
+      // Generator Plots
+      if (switchlumiweight =="mc_lumi_weight" || switchlumiweight == "mc_lumi_pu_weight"){
+	foldersFile[4]->cd();
+	m_hVector_genProtonMinusXi[j].at(i)->Write();
+	m_hVector_genProtonPlusXi[j].at(i)->Write();
+	m_hVector_genXiPlus[j].at(i)->Write();
+	m_hVector_genXiMinus[j].at(i)->Write();
+	m_hVector_genXi[j].at(i)->Write();
+	m_hVector_resLeadingLeptonPt[j].at(i)->Write();
+	m_hVector_resLeadingLeptonEta[j].at(i)->Write();
+	m_hVector_resLeadingLeptonPhi[j].at(i)->Write();
+	m_hVector_resSecondLeptonPt[j].at(i)->Write();
+	m_hVector_resSecondLeptonEta[j].at(i)->Write();
+	m_hVector_resSecondLeptonPhi[j].at(i)->Write();
+	m_hVector_resXiPlus[j].at(i)->Write();
+	m_hVector_resXiMinus[j].at(i)->Write();
+	m_hVector_resXiPlusGen[j].at(i)->Write();
+	m_hVector_resXiMinusGen[j].at(i)->Write();
+	m_hVector_resHFEnergy[j].at(i)->Write();
+	m_hVector_resCASTOREnergy[j].at(i)->Write();
+	m_hVector_correlHFEnergy[j].at(i)->Write();
+	m_hVector_correlCASTOREnergy[j].at(i)->Write();
+	m_hVector_correlXiPlus[j].at(i)->Write();
+	m_hVector_correlXiMinus[j].at(i)->Write();
+	m_hVector_correlRatioCastor[j].at(i)->Write();
+	m_hVector_gensumEHFplus[j].at(i)->Write();
+	m_hVector_gensumEHFminus[j].at(i)->Write();
+	m_hVector_gensumECastorMinus[j].at(i)->Write();
+      }
 
     }
   }
@@ -1195,6 +1441,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool vertex = false;
     bool diffseln = false;
     bool diffselp = false;
+    bool generator = false;
+    bool gencastorlow = false;
+    bool gencastorhigh = false;
 
     bool presel = false;
     bool charge = false;
@@ -1325,13 +1574,33 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiffZ->GetSumEHFMinus();
 
+    if (switchlumiweight =="mc_lumi_weight" || switchlumiweight == "mc_lumi_pu_weight"){
+      for (int k=0; k<eventdiffZ->GetCastorNParticlesGen();k++){
+	if (eventdiffZ->GetCastorParticlesEtaGen(k)<-4. && eventdiffZ->GetCastorParticlesEtaGen(k)>-11.){
+	  sumGenCastorEnergy += eventdiffZ->GetCastorParticlesEnergyGen(k);
+	}
+      }
+      if(sumGenCastorEnergy <= 1.) gencastorlow = true;
+      if(sumGenCastorEnergy > 1.) gencastorhigh = true;
+      if(xigen < 0.05) generator = true;
+    }else{
+      gencastorlow = false;
+      gencastorhigh = false;
+      generator = false;
+    }
+
     if (eventdiff->GetNVertex() <= nVertex) vertex = true;
+
+    xigen = eventdiffZ->GetMx2Gen()/TMath::Power(sqrtS,2);
+    xi = eventdiffZ->GetMx2PF()/TMath::Power(sqrtS,2);
+    xigenplus = eventdiffZ->GetEpluspzGenLim()/sqrtS;
+    xigenminus = eventdiffZ->GetEminuspzGenLim()/sqrtS;
 
     if (gapseltype == "PF" || gapseltype == "pf"){
       etamax = eventdiffZ->GetEtaMaxPF();
       etamin = eventdiffZ->GetEtaMinPF();
-      xiplus = eventdiffZ->GetEminuspzPF()/sqrtS;
-      ximinus = eventdiffZ->GetEpluspzPF()/sqrtS;
+      ximinus = 1.6*eventdiffZ->GetEminuspzPF()/sqrtS;
+      xiplus = 1.6*eventdiffZ->GetEpluspzPF()/sqrtS;
       maxLRG = eventdiffZ->GetLrgPF();
       if (etamax < 3. && etamax > -10.) diffselp = true; // avoid protection -999.
       if (etamin > -3.) diffseln = true; // avoid protection -999.
@@ -1339,8 +1608,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     else if(gapseltype == "CALO" || gapseltype == "calo"){
       etamax = eventdiffZ->GetEtaCaloMax();
       etamin = eventdiffZ->GetEtaCaloMin();
-      xiplus = eventdiffZ->GetEminuspzCalo()/sqrtS;
-      ximinus = eventdiffZ->GetEpluspzCalo()/sqrtS;
+      ximinus = 1.6*eventdiffZ->GetEminuspzCalo()/sqrtS;
+      xiplus = 1.6*eventdiffZ->GetEpluspzCalo()/sqrtS;
       maxLRG = eventdiffZ->GetLrgCalo();
       if (eventdiffZ->GetSumEHFMinus()==0.) diffseln = true;
       if (eventdiffZ->GetSumEHFPlus()==0.) diffselp = true;
@@ -1356,9 +1625,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     //
     // Castor
     //
-    if(castoractivity){
-      etamin = -6.;
-    }
+    //if(castoractivity){
+    //  etamin = -6.;
+    //}
 
     deltaeta = etamax - etamin;
 
@@ -1402,6 +1671,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       cone03tracks = eventdiffZ->GetTracksNonConeLeadingElectronR03()+eventdiffZ->GetTracksNonConeSecondElectronR03();
       cone04tracks = eventdiffZ->GetTracksNonConeLeadingElectronR04()+eventdiffZ->GetTracksNonConeSecondElectronR04();
       cone05tracks = eventdiffZ->GetTracksNonConeLeadingElectronR05()+eventdiffZ->GetTracksNonConeSecondElectronR05();
+
+      resLeadingPt = eventdiffZ->GetLeadingElectronPt()/eventdiffZ->GetGenLeadingElectronPt();
+      resLeadingEta = eventdiffZ->GetLeadingElectronEta()/eventdiffZ->GetGenLeadingElectronEta();
+      resLeadingPhi = eventdiffZ->GetLeadingElectronPhi()/eventdiffZ->GetGenLeadingElectronPhi();
+      resSecondPt = eventdiffZ->GetSecondElectronPt()/eventdiffZ->GetGenSecondElectronPt();
+      resSecondEta = eventdiffZ->GetSecondElectronEta()/eventdiffZ->GetGenSecondElectronEta();
+      resSecondPhi = eventdiffZ->GetSecondElectronPhi()/eventdiffZ->GetGenSecondElectronPhi();
 
       double totalASumCastor = eventdiffZ->GetSumEHFMinus() + sumCastorEnergy;
       if(totalASumCastor > 0.){
@@ -1485,6 +1761,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       cone04tracks = eventdiffZ->GetTracksNonConeLeadingMuonR04()+eventdiffZ->GetTracksNonConeSecondMuonR04();
       cone05tracks = eventdiffZ->GetTracksNonConeLeadingMuonR05()+eventdiffZ->GetTracksNonConeSecondMuonR05();
 
+      resLeadingPt = eventdiffZ->GetLeadingMuonPt()/eventdiffZ->GetGenLeadingMuonPt();
+      resLeadingEta = eventdiffZ->GetLeadingMuonEta()/eventdiffZ->GetGenLeadingMuonEta();
+      resLeadingPhi = eventdiffZ->GetLeadingMuonPhi()/eventdiffZ->GetGenLeadingMuonPhi();
+      resSecondPt = eventdiffZ->GetSecondMuonPt()/eventdiffZ->GetGenSecondMuonPt();
+      resSecondEta = eventdiffZ->GetSecondMuonEta()/eventdiffZ->GetGenSecondMuonEta();
+      resSecondPhi = eventdiffZ->GetSecondMuonPhi()/eventdiffZ->GetGenSecondMuonPhi();
+
       if (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
       if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass = true;
@@ -1545,6 +1828,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       cone03tracks = eventdiffZ->GetTracksNonConePatElectron1R03()+eventdiffZ->GetTracksNonConePatElectron2R03();
       cone04tracks = eventdiffZ->GetTracksNonConePatElectron1R04()+eventdiffZ->GetTracksNonConePatElectron2R04();
       cone05tracks = eventdiffZ->GetTracksNonConePatElectron1R05()+eventdiffZ->GetTracksNonConePatElectron2R05();
+
+      resLeadingPt = eventdiffZ->GetPatElectron1Pt()/eventdiffZ->GetGenLeadingElectronPt();
+      resLeadingEta = eventdiffZ->GetPatElectron1Eta()/eventdiffZ->GetGenLeadingElectronEta();
+      resLeadingPhi = eventdiffZ->GetPatElectron1Phi()/eventdiffZ->GetGenLeadingElectronPhi();
+      resSecondPt = eventdiffZ->GetPatElectron2Pt()/eventdiffZ->GetGenSecondElectronPt();
+      resSecondEta = eventdiffZ->GetPatElectron2Eta()/eventdiffZ->GetGenSecondElectronEta();
+      resSecondPhi = eventdiffZ->GetPatElectron2Phi()/eventdiffZ->GetGenSecondElectronPhi();
 
       if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) charge = true;
@@ -1622,6 +1912,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       cone03tracks = eventdiffZ->GetTracksNonConePatMuon1R03()+eventdiffZ->GetTracksNonConePatMuon2R03();
       cone04tracks = eventdiffZ->GetTracksNonConePatMuon1R04()+eventdiffZ->GetTracksNonConePatMuon2R04();
       cone05tracks = eventdiffZ->GetTracksNonConePatMuon1R05()+eventdiffZ->GetTracksNonConePatMuon2R05();
+
+      resLeadingPt = eventdiffZ->GetPatMuon1Pt()/eventdiffZ->GetGenLeadingMuonPt();
+      resLeadingEta = eventdiffZ->GetPatMuon1Eta()/eventdiffZ->GetGenLeadingMuonEta();
+      resLeadingPhi = eventdiffZ->GetPatMuon1Phi()/eventdiffZ->GetGenLeadingMuonPhi();
+      resSecondPt = eventdiffZ->GetPatMuon2Pt()/eventdiffZ->GetGenSecondMuonPt();
+      resSecondEta = eventdiffZ->GetPatMuon2Eta()/eventdiffZ->GetGenSecondMuonEta();
+      resSecondPhi = eventdiffZ->GetPatMuon2Phi()/eventdiffZ->GetGenSecondMuonPhi();
 
       if (eventdiffZ->GetPatMuon1Pt() > lepton1pt && eventdiffZ->GetPatMuon2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) charge = true;
@@ -1769,6 +2066,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	}
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap) FillHistos(19,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castorgap && ZKinP) FillHistos(20,pileup,totalcommon);
+	if(generator) FillHistos(21,pileup,totalcommon);
+	if(gencastorlow) FillHistos(22,pileup,totalcommon);
+	if(gencastorhigh) FillHistos(23,pileup,totalcommon);
       }
 
       else{
@@ -1830,6 +2130,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   foldersFile[1] = outf->mkdir("Run");
   foldersFile[2] = outf->mkdir("Detector");
   foldersFile[3] = outf->mkdir("Diffraction");
+  foldersFile[4] = outf->mkdir("Generator");
+
   SaveHistos(type,typesel);
   outf->Close();
   std::cout << "\n" << std::endl;

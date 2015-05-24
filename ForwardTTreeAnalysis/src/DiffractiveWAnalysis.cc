@@ -1132,7 +1132,6 @@ void DiffractiveWAnalysis::fillTracksInfo(DiffractiveWEvent& eventData, const ed
 void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   bool debug = false;
-
   double sumECastorGen = 0.;
 
   genVector.clear();
@@ -1141,6 +1140,10 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
   genElectronVector.clear();
   genMuonVector.clear();
   genNeutrinoVector.clear();
+
+  particlesCastorEtaGen.clear();
+  particlesCastorPdgIdGen.clear();
+  particlesCastorEnergyGen.clear();
 
   // Fill Gen
   edm::Handle<reco::GenParticleCollection> genParticle;
@@ -1154,8 +1157,14 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
       if (fabs(genAll->pdgId()) == 13) genMuonVector.push_back(genAll);
       if (fabs(genAll->pdgId()) == 11) genElectronVector.push_back(genAll);
       if (fabs(genAll->pdgId()) == 12 || fabs(genAll->pdgId()) == 14) genNeutrinoVector.push_back(genAll);
-      if (genAll->pdgId() == 2212 && genAll->pz()>0.7*beamEnergy_) genProtonVector.push_back(genAll);
+      if (genAll->pdgId() == 2212 && fabs(genAll->pz())>0.7*beamEnergy_) genProtonVector.push_back(genAll);
       if (fabs(genAll->pdgId()) == 2212) continue;
+      if (genAll->eta()<=-4.0 && genAll->eta()>=-11.){
+	if (debug) std::cout << "PDG Id, Castor acceptance: " << genAll->pdgId() << " | Energy: " << genAll->energy() << std::endl;
+        particlesCastorEtaGen.push_back(genAll->eta());
+	particlesCastorPdgIdGen.push_back(genAll->pdgId());
+	particlesCastorEnergyGen.push_back(genAll->energy());
+      }
       if (genAll->eta()<-5.2 && genAll->eta()>-6.6) sumECastorGen+=genAll->energy();
       genVector.push_back(genAll);
       if( ( fabs(genAll->eta()) <= 2.866 && fabs(genAll->eta() > 3.152) ) || (fabs(genAll->eta()) <= 4.730)) genCMSVector.push_back(genAll);
@@ -1169,6 +1178,11 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
 
     }
   }
+
+  eventData.SetCastorParticlesEtaGen(particlesCastorEtaGen);
+  eventData.SetCastorParticlesEnergyGen(particlesCastorEnergyGen);
+  eventData.SetCastorParticlesPDGidGen(particlesCastorPdgIdGen);
+  eventData.SetCastorNParticlesGen(particlesCastorEnergyGen.size());
 
   if (RunMC_){
     if(genVector.size()>0){
@@ -1232,6 +1246,7 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
 
   if(debug){
     std::cout << "\nProtons Gen Info:" << std::endl;
+    std::cout << "N protons: " << genProtonVector.size() << std::endl;
     std::cout << "Xi +: " << xi_p_gen_plus << std::endl;
     std::cout << "Xi -: " << xi_p_gen_minus << std::endl;
   }
@@ -2140,7 +2155,7 @@ void DiffractiveWAnalysis::fillVariables(DiffractiveWEvent& eventData, const edm
     eventData.SetEtExpoPlusPFNoW(et_expo_plus_now);
     eventData.SetEtExpoMinusPFNoW(et_expo_minus_now);
   }else{
-     eventData.SetMxPFNoW(-999.);
+    eventData.SetMxPFNoW(-999.);
     eventData.SetMx2PFNoW(-999.);
     eventData.SetMxPFNoWMinus(-999.);
     eventData.SetMxPFNoWPlus(-999.);

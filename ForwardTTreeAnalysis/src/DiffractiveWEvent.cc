@@ -120,6 +120,10 @@ void DiffractiveWEvent::reset(){
   eminuspzgen_=-999.;
   etexpoplusgen_=-999.;
   etexpominusgen_=-999.;
+  castorparticlespdgidgen_.clear();
+  castorparticlesenergygen_.clear();
+  castorparticlesetagen_.clear();
+  castornparticlesgen_ = -1;
   sumECastorMinusGen_=-999.;
   sumptgenleft_=-999.;
   sumptgenright_=-999.;
