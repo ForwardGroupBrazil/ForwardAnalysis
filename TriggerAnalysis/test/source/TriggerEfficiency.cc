@@ -114,11 +114,11 @@ void TriggerEfficiency::Run(std::string filein_, std::string savehistofile_, std
     char name[300];
 
     sprintf(name,"leading_lepton_pt_%s",Folders.at(j).c_str());
-    TH1D *histo_leading_pt = new TH1D(name,"; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+    TH1D *histo_leading_pt = new TH1D(name,"; P_{T} [GeV.c^{-1}]; N events",500,0,1000);
     m_hVector_leading_pt.push_back(histo_leading_pt);
 
     sprintf(name,"second_lepton_pt_%s",Folders.at(j).c_str());
-    TH1D *histo_second_pt = new TH1D(name,"; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+    TH1D *histo_second_pt = new TH1D(name,"; P_{T} [GeV.c^{-1}]; N events",500,0,1000);
     m_hVector_second_pt.push_back(histo_second_pt);
 
     sprintf(name,"dilepton_mass_%s",Folders.at(j).c_str());

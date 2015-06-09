@@ -65,6 +65,7 @@ void DiffractiveW::CleanVariables(){
   deltaphi = -999.;
   bosonWMass = -999.;
   bosonWEta = -999.;
+  bosonWEtaGen = -999.;
   bosonWPt = -999.;
   bosonWPhi = -999.;
   bosonWCharge = -999;
@@ -296,10 +297,13 @@ void DiffractiveW::CreateHistos(std::string type){
     m_hVector_correlCASTOREnergy.push_back( std::vector<TH2F*>() );
     m_hVector_correlXiPlus.push_back( std::vector<TH2F*>() );
     m_hVector_correlXiMinus.push_back( std::vector<TH2F*>() );
+    m_hVector_correlXiPlusDefinition.push_back( std::vector<TH2F*>() );
+    m_hVector_correlXiMinusDefinition.push_back( std::vector<TH2F*>() );
     m_hVector_correlRatioCastor.push_back( std::vector<TH2F*>() );
     m_hVector_gensumECastorMinus.push_back( std::vector<TH1F*>() );
     m_hVector_gensumEHFplus.push_back( std::vector<TH1F*>() );
     m_hVector_gensumEHFminus.push_back( std::vector<TH1F*>() );
+    m_hVector_WEtaGen.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -676,11 +680,11 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_absdeltaEta[j].push_back(histo_absdeltaEta);
 
       sprintf(name,"xiPlus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_XiPlus = new TH1F(name,"#xi_{-}; #xi_{+}; N Event",17,xi_bin);
+      TH1F *histo_XiPlus = new TH1F(name,"#xi_{+}; #xi_{+}; N Event",17,xi_bin);
       m_hVector_XiPlus[j].push_back(histo_XiPlus);
 
       sprintf(name,"xiMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_XiMinus = new TH1F(name,"#xi_{-}; #xi_{+}; N Event",17,xi_bin);
+      TH1F *histo_XiMinus = new TH1F(name,"#xi_{-}; #xi_{-}; N Event",17,xi_bin);
       m_hVector_XiMinus[j].push_back(histo_XiMinus);
 
       sprintf(name,"xi_%s_%s",tag,Folders.at(j).c_str());
@@ -766,12 +770,20 @@ void DiffractiveW::CreateHistos(std::string type){
       m_hVector_correlCASTOREnergy[j].push_back(histo_correlCASTOREnergy);
 
       sprintf(name,"correlXiPlus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlXiPlus = new TH2F(name,"; log_{10}(#xi^{+}_{gen}); log_{10}(#xi_{gen})",250,-4,0,250,-4,0);
+      TH2F *histo_correlXiPlus = new TH2F(name,"; log_{10}(#xi^{+}_{gen}); log_{10}(#xi_{gen})",500,-4,0,500,-4,0);
       m_hVector_correlXiPlus[j].push_back(histo_correlXiPlus);
 
       sprintf(name,"correlXiMinus_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlXiMinus = new TH2F(name,"; log_{10}(#xi^{-}_{gen}); log_{10}(#xi_{gen})",250,-4,0,250,-4,0);
+      TH2F *histo_correlXiMinus = new TH2F(name,"; log_{10}(#xi^{-}_{gen}); log_{10}(#xi_{gen})",500,-4,0,500,-4,0);
       m_hVector_correlXiMinus[j].push_back(histo_correlXiMinus);
+
+      sprintf(name,"correlXiPlusDefinition_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlXiPlusDefinition = new TH2F(name,"; log_{10}(#xi^{+}_{reco}); log_{10}(#xi_^{+}_{gen})",500,-4,0,500,-4,0);
+      m_hVector_correlXiPlusDefinition[j].push_back(histo_correlXiPlusDefinition);
+
+      sprintf(name,"correlXiMinusDefinition_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_correlXiMinusDefinition = new TH2F(name,"; log_{10}(#xi^{-}_{reco}); log_{10}(#xi_^{-}_{gen})",500,-4,0,500,-4,0);
+      m_hVector_correlXiMinusDefinition[j].push_back(histo_correlXiMinusDefinition);
 
       sprintf(name,"correlRatioCastor_%s_%s",tag,Folders.at(j).c_str());
       TH2F *histo_correlRatioCastor = new TH2F(name,"; #frac{#sum E_{CASTOR}^{reco}}{#sum E_{CASTOR}^{gen}}; #sum E_{CASTOR}^{gen}",500,0,20,500,0,2000);
@@ -788,6 +800,10 @@ void DiffractiveW::CreateHistos(std::string type){
       sprintf(name,"gensumECastorMinus_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_gensumECastorMinus = new TH1F(name,"Castor Sum of Energy; Energy, gen [GeV]; N events",2000,0,1000);
       m_hVector_gensumECastorMinus[j].push_back(histo_gensumECastorMinus);
+
+      sprintf(name,"genBosonWEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_WEtaGen = new TH1F(name, "; #eta_{gen}; N events",50,-5.2,5.2);
+      m_hVector_WEtaGen[j].push_back(histo_WEtaGen);
 
     }
   }
@@ -931,39 +947,43 @@ void DiffractiveW::FillHistos(int index, int pileup, double totalweight){
 
   // Generator
   if (switchlumiweight =="mc_lumi_weight" || switchlumiweight == "mc_lumi_pu_weight"){
-    m_hVector_genProtonMinusXi[index].at(pileup)->Fill(eventdiff->GetXiGenMinus(),totalweight);
-    m_hVector_genProtonPlusXi[index].at(pileup)->Fill(eventdiff->GetXiGenPlus(),totalweight);
-    m_hVector_genXiPlus[index].at(pileup)->Fill(xigenplus,totalweight);
-    m_hVector_genXiMinus[index].at(pileup)->Fill(xigenminus,totalweight);
-    m_hVector_genXi[index].at(pileup)->Fill(xigen,totalweight);
-    m_hVector_resLeadingLeptonPt[index].at(pileup)->Fill(resLeadingPt);
-    m_hVector_resLeadingLeptonEta[index].at(pileup)->Fill(resLeadingEta);
-    m_hVector_resLeadingLeptonPhi[index].at(pileup)->Fill(resLeadingPhi);
-    m_hVector_resMETPt[index].at(pileup)->Fill(resMETPt);
-    m_hVector_resMETPhi[index].at(pileup)->Fill(resMETPhi);
-    m_hVector_resXiPlus[index].at(pileup)->Fill((xigenplus-xiplus)/xigenplus);
-    m_hVector_resXiMinus[index].at(pileup)->Fill((xigenminus-ximinus)/xigenminus);
-    m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffW->GetSumEHFPlus()/eventdiff->GetSumEnergyHFPlusGen());
-    m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffW->GetSumEHFMinus()/eventdiff->GetSumEnergyHFMinusGen());
-    m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),eventdiffW->GetSumEHFPlus());
-    m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),eventdiffW->GetSumEHFMinus());
-    m_hVector_correlXiPlus[index].at(pileup)->Fill(TMath::Log10(xigenplus),TMath::Log10(xigen));
-    m_hVector_correlXiMinus[index].at(pileup)->Fill(TMath::Log10(xigenminus),TMath::Log10(xigen));
+    if(xigen>0.){
+      m_hVector_genProtonMinusXi[index].at(pileup)->Fill(eventdiff->GetXiGenMinus(),totalweight);
+      m_hVector_genProtonPlusXi[index].at(pileup)->Fill(eventdiff->GetXiGenPlus(),totalweight);
+      m_hVector_genXiPlus[index].at(pileup)->Fill(xigenplus,totalweight);
+      m_hVector_genXiMinus[index].at(pileup)->Fill(xigenminus,totalweight);
+      m_hVector_genXi[index].at(pileup)->Fill(xigen,totalweight);
+      m_hVector_resLeadingLeptonPt[index].at(pileup)->Fill(resLeadingPt);
+      m_hVector_resLeadingLeptonEta[index].at(pileup)->Fill(resLeadingEta);
+      m_hVector_resLeadingLeptonPhi[index].at(pileup)->Fill(resLeadingPhi);
+      m_hVector_resMETPt[index].at(pileup)->Fill(resMETPt);
+      m_hVector_resMETPhi[index].at(pileup)->Fill(resMETPhi);
+      m_hVector_resXiPlus[index].at(pileup)->Fill((xigenplus-xiplus)/xigenplus);
+      m_hVector_resXiMinus[index].at(pileup)->Fill((xigenminus-ximinus)/xigenminus);
+      m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffW->GetSumEHFPlus()/eventdiff->GetSumEnergyHFPlusGen());
+      m_hVector_resHFEnergy[index].at(pileup)->Fill(eventdiffW->GetSumEHFMinus()/eventdiff->GetSumEnergyHFMinusGen());
+      m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),eventdiffW->GetSumEHFPlus());
+      m_hVector_correlHFEnergy[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),eventdiffW->GetSumEHFMinus());
+      m_hVector_correlXiPlus[index].at(pileup)->Fill(TMath::Log10(xigenplus),TMath::Log10(xigen));
+      m_hVector_correlXiMinus[index].at(pileup)->Fill(TMath::Log10(xigenminus),TMath::Log10(xigen));
+      m_hVector_correlXiPlusDefinition[index].at(pileup)->Fill(TMath::Log10(xiplus),TMath::Log10(xigenplus));
+      m_hVector_correlXiMinusDefinition[index].at(pileup)->Fill(TMath::Log10(ximinus),TMath::Log10(xigenminus));
 
-    double sumGenCastorEnergy = 0.;
-    for (int k=0; k<eventdiffW->GetCastorNParticlesGen();k++){
-      if (eventdiffW->GetCastorParticlesEtaGen(k)<-4. && eventdiffW->GetCastorParticlesEtaGen(k)>-11.){
-	sumGenCastorEnergy += eventdiffW->GetCastorParticlesEnergyGen(k);
+      double sumGenCastorEnergy = 0.;
+      for (int k=0; k<eventdiffW->GetCastorNParticlesGen();k++){
+	if (eventdiffW->GetCastorParticlesEtaGen(k)<-4. && eventdiffW->GetCastorParticlesEtaGen(k)>-11.){
+	  sumGenCastorEnergy += eventdiffW->GetCastorParticlesEnergyGen(k);
+	}
       }
+
+      m_hVector_correlCASTOREnergy[index].at(pileup)->Fill(sumGenCastorEnergy,sumCastorEnergy);
+      m_hVector_correlRatioCastor[index].at(pileup)->Fill(sumCastorEnergy/sumGenCastorEnergy,sumGenCastorEnergy);
+      m_hVector_resCASTOREnergy[index].at(pileup)->Fill(sumCastorEnergy/sumGenCastorEnergy);
+      m_hVector_gensumEHFplus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),totalweight);
+      m_hVector_gensumEHFminus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),totalweight);
+      m_hVector_gensumECastorMinus[index].at(pileup)->Fill(sumGenCastorEnergy,totalweight);
+      m_hVector_WEtaGen[index].at(pileup)->Fill(bosonWEtaGen,totalweight);
     }
-
-    m_hVector_correlCASTOREnergy[index].at(pileup)->Fill(sumGenCastorEnergy,sumCastorEnergy);
-    m_hVector_correlRatioCastor[index].at(pileup)->Fill(sumCastorEnergy/sumGenCastorEnergy,sumGenCastorEnergy);
-    m_hVector_resCASTOREnergy[index].at(pileup)->Fill(sumCastorEnergy/sumGenCastorEnergy);
-    m_hVector_gensumEHFplus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlusGen(),totalweight);
-    m_hVector_gensumEHFminus[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinusGen(),totalweight);
-    m_hVector_gensumECastorMinus[index].at(pileup)->Fill(sumGenCastorEnergy,totalweight);
-
   }
 
 }
@@ -1108,10 +1128,13 @@ void DiffractiveW::SaveHistos(std::string type,std::string typesel){
 	m_hVector_correlCASTOREnergy[j].at(i)->Write();
 	m_hVector_correlXiPlus[j].at(i)->Write();
 	m_hVector_correlXiMinus[j].at(i)->Write();
+	m_hVector_correlXiPlusDefinition[j].at(i)->Write();
+	m_hVector_correlXiMinusDefinition[j].at(i)->Write();
 	m_hVector_correlRatioCastor[j].at(i)->Write();
 	m_hVector_gensumEHFplus[j].at(i)->Write();
 	m_hVector_gensumEHFminus[j].at(i)->Write();
 	m_hVector_gensumECastorMinus[j].at(i)->Write();
+	m_hVector_WEtaGen[j].at(i)->Write();
       }
 
     }
@@ -1488,12 +1511,34 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
     if (eventdiff->GetNVertex() <= nVertex) vertex = true;
 
-    xigen = eventdiffW->GetMx2Gen()/TMath::Power(sqrtS,2);
+    //xigen = eventdiffW->GetMx2Gen()/TMath::Power(sqrtS,2);
+    if(eventdiff->GetMxGen()>-999. || eventdiff->GetMxGen() < 1.){
+      xigen = eventdiff->GetMxGen()*eventdiff->GetMxGen()/49000000.;
+    }else{
+      xigen = -1;
+    }
+
     xi = eventdiffW->GetMx2PF()/TMath::Power(sqrtS,2);
     xigenplus = eventdiffW->GetEpluspzGenLim()/sqrtS;
     xigenminus = eventdiffW->GetEminuspzGenLim()/sqrtS;
+
     resMETPt = eventdiffW->GetMETPt()/eventdiffW->GetGenNeutrinoPt();
     resMETPhi = eventdiffW->GetMETPhi()/eventdiffW->GetGenNeutrinoPhi();
+
+    if(debug){
+      std::cout << "Gen, MX: " << eventdiffW->GetMxGen() << " | MX2: " << eventdiffW->GetMx2Gen() << " | TMath::Pow: " << TMath::Power(sqrtS,2) << " | sqrtS*sqrtS: " << sqrtS*sqrtS << " | Xi :" << xigen << std::endl;
+      std::cout << "Gen, MX, left: " << eventdiffW->GetMxGenLeft() << " | MX2: " << eventdiffW->GetMx2GenLeft() << " | TMath::Pow: " << TMath::Power(sqrtS,2) << " | sqrtS*sqrtS: " << sqrtS*sqrtS << "| Xi :" << eventdiffW->GetMx2GenLeft()/TMath::Power(sqrtS,2)  << std::endl; 
+      std::cout << "Gen: MX, Right: " << eventdiffW->GetMxGenRight() << " | MX2: " << eventdiffW->GetMx2GenRight() << " | TMath::Pow: " << TMath::Power(sqrtS,2) << " | sqrtS*sqrtS: " << sqrtS*sqrtS << " | Xi :" << eventdiffW->GetMx2GenRight()/TMath::Power(sqrtS,2)  << std::endl; 
+      std::cout << "Xi Plus Gen, lim: " << xigenplus << " | Xi Minus Gen, lim: " << xigenminus << std::endl;
+      std::cout << "Xi Plus Gen, CMS: " << eventdiffW->GetEpluspzGenCMS()/sqrtS << " | Xi Minus Gen, CMS: " << eventdiffW->GetEminuspzGenCMS()/sqrtS << std::endl;
+      std::cout << "Xi Proton Plus: " << eventdiff->GetXiGenPlus() << std::endl;
+      std::cout << "Xi Proton Minus " << eventdiff->GetXiGenMinus() << std::endl;
+      std::cout << "MxGen: " << eventdiff->GetMxGen() << " | xi: " << eventdiff->GetMxGen()*eventdiff->GetMxGen()/49000000. << std::endl;
+      std::cout << "MxGenRange: " << eventdiff->GetMxGenRange() << " | xi: " << eventdiff->GetMxGenRange()*eventdiff->GetMxGenRange()/49000000. << std::endl;
+      std::cout << "MxGenDiss: " << eventdiff->GetMxGenDiss() << " | xi: " << eventdiff->GetMxGenDiss()*eventdiff->GetMxGenDiss()/49000000. << std::endl;
+      std::cout << "MyGenDiss: " << eventdiff->GetMyGenDiss() << " | xi: " << eventdiff->GetMyGenDiss()*eventdiff->GetMyGenDiss()/49000000. << std::endl;
+      std::cout << "" << std::endl;
+    }
 
     if(xigen < 0.05) generator = true;
     if(eventdiffW->GetSumECastorMinusGen()<1) gencastorlow = true; 
@@ -1502,8 +1547,10 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     if (gapseltype == "PF" || gapseltype == "pf"){
       etamax = eventdiffW->GetEtaMaxPF();
       etamin = eventdiffW->GetEtaMinPF();
-      ximinus = 1.6*eventdiffW->GetEminuspzPF()/sqrtS; // 1.6 is the MC correction.
-      xiplus = 1.6*eventdiffW->GetEpluspzPF()/sqrtS;
+      ximinus = eventdiffW->GetEminuspzPF()/sqrtS; // 1.6 is the MC correction.
+      xiplus = eventdiffW->GetEpluspzPF()/sqrtS; // 1.6 is the MC correction.
+      //ximinus = eventdiff->GetXiMinusFromPFCands();
+      //xiplus = eventdiff->GetXiPlusFromPFCands();
       maxLRG = eventdiffW->GetLrgPF();
       if (etamax < 3. && etamax > -10.) diffselp = true; // avoid protection -999.
       if (etamin > -3.) diffseln = true; // avoid protection -999.
@@ -1511,8 +1558,8 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
     else if(gapseltype == "CALO" || gapseltype == "calo"){
       etamax = eventdiffW->GetEtaCaloMax();
       etamin = eventdiffW->GetEtaCaloMin();
-      ximinus = 1.6*eventdiffW->GetEminuspzCalo()/sqrtS;
-      xiplus = 1.6*eventdiffW->GetEpluspzCalo()/sqrtS;
+      ximinus = eventdiffW->GetEminuspzCalo()/sqrtS; // 1.6 is the MC correction.
+      xiplus = eventdiffW->GetEpluspzCalo()/sqrtS; // 1.6 is the MC correction.
       maxLRG = eventdiffW->GetLrgCalo();
       if (eventdiffW->GetSumEHFMinus()==0.) diffseln = true;
       if (eventdiffW->GetSumEHFPlus()==0.) diffselp = true;
@@ -1539,6 +1586,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
       bosonWMass = TMath::Sqrt(2.*eventdiffW->GetLeadingElectronPt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(M_PI*(eventdiffW->GetLeadingElectronPhi()-eventdiffW->GetMETPhi()))));
       bosonWEta = eventdiffW->GetLeadingElectronEta();
+      bosonWEtaGen = eventdiffW->GetGenLeadingElectronEta();
       bosonWPhi = eventdiffW->GetLeadingElectronPhi();
       bosonWPt = eventdiffW->GetLeadingElectronPt();
       bosonWCharge = eventdiffW->GetLeadingElectronCharge();
@@ -1615,6 +1663,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
       bosonWMass = TMath::Sqrt(2.*eventdiffW->GetLeadingMuonPt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(M_PI*(eventdiffW->GetLeadingMuonPhi()-eventdiffW->GetMETPhi()))));
       bosonWEta = eventdiffW->GetLeadingMuonEta();
+      bosonWEtaGen = eventdiffW->GetGenLeadingMuonEta();
       bosonWPhi = eventdiffW->GetLeadingMuonPhi();
       bosonWPt = eventdiffW->GetLeadingMuonPt();
       bosonWCharge = eventdiffW->GetLeadingMuonCharge();
@@ -1677,6 +1726,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
       bosonWMass = TMath::Sqrt(2.*eventdiffW->GetPatElectron1Pt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(M_PI*(eventdiffW->GetPatElectron1Phi()-eventdiffW->GetMETPhi()))));
       bosonWEta = eventdiffW->GetPatElectron1Eta();
+      bosonWEtaGen = eventdiffW->GetGenLeadingElectronEta();
       bosonWPhi = eventdiffW->GetPatElectron1Phi();
       bosonWPt = eventdiffW->GetPatElectron1Pt();
       bosonWCharge = eventdiffW->GetPatMuon1Charge();
@@ -1745,6 +1795,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
       bosonWMass = TMath::Sqrt(2.*eventdiffW->GetPatMuon1Pt()*eventdiffW->GetMETPt()*(1.-TMath::Cos(M_PI*(eventdiffW->GetPatMuon1Phi()-eventdiffW->GetMETPhi()))));
       bosonWEta = eventdiffW->GetPatMuon1Eta();
+      bosonWEtaGen = eventdiffW->GetGenLeadingMuonEta();
       bosonWPhi = eventdiffW->GetPatMuon1Phi();
       bosonWPt = eventdiffW->GetPatMuon1Pt();
       bosonWCharge = eventdiffW->GetPatMuon1Charge();

@@ -57,6 +57,7 @@ class DiffractiveW {
   double bosonWEta;
   double bosonWPhi;
   double bosonWPt;
+  double bosonWEtaGen;
   int bosonWCharge;
   int NElectrons;
   int NMuons;
@@ -269,10 +270,13 @@ class DiffractiveW {
   std::vector<std::vector<TH2F*> > m_hVector_correlCASTOREnergy;
   std::vector<std::vector<TH2F*> > m_hVector_correlXiPlus;
   std::vector<std::vector<TH2F*> > m_hVector_correlXiMinus;
+  std::vector<std::vector<TH2F*> > m_hVector_correlXiPlusDefinition;
+  std::vector<std::vector<TH2F*> > m_hVector_correlXiMinusDefinition;
   std::vector<std::vector<TH2F*> > m_hVector_correlRatioCastor;
   std::vector<std::vector<TH1F*> > m_hVector_gensumEHFplus;
   std::vector<std::vector<TH1F*> > m_hVector_gensumEHFminus;
   std::vector<std::vector<TH1F*> > m_hVector_gensumECastorMinus;
+  std::vector<std::vector<TH1F*> > m_hVector_WEtaGen;
 
   std::vector <std::string> Folders;
   TDirectory *foldersFile[5];

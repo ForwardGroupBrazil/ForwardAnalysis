@@ -61,7 +61,7 @@ if options.Run == "data_ZeroBias":
   config.runPUMC = False
   config.runGen = False
 
-if options.Run == "data_MuonP1":
+elif options.Run == "data_MuonP1":
   print("")
   print("###################")
   print("Data Muon 2010 P1")

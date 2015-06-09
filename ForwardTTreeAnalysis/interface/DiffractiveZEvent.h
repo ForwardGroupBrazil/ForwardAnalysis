@@ -140,10 +140,11 @@ class DiffractiveZEvent {
     void SetEtExpoPlusGen(double fetexpoplusgen)    { etexpoplusgen_     = fetexpoplusgen;}
     void SetEtExpoMinusGen(double fetexpominusgen)    { etexpominusgen_     = fetexpominusgen;}
     void SetSumECastorMinusGen(double fsumECastorMinusGen)    { sumECastorMinusGen_     = fsumECastorMinusGen;}
-    void SetCastorParticlesPDGidGen(const std::vector<double>& fcastorparticlespdgidgen) { castorparticlespdgidgen_ = fcastorparticlespdgidgen; }
-    void SetCastorParticlesEnergyGen(const std::vector<double>& fcastorparticlesenergygen) { castorparticlesenergygen_ = fcastorparticlesenergygen; }
-    void SetCastorParticlesEtaGen(const std::vector<double>& fcastorparticlesetagen) { castorparticlesetagen_ = fcastorparticlesetagen; }
-    void SetCastorNParticlesGen(int fcastornparticlesgen)    {castornparticlesgen_ = fcastornparticlesgen;}
+    void SetParticlesPDGidGen(const std::vector<double>& fparticlespdgidgen) { particlespdgidgen_ = fparticlespdgidgen; }
+    void SetParticlesEnergyGen(const std::vector<double>& fparticlesenergygen) { particlesenergygen_ = fparticlesenergygen; }
+    void SetParticlesEtaGen(const std::vector<double>& fparticlesetagen) { particlesetagen_ = fparticlesetagen; }
+    void SetParticlesP4Gen(const std::vector< math::XYZTLorentzVector > fparticlesp4gen)    { particlesp4gen_     = fparticlesp4gen;}
+    void SetNParticlesGen(int fnparticlesgen)    {nparticlesgen_ = fnparticlesgen;}
     void SetSumptGenLeft(double fsumptgenleft)    { sumptgenleft_     = fsumptgenleft;}
     void SetSumptGenRight(double fsumptgenright)    { sumptgenright_     = fsumptgenright;}
 
@@ -594,10 +595,11 @@ class DiffractiveZEvent {
     double GetEtExpoPlusGen() const { return etexpoplusgen_;}
     double GetEtExpoMinusGen() const { return etexpominusgen_;}
     double GetSumECastorMinusGen() const { return sumECastorMinusGen_;}
-    double GetCastorParticlesPDGidGen(int i) const { return castorparticlespdgidgen_[i]; }
-    double GetCastorParticlesEnergyGen(int i) const { return castorparticlesenergygen_[i]; }
-    double GetCastorParticlesEtaGen(int i) const { return castorparticlesetagen_[i]; }
-    int GetCastorNParticlesGen() const {return castornparticlesgen_;}
+    double GetParticlesPDGidGen(int i) const { return particlespdgidgen_[i]; }
+    double GetParticlesEnergyGen(int i) const { return particlesenergygen_[i]; }
+    double GetParticlesEtaGen(int i) const { return particlesetagen_[i]; }
+    const LorentzVector& GetParticlesP4Gen(int i) const {return particlesp4gen_[i];}
+    int GetNParticlesGen() const {return nparticlesgen_;}
 
     double GetSumptGenLeft() const { return sumptgenleft_;}
     double GetSumptGenRight() const { return sumptgenright_;}
@@ -1068,10 +1070,11 @@ class DiffractiveZEvent {
     double etexpoplusgen_;
     double etexpominusgen_;
     double sumECastorMinusGen_;
-    std::vector<double> castorparticlesetagen_;
-    std::vector<double> castorparticlespdgidgen_;
-    std::vector<double> castorparticlesenergygen_;
-    int castornparticlesgen_;
+    std::vector<double> particlesetagen_;
+    std::vector<double> particlespdgidgen_;
+    std::vector<double> particlesenergygen_;
+    std::vector< math::XYZTLorentzVector > particlesp4gen_;
+    int nparticlesgen_;
     double sumptgenleft_;
     double sumptgenright_;
 
