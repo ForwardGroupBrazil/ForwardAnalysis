@@ -1240,7 +1240,7 @@ void DiffractiveZ::SaveHistos(std::string type,std::string typesel){
 	  m_hVector_gensumEHFminus[j].at(i)->Write();
 	  m_hVector_gensumECastorMinus[j].at(i)->Write();
 	  m_hVector_ZEtaGen[j].at(i)->Write();
-          m_hVector_MxVsEnergy[j].at(i)->Write();
+	  m_hVector_MxVsEnergy[j].at(i)->Write();
 	}
 
     }
@@ -1615,10 +1615,10 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
     //double EpluspzGen = 0.;
     //double EminuspzGen = 0.;
-   
-EpluspzGen = 0.;
-EminuspzGen = 0.;
-Mx2Gen = 0; 
+
+    EpluspzGen = 0.;
+    EminuspzGen = 0.;
+    Mx2Gen = 0; 
 
     math::XYZTLorentzVector System(0.,0.,0.,0.);
     math::XYZTLorentzVector SystemX(0.,0.,0.,0.);
@@ -1638,23 +1638,23 @@ Mx2Gen = 0;
 	}
 	//	if( ( fabs(eventdiffZ->GetParticlesEtaGen(k)) <= 2.866 && fabs(eventdiffZ->GetParticlesEtaGen(k)) > 3.152)){
 	System += eventdiffZ->GetParticlesP4Gen(k);
-        //EpluspzGen += eventdiffZ->GetParticlesP4Gen(k).energy()+eventdiffZ->GetParticlesP4Gen(k).pz();
-        //EminuspzGen += eventdiffZ->GetParticlesP4Gen(k).energy()-eventdiffZ->GetParticlesP4Gen(k).pz();
+	//EpluspzGen += eventdiffZ->GetParticlesP4Gen(k).energy()+eventdiffZ->GetParticlesP4Gen(k).pz();
+	//EminuspzGen += eventdiffZ->GetParticlesP4Gen(k).energy()-eventdiffZ->GetParticlesP4Gen(k).pz();
 	//	}
 	//	if(eventdiffZ->GetParticlesEtaGen(k)<4.730 || (eventdiffZ->GetParticlesEtaGen(k) <= 2.866 && eventdiffZ->GetParticlesEtaGen(k) > 3.152) ){
 
 	//if (fabs(eventdiffZ->GetParticlesPDGidGen(k))==2212) continue;
 
 	//if(eventdiffZ->GetParticlesEtaGen(k)<4.9){
-	  EpluspzGen += eventdiffZ->GetParticlesP4Gen(k).energy()+eventdiffZ->GetParticlesP4Gen(k).pz();
-	  SystemX += eventdiffZ->GetParticlesP4Gen(k);
-	  //System += eventdiffZ->GetParticlesP4Gen(k);
+	EpluspzGen += eventdiffZ->GetParticlesP4Gen(k).energy()+eventdiffZ->GetParticlesP4Gen(k).pz();
+	SystemX += eventdiffZ->GetParticlesP4Gen(k);
+	//System += eventdiffZ->GetParticlesP4Gen(k);
 	//}
 	//	if(eventdiffZ->GetParticlesEtaGen(k)>-4.730 || (eventdiffZ->GetParticlesEtaGen(k) >= -2.866 && eventdiffZ->GetParticlesEtaGen(k) < -3.152)){
 	//if(eventdiffZ->GetParticlesEtaGen(k)>-4.9){
-	  EminuspzGen += eventdiffZ->GetParticlesP4Gen(k).energy()-eventdiffZ->GetParticlesP4Gen(k).pz();
-	  SystemY += eventdiffZ->GetParticlesP4Gen(k);
-	  //System += eventdiffZ->GetParticlesP4Gen(k);
+	EminuspzGen += eventdiffZ->GetParticlesP4Gen(k).energy()-eventdiffZ->GetParticlesP4Gen(k).pz();
+	SystemY += eventdiffZ->GetParticlesP4Gen(k);
+	//System += eventdiffZ->GetParticlesP4Gen(k);
 	//}
       }
 
