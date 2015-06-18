@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <TLorentzVector.h>
 
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
@@ -44,6 +45,7 @@ class DiffractiveZ {
   int index;
   int pileup;
   int totalweight;
+  int counterproton;
 
   double nMuons;
   double nElectrons;
@@ -92,11 +94,17 @@ class DiffractiveZ {
   double xi;
   double xiplus;
   double ximinus;
+  double ximinuscastor;
+  double xipluscastor;
+  double ximinusall;
+  double xiplusall;
   double xigen;
-  double xigen_plus;
-  double xigen_minus;
   double xigenplus;
   double xigenminus;
+  double xigenpluscastor;
+  double xigenminuscastor;
+  double xigenplusall;
+  double xigenminusall;
   double maxLRG;
   double resLeadingPt;
   double resLeadingEta;
@@ -120,9 +128,9 @@ class DiffractiveZ {
   bool castorgap;
   int counterHit;
 
-double EpluspzGen;
-double EminuspzGen;
-double Mx2Gen;
+  double EpluspzGen;
+  double EminuspzGen;
+  double protonpz;
 
   int bRunNumber;
   int bLumiSection;
@@ -273,6 +281,10 @@ double Mx2Gen;
   std::vector<std::vector<TH1D*> > m_hVector_etasignedCASTOR;
   std::vector<std::vector<TH1D*> > m_hVector_XiPlus;
   std::vector<std::vector<TH1D*> > m_hVector_XiMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_XiPlusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_XiMinusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_XiPlusAll;
+  std::vector<std::vector<TH1D*> > m_hVector_XiMinusAll;
   std::vector<std::vector<TH1D*> > m_hVector_Xi;
   std::vector<std::vector<TH1D*> > m_hVector_absdeltaEta;
   std::vector<std::vector<TH1D*> > m_hVector_deltaEta;
@@ -290,6 +302,10 @@ double Mx2Gen;
   std::vector<std::vector<TH1D*> > m_hVector_genProtonPlusXi;
   std::vector<std::vector<TH1D*> > m_hVector_genXiPlus;
   std::vector<std::vector<TH1D*> > m_hVector_genXiMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_genXiPlusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_genXiMinusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_genXiPlusAll;
+  std::vector<std::vector<TH1D*> > m_hVector_genXiMinusAll;
   std::vector<std::vector<TH1D*> > m_hVector_genXi;
   std::vector<std::vector<TH1D*> > m_hVector_resLeadingLeptonPt;
   std::vector<std::vector<TH1D*> > m_hVector_resLeadingLeptonEta;
@@ -299,22 +315,34 @@ double Mx2Gen;
   std::vector<std::vector<TH1D*> > m_hVector_resSecondLeptonPhi;
   std::vector<std::vector<TH1D*> > m_hVector_resXiPlus;
   std::vector<std::vector<TH1D*> > m_hVector_resXiMinus;
-  std::vector<std::vector<TH1D*> > m_hVector_resXiPlusGen;
-  std::vector<std::vector<TH1D*> > m_hVector_resXiMinusGen;
+  std::vector<std::vector<TH1D*> > m_hVector_resXiPlusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_resXiMinusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_resXiPlusAll;
+  std::vector<std::vector<TH1D*> > m_hVector_resXiMinusAll;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioXiPlus;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioXiMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioXiPlusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioXiMinusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioXiPlusAll;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioXiMinusAll;
   std::vector<std::vector<TH1D*> > m_hVector_resHFEnergy;
   std::vector<std::vector<TH1D*> > m_hVector_resCASTOREnergy;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioCASTOREnergy;
   std::vector<std::vector<TH2D*> > m_hVector_correlHFEnergy;
   std::vector<std::vector<TH2D*> > m_hVector_correlCASTOREnergy;
   std::vector<std::vector<TH2D*> > m_hVector_correlXiPlus;
   std::vector<std::vector<TH2D*> > m_hVector_correlXiMinus;
-  std::vector<std::vector<TH2D*> > m_hVector_correlXiPlusDefinition;
-  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusDefinition;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiPlusCastor;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusCastor;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiPlusAll;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusAll;
   std::vector<std::vector<TH2D*> > m_hVector_correlRatioCastor;
   std::vector<std::vector<TH1D*> > m_hVector_gensumECastorMinus;
   std::vector<std::vector<TH1D*> > m_hVector_gensumEHFplus;
   std::vector<std::vector<TH1D*> > m_hVector_gensumEHFminus;
   std::vector<std::vector<TH1D*> > m_hVector_ZEtaGen;
-  std::vector<std::vector<TH2D*> > m_hVector_MxVsEnergy;
+  std::vector<std::vector<TH1D*> > m_hVector_NumberOfProtons;
+  std::vector<std::vector<TH1D*> > m_hVector_ProtonPz;
 
   std::vector <std::string> Folders;
   TDirectory *foldersFile[5];
@@ -331,6 +359,15 @@ double Mx2Gen;
   void FillHistos(int, int, double);
   void SaveHistos(std::string, std::string);
   void CleanVariables();
+
+  struct orderAbsolutPZ
+  {
+    template <class T, class W>
+      inline bool operator() (T vec1, W vec2)
+      {
+	return (fabs(vec1.pz()) > fabs(vec2.pz()));
+      }
+  };
 
 };
 #endif
