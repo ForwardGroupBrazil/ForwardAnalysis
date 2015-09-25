@@ -28,8 +28,6 @@ using namespace zerobiasAnalysis;
 using namespace eventInfo;
 using namespace reweight;
 
-#define PI 3.14159265
-
 void DetectorThreshold::LoadFile(std::string fileinput, std::string processinput){
 
   inf = NULL;
@@ -93,14 +91,14 @@ void DetectorThreshold::CreateHistos(std::string type){
       char subtitle[600];
       sprintf(castorname,"Sector%d_CastorSumEnergy_%s",bs+1,Folders.at(j).c_str());
       sprintf(subtitle,"#sum Energy, Castor Sector %d; #sum E_{modules 1,2,3,4,5} [GeV]; N events", bs+1);
-      TH1D *histo_SectorCastorEnergy = new TH1D(castorname,subtitle,200,-10,10);
+      TH1D *histo_SectorCastorEnergy = new TH1D(castorname,subtitle,2000,-100,100);
       m_hVector_SectorCastorEnergy[bs].push_back(histo_SectorCastorEnergy);
 
     }
 
     char name7[600];
     sprintf(name7,"CastorSumOfEnergyForAllSectors_%s",Folders.at(j).c_str());
-    TH1D *histo_AllSectorsCastorEnergy = new TH1D(name7,"Castor Sector: #sum Energy; #sum E_{modules 1,2,3,4,5} per sector [GeV]; N events",200,-10,10);
+    TH1D *histo_AllSectorsCastorEnergy = new TH1D(name7,"Castor Sector: #sum Energy; #sum E_{modules 1,2,3,4,5} all sectors [GeV]; N events",2000,-100,100);
     m_hVector_AllSectorsCastorEnergy.push_back(histo_AllSectorsCastorEnergy);
 
     for (int bs=0; bs<80; bs++){
@@ -148,7 +146,7 @@ void DetectorThreshold::FillHistos(int index){
       CastorEnergySector[i]=eventZeroBias->GetCastorModule1Energy(i)+eventZeroBias->GetCastorModule2Energy(i)+eventZeroBias->GetCastorModule3Energy(i)+eventZeroBias->GetCastorModule4Energy(i)+eventZeroBias->GetCastorModule5Energy(i);
     }
     m_hVector_SectorCastorEnergy[i].at(index)->Fill(CastorEnergySector[i]);
-    m_hVector_AllSectorsCastorEnergy[index]->Fill(CastorEnergySector[i]);
+    EnergyAllCastor+=CastorEnergySector[i];
   }
 
   for (int i=0; i < 16; i++){
@@ -159,12 +157,13 @@ void DetectorThreshold::FillHistos(int index){
     m_hVector_ChannelCastorEnergy[64+i].at(index)->Fill(eventZeroBias->GetCastorModule5Energy(i));   
   }
 
-
   if (debug){
     for (int i=0; i<16; i++){
       std::cout << "\nCastor Sector(" << i+1 << "): " << CastorEnergySector[i] << std::endl;
     }
   } 
+
+  m_hVector_AllSectorsCastorEnergy[index]->Fill(EnergyAllCastor);
 
 }
 

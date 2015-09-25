@@ -1046,7 +1046,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   eventData.SetParticlesEnergyGen(particlesEnergyGen);
   eventData.SetParticlesP4Gen(particlesP4Gen);
   eventData.SetParticlesPDGidGen(particlesPdgIdGen);
-  eventData.SetNParticlesGen(gensize);
+  eventData.SetNParticlesGen(particlesEnergyGen.size());
 
   if (RunMC_){
     if(genVector.size()>0){

@@ -1,0 +1,30 @@
+
+<< INPUTS >>
+ 
+Input file: /storage1/dmf/Samples/DiffractiveZ/9_december_2013/MinBiasMC/MinBiasMC.root
+Output file: histo_Castor_MinBias_unpaired.root
+ 
+Type: unpairedmc
+
+Total Trigger Fired: 
+Trigger 0: 0
+Trigger 1: 0
+Trigger 2: 0
+Trigger 3: 0
+Trigger 4: 0
+Trigger 5: 0
+Trigger 6: 0
+Trigger 7: 0
+Trigger 8: 0
+Trigger 9: 0
+Trigger 10: 0
+Trigger 11: 0
+Trigger 12: 0
+Trigger 13: 0
+Trigger 14: 0
+Trigger 15: 0
+Trigger 16: 0
+Trigger 17: 0
+Trigger 18: 0
+Trigger 19: 0
+

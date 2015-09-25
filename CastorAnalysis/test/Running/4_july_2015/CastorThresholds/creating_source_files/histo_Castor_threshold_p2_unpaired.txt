@@ -1,0 +1,30 @@
+
+<< INPUTS >>
+ 
+Input file: /storage1/dmf/Samples/DiffractiveZ/5_October_2013/ZeroBias/ZeroBiasA_v3/ZeroBiasA_v3.root
+Output file: histo_Castor_threshold_p2_unpaired.root
+ 
+Type: unpaired
+
+Total Trigger Fired: 
+Trigger 0: 10615276
+Trigger 1: 675254
+Trigger 2: 673928
+Trigger 3: 2400595
+Trigger 4: 4177
+Trigger 5: 87
+Trigger 6: 0
+Trigger 7: 370
+Trigger 8: 173
+Trigger 9: 173
+Trigger 10: 422
+Trigger 11: 0
+Trigger 12: 0
+Trigger 13: 0
+Trigger 14: 0
+Trigger 15: 0
+Trigger 16: 0
+Trigger 17: 0
+Trigger 18: 0
+Trigger 19: 0
+

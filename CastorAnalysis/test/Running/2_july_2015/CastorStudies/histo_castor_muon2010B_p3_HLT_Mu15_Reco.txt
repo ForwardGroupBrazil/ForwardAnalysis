@@ -1,0 +1,52 @@
+
+<< Gold Events >>
+
+Please, insert this events in another text file to be used by PickEvent Tool. 
+Twiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookPickEvents 
+>>---------------------------------------------------------------------- 
+
+<< INPUTS >>
+ 
+>> Input file: /storage/dmf/uerj-1/Samples/DiffractiveZ/11_june_2015/Muon_P3/MuonP3.root
+>> Output file: histo_castor_muon2010B_p3_HLT_Mu15_Reco.root
+>> Channel Correction file: channelcorrector.root
+>> TTree Name: diffractiveZAnalysisTTree
+ 
+<< OPTIONS >>
+ 
+>> Trigger: trigger_all_muon
+>> # Vertex: 1
+>> Lepton1(pT) > 20
+>> Lepton2(pT) > 20
+>> Type of Selection: Reco::Muon
+>> Event Weight: no_weight | MC Weight:1
+>> Castor Sector Threshold: 1.50 GeV
+ 
+<< TRIGGER >> 
+ 
+Total Number of Events: 1593764
+Number of Triggered Events: 666658 | Option: 0
+(if negative, trigger option is off)
+
+Each Trigger Fired: 
+Trigger 0: 49
+Trigger 1: 15541
+Trigger 2: 0
+Trigger 3: 57783
+Trigger 4: 0
+Trigger 5: 0
+Trigger 6: 500245
+Trigger 7: 0
+Trigger 8: 666658
+Trigger 9: 792807
+Trigger 10: 0
+Trigger 11: 0
+Trigger 12: 485
+Trigger 13: 20
+Trigger 14: 0
+Trigger 15: 0
+Trigger 16: 0
+Trigger 17: 0
+Trigger 18: 0
+Trigger 19: 0
+

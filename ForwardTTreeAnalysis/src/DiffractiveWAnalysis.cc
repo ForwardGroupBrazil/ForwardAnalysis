@@ -1184,7 +1184,7 @@ void DiffractiveWAnalysis::fillGenInfo(DiffractiveWEvent& eventData, const edm::
   eventData.SetParticlesEnergyGen(particlesEnergyGen);
   eventData.SetParticlesPDGidGen(particlesPdgIdGen);
   eventData.SetParticlesP4Gen(particlesP4Gen);
-  eventData.SetNParticlesGen(gensize);
+  eventData.SetNParticlesGen(particlesEnergyGen.size());
 
   if (RunMC_){
     if(genVector.size()>0){

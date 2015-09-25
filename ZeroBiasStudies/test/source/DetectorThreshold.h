@@ -33,6 +33,7 @@ class DetectorThreshold {
   int runmax;
 
   double CastorEnergySector[16];
+  double EnergyAllCastor;
 
   std::vector<TH1D*> m_hVector_tracks;
   std::vector<TH1D*> m_hVector_vertex;

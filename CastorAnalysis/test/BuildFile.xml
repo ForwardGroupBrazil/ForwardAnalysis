@@ -1,0 +1,29 @@
+<flags CXXFLAGS="-g -O0"/>
+
+<bin   file="source/CastorAnalysis.cc" name="CastorAnalysis">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+</bin>
+
+<bin   file="source/CastorThreshold.cc" name="CastorThreshold">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+</bin>
+
+<bin   file="source/CastorBackground.cc" name="CastorBackground">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+</bin>
+
