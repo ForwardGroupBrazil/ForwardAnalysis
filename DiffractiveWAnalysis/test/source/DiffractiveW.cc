@@ -1525,7 +1525,6 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
 
   // Cut Flow
   TH1D *histo_cutflow = new TH1D("CutFlow","Cut Flow; Cuts; Events",30,0,30);
-  histo_cutflow->LabelsOption(">","X");
 
   // Adding TTree Golden Events
   TString TTreeoutput, TTreeAllW, TTreeCASTOR;
@@ -2771,6 +2770,7 @@ void DiffractiveW::Run(std::string filein_, std::string processname_, std::strin
       foldersFile[2] = outf->mkdir("Run");
       foldersFile[3] = outf->mkdir("Diffraction");
       foldersFile[4] = outf->mkdir("Generator");
+      histo_cutflow->LabelsOption(">","X");
       histo_cutflow->Write();
       SaveHistos(type,typesel);
       outf->Close();
