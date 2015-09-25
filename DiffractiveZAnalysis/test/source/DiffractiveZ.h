@@ -3,6 +3,7 @@
 
 #include <TFile.h>
 #include <TTree.h>
+#include <TF1.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +36,7 @@ class DiffractiveZ {
   TTree* troutCASTOR;
 
   TH1* h_castor_channel;
+  TF1* CastorReweight;
   DiffractiveEvent *eventdiff;
   DiffractiveZEvent *eventdiffZ;
   EventInfoEvent *eventinfo;
@@ -42,9 +44,10 @@ class DiffractiveZ {
   std::string fileinput;
   std::string processinput;
   std::string gapseltype;
+  std::string corcastor;
+  std::string corcastorfile;
   int index;
   int pileup;
-  int totalweight;
   int counterproton;
 
   double nMuons;
@@ -97,12 +100,15 @@ class DiffractiveZ {
   double ximinuscastor;
   double xipluscastor;
   double ximinusall;
+  double ximinusunique;
   double xiplusall;
   double xigen;
   double xigenplus;
   double xigenminus;
+  double xigenminusMore;
   double xigenpluscastor;
   double xigenminuscastor;
+  double xigenminuscastorDef;
   double xigenplusall;
   double xigenminusall;
   double maxLRG;
@@ -119,17 +125,25 @@ class DiffractiveZ {
   double etasignedCASTOR;
 
   double sumCastorEnergy;
+  double sumGenCastorEnergyExc;
   double sumGenCastorEnergy;
+  double sumGenCastorPions;
+  double sumGenCastorEPhoton;
+  double sumGenCastorOthers;
+  double sumGenCastorAll;
   double sumCastorAndHFMinusEnergy;
   int SectorCastorHit;
   double castorthreshold;
   double channelsthreshold;
   bool castoractivity;
   bool castorgap;
+  bool castorgapGen;
   int counterHit;
 
   double EpluspzGen;
   double EminuspzGen;
+  double EminuspzGenMore;
+  double EminuspzGenCastor;
   double protonpz;
 
   int bRunNumber;
@@ -285,6 +299,7 @@ class DiffractiveZ {
   std::vector<std::vector<TH1D*> > m_hVector_XiMinusCastor;
   std::vector<std::vector<TH1D*> > m_hVector_XiPlusAll;
   std::vector<std::vector<TH1D*> > m_hVector_XiMinusAll;
+  std::vector<std::vector<TH1D*> > m_hVector_XiMinusUnique;
   std::vector<std::vector<TH1D*> > m_hVector_Xi;
   std::vector<std::vector<TH1D*> > m_hVector_absdeltaEta;
   std::vector<std::vector<TH1D*> > m_hVector_deltaEta;
@@ -302,6 +317,7 @@ class DiffractiveZ {
   std::vector<std::vector<TH1D*> > m_hVector_genProtonPlusXi;
   std::vector<std::vector<TH1D*> > m_hVector_genXiPlus;
   std::vector<std::vector<TH1D*> > m_hVector_genXiMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_genXiMinusMore;
   std::vector<std::vector<TH1D*> > m_hVector_genXiPlusCastor;
   std::vector<std::vector<TH1D*> > m_hVector_genXiMinusCastor;
   std::vector<std::vector<TH1D*> > m_hVector_genXiPlusAll;
@@ -315,12 +331,21 @@ class DiffractiveZ {
   std::vector<std::vector<TH1D*> > m_hVector_resSecondLeptonPhi;
   std::vector<std::vector<TH1D*> > m_hVector_resXiPlus;
   std::vector<std::vector<TH1D*> > m_hVector_resXiMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_resXiMinusMore;
   std::vector<std::vector<TH1D*> > m_hVector_resXiPlusCastor;
   std::vector<std::vector<TH1D*> > m_hVector_resXiMinusCastor;
   std::vector<std::vector<TH1D*> > m_hVector_resXiPlusAll;
   std::vector<std::vector<TH1D*> > m_hVector_resXiMinusAll;
+  std::vector<std::vector<TH1D*> > m_hVector_resAbsXiPlus;
+  std::vector<std::vector<TH1D*> > m_hVector_resAbsXiMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_resAbsXiPlusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_resAbsXiMinusCastor;
+  std::vector<std::vector<TH1D*> > m_hVector_resAbsXiPlusAll;
+  std::vector<std::vector<TH1D*> > m_hVector_resAbsXiMinusAll;
   std::vector<std::vector<TH1D*> > m_hVector_ratioXiPlus;
   std::vector<std::vector<TH1D*> > m_hVector_ratioXiMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioXiMinusMore;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioXiMinusUnique;
   std::vector<std::vector<TH1D*> > m_hVector_ratioXiPlusCastor;
   std::vector<std::vector<TH1D*> > m_hVector_ratioXiMinusCastor;
   std::vector<std::vector<TH1D*> > m_hVector_ratioXiPlusAll;
@@ -328,16 +353,31 @@ class DiffractiveZ {
   std::vector<std::vector<TH1D*> > m_hVector_resHFEnergy;
   std::vector<std::vector<TH1D*> > m_hVector_resCASTOREnergy;
   std::vector<std::vector<TH1D*> > m_hVector_ratioCASTOREnergy;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioCASTORPionsEnergy;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioCASTOREPhotonEnergy;
+  std::vector<std::vector<TH1D*> > m_hVector_ratioCASTOROthersEnergy;
   std::vector<std::vector<TH2D*> > m_hVector_correlHFEnergy;
   std::vector<std::vector<TH2D*> > m_hVector_correlCASTOREnergy;
   std::vector<std::vector<TH2D*> > m_hVector_correlXiPlus;
   std::vector<std::vector<TH2D*> > m_hVector_correlXiMinus;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusMore;
   std::vector<std::vector<TH2D*> > m_hVector_correlXiPlusCastor;
   std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusCastor;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusCastorDef;
   std::vector<std::vector<TH2D*> > m_hVector_correlXiPlusAll;
   std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusAll;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusRecoGen;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusCastorRecoGen;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusAllRecoGen;
+  std::vector<std::vector<TH2D*> > m_hVector_correlXiMinusUniqueRecoGen;
   std::vector<std::vector<TH2D*> > m_hVector_correlRatioCastor;
+  std::vector<std::vector<TH2D*> > m_hVector_correlRatioCastorPion;
+  std::vector<std::vector<TH2D*> > m_hVector_correlRatioCastorEPhoton;
+  std::vector<std::vector<TH2D*> > m_hVector_correlRatioCastorOthers;
   std::vector<std::vector<TH1D*> > m_hVector_gensumECastorMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_gensumECastorPionsMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_gensumECastorEPhotonMinus;
+  std::vector<std::vector<TH1D*> > m_hVector_gensumECastorOthersMinus;
   std::vector<std::vector<TH1D*> > m_hVector_gensumEHFplus;
   std::vector<std::vector<TH1D*> > m_hVector_gensumEHFminus;
   std::vector<std::vector<TH1D*> > m_hVector_ZEtaGen;
@@ -353,7 +393,7 @@ class DiffractiveZ {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double, double, std::string, std::string, std::string, std::string);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, double, std::string, double, double, std::string, std::string, std::string, std::string, std::string, std::string);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);
