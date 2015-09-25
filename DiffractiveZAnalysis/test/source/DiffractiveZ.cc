@@ -1624,6 +1624,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
   // Cut Flow
   TH1D *histo_cutflow = new TH1D("CutFlow","Cut Flow; Cuts; Events",30,0,30);
+  histo_cutflow->LabelsOption(">","X");
 
   // Adding TTree Golden Events
   TString TTreeoutput, TTreeAllZ, TTreeCASTOR;
